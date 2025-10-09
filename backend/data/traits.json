@@ -1,0 +1,137 @@
+[
+  {
+    "name": "Aquatic",
+    "point_cost": "2",
+    "effects": "Ocean Worlds: +20% Habitability, Pop housing usage −10%. Dry and Cold planets: −20% Habitability. This species is perfectly adapted to living in the depths of the ocean."
+  },
+  {
+    "name": "Hive-Minded",
+    "point_cost": "0",
+    "effects": "Not affected by happiness, +20 Years leader lifespan. This species is made up of semi-autonomous individuals slaved to a single, unfathomably vast consciousness."
+  },
+  {
+    "name": "Adaptive",
+    "point_cost": "2",
+    "effects": "+10% Habitability. This species is highly adaptive when it comes to foreign environments."
+  },
+  {
+    "name": "Extremely Adaptive",
+    "point_cost": "4",
+    "effects": "+20% Habitability. This species is remarkably adept at adapting to any foreign environments."
+  },
+  {
+    "name": "Agrarian",
+    "point_cost": "2",
+    "effects": "+15% Farming job efficiency. This species has a deep connection to the land, and make expert farmers and gardeners."
+  },
+  {
+    "name": "Charismatic",
+    "point_cost": "2",
+    "effects": "+20% Amenities job efficiency. Members of this species have a special charisma, and are generally considered pleasant to be around."
+  },
+  {
+    "name": "Communal",
+    "point_cost": "1",
+    "effects": "−10% Pop housing usage. Members of this species are highly communal, and quite used to living in close proximity to others."
+  },
+  {
+    "name": "Conformists",
+    "point_cost": "2",
+    "effects": "+30% Governing ethics attraction. These people always seek consensus and are more likely to conform to the governing ethics."
+  },
+  {
+    "name": "Conservationist",
+    "point_cost": "1",
+    "effects": "−10% Pop consumer goods upkeep. Members of this species believe that resources must be conserved and recycled."
+  },
+  {
+    "name": "Docile",
+    "point_cost": "2",
+    "effects": "−10% Empire size from pops. Members of this species are easy to manage and organize."
+  },
+  {
+    "name": "Enduring",
+    "point_cost": "1",
+    "effects": "+20 Years leader lifespan. Lifespans in this species are unusually long."
+  },
+  {
+    "name": "Venerable",
+    "point_cost": "4",
+    "effects": "+80 Years leader lifespan. This species can grow to an age that commands dignity and respect."
+  },
+  {
+    "name": "Industrious",
+    "point_cost": "2",
+    "effects": "+15% Mining job efficiency. Members of this species are known for their diligent and hard-working nature."
+  },
+  {
+    "name": "Ingenious",
+    "point_cost": "2",
+    "effects": "+15% Technician job efficiency. Members of this species are good at 'thinking outside the box'."
+  },
+  {
+    "name": "Intelligent",
+    "point_cost": "2",
+    "effects": "+10% Research job efficiency. This species is highly intelligent, and enjoys faster technological progress."
+  },
+  {
+    "name": "Natural Engineers",
+    "point_cost": "1",
+    "effects": "+15% Engineering research job efficiency. Members of this species have a natural inclination towards engineering."
+  },
+  {
+    "name": "Natural Physicists",
+    "point_cost": "1",
+    "effects": "+15% Physics research job efficiency. Members of this species have a natural inclination towards theoretical physics."
+  },
+  {
+    "name": "Natural Sociologists",
+    "point_cost": "1",
+    "effects": "+15% Society research job efficiency. Members of this species have a natural inclination towards sociology."
+  },
+  {
+    "name": "Nomadic",
+    "point_cost": "1",
+    "effects": "−35% Resettlement cost. This species has a nomadic past."
+  },
+  {
+    "name": "Quick Learners",
+    "point_cost": "1",
+    "effects": "+10% Leader experience gain. Members of this species are quick to learn from their experiences."
+  },
+  {
+    "name": "Rapid Breeders",
+    "point_cost": "2",
+    "effects": "+10% Pop growth speed. This species reproduces at a very rapid rate."
+  },
+  {
+    "name": "Resilient",
+    "point_cost": "1",
+    "effects": "+50% Defense army damage. Members of this species are physiologically resilient."
+  },
+  {
+    "name": "Strong",
+    "point_cost": "1",
+    "effects": "+20% Army damage, +2% Worker job efficiency. Members of this species possess great physical strength."
+  },
+  {
+    "name": "Very Strong",
+    "point_cost": "3",
+    "effects": "+40% Army Damage, +5% Worker job efficiency. Members of this species possess a strength that almost defies the laws of physics."
+  },
+  {
+    "name": "Talented",
+    "point_cost": "1",
+    "effects": "−10% Leader upkeep. Member of this species are born with a natural aptitude."
+  },
+  {
+    "name": "Thrifty",
+    "point_cost": "2",
+    "effects": "+25% Job Efficiency for Trader Jobs. Members of this species are instinctively economical."
+  },
+  {
+    "name": "Traditional",
+    "point_cost": "1",
+    "effects": "+10% Bureaucrat job efficiency. This species is predisposed to especially value historical precedence and group unity."
+  }
+]

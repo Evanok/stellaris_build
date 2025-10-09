@@ -5,6 +5,8 @@ interface Build {
   id: number;
   name: string;
   description: string;
+  game_version: string;
+  tags: string;
 }
 
 function App() {
@@ -51,12 +53,18 @@ function App() {
           <div className="list-group">
             {builds.length > 0 ? (
               builds.map((build) => (
-                <a href="#" key={build.id} className="list-group-item list-group-item-action bg-dark text-white mb-2 border-secondary">
+                <div key={build.id} className="list-group-item list-group-item-action bg-dark text-white mb-2 border-secondary">
                   <div className="d-flex w-100 justify-content-between">
                     <h5 className="mb-1">{build.name}</h5>
+                    <small>v{build.game_version || 'N/A'}</small>
                   </div>
                   <p className="mb-1">{build.description || 'No description provided.'}</p>
-                </a>
+                  <div>
+                    {build.tags && build.tags.split(',').map(tag => tag.trim()).map(tag => (
+                      <span key={tag} className="badge bg-primary me-1">{tag}</span>
+                    ))}
+                  </div>
+                </div>
               ))
             ) : (
               <p>No builds have been shared yet. Be the first!</p>

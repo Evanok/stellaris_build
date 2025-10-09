@@ -1,4 +1,5 @@
 const express = require('express');
+const fs = require('fs');
 const { setupDatabase, db } = require('./database');
 const app = express();
 const port = process.env.PORT || 3001;
@@ -11,6 +12,17 @@ setupDatabase();
 
 app.get('/api/test', (req, res) => {
   res.json({ message: 'Hello from the backend!' });
+});
+
+// Get all traits
+app.get('/api/traits', (req, res) => {
+  fs.readFile('./data/traits.json', 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json({ error: "Could not read traits data." });
+      return;
+    }
+    res.json(JSON.parse(data));
+  });
 });
 
 // Get all builds
@@ -27,13 +39,15 @@ app.get('/api/builds', (req, res) => {
 
 // Create a new build
 app.post('/api/builds', (req, res) => {
-  const { name, description } = req.body;
+  const { name, description, game_version, civics, traits, dlcs, tags } = req.body;
   if (!name) {
     return res.status(400).json({ error: 'Build name is required.' });
   }
 
-  const sql = `INSERT INTO builds (name, description) VALUES (?, ?)`;
-  db.run(sql, [name, description], function(err) {
+  const sql = `INSERT INTO builds (name, description, game_version, civics, traits, dlcs, tags) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  const params = [name, description, game_version, civics, traits, dlcs, tags];
+
+  db.run(sql, params, function(err) {
     if (err) {
       res.status(500).json({ error: err.message });
       return;
