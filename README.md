@@ -80,11 +80,58 @@ Advanced build search and filtering options:
 
 ## Recommended Tech Stack
 
-- **Frontend:** Next.js + TailwindCSS  
-- **Backend:** Next.js API routes or Node/Express  
-- **Database:** PostgreSQL + Prisma ORM  
-- **Authentication:** NextAuth.js  
+- **Frontend:** Next.js + TailwindCSS
+- **Backend:** Next.js API routes or Node/Express
+- **Database:** PostgreSQL + Prisma ORM
+- **Authentication:** NextAuth.js
 - **Deployment:** Vercel (frontend) + Supabase or Railway (database/backend)
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (version 18 or higher)
+- npm or yarn package manager
+
+### Installation
+
+```bash
+# Install dependencies
+npm install
+```
+
+### Running the Development Server
+
+```bash
+# Start the development server
+npm run dev
+```
+
+The application will be available at `http://localhost:3000`
+
+### Testing the Website
+
+Once the development server is running:
+
+1. Open your browser and navigate to `http://localhost:3000`
+2. Test the build form and features
+3. Check the console for any errors
+
+### Stopping the Server
+
+- Press `Ctrl + C` in the terminal where the server is running
+
+### Production Build
+
+```bash
+# Build for production
+npm run build
+
+# Start production server
+npm start
+```
 
 ---
 
