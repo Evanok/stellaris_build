@@ -27,6 +27,7 @@ const setupDatabase = () => {
       civics TEXT, -- Stored as JSON string
       traits TEXT, -- Stored as JSON string
       origin TEXT, -- Origin ID
+      ethics TEXT, -- Ethics (JSON string)
       ascension_perks TEXT, -- Recommended ascension perks (JSON string)
       dlcs TEXT, -- Stored as JSON string
       game_version TEXT,
@@ -41,6 +42,13 @@ const setupDatabase = () => {
     db.run(`ALTER TABLE builds ADD COLUMN origin TEXT`, (err) => {
       if (err && !err.message.includes('duplicate column')) {
         console.error('Error adding origin column:', err.message);
+      }
+    });
+
+    // Add ethics column if it doesn't exist (for existing databases)
+    db.run(`ALTER TABLE builds ADD COLUMN ethics TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding ethics column:', err.message);
       }
     });
 

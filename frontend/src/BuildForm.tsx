@@ -40,9 +40,25 @@ interface AscensionPerk {
   is_path_perk: boolean;
 }
 
+interface Ethic {
+  id: string;
+  name: string;
+  cost: number;
+  category: string;
+  category_value: number;
+  fanatic_variant: string;
+  regular_variant: string;
+  effects: string;
+  tags: string[];
+  modifier?: {
+    [key: string]: number;
+  };
+}
+
 // Stellaris 4.X base rules (can be modified by origins)
 const BASE_MAX_TRAIT_POINTS = 2;
 const BASE_MAX_TRAIT_COUNT = 5;
+const MAX_ETHICS_POINTS = 3;
 
 export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   // Form fields state
@@ -68,6 +84,11 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   const [allAscensionPerks, setAllAscensionPerks] = useState<AscensionPerk[]>([]);
   const [selectedAscensionPerks, setSelectedAscensionPerks] = useState<string[]>([]);
   const [ascensionPerkSearchQuery, setAscensionPerkSearchQuery] = useState('');
+
+  // Ethics data from API
+  const [allEthics, setAllEthics] = useState<Ethic[]>([]);
+  const [selectedEthics, setSelectedEthics] = useState<string[]>([]);
+  const [ethicsSearchQuery, setEthicsSearchQuery] = useState('');
 
   // UI state
   const [error, setError] = useState<string | null>(null);
@@ -134,6 +155,28 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
         setAllAscensionPerks(sanitizedPerks);
       })
       .catch(() => setError('Could not load ascension perks data.'));
+
+    // Load ethics
+    fetch('/api/ethics')
+      .then(res => res.json())
+      .then(data => {
+        // Filter and sanitize ethics
+        const sanitizedEthics = data
+          .map((ethic: any) => ({
+            ...ethic,
+            effects: typeof ethic.effects === 'string' ? ethic.effects : '',
+            tags: Array.isArray(ethic.tags) ? ethic.tags : [],
+            cost: typeof ethic.cost === 'number' ? ethic.cost : 1,
+          }))
+          .sort((a: any, b: any) => {
+            // Sort by cost (descending) then by id
+            if (b.cost !== a.cost) return b.cost - a.cost;
+            return a.id.localeCompare(b.id);
+          });
+
+        setAllEthics(sanitizedEthics);
+      })
+      .catch(() => setError('Could not load ethics data.'));
   }, []);
 
   // Get origin bonuses for current species type
@@ -181,6 +224,71 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   const exceedsTraitCount = selectedTraits.length > MAX_TRAIT_COUNT;
   const exceedsTraitPoints = currentTraitPoints > MAX_TRAIT_POINTS;
   const hasInvalidTraits = exceedsTraitCount || exceedsTraitPoints;
+
+  // Calculate current ethics points
+  const calculateEthicsPoints = (): number => {
+    return selectedEthics.reduce((total, ethicId) => {
+      const ethic = allEthics.find(e => e.id === ethicId);
+      if (ethic) {
+        return total + ethic.cost;
+      }
+      return total;
+    }, 0);
+  };
+
+  const currentEthicsPoints = calculateEthicsPoints();
+  const exceedsEthicsPoints = currentEthicsPoints > MAX_ETHICS_POINTS;
+
+  // Check if an ethic can be selected
+  const canSelectEthic = (ethic: Ethic): boolean => {
+    // Already selected
+    if (selectedEthics.includes(ethic.id)) {
+      return true;
+    }
+
+    // Check if selecting this ethic would exceed max points
+    if (currentEthicsPoints + ethic.cost > MAX_ETHICS_POINTS) {
+      return false;
+    }
+
+    // Check for opposing ethics (same category, different category_value)
+    // Gestalt consciousness is special - it's exclusive (costs 3 points, fills all budget)
+    if (ethic.category === 'hive') {
+      // If trying to select gestalt, no other ethics can be selected
+      if (selectedEthics.length > 0) return false;
+    } else {
+      // If gestalt is already selected, can't select anything else
+      const hasGestalt = selectedEthics.some(ethicId => {
+        const e = allEthics.find(et => et.id === ethicId);
+        return e && e.category === 'hive';
+      });
+      if (hasGestalt) return false;
+
+      // Check for opposing ethics in the same category
+      for (const selectedEthicId of selectedEthics) {
+        const selectedEthic = allEthics.find(e => e.id === selectedEthicId);
+        if (selectedEthic && selectedEthic.category === ethic.category) {
+          // Same category - check if they're opposites
+          // Opposites have category_value difference >= 2
+          const valueDiff = Math.abs(selectedEthic.category_value - ethic.category_value);
+          if (valueDiff >= 2) {
+            return false; // These are opposites
+          }
+        }
+      }
+
+      // Check for fanatic/normal conflicts
+      // Can't have both fanatic and normal version of the same ethic
+      if (ethic.fanatic_variant && selectedEthics.includes(ethic.fanatic_variant)) {
+        return false;
+      }
+      if (ethic.regular_variant && selectedEthics.includes(ethic.regular_variant)) {
+        return false;
+      }
+    }
+
+    return true;
+  };
 
   // Check if a trait can be selected
   const canSelectTrait = (trait: Trait): boolean => {
@@ -257,6 +365,19 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     return true;
   });
 
+  // Filter ethics based on search query
+  const filteredEthics = allEthics.filter(ethic => {
+    if (ethicsSearchQuery) {
+      const query = ethicsSearchQuery.toLowerCase();
+      return (
+        ethic.id.toLowerCase().includes(query) ||
+        ethic.effects.toLowerCase().includes(query) ||
+        ethic.tags.some(tag => tag.toLowerCase().includes(query))
+      );
+    }
+    return true;
+  });
+
   const handleTraitChange = (traitId: string) => {
     const trait = allTraits.find(t => t.id === traitId);
     if (!trait) return;
@@ -270,6 +391,22 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     // If selecting, check if it's allowed
     if (canSelectTrait(trait)) {
       setSelectedTraits(prev => [...prev, traitId]);
+    }
+  };
+
+  const handleEthicsChange = (ethicId: string) => {
+    const ethic = allEthics.find(e => e.id === ethicId);
+    if (!ethic) return;
+
+    // If deselecting, always allow
+    if (selectedEthics.includes(ethicId)) {
+      setSelectedEthics(prev => prev.filter(e => e !== ethicId));
+      return;
+    }
+
+    // If selecting, check if it's allowed
+    if (canSelectEthic(ethic)) {
+      setSelectedEthics(prev => [...prev, ethicId]);
     }
   };
 
@@ -311,6 +448,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           tags,
           traits: selectedTraits.join(', '), // Convert array to comma-separated string
           origin: selectedOrigin,
+          ethics: selectedEthics.join(', '), // Convert array to comma-separated string
           ascension_perks: selectedAscensionPerks.join(', ') // Convert array to comma-separated string
         }),
       });
@@ -333,6 +471,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
       setTags('');
       setSelectedTraits([]);
       setSelectedOrigin('');
+      setSelectedEthics([]);
       setSelectedAscensionPerks([]);
 
     } catch (err: any) {
@@ -546,6 +685,106 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
             </div>
           </div>
 
+          {/* Ethics Selection */}
+          <div className="mb-3">
+            <label className="form-label">
+              Ethics ({currentEthicsPoints}/{MAX_ETHICS_POINTS} points)
+            </label>
+
+            {/* Warning if limits exceeded */}
+            {exceedsEthicsPoints && (
+              <div className="alert alert-danger mb-2">
+                <strong>⚠️ Ethics points exceeded!</strong>
+                <div className="mt-1">
+                  You have {currentEthicsPoints} points but the limit is {MAX_ETHICS_POINTS}. Please adjust your ethics selection.
+                </div>
+              </div>
+            )}
+
+            {/* Ethics Points Display */}
+            <div className="alert alert-info mb-2">
+              <div className="d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>Ethics Points:</strong> {currentEthicsPoints} / {MAX_ETHICS_POINTS}
+                  {currentEthicsPoints > MAX_ETHICS_POINTS && (
+                    <span className="text-danger ms-2">(Exceeds maximum!)</span>
+                  )}
+                </div>
+              </div>
+              <div className="progress mt-2" style={{ height: '20px' }}>
+                <div
+                  className={`progress-bar ${currentEthicsPoints > MAX_ETHICS_POINTS ? 'bg-danger' : currentEthicsPoints === MAX_ETHICS_POINTS ? 'bg-warning' : 'bg-success'}`}
+                  role="progressbar"
+                  style={{ width: `${Math.min((currentEthicsPoints / MAX_ETHICS_POINTS) * 100, 100)}%` }}
+                  aria-valuenow={currentEthicsPoints}
+                  aria-valuemin={0}
+                  aria-valuemax={MAX_ETHICS_POINTS}
+                >
+                  {currentEthicsPoints} / {MAX_ETHICS_POINTS}
+                </div>
+              </div>
+            </div>
+
+            <input
+              type="text"
+              className="form-control bg-secondary text-white border-secondary mb-2"
+              placeholder="Search ethics by name, effect, or tag..."
+              value={ethicsSearchQuery}
+              onChange={(e) => setEthicsSearchQuery(e.target.value)}
+            />
+            <div className="card bg-secondary" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+              <div className="card-body">
+                {filteredEthics.length > 0 ? (
+                  filteredEthics.map(ethic => {
+                    const isSelected = selectedEthics.includes(ethic.id);
+                    const canSelect = canSelectEthic(ethic);
+                    const isDisabled = !isSelected && !canSelect;
+
+                    return (
+                      <div
+                        key={ethic.id}
+                        className={`form-check mb-2 pb-2 border-bottom border-dark ${isDisabled ? 'opacity-50' : ''}`}
+                        style={{ opacity: isDisabled ? 0.5 : 1 }}
+                      >
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id={`ethic-${ethic.id}`}
+                          checked={isSelected}
+                          onChange={() => handleEthicsChange(ethic.id)}
+                          disabled={isDisabled}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor={`ethic-${ethic.id}`}
+                          style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
+                        >
+                          <strong className="text-white">{ethic.id}</strong>
+                          <span className={`badge ms-2 ${ethic.cost === 3 ? 'bg-warning text-dark' : ethic.cost === 2 ? 'bg-primary' : 'bg-info'}`}>
+                            Cost: {ethic.cost} {ethic.cost === 2 ? '(Fanatic)' : ethic.cost === 3 ? '(Gestalt)' : ''}
+                          </span>
+                          {ethic.tags && ethic.tags.length > 0 && (
+                            <span className="ms-2">
+                              {ethic.tags.slice(0, 2).map((tag: string, idx: number) => (
+                                <span key={idx} className="badge bg-secondary me-1">{tag}</span>
+                              ))}
+                            </span>
+                          )}
+                          {isDisabled && !isSelected && (
+                            <span className="badge bg-warning text-dark ms-2">Cannot select</span>
+                          )}
+                          <small className="d-block text-light mt-1">{ethic.effects || 'No effects listed'}</small>
+                        </label>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-center text-muted">No ethics match your search.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
           {/* ... other fields like civics, dlcs etc. as text for now ... */}
           <div className="mb-3">
             <label htmlFor="civics" className="form-label">Civics (comma-separated)</label>
@@ -626,11 +865,14 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary" disabled={submitting || hasInvalidTraits}>
+          <button type="submit" className="btn btn-primary" disabled={submitting || hasInvalidTraits || exceedsEthicsPoints}>
             {submitting ? 'Submitting...' : 'Submit Build'}
           </button>
           {hasInvalidTraits && (
             <small className="text-danger ms-2">Cannot submit: trait limits exceeded</small>
+          )}
+          {exceedsEthicsPoints && (
+            <small className="text-danger ms-2">Cannot submit: ethics points exceeded</small>
           )}
         </form>
       </div>
