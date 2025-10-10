@@ -274,11 +274,21 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   };
 
   const handleAscensionPerkChange = (perkId: string) => {
-    setSelectedAscensionPerks(prev =>
-      prev.includes(perkId)
-        ? prev.filter(p => p !== perkId)
-        : [...prev, perkId]
-    );
+    setSelectedAscensionPerks(prev => {
+      if (prev.includes(perkId)) {
+        // Remove perk (order numbers will shift automatically)
+        return prev.filter(p => p !== perkId);
+      } else {
+        // Add perk at the end (gets next order number)
+        return [...prev, perkId];
+      }
+    });
+  };
+
+  // Get the order number of a selected perk (1-indexed)
+  const getPerkOrder = (perkId: string): number | null => {
+    const index = selectedAscensionPerks.indexOf(perkId);
+    return index >= 0 ? index + 1 : null;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -545,8 +555,23 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           <div className="mb-3">
             <label className="form-label">
               Recommended Ascension Perks ({selectedAscensionPerks.length} selected)
-              <small className="text-muted d-block">These are strategic suggestions for your build, not requirements</small>
+              <small className="text-muted d-block">These are strategic suggestions for your build, not requirements. Click to add in order.</small>
             </label>
+
+            {/* Display selected perks in order */}
+            {selectedAscensionPerks.length > 0 && (
+              <div className="alert alert-info mb-2">
+                <strong>Selection Order:</strong>
+                <div className="mt-1">
+                  {selectedAscensionPerks.map((perkId, index) => (
+                    <span key={perkId} className="badge bg-primary me-1 mb-1">
+                      {index + 1}. {perkId}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <input
               type="text"
               className="form-control bg-secondary text-white border-secondary mb-2"
@@ -559,6 +584,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                 {filteredAscensionPerks.length > 0 ? (
                   filteredAscensionPerks.map(perk => {
                     const isSelected = selectedAscensionPerks.includes(perk.id);
+                    const orderNumber = getPerkOrder(perk.id);
                     return (
                       <div
                         key={perk.id}
@@ -577,6 +603,9 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                           style={{ cursor: 'pointer' }}
                         >
                           <strong className="text-white">{perk.id}</strong>
+                          {orderNumber !== null && (
+                            <span className="badge bg-success ms-2">#{orderNumber}</span>
+                          )}
                           {perk.is_path_perk && (
                             <span className="badge bg-warning text-dark ms-2">Path Perk</span>
                           )}
