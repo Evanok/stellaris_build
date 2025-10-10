@@ -22,6 +22,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   const [civics, setCivics] = useState('');
   const [dlcs, setDlcs] = useState('');
   const [tags, setTags] = useState('');
+  const [speciesType, setSpeciesType] = useState<string>('BIOLOGICAL');
   const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
 
   // Trait data from API
@@ -56,15 +57,25 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
       .catch(() => setError('Could not load traits data.'));
   }, []);
 
-  // Filter traits based on search query
+  // Filter traits based on species type and search query
   const filteredTraits = allTraits.filter(trait => {
-    if (!traitSearchQuery) return true;
-    const query = traitSearchQuery.toLowerCase();
-    return (
-      trait.id.toLowerCase().includes(query) ||
-      trait.effects.toLowerCase().includes(query) ||
-      trait.tags.some(tag => tag.toLowerCase().includes(query))
-    );
+    // Filter by species archetype
+    const archetypes = (trait as any).allowed_archetypes || [];
+    if (archetypes.length > 0 && !archetypes.includes(speciesType)) {
+      return false;
+    }
+
+    // Filter by search query
+    if (traitSearchQuery) {
+      const query = traitSearchQuery.toLowerCase();
+      return (
+        trait.id.toLowerCase().includes(query) ||
+        trait.effects.toLowerCase().includes(query) ||
+        trait.tags.some(tag => tag.toLowerCase().includes(query))
+      );
+    }
+
+    return true;
   });
 
   const handleTraitChange = (traitId: string) => {
@@ -136,7 +147,21 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
             <label htmlFor="buildDescription" className="form-label">Description</label>
             <textarea className="form-control bg-secondary text-white border-secondary" id="buildDescription" rows={3} value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
           </div>
-          {/* ... other fields ... */}
+
+          <div className="mb-3">
+            <label htmlFor="speciesType" className="form-label">Species Type</label>
+            <select
+              className="form-select bg-secondary text-white border-secondary"
+              id="speciesType"
+              value={speciesType}
+              onChange={(e) => setSpeciesType(e.target.value)}
+            >
+              <option value="BIOLOGICAL">Biological</option>
+              <option value="LITHOID">Lithoid</option>
+              <option value="MACHINE">Machine</option>
+              <option value="ROBOT">Robot</option>
+            </select>
+          </div>
 
           <div className="mb-3">
             <label className="form-label">
