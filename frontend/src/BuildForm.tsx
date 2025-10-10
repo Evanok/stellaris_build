@@ -14,9 +14,23 @@ interface Trait {
   category: string;
 }
 
-// Stellaris 4.X rules
-const MAX_TRAIT_POINTS = 2;
-const MAX_TRAIT_COUNT = 5;
+interface Origin {
+  id: string;
+  name: string;
+  description: string;
+  effects: string;
+  possible: any[];
+  playable_conditions?: string;
+  is_origin: boolean;
+  pickable_at_start: boolean;
+  modifier?: {
+    [key: string]: number;
+  };
+}
+
+// Stellaris 4.X base rules (can be modified by origins)
+const BASE_MAX_TRAIT_POINTS = 2;
+const BASE_MAX_TRAIT_COUNT = 5;
 
 export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   // Form fields state
@@ -28,16 +42,22 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   const [tags, setTags] = useState('');
   const [speciesType, setSpeciesType] = useState<string>('BIOLOGICAL');
   const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
+  const [selectedOrigin, setSelectedOrigin] = useState<string>('');
 
   // Trait data from API
   const [allTraits, setAllTraits] = useState<Trait[]>([]);
   const [traitSearchQuery, setTraitSearchQuery] = useState('');
-  
+
+  // Origin data from API
+  const [allOrigins, setAllOrigins] = useState<Origin[]>([]);
+  const [originSearchQuery, setOriginSearchQuery] = useState('');
+
   // UI state
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
+    // Load traits
     fetch('/api/traits')
       .then(res => res.json())
       .then(data => {
@@ -59,7 +79,53 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
         setAllTraits(sanitizedTraits);
       })
       .catch(() => setError('Could not load traits data.'));
+
+    // Load origins
+    fetch('/api/origins')
+      .then(res => res.json())
+      .then(data => {
+        // Filter and sanitize origins
+        const sanitizedOrigins = data
+          .filter((origin: any) => origin.pickable_at_start && origin.is_origin)
+          .map((origin: any) => ({
+            ...origin,
+            effects: typeof origin.effects === 'string' ? origin.effects : '',
+            description: typeof origin.description === 'string' ? origin.description : '',
+          }))
+          .sort((a: any, b: any) => a.id.localeCompare(b.id));
+
+        setAllOrigins(sanitizedOrigins);
+      })
+      .catch(() => setError('Could not load origins data.'));
   }, []);
+
+  // Get origin bonuses for current species type
+  const getOriginTraitBonuses = () => {
+    if (!selectedOrigin) {
+      return { pointsBonus: 0, picksBonus: 0 };
+    }
+
+    const origin = allOrigins.find(o => o.id === selectedOrigin);
+    if (!origin || !origin.modifier) {
+      return { pointsBonus: 0, picksBonus: 0 };
+    }
+
+    const modifier = origin.modifier;
+    const speciesPrefix = speciesType; // BIOLOGICAL, LITHOID, MACHINE, ROBOT
+
+    // Check for species-specific bonuses
+    const pointsKey = `${speciesPrefix}_species_trait_points_add`;
+    const picksKey = `${speciesPrefix}_species_trait_picks_add`;
+
+    return {
+      pointsBonus: modifier[pointsKey] || 0,
+      picksBonus: modifier[picksKey] || 0
+    };
+  };
+
+  const { pointsBonus, picksBonus } = getOriginTraitBonuses();
+  const MAX_TRAIT_POINTS = BASE_MAX_TRAIT_POINTS + pointsBonus;
+  const MAX_TRAIT_COUNT = BASE_MAX_TRAIT_COUNT + picksBonus;
 
   // Calculate current trait points
   const calculateTraitPoints = (): number => {
@@ -73,6 +139,11 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   };
 
   const currentTraitPoints = calculateTraitPoints();
+
+  // Check if current selection exceeds limits
+  const exceedsTraitCount = selectedTraits.length > MAX_TRAIT_COUNT;
+  const exceedsTraitPoints = currentTraitPoints > MAX_TRAIT_POINTS;
+  const hasInvalidTraits = exceedsTraitCount || exceedsTraitPoints;
 
   // Check if a trait can be selected
   const canSelectTrait = (trait: Trait): boolean => {
@@ -124,6 +195,19 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     return true;
   });
 
+  // Filter origins based on search query
+  const filteredOrigins = allOrigins.filter(origin => {
+    if (originSearchQuery) {
+      const query = originSearchQuery.toLowerCase();
+      return (
+        origin.id.toLowerCase().includes(query) ||
+        origin.description.toLowerCase().includes(query) ||
+        origin.effects.toLowerCase().includes(query)
+      );
+    }
+    return true;
+  });
+
   const handleTraitChange = (traitId: string) => {
     const trait = allTraits.find(t => t.id === traitId);
     if (!trait) return;
@@ -158,7 +242,8 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           civics,
           dlcs,
           tags,
-          traits: selectedTraits.join(', ') // Convert array to comma-separated string
+          traits: selectedTraits.join(', '), // Convert array to comma-separated string
+          origin: selectedOrigin
         }),
       });
 
@@ -179,6 +264,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
       setDlcs('');
       setTags('');
       setSelectedTraits([]);
+      setSelectedOrigin('');
 
     } catch (err: any) {
       setError(err.message);
@@ -219,10 +305,89 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
             </select>
           </div>
 
+          {/* Origin Selection */}
+          <div className="mb-3">
+            <label className="form-label">
+              Origin {selectedOrigin && <span className="badge bg-success ms-2">Selected: {selectedOrigin}</span>}
+            </label>
+            <input
+              type="text"
+              className="form-control bg-secondary text-white border-secondary mb-2"
+              placeholder="Search origins by name, description, or effects..."
+              value={originSearchQuery}
+              onChange={(e) => setOriginSearchQuery(e.target.value)}
+            />
+            <div className="card bg-secondary" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+              <div className="card-body">
+                {filteredOrigins.length > 0 ? (
+                  filteredOrigins.map(origin => {
+                    const isSelected = selectedOrigin === origin.id;
+                    return (
+                      <div
+                        key={origin.id}
+                        className={`form-check mb-2 pb-2 border-bottom border-dark ${isSelected ? 'bg-primary bg-opacity-25' : ''}`}
+                      >
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          id={`origin-${origin.id}`}
+                          name="origin"
+                          checked={isSelected}
+                          onChange={() => setSelectedOrigin(origin.id)}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor={`origin-${origin.id}`}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <strong className="text-white">{origin.id}</strong>
+                          {origin.effects && (
+                            <div className="mt-1">
+                              <small className="text-info d-block">{origin.effects}</small>
+                            </div>
+                          )}
+                        </label>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-center text-muted">No origins match your search.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
           <div className="mb-3">
             <label className="form-label">
               Traits ({selectedTraits.length}/{MAX_TRAIT_COUNT} traits, {currentTraitPoints}/{MAX_TRAIT_POINTS} points)
             </label>
+
+            {/* Origin Bonus Display */}
+            {(pointsBonus > 0 || picksBonus > 0) && (
+              <div className="alert alert-success mb-2">
+                <strong>Origin Bonus:</strong>
+                {pointsBonus > 0 && <span className="ms-2">+{pointsBonus} trait points</span>}
+                {picksBonus > 0 && <span className="ms-2">+{picksBonus} trait pick{picksBonus > 1 ? 's' : ''}</span>}
+                <small className="d-block mt-1">
+                  Base limits: {BASE_MAX_TRAIT_COUNT} traits, {BASE_MAX_TRAIT_POINTS} points
+                </small>
+              </div>
+            )}
+
+            {/* Warning if limits exceeded */}
+            {hasInvalidTraits && (
+              <div className="alert alert-danger mb-2">
+                <strong>⚠️ Trait limits exceeded!</strong>
+                <div className="mt-1">
+                  {exceedsTraitCount && (
+                    <div>You have {selectedTraits.length} traits but the limit is {MAX_TRAIT_COUNT}. Please deselect {selectedTraits.length - MAX_TRAIT_COUNT} trait{selectedTraits.length - MAX_TRAIT_COUNT > 1 ? 's' : ''}.</div>
+                  )}
+                  {exceedsTraitPoints && (
+                    <div>You have {currentTraitPoints} points but the limit is {MAX_TRAIT_POINTS}. Please adjust your trait selection.</div>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Trait Points Display */}
             <div className="alert alert-info mb-2">
@@ -317,9 +482,12 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
             <input type="text" className="form-control bg-secondary text-white border-secondary" id="civics" value={civics} onChange={(e) => setCivics(e.target.value)} />
           </div>
 
-          <button type="submit" className="btn btn-primary" disabled={submitting}>
+          <button type="submit" className="btn btn-primary" disabled={submitting || hasInvalidTraits}>
             {submitting ? 'Submitting...' : 'Submit Build'}
           </button>
+          {hasInvalidTraits && (
+            <small className="text-danger ms-2">Cannot submit: trait limits exceeded</small>
+          )}
         </form>
       </div>
     </div>

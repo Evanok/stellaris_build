@@ -26,6 +26,7 @@ const setupDatabase = () => {
       description TEXT,
       civics TEXT, -- Stored as JSON string
       traits TEXT, -- Stored as JSON string
+      origin TEXT, -- Origin ID
       dlcs TEXT, -- Stored as JSON string
       game_version TEXT,
       tags TEXT, -- Stored as JSON string
@@ -34,6 +35,13 @@ const setupDatabase = () => {
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (author_id) REFERENCES users (id)
     )`);
+
+    // Add origin column if it doesn't exist (for existing databases)
+    db.run(`ALTER TABLE builds ADD COLUMN origin TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding origin column:', err.message);
+      }
+    });
 
     console.log('Database tables checked/created.');
   });
