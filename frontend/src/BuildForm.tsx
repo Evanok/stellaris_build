@@ -374,61 +374,10 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
             </select>
           </div>
 
-          {/* Origin Selection */}
+          {/* Species Traits */}
           <div className="mb-3">
             <label className="form-label">
-              Origin {selectedOrigin && <span className="badge bg-success ms-2">Selected: {selectedOrigin}</span>}
-            </label>
-            <input
-              type="text"
-              className="form-control bg-secondary text-white border-secondary mb-2"
-              placeholder="Search origins by name, description, or effects..."
-              value={originSearchQuery}
-              onChange={(e) => setOriginSearchQuery(e.target.value)}
-            />
-            <div className="card bg-secondary" style={{ maxHeight: '400px', overflowY: 'auto' }}>
-              <div className="card-body">
-                {filteredOrigins.length > 0 ? (
-                  filteredOrigins.map(origin => {
-                    const isSelected = selectedOrigin === origin.id;
-                    return (
-                      <div
-                        key={origin.id}
-                        className={`form-check mb-2 pb-2 border-bottom border-dark ${isSelected ? 'bg-primary bg-opacity-25' : ''}`}
-                      >
-                        <input
-                          className="form-check-input"
-                          type="radio"
-                          id={`origin-${origin.id}`}
-                          name="origin"
-                          checked={isSelected}
-                          onChange={() => setSelectedOrigin(origin.id)}
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor={`origin-${origin.id}`}
-                          style={{ cursor: 'pointer' }}
-                        >
-                          <strong className="text-white">{origin.id}</strong>
-                          {origin.effects && (
-                            <div className="mt-1">
-                              <small className="text-info d-block">{origin.effects}</small>
-                            </div>
-                          )}
-                        </label>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <p className="text-center text-muted">No origins match your search.</p>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">
-              Traits ({selectedTraits.length}/{MAX_TRAIT_COUNT} traits, {currentTraitPoints}/{MAX_TRAIT_POINTS} points)
+              Species Traits ({selectedTraits.length}/{MAX_TRAIT_COUNT} traits, {currentTraitPoints}/{MAX_TRAIT_POINTS} points)
             </label>
 
             {/* Origin Bonus Display */}
@@ -540,6 +489,58 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                   })
                 ) : (
                   <p className="text-center text-muted">No traits match your search.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Origin Selection */}
+          <div className="mb-3">
+            <label className="form-label">
+              Origin {selectedOrigin && <span className="badge bg-success ms-2">Selected: {selectedOrigin}</span>}
+            </label>
+            <input
+              type="text"
+              className="form-control bg-secondary text-white border-secondary mb-2"
+              placeholder="Search origins by name, description, or effects..."
+              value={originSearchQuery}
+              onChange={(e) => setOriginSearchQuery(e.target.value)}
+            />
+            <div className="card bg-secondary" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+              <div className="card-body">
+                {filteredOrigins.length > 0 ? (
+                  filteredOrigins.map(origin => {
+                    const isSelected = selectedOrigin === origin.id;
+                    return (
+                      <div
+                        key={origin.id}
+                        className={`form-check mb-2 pb-2 border-bottom border-dark ${isSelected ? 'bg-primary bg-opacity-25' : ''}`}
+                      >
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          id={`origin-${origin.id}`}
+                          name="origin"
+                          checked={isSelected}
+                          onChange={() => setSelectedOrigin(origin.id)}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor={`origin-${origin.id}`}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <strong className="text-white">{origin.id}</strong>
+                          {origin.effects && (
+                            <div className="mt-1">
+                              <small className="text-info d-block">{origin.effects}</small>
+                            </div>
+                          )}
+                        </label>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-center text-muted">No origins match your search.</p>
                 )}
               </div>
             </div>
