@@ -69,17 +69,50 @@ interface Authority {
   required_dlc?: string;
 }
 
+interface Civic {
+  id: string;
+  name: string;
+  is_origin: boolean;
+  playable: boolean;
+  pickable_at_start: boolean;
+  description: string;
+  potential: any[]; // Conditions that filter visibility
+  possible: any[]; // Requirements that must be met
+  effects: string;
+  modifier?: {
+    [key: string]: number;
+  };
+  can_modify: boolean;
+}
+
+interface TraditionTree {
+  name: string;
+  adopt: any;
+  finish: any;
+  traditions: any[];
+}
+
 // Stellaris 4.X base rules (can be modified by origins)
 const BASE_MAX_TRAIT_POINTS = 2;
 const BASE_MAX_TRAIT_COUNT = 5;
 const MAX_ETHICS_POINTS = 3;
+const MAX_CIVIC_SLOTS = 3;
+
+// Stellaris game versions
+const GAME_VERSIONS = [
+  { value: '4.14', label: '4.14 "Vela" (Latest)' },
+  { value: '4.13', label: '4.13 "Maelstrom"' },
+  { value: '4.12', label: '4.12 "Andromeda"' },
+  { value: '4.0', label: '4.0 "Cepheus"' },
+  { value: '3.8', label: '3.8 "Gemini" (Legacy)' },
+  { value: 'other', label: 'Other (specify in description)' },
+];
 
 export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   // Form fields state
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [game_version, setGameVersion] = useState('');
-  const [civics, setCivics] = useState('');
+  const [game_version, setGameVersion] = useState('4.14');
   const [dlcs, setDlcs] = useState('');
   const [tags, setTags] = useState('');
   const [speciesType, setSpeciesType] = useState<string>('BIOLOGICAL');
@@ -107,6 +140,16 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   // Authority data from API
   const [allAuthorities, setAllAuthorities] = useState<Authority[]>([]);
   const [selectedAuthority, setSelectedAuthority] = useState<string>('');
+
+  // Civics data from API
+  const [allCivics, setAllCivics] = useState<Civic[]>([]);
+  const [selectedCivics, setSelectedCivics] = useState<string[]>([]);
+  const [civicsSearchQuery, setCivicsSearchQuery] = useState('');
+
+  // Traditions data from API
+  const [allTraditionTrees, setAllTraditionTrees] = useState<TraditionTree[]>([]);
+  const [selectedTraditions, setSelectedTraditions] = useState<string[]>([]);
+  const [traditionsSearchQuery, setTraditionsSearchQuery] = useState('');
 
   // UI state
   const [error, setError] = useState<string | null>(null);
@@ -215,6 +258,49 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
         setAllAuthorities(sanitizedAuthorities);
       })
       .catch(() => setError('Could not load authorities data.'));
+
+    // Load civics
+    fetch('/api/civics')
+      .then(res => res.json())
+      .then(data => {
+        // Filter and sanitize civics
+        const sanitizedCivics = data
+          .filter((civic: any) => civic.pickable_at_start && !civic.is_origin)
+          .map((civic: any) => ({
+            ...civic,
+            description: typeof civic.description === 'string' ? civic.description : '',
+            effects: typeof civic.effects === 'string' ? civic.effects : '',
+            potential: Array.isArray(civic.potential) ? civic.potential : [],
+            possible: Array.isArray(civic.possible) ? civic.possible : [],
+          }))
+          .sort((a: any, b: any) => a.id.localeCompare(b.id));
+
+        setAllCivics(sanitizedCivics);
+      })
+      .catch(() => setError('Could not load civics data.'));
+
+    // Load traditions
+    fetch('/api/traditions')
+      .then(res => res.json())
+      .then(data => {
+        // Extract tradition trees (keys that don't start with "tr_")
+        const trees: TraditionTree[] = [];
+        for (const key in data) {
+          if (!key.startsWith('tr_') && data[key].name) {
+            trees.push({
+              name: key,
+              adopt: data[key].adopt,
+              finish: data[key].finish,
+              traditions: data[key].traditions || []
+            });
+          }
+        }
+
+        // Sort alphabetically
+        trees.sort((a, b) => a.name.localeCompare(b.name));
+        setAllTraditionTrees(trees);
+      })
+      .catch(() => setError('Could not load traditions data.'));
   }, []);
 
   // Validate authority when ethics change
@@ -287,6 +373,108 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
 
   const currentEthicsPoints = calculateEthicsPoints();
   const exceedsEthicsPoints = currentEthicsPoints > MAX_ETHICS_POINTS;
+
+  // Helper function to check civic conditions (potential/possible arrays)
+  const checkCivicCondition = (condition: any): boolean => {
+    if (typeof condition !== 'string') return true;
+
+    // Handle NOT conditions
+    if (condition.startsWith('NOT ')) {
+      const restOfCondition = condition.substring(4).trim();
+
+      // Check if it's a NOT with an array: "NOT ['item1', 'item2']"
+      if (restOfCondition.startsWith('[')) {
+        try {
+          // Parse the array (remove brackets and quotes, split by comma)
+          const arrayMatch = restOfCondition.match(/\[(.*?)\]/);
+          if (arrayMatch) {
+            const items = arrayMatch[1].split(',').map(item =>
+              item.trim().replace(/['"]/g, '')
+            );
+            // For NOT with array, return true if NONE of the items match
+            return !items.some(item => {
+              if (item.startsWith('ethic_')) {
+                return selectedEthics.includes(item);
+              } else if (item.startsWith('auth_')) {
+                return selectedAuthority === item;
+              } else if (item.startsWith('civic_')) {
+                return selectedCivics.includes(item);
+              }
+              return false;
+            });
+          }
+        } catch (e) {
+          return true;
+        }
+      } else {
+        // Simple NOT condition: "NOT ethic_gestalt_consciousness"
+        if (restOfCondition.startsWith('ethic_')) {
+          return !selectedEthics.includes(restOfCondition);
+        } else if (restOfCondition.startsWith('auth_')) {
+          return selectedAuthority !== restOfCondition;
+        } else if (restOfCondition.startsWith('civic_')) {
+          return !selectedCivics.includes(restOfCondition);
+        }
+      }
+    } else {
+      // Positive condition (no NOT)
+      if (condition.startsWith('ethic_')) {
+        return selectedEthics.includes(condition);
+      } else if (condition.startsWith('auth_')) {
+        return selectedAuthority === condition;
+      } else if (condition.startsWith('civic_')) {
+        return selectedCivics.includes(condition);
+      }
+    }
+
+    return true;
+  };
+
+  // Check if a civic can be selected based on current selections
+  const canSelectCivic = (civic: Civic): boolean => {
+    // Already selected
+    if (selectedCivics.includes(civic.id)) {
+      return true;
+    }
+
+    // Check if at max slots
+    if (selectedCivics.length >= MAX_CIVIC_SLOTS) {
+      return false;
+    }
+
+    // Check all "potential" conditions (these filter which civics show up)
+    if (civic.potential && civic.potential.length > 0) {
+      for (const condition of civic.potential) {
+        if (!checkCivicCondition(condition)) {
+          return false;
+        }
+      }
+    }
+
+    // Check all "possible" conditions (these are requirements)
+    if (civic.possible && civic.possible.length > 0) {
+      for (const condition of civic.possible) {
+        if (!checkCivicCondition(condition)) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  };
+
+  // Filter civics based on potential/possible conditions
+  const availableCivics = allCivics.filter(civic => {
+    // Check potential conditions
+    if (civic.potential && civic.potential.length > 0) {
+      for (const condition of civic.potential) {
+        if (!checkCivicCondition(condition)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  });
 
   // Check if an authority can be selected based on current ethics
   const canSelectAuthority = (authority: Authority): boolean => {
@@ -455,6 +643,28 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     return true;
   });
 
+  // Filter civics based on search query
+  const filteredCivics = availableCivics.filter(civic => {
+    if (civicsSearchQuery) {
+      const query = civicsSearchQuery.toLowerCase();
+      return (
+        civic.id.toLowerCase().includes(query) ||
+        civic.effects.toLowerCase().includes(query) ||
+        civic.description.toLowerCase().includes(query)
+      );
+    }
+    return true;
+  });
+
+  // Filter tradition trees based on search query
+  const filteredTraditionTrees = allTraditionTrees.filter(tree => {
+    if (traditionsSearchQuery) {
+      const query = traditionsSearchQuery.toLowerCase();
+      return tree.name.toLowerCase().includes(query);
+    }
+    return true;
+  });
+
   const handleTraitChange = (traitId: string) => {
     const trait = allTraits.find(t => t.id === traitId);
     if (!trait) return;
@@ -487,6 +697,22 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     }
   };
 
+  const handleCivicChange = (civicId: string) => {
+    const civic = allCivics.find(c => c.id === civicId);
+    if (!civic) return;
+
+    // If deselecting, always allow
+    if (selectedCivics.includes(civicId)) {
+      setSelectedCivics(prev => prev.filter(c => c !== civicId));
+      return;
+    }
+
+    // If selecting, check if it's allowed
+    if (canSelectCivic(civic)) {
+      setSelectedCivics(prev => [...prev, civicId]);
+    }
+  };
+
   const handleAscensionPerkChange = (perkId: string) => {
     setSelectedAscensionPerks(prev => {
       if (prev.includes(perkId)) {
@@ -499,9 +725,27 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     });
   };
 
+  const handleTraditionChange = (treeId: string) => {
+    setSelectedTraditions(prev => {
+      if (prev.includes(treeId)) {
+        // Remove tradition tree (order numbers will shift automatically)
+        return prev.filter(t => t !== treeId);
+      } else {
+        // Add tradition tree at the end (gets next order number)
+        return [...prev, treeId];
+      }
+    });
+  };
+
   // Get the order number of a selected perk (1-indexed)
   const getPerkOrder = (perkId: string): number | null => {
     const index = selectedAscensionPerks.indexOf(perkId);
+    return index >= 0 ? index + 1 : null;
+  };
+
+  // Get the order number of a selected tradition tree (1-indexed)
+  const getTraditionOrder = (treeId: string): number | null => {
+    const index = selectedTraditions.indexOf(treeId);
     return index >= 0 ? index + 1 : null;
   };
 
@@ -520,14 +764,15 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           name,
           description,
           game_version,
-          civics,
+          civics: selectedCivics.join(', '), // Convert array to comma-separated string
           dlcs,
           tags,
           traits: selectedTraits.join(', '), // Convert array to comma-separated string
           origin: selectedOrigin,
           ethics: selectedEthics.join(', '), // Convert array to comma-separated string
           authority: selectedAuthority,
-          ascension_perks: selectedAscensionPerks.join(', ') // Convert array to comma-separated string
+          ascension_perks: selectedAscensionPerks.join(', '), // Convert array to comma-separated string
+          traditions: selectedTraditions.join(', ') // Convert array to comma-separated string
         }),
       });
 
@@ -543,15 +788,16 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
       // Reset form
       setName('');
       setDescription('');
-      setGameVersion('');
-      setCivics('');
+      setGameVersion('4.14'); // Reset to latest version
       setDlcs('');
       setTags('');
       setSelectedTraits([]);
       setSelectedOrigin('');
       setSelectedEthics([]);
       setSelectedAuthority('');
+      setSelectedCivics([]);
       setSelectedAscensionPerks([]);
+      setSelectedTraditions([]);
 
     } catch (err: any) {
       setError(err.message);
@@ -575,6 +821,22 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           <div className="mb-3">
             <label htmlFor="buildDescription" className="form-label">Description</label>
             <textarea className="form-control bg-secondary text-white border-secondary" id="buildDescription" rows={3} value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="gameVersion" className="form-label">Game Version</label>
+            <select
+              className="form-select bg-secondary text-white border-secondary"
+              id="gameVersion"
+              value={game_version}
+              onChange={(e) => setGameVersion(e.target.value)}
+            >
+              {GAME_VERSIONS.map(version => (
+                <option key={version.value} value={version.value}>
+                  {version.label}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="mb-3">
@@ -943,10 +1205,99 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
             </div>
           </div>
 
-          {/* ... other fields like civics, dlcs etc. as text for now ... */}
+          {/* Civics Selection */}
           <div className="mb-3">
-            <label htmlFor="civics" className="form-label">Civics (comma-separated)</label>
-            <input type="text" className="form-control bg-secondary text-white border-secondary" id="civics" value={civics} onChange={(e) => setCivics(e.target.value)} />
+            <label className="form-label">
+              Civics ({selectedCivics.length}/{MAX_CIVIC_SLOTS} selected)
+            </label>
+
+            {/* Info about civic selection */}
+            {selectedEthics.length === 0 && !selectedAuthority && (
+              <div className="alert alert-info mb-2">
+                <strong>ℹ️ Select ethics and authority first</strong>
+                <div className="mt-1">
+                  Available civics depend on your ethics and authority selection.
+                </div>
+              </div>
+            )}
+
+            {/* Display selected civics */}
+            {selectedCivics.length > 0 && (
+              <div className="alert alert-success mb-2">
+                <strong>Selected Civics:</strong>
+                <div className="mt-1">
+                  {selectedCivics.map((civicId, index) => {
+                    const civic = allCivics.find(c => c.id === civicId);
+                    return (
+                      <span key={civicId} className="badge bg-primary me-1 mb-1">
+                        {index + 1}. {civic?.name || civicId}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            <input
+              type="text"
+              className="form-control bg-secondary text-white border-secondary mb-2"
+              placeholder="Search civics by name, effect, or description..."
+              value={civicsSearchQuery}
+              onChange={(e) => setCivicsSearchQuery(e.target.value)}
+            />
+            <div className="card bg-secondary" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+              <div className="card-body">
+                {filteredCivics.length > 0 ? (
+                  filteredCivics.map(civic => {
+                    const isSelected = selectedCivics.includes(civic.id);
+                    const canSelect = canSelectCivic(civic);
+                    const isDisabled = !isSelected && !canSelect;
+
+                    return (
+                      <div
+                        key={civic.id}
+                        className={`form-check mb-2 pb-2 border-bottom border-dark ${isDisabled ? 'opacity-50' : ''}`}
+                        style={{ opacity: isDisabled ? 0.5 : 1 }}
+                      >
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id={`civic-${civic.id}`}
+                          checked={isSelected}
+                          onChange={() => handleCivicChange(civic.id)}
+                          disabled={isDisabled}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor={`civic-${civic.id}`}
+                          style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
+                        >
+                          <strong className="text-white">{civic.id}</strong>
+                          {!civic.can_modify && (
+                            <span className="badge bg-warning text-dark ms-2">Permanent</span>
+                          )}
+                          {isDisabled && !isSelected && selectedCivics.length >= MAX_CIVIC_SLOTS && (
+                            <span className="badge bg-danger ms-2">Max slots reached</span>
+                          )}
+                          {isDisabled && !isSelected && selectedCivics.length < MAX_CIVIC_SLOTS && (
+                            <span className="badge bg-warning text-dark ms-2">Requirements not met</span>
+                          )}
+                          {civic.effects && (
+                            <small className="d-block text-light mt-1">{civic.effects}</small>
+                          )}
+                        </label>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-center text-muted">
+                    {availableCivics.length === 0
+                      ? 'No civics available for current selections.'
+                      : 'No civics match your search.'}
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Recommended Ascension Perks */}
@@ -1018,6 +1369,77 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                   })
                 ) : (
                   <p className="text-center text-muted">No ascension perks match your search.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Recommended Tradition Trees */}
+          <div className="mb-3">
+            <label className="form-label">
+              Recommended Tradition Trees ({selectedTraditions.length} selected)
+              <small className="text-muted d-block">Select tradition trees in the order you recommend adopting them.</small>
+            </label>
+
+            {/* Display selected traditions in order */}
+            {selectedTraditions.length > 0 && (
+              <div className="alert alert-info mb-2">
+                <strong>Tradition Order:</strong>
+                <div className="mt-1">
+                  {selectedTraditions.map((treeId, index) => (
+                    <span key={treeId} className="badge bg-primary me-1 mb-1">
+                      {index + 1}. {treeId}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <input
+              type="text"
+              className="form-control bg-secondary text-white border-secondary mb-2"
+              placeholder="Search tradition trees..."
+              value={traditionsSearchQuery}
+              onChange={(e) => setTraditionsSearchQuery(e.target.value)}
+            />
+            <div className="card bg-secondary" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+              <div className="card-body">
+                {filteredTraditionTrees.length > 0 ? (
+                  filteredTraditionTrees.map(tree => {
+                    const isSelected = selectedTraditions.includes(tree.name);
+                    const orderNumber = getTraditionOrder(tree.name);
+                    return (
+                      <div
+                        key={tree.name}
+                        className={`form-check mb-2 pb-2 border-bottom border-dark`}
+                      >
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id={`tradition-${tree.name}`}
+                          checked={isSelected}
+                          onChange={() => handleTraditionChange(tree.name)}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor={`tradition-${tree.name}`}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <strong className="text-white">{tree.name}</strong>
+                          {orderNumber !== null && (
+                            <span className="badge bg-success ms-2">#{orderNumber}</span>
+                          )}
+                          {tree.finish && tree.finish.effects && (
+                            <div className="mt-1">
+                              <small className="text-info d-block"><strong>Completion:</strong> {tree.finish.effects}</small>
+                            </div>
+                          )}
+                        </label>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-center text-muted">No tradition trees match your search.</p>
                 )}
               </div>
             </div>

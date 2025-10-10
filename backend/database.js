@@ -66,6 +66,13 @@ const setupDatabase = () => {
       }
     });
 
+    // Add traditions column if it doesn't exist (for existing databases)
+    db.run(`ALTER TABLE builds ADD COLUMN traditions TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding traditions column:', err.message);
+      }
+    });
+
     console.log('Database tables checked/created.');
   });
 };
