@@ -25,6 +25,61 @@ app.get('/api/traits', (req, res) => {
   });
 });
 
+// Get all ethics
+app.get('/api/ethics', (req, res) => {
+  fs.readFile('./data/ethics.json', 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json({ error: "Could not read ethics data." });
+      return;
+    }
+    res.json(JSON.parse(data));
+  });
+});
+
+// Get all civics
+app.get('/api/civics', (req, res) => {
+  fs.readFile('./data/civics.json', 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json({ error: "Could not read civics data." });
+      return;
+    }
+    res.json(JSON.parse(data));
+  });
+});
+
+// Get all origins
+app.get('/api/origins', (req, res) => {
+  fs.readFile('./data/origins.json', 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json({ error: "Could not read origins data." });
+      return;
+    }
+    res.json(JSON.parse(data));
+  });
+});
+
+// Get all traditions
+app.get('/api/traditions', (req, res) => {
+  fs.readFile('./data/traditions.json', 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json({ error: "Could not read traditions data." });
+      return;
+    }
+    res.json(JSON.parse(data));
+  });
+});
+
+// Get all ascension perks
+app.get('/api/ascension-perks', (req, res) => {
+  fs.readFile('./data/ascension_perks.json', 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json({ error: "Could not read ascension perks data." });
+      return;
+    }
+    res.json(JSON.parse(data));
+  });
+});
+
 // Get all builds
 app.get('/api/builds', (req, res) => {
   const sql = "SELECT * FROM builds ORDER BY created_at DESC";

@@ -5,9 +5,13 @@ interface BuildFormProps {
 }
 
 interface Trait {
+  id: string;
   name: string;
-  point_cost: string;
+  cost: number | string;
   effects: string;
+  tags: any[];
+  opposites: any[];
+  category: string;
 }
 
 export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
@@ -22,6 +26,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
 
   // Trait data from API
   const [allTraits, setAllTraits] = useState<Trait[]>([]);
+  const [traitSearchQuery, setTraitSearchQuery] = useState('');
   
   // UI state
   const [error, setError] = useState<string | null>(null);
@@ -30,15 +35,43 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   useEffect(() => {
     fetch('/api/traits')
       .then(res => res.json())
-      .then(data => setAllTraits(data))
+      .then(data => {
+        // Filter and sanitize traits to prevent rendering errors
+        const sanitizedTraits = data
+          .map((trait: any) => ({
+            ...trait,
+            // Ensure all fields are safe to render
+            tags: Array.isArray(trait.tags) ? trait.tags.filter((t: any) => typeof t === 'string') : [],
+            opposites: Array.isArray(trait.opposites) ? trait.opposites.filter((o: any) => typeof o === 'string') : [],
+            effects: typeof trait.effects === 'string' ? trait.effects : '',
+            cost: typeof trait.cost === 'number' ? trait.cost : 0,
+          }))
+          // Only show traits that are selectable during empire creation (non-zero cost)
+          .filter((trait: any) => typeof trait.cost === 'number' && trait.cost !== 0)
+          // Sort by cost (positive traits first, then negative)
+          .sort((a: any, b: any) => b.cost - a.cost);
+
+        setAllTraits(sanitizedTraits);
+      })
       .catch(() => setError('Could not load traits data.'));
   }, []);
 
-  const handleTraitChange = (traitName: string) => {
-    setSelectedTraits(prev => 
-      prev.includes(traitName) 
-        ? prev.filter(t => t !== traitName) 
-        : [...prev, traitName]
+  // Filter traits based on search query
+  const filteredTraits = allTraits.filter(trait => {
+    if (!traitSearchQuery) return true;
+    const query = traitSearchQuery.toLowerCase();
+    return (
+      trait.id.toLowerCase().includes(query) ||
+      trait.effects.toLowerCase().includes(query) ||
+      trait.tags.some(tag => tag.toLowerCase().includes(query))
+    );
+  });
+
+  const handleTraitChange = (traitId: string) => {
+    setSelectedTraits(prev =>
+      prev.includes(traitId)
+        ? prev.filter(t => t !== traitId)
+        : [...prev, traitId]
     );
   };
 
@@ -106,24 +139,45 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           {/* ... other fields ... */}
 
           <div className="mb-3">
-            <label className="form-label">Traits</label>
-            <div className="card" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+            <label className="form-label">
+              Traits ({selectedTraits.length} selected, {filteredTraits.length} shown of {allTraits.length} total)
+            </label>
+            <input
+              type="text"
+              className="form-control bg-secondary text-white border-secondary mb-2"
+              placeholder="Search traits by name, effect, or tag..."
+              value={traitSearchQuery}
+              onChange={(e) => setTraitSearchQuery(e.target.value)}
+            />
+            <div className="card bg-secondary" style={{ maxHeight: '400px', overflowY: 'auto' }}>
               <div className="card-body">
-                {allTraits.map(trait => (
-                  <div key={trait.name} className="form-check">
-                    <input 
-                      className="form-check-input" 
-                      type="checkbox" 
-                      id={`trait-${trait.name}`}
-                      checked={selectedTraits.includes(trait.name)}
-                      onChange={() => handleTraitChange(trait.name)}
+                {filteredTraits.length > 0 ? (
+                  filteredTraits.map(trait => (
+                  <div key={trait.id} className="form-check mb-2 pb-2 border-bottom border-dark">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id={`trait-${trait.id}`}
+                      checked={selectedTraits.includes(trait.id)}
+                      onChange={() => handleTraitChange(trait.id)}
                     />
-                    <label className="form-check-label" htmlFor={`trait-${trait.name}`}>
-                      <strong>{trait.name}</strong> (Cost: {trait.point_cost})
-                      <small className="d-block text-muted">{trait.effects}</small>
+                    <label className="form-check-label" htmlFor={`trait-${trait.id}`}>
+                      <strong className="text-white">{trait.id}</strong>
+                      <span className="badge bg-primary ms-2">Cost: {trait.cost}</span>
+                      {trait.tags && trait.tags.length > 0 && (
+                        <span className="ms-2">
+                          {trait.tags.slice(0, 3).map((tag: string, idx: number) => (
+                            <span key={idx} className="badge bg-secondary me-1">{tag}</span>
+                          ))}
+                        </span>
+                      )}
+                      <small className="d-block text-light mt-1">{trait.effects || 'No effects listed'}</small>
                     </label>
                   </div>
-                ))}
+                  ))
+                ) : (
+                  <p className="text-center text-muted">No traits match your search.</p>
+                )}
               </div>
             </div>
           </div>

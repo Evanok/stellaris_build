@@ -1,0 +1,4102 @@
+{
+  "tr_adaptability": {
+    "name": "tr_adaptability",
+    "adopt": {
+      "id": "tr_adaptability_adopt",
+      "name": "tr_adaptability_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_adaptability",
+      "effects": "",
+      "modifier": {},
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_adaptability_finish",
+      "name": "tr_adaptability_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_adaptability",
+      "effects": "ascension_perks_add: +1",
+      "modifier": {
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "adaptability": {
+    "name": "adaptability",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_adaptability_recycling",
+        "name": "tr_adaptability_recycling",
+        "custom_tooltip": "tr_adaptability_recycling_desc",
+        "type": "tradition",
+        "tree": "adaptability",
+        "effects": "planet_structures_volatile_motes_upkeep_mult: -15.0%; planet_structures_exotic_gases_upkeep_mult: -15.0%; planet_structures_rare_crystals_upkeep_mult: -15.0%; planet_structures_volatile_motes_cost_mult: -15.0%; planet_structures_exotic_gases_cost_mult: -15.0%; planet_structures_rare_crystals_cost_mult: -15.0%",
+        "modifier": {
+          "planet_structures_volatile_motes_upkeep_mult": -0.15,
+          "planet_structures_exotic_gases_upkeep_mult": -0.15,
+          "planet_structures_rare_crystals_upkeep_mult": -0.15,
+          "planet_structures_volatile_motes_cost_mult": -0.15,
+          "planet_structures_exotic_gases_cost_mult": -0.15,
+          "planet_structures_rare_crystals_cost_mult": -0.15
+        },
+        "possible": {},
+        "ai_weight": 10000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_adaptability_survival_fittest",
+        "name": "tr_adaptability_survival_fittest",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "adaptability",
+        "effects": "planet_orbital_bombardment_damage: -0.25; army_defense_damage_mult: +25.0%",
+        "modifier": {
+          "planet_orbital_bombardment_damage": -0.25,
+          "army_defense_damage_mult": 0.25
+        },
+        "possible": {
+          "has_tradition": "tr_adaptability_recycling"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_adaptability_environmental_diversification",
+        "name": "tr_adaptability_environmental_diversification",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "adaptability",
+        "effects": "pop_environment_tolerance: +0.1",
+        "modifier": {
+          "pop_environment_tolerance": 0.1
+        },
+        "possible": {},
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_adaptability_adaptive_ecology",
+        "name": "tr_adaptability_adaptive_ecology",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "adaptability",
+        "effects": "planet_non_artificial_max_districts_add: +1",
+        "modifier": {
+          "planet_non_artificial_max_districts_add": 1
+        },
+        "possible": {
+          "has_tradition": "tr_adaptability_environmental_diversification"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_adaptability_appropriation",
+        "name": "tr_adaptability_appropriation",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "adaptability",
+        "effects": "pop_resettlement_cost_mult: -50.0%",
+        "modifier": {
+          "pop_resettlement_cost_mult": -0.5
+        },
+        "possible": {
+          "has_tradition": "tr_adaptability_environmental_diversification"
+        },
+        "ai_weight": 1000,
+        "has_variants": true
+      }
+    ]
+  },
+  "tr_aptitude": {
+    "name": "tr_aptitude",
+    "adopt": {
+      "id": "tr_aptitude_adopt",
+      "name": "tr_aptitude_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_aptitude",
+      "effects": "leader_trait_selection_options_add: +1",
+      "modifier": {
+        "leader_trait_selection_options_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_aptitude_finish",
+      "name": "tr_aptitude_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_aptitude",
+      "effects": "country_commander_cap_add: +1; country_official_cap_add: +1; country_scientist_cap_add: +1",
+      "modifier": {
+        "country_commander_cap_add": 1,
+        "country_official_cap_add": 1,
+        "country_scientist_cap_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "aptitude": {
+    "name": "aptitude",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_aptitude_the_empire_needs_you",
+        "name": "tr_aptitude_the_empire_needs_you",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "aptitude",
+        "effects": "leaders_cost_mult: -25.0%",
+        "modifier": {
+          "leaders_cost_mult": -0.25
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_aptitude_specialist_training",
+        "name": "tr_aptitude_specialist_training",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "aptitude",
+        "effects": "country_leader_pool_size: +1",
+        "modifier": {
+          "country_leader_pool_size": 1
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_aptitude_psychological_profiling",
+        "name": "tr_aptitude_psychological_profiling",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "aptitude",
+        "effects": "leaders_upkeep_mult: -25.0%",
+        "modifier": {
+          "leaders_upkeep_mult": -0.25
+        },
+        "possible": {
+          "has_tradition": "tr_aptitude_the_empire_needs_you"
+        },
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_aptitude_healthcare_program",
+        "name": "tr_aptitude_healthcare_program",
+        "custom_tooltip": "BLANK_STRING",
+        "type": "tradition",
+        "tree": "aptitude",
+        "effects": "negative_traits_country: -1",
+        "modifier": {
+          "negative_traits_country": -1
+        },
+        "possible": {
+          "has_tradition": "tr_aptitude_the_empire_needs_you"
+        },
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_aptitude_champions_of_the_empire",
+        "name": "tr_aptitude_champions_of_the_empire",
+        "custom_tooltip": "tr_aptitude_adopt_desc",
+        "type": "tradition",
+        "tree": "aptitude",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_aptitude_specialist_training"
+        },
+        "ai_weight": 1000,
+        "has_variants": false
+      }
+    ]
+  },
+  "tr_archivism": {
+    "name": "tr_archivism",
+    "adopt": {
+      "id": "tr_archivism_adopt",
+      "name": "tr_archivism_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_archivism",
+      "effects": "country_exhibit_unlocking_cost_mult: -50.0%; ship_anomaly_generation_chance_mult: +5.0%",
+      "modifier": {
+        "country_exhibit_unlocking_cost_mult": -0.5,
+        "ship_anomaly_generation_chance_mult": 0.05
+      },
+      "possible": {
+        "has_technology": "tech_galactic_archivism"
+      },
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_archivism_finish",
+      "name": "tr_archivism_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_archivism",
+      "effects": "specimens_produces_mult: +15.0%; ascension_perks_add: +1",
+      "modifier": {
+        "specimens_produces_mult": 0.15,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "archivism": {
+    "name": "archivism",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_archivism_xeno_paleontology",
+        "name": "tr_archivism_xeno_paleontology",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "archivism",
+        "effects": "ship_archaeological_site_excavation_speed_mult: +30.0%; ship_archaeological_site_clues_add: +1; scientist_exp_gain: +0.3",
+        "modifier": {
+          "ship_archaeological_site_excavation_speed_mult": 0.3,
+          "ship_archaeological_site_clues_add": 1,
+          "scientist_exp_gain": 0.3
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_archivism_expert_negociation",
+        "name": "tr_archivism_expert_negociation",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "archivism",
+        "effects": "country_specimen_selling_cost_mult: +2",
+        "modifier": {
+          "country_specimen_selling_cost_mult": 2
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_archivism_frontier_archaeology",
+        "name": "tr_archivism_frontier_archaeology",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "archivism",
+        "effects": "ship_science_speed_mult: +35.0%; ship_science_upkeep_mult: -50.0%",
+        "modifier": {
+          "ship_science_speed_mult": 0.35,
+          "ship_science_upkeep_mult": -0.5
+        },
+        "possible": {
+          "has_tradition": "tr_archivism_xeno_paleontology"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_archivism_flawless_display",
+        "name": "tr_archivism_flawless_display",
+        "custom_tooltip": "tr_archivism_flawless_display_tt",
+        "type": "tradition",
+        "tree": "archivism",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_archivism_expert_negociation"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_archivism_exhibition_specialization",
+        "name": "tr_archivism_exhibition_specialization",
+        "custom_tooltip": "tr_archivism_exhibition_specialization_tt",
+        "type": "tradition",
+        "tree": "archivism",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_archivism_expert_negociation"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      }
+    ]
+  },
+  "tr_diplomacy": {
+    "name": "tr_diplomacy",
+    "adopt": {
+      "id": "tr_diplomacy_adopt",
+      "name": "tr_diplomacy_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_diplomacy",
+      "effects": "diplomacy_influence_upkeep_mult: -50.0%; diplomacy_influence_cost_mult: -25.0%",
+      "modifier": {
+        "diplomacy_influence_upkeep_mult": -0.5,
+        "diplomacy_influence_cost_mult": -0.25
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_diplomacy_finish",
+      "name": "tr_diplomacy_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_diplomacy",
+      "effects": "federation_experience_add: +2; diplo_weight_mult: +10.0%; country_official_cap_add: +1; ascension_perks_add: +1",
+      "modifier": {
+        "federation_experience_add": 2,
+        "diplo_weight_mult": 0.1,
+        "country_official_cap_add": 1,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "diplomacy": {
+    "name": "diplomacy",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_diplomacy_the_federation",
+        "name": "tr_diplomacy_the_federation",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "diplomacy",
+        "effects": "cohesion_add: +1; envoys_add: +1",
+        "modifier": {
+          "cohesion_add": 1,
+          "envoys_add": 1
+        },
+        "possible": {},
+        "ai_weight": 10000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_diplomacy_entente_coordination",
+        "name": "tr_diplomacy_entente_coordination",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "diplomacy",
+        "effects": "federation_naval_cap_contribution_mult: +1.0; country_border_friction_mult: -25.0%",
+        "modifier": {
+          "federation_naval_cap_contribution_mult": 1.0,
+          "country_border_friction_mult": -0.25
+        },
+        "possible": {
+          "has_tradition": "tr_diplomacy_the_federation"
+        },
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_diplomacy_diplomatic_networking",
+        "name": "tr_diplomacy_diplomatic_networking",
+        "custom_tooltip": "tr_diplomacy_diplomatic_networking_desc",
+        "type": "tradition",
+        "tree": "diplomacy",
+        "effects": "",
+        "modifier": {},
+        "possible": {},
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_diplomacy_direct_diplomacy",
+        "name": "tr_diplomacy_direct_diplomacy",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "diplomacy",
+        "effects": "country_trust_cap_add: +50; country_trust_growth: +0.33",
+        "modifier": {
+          "country_trust_cap_add": 50,
+          "country_trust_growth": 0.33
+        },
+        "possible": {
+          "has_tradition": "tr_diplomacy_diplomatic_networking"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_diplomacy_eminent_diplomats",
+        "name": "tr_diplomacy_eminent_diplomats",
+        "custom_tooltip": "tr_diplomacy_eminent_diplomats_desc",
+        "type": "tradition",
+        "tree": "diplomacy",
+        "effects": "diplo_action_acceptance_add: +5",
+        "modifier": {
+          "diplo_action_acceptance_add": 5
+        },
+        "possible": {
+          "has_tradition": "tr_diplomacy_diplomatic_networking"
+        },
+        "ai_weight": 5000,
+        "has_variants": true
+      }
+    ]
+  },
+  "tr_discovery": {
+    "name": "tr_discovery",
+    "adopt": {
+      "id": "tr_discovery_adopt",
+      "name": "tr_discovery_adopt",
+      "custom_tooltip": "tr_discovery_adopt_desc",
+      "type": "adopt",
+      "tree": "tr_discovery",
+      "effects": "ship_anomaly_research_speed_mult: +20.0%",
+      "modifier": {
+        "ship_anomaly_research_speed_mult": 0.2
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_discovery_finish",
+      "name": "tr_discovery_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_discovery",
+      "effects": "all_technology_research_speed: +10.0%; ascension_perks_add: +1",
+      "modifier": {
+        "all_technology_research_speed": 0.1,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "traditions": []
+  },
+  "discovery": {
+    "name": "discovery",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_discovery_to_boldly_go",
+        "name": "tr_discovery_to_boldly_go",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "discovery",
+        "effects": "science_ship_survey_speed: +35.0%; shipclass_science_ship_disengage_mult: +50.0%",
+        "modifier": {
+          "science_ship_survey_speed": 0.35,
+          "shipclass_science_ship_disengage_mult": 0.5
+        },
+        "possible": {},
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_discovery_databank_uplinks",
+        "name": "tr_discovery_databank_uplinks",
+        "custom_tooltip": "tr_discovery_databank_uplinks_desc",
+        "type": "tradition",
+        "tree": "discovery",
+        "effects": "station_researchers_produces_mult: +20.0%; starbase_constructions_physics_research_produces_mult: +20.0%; starbase_constructions_society_research_produces_mult: +20.0%; starbase_constructions_engineering_research_produces_mult: +20.0%",
+        "modifier": {
+          "station_researchers_produces_mult": 0.2,
+          "starbase_constructions_physics_research_produces_mult": 0.2,
+          "starbase_constructions_society_research_produces_mult": 0.2,
+          "starbase_constructions_engineering_research_produces_mult": 0.2
+        },
+        "possible": {
+          "has_tradition": "tr_discovery_to_boldly_go"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_discovery_science_division",
+        "name": "tr_discovery_science_division",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "discovery",
+        "effects": "num_tech_alternatives_add: +1; country_scientist_cap_add: +1; scientist_initial_skill: +1",
+        "modifier": {
+          "num_tech_alternatives_add": 1,
+          "country_scientist_cap_add": 1,
+          "scientist_initial_skill": 1
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_discovery_polytechnic_education",
+        "name": "tr_discovery_polytechnic_education",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "discovery",
+        "effects": "country_leader_pool_size: +1; species_leader_exp_gain: +0.1",
+        "modifier": {
+          "country_leader_pool_size": 1,
+          "species_leader_exp_gain": 0.1
+        },
+        "possible": {
+          "has_tradition": "tr_discovery_science_division"
+        },
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_discovery_faith_in_science",
+        "name": "tr_discovery_faith_in_science",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "discovery",
+        "effects": "planet_researchers_upkeep_mult: -20.0%",
+        "modifier": {
+          "planet_researchers_upkeep_mult": -0.2
+        },
+        "possible": {
+          "has_tradition": "tr_discovery_polytechnic_education"
+        },
+        "ai_weight": 5000,
+        "has_variants": true
+      }
+    ]
+  },
+  "tr_domestication": {
+    "name": "tr_domestication",
+    "adopt": {
+      "id": "tr_domestication_adopt",
+      "name": "tr_domestication_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_domestication",
+      "effects": "planet_farmers_produces_mult: +20.0%; starbase_shipyard_space_fauna_build_cost_mult: -10.0%",
+      "modifier": {
+        "planet_farmers_produces_mult": 0.2,
+        "starbase_shipyard_space_fauna_build_cost_mult": -0.1
+      },
+      "possible": {
+        "has_technology": "tech_alien_cloning"
+      },
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_domestication_finish",
+      "name": "tr_domestication_finish",
+      "custom_tooltip": "tr_domestication_finish_desc",
+      "type": "finish",
+      "tree": "tr_domestication",
+      "effects": "ascension_perks_add: +1",
+      "modifier": {
+        "space_fauna_experience_gain_mult": "@domestication_finish_exp_bonus",
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "domestication": {
+    "name": "domestication",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_domestication_containment_protocols",
+        "name": "tr_domestication_containment_protocols",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "domestication",
+        "effects": "country_vivarium_max_capacity_mult: +25.0%; country_capture_chance_add: +20.0%",
+        "modifier": {
+          "country_vivarium_max_capacity_mult": 0.25,
+          "country_capture_chance_add": 0.2
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_domestication_bio_repurposing",
+        "name": "tr_domestication_bio_repurposing",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "domestication",
+        "effects": "planet_clear_blocker_speed_mult: +33.0%",
+        "modifier": {
+          "planet_clear_blocker_speed_mult": 0.33
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_domestication_astrozoology",
+        "name": "tr_domestication_astrozoology",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "domestication",
+        "effects": "space_fauna_monthly_increased_breeding_chance_add: +1; space_fauna_culling_reward_mult: +25.0%",
+        "modifier": {
+          "space_fauna_monthly_increased_breeding_chance_add": 1,
+          "space_fauna_culling_reward_mult": 0.25
+        },
+        "possible": {
+          "has_tradition": "tr_domestication_containment_protocols"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_domestication_metabolic_regulation",
+        "name": "tr_domestication_metabolic_regulation",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "domestication",
+        "effects": "logistic_growth_mult: +5.0%; starbase_shipyard_space_fauna_build_speed_mult: +15.0%",
+        "modifier": {
+          "logistic_growth_mult": 0.05,
+          "starbase_shipyard_space_fauna_build_speed_mult": 0.15
+        },
+        "possible": {
+          "has_tradition": [
+            "tr_domestication_containment_protocols",
+            "tr_domestication_bio_repurposing"
+          ]
+        },
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_domestication_killer_instinct",
+        "name": "tr_domestication_killer_instinct",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "domestication",
+        "effects": "space_fauna_ship_damage_mult: +15.0%; space_fauna_ship_speed_mult: +15.0%",
+        "modifier": {
+          "space_fauna_ship_damage_mult": 0.15,
+          "space_fauna_ship_speed_mult": 0.15
+        },
+        "possible": {
+          "has_tradition": "tr_domestication_bio_repurposing"
+        },
+        "ai_weight": 5000,
+        "has_variants": true
+      }
+    ]
+  },
+  "tr_domination": {
+    "name": "tr_domination",
+    "adopt": {
+      "id": "tr_domination_adopt",
+      "name": "tr_domination_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_domination",
+      "effects": "planet_jobs_worker_produces_mult: +5.0%; planet_jobs_slave_produces_mult: +5.0%; pop_cat_slave_political_power: -0.25",
+      "modifier": {
+        "planet_jobs_worker_produces_mult": 0.05,
+        "planet_jobs_slave_produces_mult": 0.05,
+        "pop_cat_slave_political_power": -0.25
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "finish": {
+      "id": "tr_domination_finish",
+      "name": "tr_domination_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_domination",
+      "effects": "empire_size_pops_mult: -10.0%; ascension_perks_add: +1",
+      "modifier": {
+        "empire_size_pops_mult": -0.1,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "traditions": []
+  },
+  "domination": {
+    "name": "domination",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_domination_colonial_viceroys",
+        "name": "tr_domination_colonial_viceroys",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "domination",
+        "effects": "country_traditions_influence_produces_add: +50.0%; country_official_cap_add: +1; official_initial_skill: +1",
+        "modifier": {
+          "country_traditions_influence_produces_add": 0.5,
+          "country_official_cap_add": 1,
+          "official_initial_skill": 1
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_domination_imperious_architecture",
+        "name": "tr_domination_imperious_architecture",
+        "custom_tooltip": "tr_domination_imperious_architecture_desc",
+        "type": "tradition",
+        "tree": "domination",
+        "effects": "",
+        "modifier": {},
+        "possible": {},
+        "ai_weight": 10,
+        "has_variants": true
+      },
+      {
+        "id": "tr_domination_grand_council",
+        "name": "tr_domination_grand_council",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "domination",
+        "effects": "councilor_exp_gain: +0.2; country_edict_fund_add: +50",
+        "modifier": {
+          "councilor_exp_gain": 0.2,
+          "country_edict_fund_add": 50
+        },
+        "possible": {
+          "has_tradition": [
+            "tr_domination_imperious_architecture",
+            "tr_domination_colonial_viceroys"
+          ]
+        },
+        "ai_weight": 10,
+        "has_variants": true
+      },
+      {
+        "id": "tr_domination_judgment_corps",
+        "name": "tr_domination_judgment_corps",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "domination",
+        "effects": "planet_enforcers_unity_produces_add: +1",
+        "modifier": {
+          "planet_enforcers_unity_produces_add": 1
+        },
+        "possible": {},
+        "ai_weight": 10,
+        "has_variants": true
+      },
+      {
+        "id": "tr_domination_workplace_motivators",
+        "name": "tr_domination_workplace_motivators",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "domination",
+        "effects": "planet_jobs_worker_produces_mult: +5.0%; planet_jobs_slave_produces_mult: +5.0%",
+        "modifier": {
+          "planet_jobs_worker_produces_mult": 0.05,
+          "planet_jobs_slave_produces_mult": 0.05
+        },
+        "possible": {
+          "has_tradition": "tr_domination_judgment_corps"
+        },
+        "ai_weight": 10,
+        "has_variants": true
+      }
+    ]
+  },
+  "tr_enmity": {
+    "name": "tr_enmity",
+    "adopt": {
+      "id": "tr_enmity_adopt",
+      "name": "tr_enmity_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_enmity",
+      "effects": "max_rivalries: +1",
+      "modifier": {
+        "max_rivalries": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_enmity_finish",
+      "name": "tr_enmity_finish",
+      "custom_tooltip": "tr_enmity_finish_desc",
+      "type": "finish",
+      "tree": "tr_enmity",
+      "effects": "envoys_add: +1; ascension_perks_add: +1",
+      "modifier": {
+        "envoys_add": 1,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "enmity": {
+    "name": "enmity",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_enmity_rise_to_the_occasion",
+        "name": "tr_enmity_rise_to_the_occasion",
+        "custom_tooltip": "tr_enmity_rise_to_the_occasion_effect",
+        "type": "tradition",
+        "tree": "enmity",
+        "effects": "",
+        "modifier": {},
+        "possible": {},
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_enmity_consumate_contrarian",
+        "name": "tr_enmity_consumate_contrarian",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "enmity",
+        "effects": "diplo_weight_opposing_mult: +50.0%",
+        "modifier": {
+          "diplo_weight_opposing_mult": 0.5
+        },
+        "possible": {
+          "has_tradition": "tr_enmity_rise_to_the_occasion"
+        },
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_enmity_match",
+        "name": "tr_enmity_match",
+        "custom_tooltip": "tr_enmity_match_effect",
+        "type": "tradition",
+        "tree": "enmity",
+        "effects": "",
+        "modifier": {},
+        "possible": {},
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_enmity_outpace",
+        "name": "tr_enmity_outpace",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "enmity",
+        "effects": "damage_vs_rival_mult: +15.0%",
+        "modifier": {
+          "damage_vs_rival_mult": 0.15
+        },
+        "possible": {
+          "has_tradition": "tr_enmity_match"
+        },
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_enmity_eclipse",
+        "name": "tr_enmity_eclipse",
+        "custom_tooltip": "tr_enmity_eclipse_effect",
+        "type": "tradition",
+        "tree": "enmity",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_enmity_outpace"
+        },
+        "ai_weight": 1,
+        "has_variants": false
+      }
+    ]
+  },
+  "tr_expansion": {
+    "name": "tr_expansion",
+    "adopt": {
+      "id": "tr_expansion_adopt",
+      "name": "tr_expansion_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_expansion",
+      "effects": "",
+      "modifier": {},
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_expansion_finish",
+      "name": "tr_expansion_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_expansion",
+      "effects": "planet_non_artificial_max_districts_add: +1; ascension_perks_add: +1",
+      "modifier": {
+        "planet_non_artificial_max_districts_add": 1,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "traditions": []
+  },
+  "expansion": {
+    "name": "expansion",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_expansion_colonization_fever",
+        "name": "tr_expansion_colonization_fever",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "expansion",
+        "effects": "colony_start_urban_districts_add: +1; planet_colony_development_speed_mult: +25.0%",
+        "modifier": {
+          "colony_start_urban_districts_add": 1,
+          "planet_colony_development_speed_mult": 0.25
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_expansion_a_new_life",
+        "name": "tr_expansion_a_new_life",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "expansion",
+        "effects": "logistic_growth_mult: +10.0%",
+        "modifier": {
+          "logistic_growth_mult": 0.1
+        },
+        "possible": {
+          "has_tradition": "tr_expansion_colonization_fever"
+        },
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_expansion_courier_network",
+        "name": "tr_expansion_courier_network",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "expansion",
+        "effects": "empire_size_systems_mult: -25.0%; empire_size_colonies_mult: -25.0%",
+        "modifier": {
+          "empire_size_systems_mult": -0.25,
+          "empire_size_colonies_mult": -0.25
+        },
+        "possible": {
+          "has_tradition": "tr_expansion_reach_for_the_stars"
+        },
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_expansion_reach_for_the_stars",
+        "name": "tr_expansion_reach_for_the_stars",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "expansion",
+        "effects": "country_starbase_influence_cost_mult: -10.0%",
+        "modifier": {
+          "country_starbase_influence_cost_mult": -0.1
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_expansion_galactic_ambition",
+        "name": "tr_expansion_galactic_ambition",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "expansion",
+        "effects": "starbases_upkeep_mult: -20.0%",
+        "modifier": {
+          "starbases_upkeep_mult": -0.2
+        },
+        "possible": {
+          "has_tradition": "tr_expansion_reach_for_the_stars"
+        },
+        "ai_weight": 5000,
+        "has_variants": true
+      }
+    ]
+  },
+  "tr_harmony": {
+    "name": "tr_harmony",
+    "adopt": {
+      "id": "tr_harmony_adopt",
+      "name": "tr_harmony_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_harmony",
+      "effects": "planet_pops_upkeep_mult: -10.0%",
+      "modifier": {
+        "planet_pops_upkeep_mult": -0.1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_harmony_finish",
+      "name": "tr_harmony_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_harmony",
+      "effects": "planetary_ascension_effect_mult: +25.0%; ascension_perks_add: +1",
+      "modifier": {
+        "planetary_ascension_effect_mult": 0.25,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "traditions": []
+  },
+  "harmony": {
+    "name": "harmony",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_harmony_the_greater_good",
+        "name": "tr_harmony_the_greater_good",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "harmony",
+        "effects": "pop_government_ethic_attraction: +0.25; planet_crime_add: -10",
+        "modifier": {
+          "pop_government_ethic_attraction": 0.25,
+          "planet_crime_add": -10
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_harmony_kinship",
+        "name": "tr_harmony_kinship",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "harmony",
+        "effects": "pop_unemployment_demotion_time_mult: -75.0%; empire_size_pops_mult: -10.0%",
+        "modifier": {
+          "pop_unemployment_demotion_time_mult": -0.75,
+          "empire_size_pops_mult": -0.1
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_harmony_utopian_dream",
+        "name": "tr_harmony_utopian_dream",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "harmony",
+        "effects": "planet_stability_add: +5; planetary_ascension_cost_mult: -10.0%",
+        "modifier": {
+          "planet_stability_add": 5,
+          "planetary_ascension_cost_mult": -0.1
+        },
+        "possible": {
+          "has_tradition": "tr_harmony_the_greater_good"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_harmony_harmonious_directives",
+        "name": "tr_harmony_harmonious_directives",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "harmony",
+        "effects": "country_edict_fund_add: +50",
+        "modifier": {
+          "country_edict_fund_add": 50
+        },
+        "possible": {
+          "has_tradition": [
+            "tr_harmony_kinship",
+            "tr_harmony_mind_and_body"
+          ]
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_harmony_mind_and_body",
+        "name": "tr_harmony_mind_and_body",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "harmony",
+        "effects": "leader_lifespan_add: +10; negative_traits_country: -1",
+        "modifier": {
+          "leader_lifespan_add": 10,
+          "negative_traits_country": -1
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": true
+      }
+    ]
+  },
+  "tr_logistics": {
+    "name": "tr_logistics",
+    "adopt": {
+      "id": "tr_logistics_adopt",
+      "name": "tr_logistics_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_logistics",
+      "effects": "pop_logistics_drone_bonus_workforce_mult: +5.0%",
+      "modifier": {
+        "pop_logistics_drone_bonus_workforce_mult": 0.05
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_logistics_finish",
+      "name": "tr_logistics_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_logistics",
+      "effects": "country_trade_produces_mult: +10.0%; ascension_perks_add: +1",
+      "modifier": {
+        "country_trade_produces_mult": 0.1,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "logistics": {
+    "name": "logistics",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_logistics_1",
+        "name": "tr_logistics_1",
+        "custom_tooltip": "tr_logistics_1_tt",
+        "type": "tradition",
+        "tree": "logistics",
+        "effects": "planet_traders_trade_produces_add: +2",
+        "modifier": {
+          "planet_traders_trade_produces_add": 2
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_logistics_2",
+        "name": "tr_logistics_2",
+        "custom_tooltip": "tr_logistics_2_tt",
+        "type": "tradition",
+        "tree": "logistics",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_logistics_1"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_logistics_3",
+        "name": "tr_logistics_3",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "logistics",
+        "effects": "planet_maintenance_drones_trade_produces_add: +1; planet_structures_upkeep_mult: -5.0%",
+        "modifier": {
+          "planet_maintenance_drones_trade_produces_add": 1,
+          "planet_structures_upkeep_mult": -0.05
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_logistics_4",
+        "name": "tr_logistics_4",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "logistics",
+        "effects": "country_trade_fee: -0.1",
+        "modifier": {
+          "country_trade_fee": -0.1
+        },
+        "possible": {
+          "has_tradition": "tr_logistics_3"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_logistics_5",
+        "name": "tr_logistics_5",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "logistics",
+        "effects": "ships_logistics_mult: -10.0%",
+        "modifier": {
+          "ships_logistics_mult": -0.1
+        },
+        "possible": {
+          "has_tradition": "tr_logistics_3"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      }
+    ]
+  },
+  "tr_mercantile": {
+    "name": "tr_mercantile",
+    "adopt": {
+      "id": "tr_mercantile_adopt",
+      "name": "tr_mercantile_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_mercantile",
+      "effects": "planet_traders_upkeep_mult: -20.0%",
+      "modifier": {
+        "planet_traders_upkeep_mult": -0.2
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_mercantile_finish",
+      "name": "tr_mercantile_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_mercantile",
+      "effects": "country_trade_produces_mult: +10.0%; ascension_perks_add: +1",
+      "modifier": {
+        "country_trade_produces_mult": 0.1,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "traditions": []
+  },
+  "mercantile": {
+    "name": "mercantile",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_mercantile_trickle_up_economics",
+        "name": "tr_mercantile_trickle_up_economics",
+        "custom_tooltip": "tr_mercantile_trickle_up_economics_desc",
+        "type": "tradition",
+        "tree": "mercantile",
+        "effects": "planet_civilians_trade_produces_add: +1; planet_civilians_consumer_goods_upkeep_add: +10.0%",
+        "modifier": {
+          "planet_civilians_trade_produces_add": 1,
+          "planet_civilians_consumer_goods_upkeep_add": 0.1
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_mercantile_commercial_enterprise",
+        "name": "tr_mercantile_commercial_enterprise",
+        "custom_tooltip": "tr_mercantile_commercial_enterprise_desc",
+        "type": "tradition",
+        "tree": "mercantile",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_mercantile_trickle_up_economics"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_mercantile_adaptive_economic_policies",
+        "name": "tr_mercantile_adaptive_economic_policies",
+        "custom_tooltip": "tr_mercantile_adaptive_economic_policies_desc",
+        "type": "tradition",
+        "tree": "mercantile",
+        "effects": "",
+        "modifier": {},
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_mercantile_marketplace_of_better_ideas",
+        "name": "tr_mercantile_marketplace_of_better_ideas",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "mercantile",
+        "effects": "planet_jobs_trade_produces_mult: +10.0%",
+        "modifier": {
+          "planet_jobs_trade_produces_mult": 0.1
+        },
+        "possible": {
+          "has_tradition": "tr_mercantile_adaptive_economic_policies"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_mercantile_insider_trading",
+        "name": "tr_mercantile_insider_trading",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "mercantile",
+        "effects": "country_trade_fee: -0.1",
+        "modifier": {
+          "country_trade_fee": -0.1
+        },
+        "possible": {
+          "has_tradition": "tr_mercantile_adaptive_economic_policies"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      }
+    ]
+  },
+  "tr_politics": {
+    "name": "tr_politics",
+    "adopt": {
+      "id": "tr_politics_adopt",
+      "name": "tr_politics_adopt",
+      "custom_tooltip": "tr_politics_adopt_desc",
+      "type": "adopt",
+      "tree": "tr_politics",
+      "effects": "envoys_add: +1",
+      "modifier": {
+        "envoys_add": 1
+      },
+      "possible": {
+        "is_galactic_community_formed": true
+      },
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_politics_finish",
+      "name": "tr_politics_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_politics",
+      "effects": "diplo_weight_mult: +10.0%; ascension_perks_add: +1",
+      "modifier": {
+        "custom_tooltip": "tr_politics_finish_desc",
+        "diplo_weight_mult": 0.1,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "politics": {
+    "name": "politics",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_politics_quid_pro_quo",
+        "name": "tr_politics_quid_pro_quo",
+        "custom_tooltip": "tr_politics_quid_pro_quo_desc",
+        "type": "tradition",
+        "tree": "politics",
+        "effects": "",
+        "modifier": {},
+        "possible": {},
+        "ai_weight": 10000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_politics_gravitas",
+        "name": "tr_politics_gravitas",
+        "custom_tooltip": "tr_politics_gravitas_desc",
+        "type": "tradition",
+        "tree": "politics",
+        "effects": "resolutions_cost_mult: -25.0%; diplo_weight_delegate_mult: +2.5%",
+        "modifier": {
+          "resolutions_cost_mult": -0.25,
+          "diplo_weight_delegate_mult": 0.025
+        },
+        "possible": {},
+        "ai_weight": 10000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_politics_national_agenda",
+        "name": "tr_politics_national_agenda",
+        "custom_tooltip": "tr_politics_national_agenda_desc",
+        "type": "tradition",
+        "tree": "politics",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_politics_quid_pro_quo"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_politics_persistent_petitioners",
+        "name": "tr_politics_persistent_petitioners",
+        "custom_tooltip": "tr_politics_persistent_petitioners_desc",
+        "type": "tradition",
+        "tree": "politics",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_politics_gravitas"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_politics_extraordinary_powers",
+        "name": "tr_politics_extraordinary_powers",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "politics",
+        "effects": "veto_cooldown_mult: -25.0%; emergency_measures_cooldown_mult: -25.0%",
+        "modifier": {
+          "veto_cooldown_mult": -0.25,
+          "emergency_measures_cooldown_mult": -0.25
+        },
+        "possible": {
+          "has_tradition": [
+            "tr_politics_national_agenda",
+            "tr_politics_persistent_petitioners"
+          ]
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      }
+    ]
+  },
+  "tr_prosperity": {
+    "name": "tr_prosperity",
+    "adopt": {
+      "id": "tr_prosperity_adopt",
+      "name": "tr_prosperity_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_prosperity",
+      "effects": "station_gatherers_produces_mult: +20.0%",
+      "modifier": {
+        "station_gatherers_produces_mult": 0.2
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_prosperity_finish",
+      "name": "tr_prosperity_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_prosperity",
+      "effects": "stations_produces_mult: +25.0%; ascension_perks_add: +1",
+      "modifier": {
+        "stations_produces_mult": 0.25,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "prosperity": {
+    "name": "prosperity",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_prosperity_sct",
+        "name": "tr_prosperity_sct",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "prosperity",
+        "effects": "planet_structures_cost_mult: -10.0%; planet_building_build_speed_mult: +25.0%",
+        "modifier": {
+          "planet_structures_cost_mult": -0.1,
+          "planet_building_build_speed_mult": 0.25
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_prosperity_administrative_operations",
+        "name": "tr_prosperity_administrative_operations",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "prosperity",
+        "effects": "planet_structures_upkeep_mult: -10.0%",
+        "modifier": {
+          "planet_structures_upkeep_mult": -0.1
+        },
+        "possible": {},
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_prosperity_public_works",
+        "name": "tr_prosperity_public_works",
+        "custom_tooltip": "tr_prosperity_public_works_desc",
+        "type": "tradition",
+        "tree": "prosperity",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_prosperity_sct"
+        },
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_prosperity_interstellar_franchising",
+        "name": "tr_prosperity_interstellar_franchising",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "prosperity",
+        "effects": "planet_jobs_upkeep_mult: -5.0%",
+        "modifier": {
+          "planet_jobs_upkeep_mult": -0.05
+        },
+        "possible": {
+          "has_tradition": "tr_prosperity_administrative_operations"
+        },
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_prosperity_pursuit_of_profit",
+        "name": "tr_prosperity_pursuit_of_profit",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "prosperity",
+        "effects": "planet_jobs_produces_mult: +5.0%",
+        "modifier": {
+          "planet_jobs_produces_mult": 0.05
+        },
+        "possible": {
+          "has_tradition": "tr_prosperity_administrative_operations"
+        },
+        "ai_weight": 5000,
+        "has_variants": true
+      }
+    ]
+  },
+  "tr_statecraft": {
+    "name": "tr_statecraft",
+    "adopt": {
+      "id": "tr_statecraft_adopt",
+      "name": "tr_statecraft_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_statecraft",
+      "effects": "country_edict_fund_add: +50",
+      "modifier": {
+        "country_edict_fund_add": 50
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_statecraft_finish",
+      "name": "tr_statecraft_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_statecraft",
+      "effects": "empire_size_mult: -5.0%; ascension_perks_add: +1",
+      "modifier": {
+        "empire_size_mult": -0.05,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "statecraft": {
+    "name": "statecraft",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_statecraft_constitutional_focus",
+        "name": "tr_statecraft_constitutional_focus",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "statecraft",
+        "effects": "council_agenda_progress_speed: +25.0%",
+        "modifier": {
+          "council_agenda_progress_speed": 0.25
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_statecraft_inspiring_agendas",
+        "name": "tr_statecraft_inspiring_agendas",
+        "custom_tooltip": "tr_statecraft_inspiring_agendas_desc",
+        "type": "tradition",
+        "tree": "statecraft",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_statecraft_constitutional_focus"
+        },
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_statecraft_immutable_directives",
+        "name": "tr_statecraft_immutable_directives",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "statecraft",
+        "effects": "council_agenda_finishing_effect_duration_mult: +25.0%",
+        "modifier": {
+          "council_agenda_finishing_effect_duration_mult": 0.25
+        },
+        "possible": {
+          "has_tradition": "tr_statecraft_inspiring_agendas"
+        },
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_statecraft_amongst_peers",
+        "name": "tr_statecraft_amongst_peers",
+        "custom_tooltip": "tr_statecraft_shared_benefits_desc",
+        "type": "tradition",
+        "tree": "statecraft",
+        "effects": "",
+        "modifier": {},
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_statecraft_shared_benefits",
+        "name": "tr_statecraft_shared_benefits",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "statecraft",
+        "effects": "councilor_skill_add: +1",
+        "modifier": {
+          "councilor_skill_add": 1
+        },
+        "possible": {
+          "has_tradition": "tr_statecraft_amongst_peers"
+        },
+        "ai_weight": 1000,
+        "has_variants": false
+      }
+    ]
+  },
+  "tr_subterfuge": {
+    "name": "tr_subterfuge",
+    "adopt": {
+      "id": "tr_subterfuge_adopt",
+      "name": "tr_subterfuge_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_subterfuge",
+      "effects": "espionage_operation_cost_mult: -25.0%; intel_decryption_add: +1",
+      "modifier": {
+        "espionage_operation_cost_mult": -0.25,
+        "intel_decryption_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_subterfuge_finish",
+      "name": "tr_subterfuge_finish",
+      "custom_tooltip": "tr_subterfuge_finish_desc",
+      "type": "finish",
+      "tree": "tr_subterfuge",
+      "effects": "ascension_perks_add: +1",
+      "modifier": {
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "traditions": []
+  },
+  "subterfuge": {
+    "name": "subterfuge",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_subterfuge_information_security",
+        "name": "tr_subterfuge_information_security",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "subterfuge",
+        "effects": "intel_encryption_add: +1; ship_evasion_add: +5",
+        "modifier": {
+          "intel_encryption_add": 1,
+          "ship_evasion_add": 5
+        },
+        "possible": {},
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_subterfuge_nda",
+        "name": "tr_subterfuge_nda",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "subterfuge",
+        "effects": "espionage_hostile_operation_difficulty_add: +1; espionage_hostile_operation_cost_mult: +20.0%",
+        "modifier": {
+          "espionage_hostile_operation_difficulty_add": 1,
+          "espionage_hostile_operation_cost_mult": 0.2
+        },
+        "possible": {
+          "has_tradition": "tr_subterfuge_information_security"
+        },
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_subterfuge_operational_security",
+        "name": "tr_subterfuge_operational_security",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "subterfuge",
+        "effects": "intel_decryption_add: +1; espionage_operation_skill_add: +2; ship_tracking_add: +10",
+        "modifier": {
+          "intel_decryption_add": 1,
+          "espionage_operation_skill_add": 2,
+          "ship_tracking_add": 10
+        },
+        "possible": {},
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_subterfuge_double_agents",
+        "name": "tr_subterfuge_double_agents",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "subterfuge",
+        "effects": "envoys_add: +1; spy_network_levels_add: +10; show_only_custom_tooltip: False",
+        "modifier": {
+          "envoys_add": 1,
+          "spy_network_levels_add": 10,
+          "show_only_custom_tooltip": false,
+          "custom_tooltip": "tr_subterfuge_double_agents_effect"
+        },
+        "possible": {
+          "has_tradition": [
+            "tr_subterfuge_information_security",
+            "tr_subterfuge_operational_security"
+          ]
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_subterfuge_shadow_recruits",
+        "name": "tr_subterfuge_shadow_recruits",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "subterfuge",
+        "effects": "spy_network_daily_value_mult: +50.0%",
+        "modifier": {
+          "spy_network_daily_value_mult": 0.5
+        },
+        "possible": {
+          "has_tradition": "tr_subterfuge_operational_security"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      }
+    ]
+  },
+  "tr_supremacy": {
+    "name": "tr_supremacy",
+    "adopt": {
+      "id": "tr_supremacy_adopt",
+      "name": "tr_supremacy_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_supremacy",
+      "effects": "country_naval_cap_add: +20; army_damage_mult: +20.0%",
+      "modifier": {
+        "country_naval_cap_add": 20,
+        "army_damage_mult": 0.2
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_supremacy_finish",
+      "name": "tr_supremacy_finish",
+      "custom_tooltip": "tr_supremacy_finish_desc",
+      "type": "finish",
+      "tree": "tr_supremacy",
+      "effects": "ascension_perks_add: +1",
+      "modifier": {
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "supremacy": {
+    "name": "supremacy",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_supremacy_fleet_logistical_corps",
+        "name": "tr_supremacy_fleet_logistical_corps",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "supremacy",
+        "effects": "ships_upkeep_mult: -10.0%; country_naval_cap_mult: +20.0%",
+        "modifier": {
+          "ships_upkeep_mult": -0.1,
+          "country_naval_cap_mult": 0.2
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_supremacy_master_shipwrights",
+        "name": "tr_supremacy_master_shipwrights",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "supremacy",
+        "effects": "starbase_shipyard_build_speed_mult: +25.0%",
+        "modifier": {
+          "starbase_shipyard_build_speed_mult": 0.25
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_supremacy_war_games",
+        "name": "tr_supremacy_war_games",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "supremacy",
+        "effects": "command_limit_add: +20; country_commander_cap_add: +1; commander_initial_skill: +1",
+        "modifier": {
+          "command_limit_add": 20,
+          "country_commander_cap_add": 1,
+          "commander_initial_skill": 1
+        },
+        "possible": {
+          "has_tradition": [
+            "tr_supremacy_master_shipwrights",
+            "tr_supremacy_fleet_logistical_corps"
+          ]
+        },
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_supremacy_overwhelming_force",
+        "name": "tr_supremacy_overwhelming_force",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "supremacy",
+        "effects": "ship_orbital_bombardment_mult: +20.0%; ship_fire_rate_mult: +10.0%",
+        "modifier": {
+          "ship_orbital_bombardment_mult": 0.2,
+          "ship_fire_rate_mult": 0.1
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_supremacy_great_game",
+        "name": "tr_supremacy_great_game",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "supremacy",
+        "effects": "ship_damage_against_starbases_mult: +20.0%",
+        "modifier": {
+          "ship_damage_against_starbases_mult": 0.2
+        },
+        "possible": {
+          "has_tradition": "tr_supremacy_overwhelming_force"
+        },
+        "ai_weight": 1000,
+        "has_variants": true
+      }
+    ]
+  },
+  "tr_synchronicity": {
+    "name": "tr_synchronicity",
+    "adopt": {
+      "id": "tr_synchronicity_adopt",
+      "name": "tr_synchronicity_adopt",
+      "custom_tooltip": "tr_synchronicity_adopt_desc",
+      "type": "adopt",
+      "tree": "tr_synchronicity",
+      "effects": "",
+      "modifier": {},
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_synchronicity_finish",
+      "name": "tr_synchronicity_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_synchronicity",
+      "effects": "planetary_ascension_effect_mult: +25.0%; ascension_perks_add: +1",
+      "modifier": {
+        "planetary_ascension_effect_mult": 0.25,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "traditions": []
+  },
+  "synchronicity": {
+    "name": "synchronicity",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_synchronicity_integrated_preservation",
+        "name": "tr_synchronicity_integrated_preservation",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "synchronicity",
+        "effects": "planet_resettlement_unemployed_mult: +30.0%",
+        "modifier": {
+          "planet_resettlement_unemployed_mult": 0.3
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_synchronicity_kinship_gestalt",
+        "name": "tr_synchronicity_kinship_gestalt",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "synchronicity",
+        "effects": "leaders_upkeep_mult: -20.0%; empire_size_pops_mult: -10.0%",
+        "modifier": {
+          "leaders_upkeep_mult": -0.2,
+          "empire_size_pops_mult": -0.1
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_synchronicity_collective_reasoning",
+        "name": "tr_synchronicity_collective_reasoning",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "synchronicity",
+        "effects": "planet_stability_add: +5; planetary_ascension_cost_mult: -10.0%",
+        "modifier": {
+          "planet_stability_add": 5,
+          "planetary_ascension_cost_mult": -0.1
+        },
+        "possible": {
+          "has_tradition": "tr_synchronicity_integrated_preservation"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_synchronicity_harmonious_directives",
+        "name": "tr_synchronicity_harmonious_directives",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "synchronicity",
+        "effects": "country_edict_fund_add: +50; restored_node_bonus_skill: +1",
+        "modifier": {
+          "country_edict_fund_add": 50,
+          "restored_node_bonus_skill": 1
+        },
+        "possible": {
+          "has_tradition": [
+            "tr_synchronicity_kinship_gestalt",
+            "tr_synchronicity_cloned_organs"
+          ]
+        },
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_synchronicity_cloned_organs",
+        "name": "tr_synchronicity_cloned_organs",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "synchronicity",
+        "effects": "leader_lifespan_add: +10; negative_traits_country: -1",
+        "modifier": {
+          "leader_lifespan_add": 10,
+          "negative_traits_country": -1
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": true
+      }
+    ]
+  },
+  "tr_unyielding": {
+    "name": "tr_unyielding",
+    "adopt": {
+      "id": "tr_unyielding_adopt",
+      "name": "tr_unyielding_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_unyielding",
+      "effects": "country_starbase_capacity_add: +2; starbase_upgrade_speed_mult: +50.0%",
+      "modifier": {
+        "country_starbase_capacity_add": 2,
+        "starbase_upgrade_speed_mult": 0.5
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_unyielding_finish",
+      "name": "tr_unyielding_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_unyielding",
+      "effects": "starbase_defense_platform_capacity_mult: +50.0%; starbases_upkeep_mult: -20.0%; ascension_perks_add: +1",
+      "modifier": {
+        "starbase_defense_platform_capacity_mult": 0.5,
+        "starbases_upkeep_mult": -0.2,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "traditions": []
+  },
+  "unyielding": {
+    "name": "unyielding",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_unyielding_resistance_is_frugal",
+        "name": "tr_unyielding_resistance_is_frugal",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "unyielding",
+        "effects": "army_defense_health_mult: +25.0%",
+        "modifier": {
+          "army_defense_health_mult": 0.25
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_unyielding_never_surrender",
+        "name": "tr_unyielding_never_surrender",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "unyielding",
+        "effects": "planet_orbital_bombardment_damage: -0.25; country_war_exhaustion_mult: -25.0%; country_hostile_claim_influence_cost_mult: +25.0%",
+        "modifier": {
+          "planet_orbital_bombardment_damage": -0.25,
+          "country_war_exhaustion_mult": -0.25,
+          "country_hostile_claim_influence_cost_mult": 0.25
+        },
+        "possible": {
+          "has_tradition": "tr_unyielding_resistance_is_frugal"
+        },
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_unyielding_bulwark_of_harmony",
+        "name": "tr_unyielding_bulwark_of_harmony",
+        "custom_tooltip": "tr_unyielding_bulwark_of_harmony_desc",
+        "type": "tradition",
+        "tree": "unyielding",
+        "effects": "starbase_defensive_war_ship_build_speed_mult: +33.0%; ship_home_territory_fire_rate_mult: +15.0%",
+        "modifier": {
+          "starbase_defensive_war_ship_build_speed_mult": 0.33,
+          "ship_home_territory_fire_rate_mult": 0.15
+        },
+        "possible": {
+          "has_tradition": "tr_unyielding_never_surrender"
+        },
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_unyielding_defensive_zeal",
+        "name": "tr_unyielding_defensive_zeal",
+        "custom_tooltip": "tr_unyielding_defensive_zeal_desc",
+        "type": "tradition",
+        "tree": "unyielding",
+        "effects": "shipclass_starbase_damage_mult: +33.0%; shipclass_starbase_hull_mult: +33.0%; shipclass_military_station_damage_mult: +33.0%; shipclass_military_station_hull_mult: +33.0%",
+        "modifier": {
+          "shipclass_starbase_damage_mult": 0.33,
+          "shipclass_starbase_hull_mult": 0.33,
+          "shipclass_military_station_damage_mult": 0.33,
+          "shipclass_military_station_hull_mult": 0.33
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_unyielding_fortress_doctrine",
+        "name": "tr_unyielding_fortress_doctrine",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "unyielding",
+        "effects": "country_starbase_capacity_add: +2; starbase_upgrade_cost_mult: -50.0%",
+        "modifier": {
+          "country_starbase_capacity_add": 2,
+          "starbase_upgrade_cost_mult": -0.5
+        },
+        "possible": {
+          "has_tradition": "tr_unyielding_defensive_zeal"
+        },
+        "ai_weight": 5000,
+        "has_variants": true
+      }
+    ]
+  },
+  "tr_versatility": {
+    "name": "tr_versatility",
+    "adopt": {
+      "id": "tr_versatility_adopt",
+      "name": "tr_versatility_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_versatility",
+      "effects": "planet_pop_assemblers_upkeep_mult: -10.0%",
+      "modifier": {
+        "planet_pop_assemblers_upkeep_mult": -0.1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_versatility_finish",
+      "name": "tr_versatility_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_versatility",
+      "effects": "planet_pop_assemblers_energy_upkeep_add: +1; planet_pop_assembly_mult: +10.0%; ascension_perks_add: +1",
+      "modifier": {
+        "planet_pop_assemblers_energy_upkeep_add": 1,
+        "planet_pop_assembly_mult": 0.1,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "traditions": []
+  },
+  "versatility": {
+    "name": "versatility",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_versatility_universal_compatibility",
+        "name": "tr_versatility_universal_compatibility",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "versatility",
+        "effects": "country_synthetic_trust_cap_add: +50; envoys_add: +1",
+        "modifier": {
+          "country_synthetic_trust_cap_add": 50,
+          "envoys_add": 1
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_versatility_adaptive_programming",
+        "name": "tr_versatility_adaptive_programming",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "versatility",
+        "effects": "country_trade_fee: -0.1",
+        "modifier": {
+          "country_trade_fee": -0.1
+        },
+        "possible": {
+          "has_tradition": "tr_versatility_universal_compatibility"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_versatility_spatial_optimization",
+        "name": "tr_versatility_spatial_optimization",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "versatility",
+        "effects": "pop_amenities_usage_no_happiness_mult: -10.0%",
+        "modifier": {
+          "pop_amenities_usage_no_happiness_mult": -0.1
+        },
+        "possible": {},
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_versatility_material_analysis",
+        "name": "tr_versatility_material_analysis",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "versatility",
+        "effects": "planet_jobs_upkeep_mult: -5.0%",
+        "modifier": {
+          "planet_jobs_upkeep_mult": -0.05
+        },
+        "possible": {
+          "has_tradition": "tr_versatility_spatial_optimization"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_versatility_operational_proxies",
+        "name": "tr_versatility_operational_proxies",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "versatility",
+        "effects": "planet_maintenance_drones_unity_produces_add: +1",
+        "modifier": {
+          "planet_maintenance_drones_unity_produces_add": 1
+        },
+        "possible": {
+          "has_tradition": "tr_versatility_spatial_optimization"
+        },
+        "ai_weight": 1000,
+        "has_variants": false
+      }
+    ]
+  },
+  "tr_cloning": {
+    "name": "tr_cloning",
+    "adopt": {
+      "id": "tr_cloning_adopt",
+      "name": "tr_cloning_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_cloning",
+      "effects": "",
+      "modifier": {},
+      "possible": {
+        "custom_tooltip": {
+          "fail_text": "REQUIRES_FINISHED_EVOLUTION",
+          "has_country_flag": "cloning_tradition_unlocked"
+        }
+      },
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "finish": {
+      "id": "tr_cloning_finish",
+      "name": "tr_cloning_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_cloning",
+      "effects": "ascension_perks_add: +1",
+      "modifier": {
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "traditions": []
+  },
+  "cloning": {
+    "name": "cloning",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_cloning_evolutionary_extrapolation",
+        "name": "tr_cloning_evolutionary_extrapolation",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "cloning",
+        "effects": "category_biology_research_speed_mult: +15.0%; planet_buildings_clone_vats_upkeep_mult: -50.0%",
+        "modifier": {
+          "category_biology_research_speed_mult": 0.15,
+          "planet_buildings_clone_vats_upkeep_mult": -0.5
+        },
+        "possible": {},
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_cloning_somatic_synthesization",
+        "name": "tr_cloning_somatic_synthesization",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "cloning",
+        "effects": "BIOLOGICAL_species_trait_points_add: +4; BIOLOGICAL_species_trait_picks_add: +2; modify_species_cost_mult: -50.0%",
+        "modifier": {
+          "BIOLOGICAL_species_trait_points_add": 4,
+          "BIOLOGICAL_species_trait_picks_add": 2,
+          "modify_species_cost_mult": -0.5
+        },
+        "possible": {},
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_cloning_stage_1_swap",
+        "name": "tr_cloning_stage_1_swap",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "cloning",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_cloning_evolutionary_extrapolation"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_cloning_stage_2_swap",
+        "name": "tr_cloning_stage_2_swap",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "cloning",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_cloning_somatic_synthesization"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_cloning_stage_3_swap",
+        "name": "tr_cloning_stage_3_swap",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "cloning",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": [
+            "tr_cloning_evolutionary_extrapolation",
+            "tr_cloning_somatic_synthesization"
+          ]
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_cloning_genomic_growth",
+        "name": "tr_cloning_genomic_growth",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "cloning",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "always": false
+        },
+        "ai_weight": 0,
+        "has_variants": false
+      },
+      {
+        "id": "tr_cloning_artificial_population",
+        "name": "tr_cloning_artificial_population",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "cloning",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "always": false
+        },
+        "ai_weight": 0,
+        "has_variants": false
+      },
+      {
+        "id": "tr_cloning_biochemical_composure",
+        "name": "tr_cloning_biochemical_composure",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "cloning",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "always": false
+        },
+        "ai_weight": 0,
+        "has_variants": false
+      },
+      {
+        "id": "tr_cloning_biochemical_composure_clones",
+        "name": "tr_cloning_biochemical_composure_clones",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "cloning",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "always": false
+        },
+        "ai_weight": 0,
+        "has_variants": false
+      }
+    ]
+  },
+  "tr_cybernetics": {
+    "name": "tr_cybernetics",
+    "adopt": {
+      "id": "tr_cybernetics_adopt",
+      "name": "tr_cybernetics_adopt",
+      "custom_tooltip": "tr_cybernetics_adopt_desc",
+      "type": "adopt",
+      "tree": "tr_cybernetics",
+      "effects": "",
+      "modifier": {},
+      "possible": {
+        "if": {
+          "limit": {
+            "is_hive_empire": false,
+            "NOR": {
+              "has_origin": [
+                "origin_cybernetic_creed",
+                "origin_unplugged"
+              ]
+            }
+          },
+          "has_ascension_perk": "ap_the_flesh_is_weak",
+          "has_technology": "tech_integrated_cybernetics"
+        },
+        "else_if": [
+          {
+            "limit": {
+              "is_hive_empire": false,
+              "has_origin": "origin_cybernetic_creed"
+            },
+            "has_technology": "tech_integrated_cybernetics"
+          },
+          {
+            "limit": {
+              "has_origin": "origin_unplugged"
+            },
+            "has_technology": "tech_integrated_cybernetics",
+            "OR": {
+              "custom_tooltip": {
+                "text": "hard_reset_not_embraced_cybernetics",
+                "has_country_flag": "is_cyberized"
+              },
+              "AND": {
+                "has_ascension_perk": "ap_the_flesh_is_weak",
+                "custom_tooltip": {
+                  "text": "hard_reset_embraced_neither",
+                  "NOR": {
+                    "has_country_flag": [
+                      "is_cyberized",
+                      "is_decyberized"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "limit": {
+              "is_hive_empire": true,
+              "NOT": {
+                "has_origin": "origin_cybernetic_creed"
+              }
+            },
+            "has_ascension_perk": "ap_organo_machine_interfacing",
+            "has_technology": "tech_integrated_cybernetics"
+          }
+        ]
+      },
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "finish": {
+      "id": "tr_cybernetics_finish",
+      "name": "tr_cybernetics_finish",
+      "custom_tooltip": "tr_cybernetics_finish_effects",
+      "type": "finish",
+      "tree": "tr_cybernetics",
+      "effects": "",
+      "modifier": {},
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "traditions": []
+  },
+  "cybernetics": {
+    "name": "cybernetics",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_cybernetics_transubstantiation_synthesis",
+        "name": "tr_cybernetics_transubstantiation_synthesis",
+        "custom_tooltip": "tr_cybernetics_transubstantiation_synthesis_desc",
+        "type": "tradition",
+        "tree": "cybernetics",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "if": {
+            "limit": {
+              "has_machine_age_dlc": false
+            },
+            "if": {
+              "limit": {
+                "is_cyborg_empire": true
+              }
+            },
+            "else": {
+              "custom_tooltip": {
+                "fail_text": "REQUIRES_CYBORG_EMPIRE_UTOPIA",
+                "is_cyborg_empire": true
+              }
+            }
+          }
+        },
+        "ai_weight": 1,
+        "has_variants": true
+      },
+      {
+        "id": "tr_cybernetics_metabolic_reprocessing",
+        "name": "tr_cybernetics_metabolic_reprocessing",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "cybernetics",
+        "effects": "planet_pops_cyborgs_upkeep_mult: -10.0%",
+        "modifier": {
+          "planet_pops_cyborgs_upkeep_mult": -0.1
+        },
+        "possible": {
+          "has_tradition": "tr_cybernetics_transubstantiation_synthesis"
+        },
+        "ai_weight": 1,
+        "has_variants": true
+      },
+      {
+        "id": "tr_cybernetics_integrated_anatomy",
+        "name": "tr_cybernetics_integrated_anatomy",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "cybernetics",
+        "effects": "BIOLOGICAL_species_trait_picks_add: +1",
+        "modifier": {
+          "BIOLOGICAL_species_trait_picks_add": 1
+        },
+        "possible": {
+          "has_tradition": "tr_cybernetics_transubstantiation_synthesis"
+        },
+        "ai_weight": 1,
+        "has_variants": true
+      },
+      {
+        "id": "tr_cybernetics_augmentation_overload",
+        "name": "tr_cybernetics_augmentation_overload",
+        "custom_tooltip": "tr_cybernetics_augmentation_overload_desc",
+        "type": "tradition",
+        "tree": "cybernetics",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_cybernetics_metabolic_reprocessing"
+        },
+        "ai_weight": 1,
+        "has_variants": true
+      },
+      {
+        "id": "tr_cybernetics_modular_cybernetics",
+        "name": "tr_cybernetics_modular_cybernetics",
+        "custom_tooltip": [
+          "tr_cybernetics_modular_cybernetics_tt",
+          "tr_cybernetics_modular_cybernetics_tt_2"
+        ],
+        "type": "tradition",
+        "tree": "cybernetics",
+        "effects": "modify_species_cost_mult: -50.0%",
+        "modifier": {
+          "modify_species_cost_mult": -0.5
+        },
+        "possible": {
+          "has_tradition": "tr_cybernetics_integrated_anatomy"
+        },
+        "ai_weight": 1,
+        "has_variants": true
+      },
+      {
+        "id": "tr_cybernetics_assimilator_inevitable_assimilation",
+        "name": "tr_cybernetics_assimilator_inevitable_assimilation",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "cybernetics",
+        "effects": "auto_mod_monthly_add: +100",
+        "modifier": {
+          "auto_mod_monthly_add": 100
+        },
+        "possible": {},
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_cybernetics_assimilator_metabolic_reprocessing",
+        "name": "tr_cybernetics_assimilator_metabolic_reprocessing",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "cybernetics",
+        "effects": "planet_pops_cyborgs_upkeep_mult: -10.0%",
+        "modifier": {
+          "planet_pops_cyborgs_upkeep_mult": -0.1
+        },
+        "possible": {
+          "has_tradition": "tr_cybernetics_assimilator_inevitable_assimilation"
+        },
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_cybernetics_assimilator_integrated_anatomy",
+        "name": "tr_cybernetics_assimilator_integrated_anatomy",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "cybernetics",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_cybernetics_assimilator_inevitable_assimilation"
+        },
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_cybernetics_assimilator_gestation",
+        "name": "tr_cybernetics_assimilator_gestation",
+        "custom_tooltip": "tr_cybernetics_assimilator_gestation_desc",
+        "type": "tradition",
+        "tree": "cybernetics",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_cybernetics_assimilator_metabolic_reprocessing"
+        },
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_cybernetics_assimilator_modular_cybernetics",
+        "name": "tr_cybernetics_assimilator_modular_cybernetics",
+        "custom_tooltip": [
+          "tr_cybernetics_assimilator_modular_cybernetics_tt",
+          "tr_cybernetics_assimilator_modular_cybernetics_tt_2"
+        ],
+        "type": "tradition",
+        "tree": "cybernetics",
+        "effects": "modify_species_cost_mult: -50.0%",
+        "modifier": {
+          "modify_species_cost_mult": -0.5
+        },
+        "possible": {
+          "has_tradition": "tr_cybernetics_assimilator_integrated_anatomy"
+        },
+        "ai_weight": 1,
+        "has_variants": false
+      }
+    ]
+  },
+  "tr_cybernetics_assimilator": {
+    "name": "tr_cybernetics_assimilator",
+    "adopt": {
+      "id": "tr_cybernetics_assimilator_adopt",
+      "name": "tr_cybernetics_assimilator_adopt",
+      "custom_tooltip": "tr_cybernetics_assimilator_adopt_desc",
+      "type": "adopt",
+      "tree": "tr_cybernetics_assimilator",
+      "effects": "",
+      "modifier": {},
+      "possible": {
+        "has_ascension_perk": "ap_organo_machine_interfacing_assimilator",
+        "has_technology": "tech_integrated_cybernetics"
+      },
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_cybernetics_assimilator_finish",
+      "name": "tr_cybernetics_assimilator_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_cybernetics_assimilator",
+      "effects": "cyborg_pop_bonus_workforce_mult: +10.0%; MACHINE_species_trait_picks_add: +2; ascension_perks_add: +1",
+      "modifier": {
+        "cyborg_pop_bonus_workforce_mult": 0.1,
+        "MACHINE_species_trait_picks_add": 2,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "tr_genetics": {
+    "name": "tr_genetics",
+    "adopt": {
+      "id": "tr_genetics_adopt",
+      "name": "tr_genetics_adopt",
+      "custom_tooltip": "tr_genetics_adopt_modifier_desc",
+      "type": "adopt",
+      "tree": "tr_genetics",
+      "effects": "",
+      "modifier": {},
+      "possible": {
+        "has_ascension_perk": "ap_engineered_evolution",
+        "has_technology": "tech_gene_tailoring"
+      },
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_genetics_finish",
+      "name": "tr_genetics_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_genetics",
+      "effects": "planet_buildings_clone_vats_upkeep_mult: -33.0%; ascension_perks_add: +1",
+      "modifier": {
+        "planet_buildings_clone_vats_upkeep_mult": -0.33,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "traditions": []
+  },
+  "genetics": {
+    "name": "genetics",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_genetics_resequencing",
+        "name": "tr_genetics_resequencing",
+        "custom_tooltip": "tr_genetics_resequencing_desc",
+        "type": "tradition",
+        "tree": "genetics",
+        "effects": "",
+        "modifier": {},
+        "possible": {},
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_genetics_creation",
+        "name": "tr_genetics_creation",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "genetics",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_genetics_resequencing"
+        },
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_genetics_enhanced_expression",
+        "name": "tr_genetics_enhanced_expression",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "genetics",
+        "effects": "BIOLOGICAL_species_trait_points_add: +6; BIOLOGICAL_species_trait_picks_add: +2; modify_species_cost_mult: -50.0%",
+        "modifier": {
+          "BIOLOGICAL_species_trait_points_add": 6,
+          "BIOLOGICAL_species_trait_picks_add": 2,
+          "modify_species_cost_mult": -0.5
+        },
+        "possible": {
+          "has_tradition": "tr_genetics_creation"
+        },
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_genetics_retrovirus",
+        "name": "tr_genetics_retrovirus",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "genetics",
+        "effects": "pop_environment_tolerance: +0.1",
+        "modifier": {
+          "pop_environment_tolerance": 0.1
+        },
+        "possible": {},
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_genetics_efficient_cloning",
+        "name": "tr_genetics_efficient_cloning",
+        "custom_tooltip": "tr_genetics_efficient_cloning_desc",
+        "type": "tradition",
+        "tree": "genetics",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_genetics_retrovirus"
+        },
+        "ai_weight": 1,
+        "has_variants": false
+      }
+    ]
+  },
+  "tr_modularity": {
+    "name": "tr_modularity",
+    "adopt": {
+      "id": "tr_modularity_adopt",
+      "name": "tr_modularity_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_modularity",
+      "effects": "planet_metallurgists_sr_living_metal_produces_add: +10.0%",
+      "modifier": {
+        "planet_metallurgists_sr_living_metal_produces_add": 0.1
+      },
+      "possible": {
+        "custom_tooltip": {
+          "fail_text": "REQUIRES_FINISHED_TRANSFORMATION",
+          "has_country_flag": "modularity_traditions_unlocked"
+        }
+      },
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_modularity_finish",
+      "name": "tr_modularity_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_modularity",
+      "effects": "planet_jobs_upkeep_mult: -15.0%; ascension_perks_add: +1",
+      "modifier": {
+        "planet_jobs_upkeep_mult": -0.15,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "modularity": {
+    "name": "modularity",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_modularity_1",
+        "name": "tr_modularity_1",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "modularity",
+        "effects": "planet_jobs_worker_produces_mult: +10.0%; auto_mod_monthly_add: +400",
+        "modifier": {
+          "planet_jobs_worker_produces_mult": 0.1,
+          "auto_mod_monthly_add": 400
+        },
+        "possible": {
+          "has_tradition": "tr_modularity_adopt"
+        },
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_modularity_2",
+        "name": "tr_modularity_2",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "modularity",
+        "effects": "planet_pop_assemblers_sr_living_metal_upkeep_add: +15.0%",
+        "modifier": {
+          "planet_pop_assemblers_sr_living_metal_upkeep_add": 0.15
+        },
+        "possible": {
+          "has_tradition": "tr_modularity_1"
+        },
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_modularity_3",
+        "name": "tr_modularity_3",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "modularity",
+        "effects": "planet_stability_add: +10; army_damage_mult: +50.0%",
+        "modifier": {
+          "planet_stability_add": 10,
+          "army_damage_mult": 0.5
+        },
+        "possible": {
+          "has_tradition": "tr_modularity_1"
+        },
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_modularity_4",
+        "name": "tr_modularity_4",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "modularity",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_modularity_2"
+        },
+        "ai_weight": 1000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_modularity_5",
+        "name": "tr_modularity_5",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "modularity",
+        "effects": "MACHINE_species_trait_points_add: +4; MACHINE_species_trait_picks_add: +4; modify_species_cost_mult: -50.0%",
+        "modifier": {
+          "MACHINE_species_trait_points_add": 4,
+          "MACHINE_species_trait_picks_add": 4,
+          "modify_species_cost_mult": -0.5
+        },
+        "possible": {
+          "has_tradition": "tr_modularity_3"
+        },
+        "ai_weight": 1000,
+        "has_variants": false
+      }
+    ]
+  },
+  "tr_mutation": {
+    "name": "tr_mutation",
+    "adopt": {
+      "id": "tr_mutation_adopt",
+      "name": "tr_mutation_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_mutation",
+      "effects": "",
+      "modifier": {},
+      "possible": {
+        "custom_tooltip": {
+          "fail_text": "REQUIRES_FINISHED_EVOLUTION",
+          "has_country_flag": "mutation_tradition_unlocked"
+        }
+      },
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "finish": {
+      "id": "tr_mutation_finish",
+      "name": "tr_mutation_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_mutation",
+      "effects": "ascension_perks_add: +1",
+      "modifier": {
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "mutation": {
+    "name": "mutation",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_mutation_stage_1_swap",
+        "name": "tr_mutation_stage_1_swap",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "mutation",
+        "effects": "",
+        "modifier": {},
+        "possible": {},
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_mutation_stage_2_swap",
+        "name": "tr_mutation_stage_2_swap",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "mutation",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_mutation_stage_1_swap"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_mutation_stage_3_swap",
+        "name": "tr_mutation_stage_3_swap",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "mutation",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_mutation_stage_1_swap"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_mutation_planned_polymorphism",
+        "name": "tr_mutation_planned_polymorphism",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "mutation",
+        "effects": "auto_mod_monthly_add: +200",
+        "modifier": {
+          "auto_mod_monthly_add": 200
+        },
+        "possible": {},
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_mutation_unnatural_selection",
+        "name": "tr_mutation_unnatural_selection",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "mutation",
+        "effects": "BIOLOGICAL_species_trait_points_add: +4; BIOLOGICAL_species_trait_picks_add: +4; modify_species_cost_mult: -50.0%",
+        "modifier": {
+          "BIOLOGICAL_species_trait_points_add": 4,
+          "BIOLOGICAL_species_trait_picks_add": 4,
+          "modify_species_cost_mult": -0.5
+        },
+        "possible": {
+          "has_tradition": "tr_mutation_planned_polymorphism"
+        },
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_mutation_environmental_integration",
+        "name": "tr_mutation_environmental_integration",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "mutation",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "always": false
+        },
+        "ai_weight": 0,
+        "has_variants": false
+      },
+      {
+        "id": "tr_mutation_somatic_subversiveness",
+        "name": "tr_mutation_somatic_subversiveness",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "mutation",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "always": false
+        },
+        "ai_weight": 0,
+        "has_variants": false
+      },
+      {
+        "id": "tr_mutation_nucleotide_isolation",
+        "name": "tr_mutation_nucleotide_isolation",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "mutation",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "always": false
+        },
+        "ai_weight": 0,
+        "has_variants": false
+      }
+    ]
+  },
+  "tr_nanotech": {
+    "name": "tr_nanotech",
+    "adopt": {
+      "id": "tr_nanotech_adopt",
+      "name": "tr_nanotech_adopt",
+      "custom_tooltip": "tr_nanotech_adopt_modifier_desc",
+      "type": "adopt",
+      "tree": "tr_nanotech",
+      "effects": "",
+      "modifier": {},
+      "possible": {
+        "custom_tooltip": {
+          "fail_text": "REQUIRES_FINISHED_TRANSFORMATION",
+          "has_country_flag": "nanotech_traditions_unlocked"
+        }
+      },
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_nanotech_finish",
+      "name": "tr_nanotech_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_nanotech",
+      "effects": "empire_size_colonies_mult: -50.0%; ascension_perks_add: +1",
+      "modifier": {
+        "empire_size_colonies_mult": -0.5,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "nanotech": {
+    "name": "nanotech",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_nanotech_1",
+        "name": "tr_nanotech_1",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "nanotech",
+        "effects": "planet_farmers_food_produces_add: -1; planet_farmers_nanites_produces_add: +20.0%; planet_miners_minerals_produces_add: -1; planet_miners_nanites_produces_add: +20.0%",
+        "modifier": {
+          "planet_farmers_food_produces_add": -1,
+          "planet_farmers_nanites_produces_add": 0.2,
+          "planet_miners_minerals_produces_add": -1,
+          "planet_miners_nanites_produces_add": 0.2
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_nanotech_2",
+        "name": "tr_nanotech_2",
+        "custom_tooltip": "tr_nanotech_2_modifier_desc",
+        "type": "tradition",
+        "tree": "nanotech",
+        "effects": "",
+        "modifier": {},
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_nanotech_3",
+        "name": "tr_nanotech_3",
+        "custom_tooltip": "tr_nanotech_3_modifier_desc",
+        "type": "tradition",
+        "tree": "nanotech",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_nanotech_1"
+        },
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_nanotech_4",
+        "name": "tr_nanotech_4",
+        "custom_tooltip": "tr_nanotech_4_modifier_desc",
+        "type": "tradition",
+        "tree": "nanotech",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_nanotech_2"
+        },
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_nanotech_5",
+        "name": "tr_nanotech_5",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "nanotech",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": [
+            "tr_nanotech_3",
+            "tr_nanotech_4"
+          ]
+        },
+        "ai_weight": 1000,
+        "has_variants": false
+      }
+    ]
+  },
+  "tr_psionics": {
+    "name": "tr_psionics",
+    "adopt": {
+      "id": "tr_psionics_adopt",
+      "name": "tr_psionics_adopt",
+      "custom_tooltip": "tr_psionics_adopt_tooltip",
+      "type": "adopt",
+      "tree": "tr_psionics",
+      "effects": "",
+      "modifier": {},
+      "possible": {
+        "if": {
+          "limit": {
+            "OR": {
+              "has_origin": "origin_shroudwalker_apprentice",
+              "has_country_flag": "ratling_country"
+            }
+          },
+          "has_technology": "tech_psionic_theory"
+        },
+        "else": {
+          "has_ascension_perk": "ap_mind_over_matter",
+          "has_technology": "tech_psionic_theory"
+        }
+      },
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "finish": {
+      "id": "tr_psionics_finish",
+      "name": "tr_psionics_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_psionics",
+      "effects": "edicts_upkeep_mult: -10.0%; shroud_delve_cooldown: -0.2; ascension_perks_add: +1",
+      "modifier": {
+        "edicts_upkeep_mult": -0.1,
+        "shroud_delve_cooldown": -0.2,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "psionics": {
+    "name": "psionics",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_psionics_psi_corps",
+        "name": "tr_psionics_psi_corps",
+        "custom_tooltip": "tr_psionics_psi_corps_desc",
+        "type": "tradition",
+        "tree": "psionics",
+        "effects": "",
+        "modifier": {},
+        "possible": {},
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_psionics_mind_readers",
+        "name": "tr_psionics_mind_readers",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "psionics",
+        "effects": "add_base_country_intel: +10",
+        "modifier": {
+          "custom_tooltip": "tr_psionics_mind_readers_tooltip",
+          "add_base_country_intel": 10
+        },
+        "possible": {},
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_psionics_psionic_assimilation",
+        "name": "tr_psionics_psionic_assimilation",
+        "custom_tooltip": "tr_psionics_psionic_assimilation_desc",
+        "type": "tradition",
+        "tree": "psionics",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": [
+            "tr_psionics_psi_corps",
+            "tr_psionics_mind_readers"
+          ]
+        },
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_psionics_breach_shroud",
+        "name": "tr_psionics_breach_shroud",
+        "custom_tooltip": "tr_psionics_breach_shroud_desc",
+        "type": "tradition",
+        "tree": "psionics",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_psionics_psionic_assimilation"
+        },
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_psionics_shrouded_encryption",
+        "name": "tr_psionics_shrouded_encryption",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "psionics",
+        "effects": "intel_decryption_add: +2; intel_encryption_add: +2",
+        "modifier": {
+          "intel_decryption_add": 2,
+          "intel_encryption_add": 2
+        },
+        "possible": {
+          "has_tradition": "tr_psionics_psionic_assimilation"
+        },
+        "ai_weight": 1,
+        "has_variants": false
+      },
+      {
+        "id": "tr_psionics_shroud_psi_corps",
+        "name": "tr_psionics_shroud_psi_corps",
+        "custom_tooltip": "tr_psionics_psi_corps_desc",
+        "type": "tradition",
+        "tree": "psionics",
+        "effects": "",
+        "modifier": {},
+        "possible": {},
+        "ai_weight": 1,
+        "has_variants": true
+      },
+      {
+        "id": "tr_psionics_shroud_great_awakening",
+        "name": "tr_psionics_shroud_great_awakening",
+        "custom_tooltip": "tr_psionics_psionic_assimilation_desc",
+        "type": "tradition",
+        "tree": "psionics",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_psionics_shroud_psi_corps",
+          "custom_tooltip": {
+            "fail_text": "require_breach_shroud_stage_2",
+            "OR": {
+              "any_situation": [
+                {
+                  "is_situation_type": "situation_breach_shroud",
+                  "NOT": {
+                    "current_stage": "stage_1"
+                  }
+                },
+                {
+                  "is_situation_type": "situation_breach_shroud_endbringers",
+                  "NOT": {
+                    "current_stage": "stage_1"
+                  }
+                }
+              ],
+              "NOR": {
+                "any_situation": [
+                  {
+                    "is_situation_type": "situation_breach_shroud"
+                  },
+                  {
+                    "is_situation_type": "situation_breach_shroud_endbringers"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "ai_weight": 1,
+        "has_variants": true
+      },
+      {
+        "id": "tr_psionics_shroud_telekinesis",
+        "name": "tr_psionics_shroud_telekinesis",
+        "custom_tooltip": "tr_psionics_shroud_telekinesis_desc",
+        "type": "tradition",
+        "tree": "psionics",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_psionics_shroud_great_awakening"
+        },
+        "ai_weight": 1,
+        "has_variants": true
+      },
+      {
+        "id": "tr_psionics_shroud_clairvoyance",
+        "name": "tr_psionics_shroud_clairvoyance",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "psionics",
+        "effects": "add_base_country_intel: +10; intel_decryption_add: +2; intel_encryption_add: +2",
+        "modifier": {
+          "add_base_country_intel": 10,
+          "intel_decryption_add": 2,
+          "intel_encryption_add": 2
+        },
+        "possible": {
+          "has_tradition": "tr_psionics_shroud_great_awakening"
+        },
+        "ai_weight": 1,
+        "has_variants": true
+      },
+      {
+        "id": "tr_psionics_shroud_psychometry",
+        "name": "tr_psionics_shroud_psychometry",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "psionics",
+        "effects": "psionic_specialist_pop_bonus_workforce_mult: +5.0%",
+        "modifier": {
+          "psionic_specialist_pop_bonus_workforce_mult": 0.05
+        },
+        "possible": {
+          "has_tradition": [
+            "tr_psionics_shroud_telekinesis",
+            "tr_psionics_shroud_clairvoyance"
+          ]
+        },
+        "ai_weight": 1,
+        "has_variants": true
+      }
+    ]
+  },
+  "tr_psionics_shroud": {
+    "name": "tr_psionics_shroud",
+    "adopt": {
+      "id": "tr_psionics_shroud_adopt",
+      "name": "tr_psionics_shroud_adopt",
+      "custom_tooltip": "tr_psionics_shroud_adopt_desc",
+      "type": "adopt",
+      "tree": "tr_psionics_shroud",
+      "effects": "",
+      "modifier": {},
+      "possible": {
+        "if": {
+          "limit": {
+            "OR": {
+              "has_origin": [
+                "origin_shroudwalker_apprentice",
+                "origin_endbringers"
+              ],
+              "has_country_flag": [
+                "ratling_country",
+                "finish_shroud_forged_liberation_flag"
+              ]
+            }
+          },
+          "has_technology": "tech_psionic_theory"
+        },
+        "else": {
+          "has_ascension_perk": "ap_mind_over_matter",
+          "has_technology": "tech_psionic_theory",
+          "if": {
+            "limit": {
+              "has_origin": "origin_shroud_forged"
+            },
+            "custom_tooltip": "tr_psionics_shroud_forged_requirement"
+          }
+        }
+      },
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "finish": {
+      "id": "tr_psionics_shroud_finish",
+      "name": "tr_psionics_shroud_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_psionics_shroud",
+      "effects": "empire_size_penalty_mult: -10.0%; ascension_perks_add: +1",
+      "modifier": {
+        "empire_size_penalty_mult": -0.1,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "tr_purity": {
+    "name": "tr_purity",
+    "adopt": {
+      "id": "tr_purity_adopt",
+      "name": "tr_purity_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_purity",
+      "effects": "leader_lifespan_mult: +20.0%",
+      "modifier": {
+        "leader_lifespan_mult": 0.2
+      },
+      "possible": {
+        "custom_tooltip": {
+          "fail_text": "REQUIRES_FINISHED_EVOLUTION",
+          "has_country_flag": "purity_tradition_unlocked"
+        }
+      },
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_purity_finish",
+      "name": "tr_purity_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_purity",
+      "effects": "ascension_perks_add: +1",
+      "modifier": {
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "traditions": []
+  },
+  "purity": {
+    "name": "purity",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_purity_genotype_regeneration",
+        "name": "tr_purity_genotype_regeneration",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "purity",
+        "effects": "",
+        "modifier": {},
+        "possible": {},
+        "ai_weight": 5000,
+        "has_variants": true
+      },
+      {
+        "id": "tr_purity_exemplary_genetics",
+        "name": "tr_purity_exemplary_genetics",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "purity",
+        "effects": "BIOLOGICAL_species_trait_points_add: +6; BIOLOGICAL_species_trait_picks_add: +2; modify_species_cost_mult: -50.0%",
+        "modifier": {
+          "BIOLOGICAL_species_trait_points_add": 6,
+          "BIOLOGICAL_species_trait_picks_add": 2,
+          "modify_species_cost_mult": -0.5
+        },
+        "possible": {
+          "has_tradition": "tr_purity_genotype_regeneration"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_purity_stage_1_swap",
+        "name": "tr_purity_stage_1_swap",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "purity",
+        "effects": "",
+        "modifier": {},
+        "possible": {},
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_purity_stage_2_swap",
+        "name": "tr_purity_stage_2_swap",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "purity",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_purity_stage_1_swap"
+        },
+        "ai_weight": 5000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_purity_stage_3_swap",
+        "name": "tr_purity_stage_3_swap",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "purity",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_purity_stage_1_swap"
+        },
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_purity_optimized_neurology",
+        "name": "tr_purity_optimized_neurology",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "purity",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "always": false
+        },
+        "ai_weight": 0,
+        "has_variants": false
+      },
+      {
+        "id": "tr_purity_heightened_attributes",
+        "name": "tr_purity_heightened_attributes",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "purity",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "always": false
+        },
+        "ai_weight": 0,
+        "has_variants": false
+      },
+      {
+        "id": "tr_purity_imperfection_remediation",
+        "name": "tr_purity_imperfection_remediation",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "purity",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "always": false
+        },
+        "ai_weight": 0,
+        "has_variants": true
+      }
+    ]
+  },
+  "tr_synthetics": {
+    "name": "tr_synthetics",
+    "adopt": {
+      "id": "tr_synthetics_adopt",
+      "name": "tr_synthetics_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_synthetics",
+      "effects": "",
+      "modifier": {},
+      "possible": {
+        "if": {
+          "limit": {
+            "has_origin": "origin_synthetic_fertility"
+          },
+          "has_technology": "tech_synthetic_workers"
+        },
+        "else_if": {
+          "limit": {
+            "has_machine_age_dlc": true,
+            "is_machine_empire": false,
+            "is_individual_machine": false
+          },
+          "has_ascension_perk": "ap_synthetic_evolution",
+          "has_technology": "tech_synthetic_workers"
+        },
+        "else": {
+          "if": {
+            "limit": {
+              "is_machine_empire": false
+            },
+            "has_ascension_perk": "ap_synthetic_evolution",
+            "has_technology": "tech_synthetic_workers"
+          },
+          "else": {
+            "has_ascension_perk": "ap_synthetic_age",
+            "has_technology": "tech_robomodding_m"
+          }
+        }
+      },
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "finish": {
+      "id": "tr_synthetics_finish",
+      "name": "tr_synthetics_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_synthetics",
+      "effects": "ROBOT_species_trait_picks_add: +2; ROBOT_species_trait_points_add: +2; modify_species_cost_mult: -50.0%; ascension_perks_add: +1",
+      "modifier": {
+        "ROBOT_species_trait_picks_add": 2,
+        "ROBOT_species_trait_points_add": 2,
+        "modify_species_cost_mult": -0.5,
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": true
+    },
+    "traditions": []
+  },
+  "synthetics": {
+    "name": "synthetics",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_synthetics_maintenance_protocols",
+        "name": "tr_synthetics_maintenance_protocols",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "synthetics",
+        "effects": "pop_amenities_usage_robotic_mult: -10.0%",
+        "modifier": {
+          "pop_amenities_usage_robotic_mult": -0.1
+        },
+        "possible": {
+          "if": {
+            "limit": {
+              "has_machine_age_dlc": false
+            },
+            "if": {
+              "limit": {
+                "is_synthetic_empire": true
+              }
+            },
+            "else": {
+              "custom_tooltip": {
+                "fail_text": "REQUIRES_SYNTHETIC_EMPIRE_UTOPIA",
+                "is_synthetic_empire": true
+              }
+            }
+          }
+        },
+        "ai_weight": 1,
+        "has_variants": true
+      },
+      {
+        "id": "tr_synthetics_optimization_algorithms",
+        "name": "tr_synthetics_optimization_algorithms",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "synthetics",
+        "effects": "robotic_pop_bonus_workforce_mult: +10.0%",
+        "modifier": {
+          "robotic_pop_bonus_workforce_mult": 0.1
+        },
+        "possible": {
+          "has_tradition": "tr_synthetics_maintenance_protocols"
+        },
+        "ai_weight": 1,
+        "has_variants": true
+      },
+      {
+        "id": "tr_synthetics_transubstatiation_synthesis",
+        "name": "tr_synthetics_transubstatiation_synthesis",
+        "custom_tooltip": "tr_synthetics_transubstatiation_synthesis_desc",
+        "type": "tradition",
+        "tree": "synthetics",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "if": {
+            "limit": {
+              "has_machine_age_dlc": false
+            },
+            "if": {
+              "limit": {
+                "is_synthetic_empire": true
+              }
+            },
+            "else": {
+              "custom_tooltip": {
+                "fail_text": "REQUIRES_SYNTHETIC_EMPIRE_UTOPIA",
+                "is_synthetic_empire": true
+              }
+            }
+          }
+        },
+        "ai_weight": 1,
+        "has_variants": true
+      },
+      {
+        "id": "tr_synthetics_power_systems",
+        "name": "tr_synthetics_power_systems",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "synthetics",
+        "effects": "planet_pops_robotics_upkeep_mult: -25.0%; planet_pop_assemblers_upkeep_mult: -25.0%",
+        "modifier": {
+          "planet_pops_robotics_upkeep_mult": -0.25,
+          "planet_pop_assemblers_upkeep_mult": -0.25
+        },
+        "possible": {
+          "has_tradition": "tr_synthetics_transubstatiation_synthesis"
+        },
+        "ai_weight": 1,
+        "has_variants": true
+      },
+      {
+        "id": "tr_synthetics_prefabricated_components",
+        "name": "tr_synthetics_prefabricated_components",
+        "custom_tooltip": "tr_synthetics_prefabricated_components_effects",
+        "type": "tradition",
+        "tree": "synthetics",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_synthetics_transubstatiation_synthesis"
+        },
+        "ai_weight": 1,
+        "has_variants": true
+      }
+    ]
+  },
+  "tr_virtuality": {
+    "name": "tr_virtuality",
+    "adopt": {
+      "id": "tr_virtuality_adopt",
+      "name": "tr_virtuality_adopt",
+      "custom_tooltip": "",
+      "type": "adopt",
+      "tree": "tr_virtuality",
+      "effects": "intel_decryption_add: +2; intel_encryption_add: +2; planet_metallurgists_alloys_produces_mult: -15.0%",
+      "modifier": {
+        "intel_decryption_add": 2,
+        "intel_encryption_add": 2,
+        "planet_metallurgists_alloys_produces_mult": -0.15
+      },
+      "possible": {
+        "custom_tooltip": {
+          "fail_text": "REQUIRES_FINISHED_TRANSFORMATION",
+          "has_country_flag": "virtuality_traditions_unlocked"
+        }
+      },
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "finish": {
+      "id": "tr_virtuality_finish",
+      "name": "tr_virtuality_finish",
+      "custom_tooltip": "",
+      "type": "finish",
+      "tree": "tr_virtuality",
+      "effects": "ascension_perks_add: +1",
+      "modifier": {
+        "ascension_perks_add": 1
+      },
+      "possible": {},
+      "ai_weight": 1,
+      "has_variants": false
+    },
+    "traditions": []
+  },
+  "virtuality": {
+    "name": "virtuality",
+    "adopt": null,
+    "finish": null,
+    "traditions": [
+      {
+        "id": "tr_virtuality_1",
+        "name": "tr_virtuality_1",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "virtuality",
+        "effects": "",
+        "modifier": {},
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_virtuality_2",
+        "name": "tr_virtuality_2",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "virtuality",
+        "effects": "planet_researchers_upkeep_mult: -10.0%; planet_bureaucrats_upkeep_mult: -10.0%; leaders_upkeep_mult: -15.0%; empire_size_pops_mult: -15.0%; empire_size_colonies_mult: +1",
+        "modifier": {
+          "planet_researchers_upkeep_mult": -0.1,
+          "planet_bureaucrats_upkeep_mult": -0.1,
+          "leaders_upkeep_mult": -0.15,
+          "empire_size_pops_mult": -0.15,
+          "empire_size_colonies_mult": 1
+        },
+        "possible": {},
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_virtuality_3",
+        "name": "tr_virtuality_3",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "virtuality",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": [
+            "tr_virtuality_1",
+            "tr_virtuality_2"
+          ]
+        },
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_virtuality_4",
+        "name": "tr_virtuality_4",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "virtuality",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_virtuality_3"
+        },
+        "ai_weight": 1000,
+        "has_variants": false
+      },
+      {
+        "id": "tr_virtuality_5",
+        "name": "tr_virtuality_5",
+        "custom_tooltip": "",
+        "type": "tradition",
+        "tree": "virtuality",
+        "effects": "",
+        "modifier": {},
+        "possible": {
+          "has_tradition": "tr_virtuality_3"
+        },
+        "ai_weight": 1000,
+        "has_variants": false
+      }
+    ]
+  }
+}

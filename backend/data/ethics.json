@@ -1,0 +1,387 @@
+[
+  {
+    "id": "ethic_fanatic_authoritarian",
+    "name": "ethic_fanatic_authoritarian",
+    "cost": 2,
+    "category": "col",
+    "category_value": 0,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "ethic_authoritarian",
+    "tags": [
+      "ETHIC_ALLOWS_STRATIFIED_SOCIETY",
+      "ETHIC_ALLOWS_SLAVERY",
+      "ETHIC_ONLY_AUTOCRACY"
+    ],
+    "effects": "country_ethic_influence_produces_add: +1; planet_jobs_worker_produces_mult: +10.0%",
+    "modifier": {
+      "country_ethic_influence_produces_add": 1,
+      "planet_jobs_worker_produces_mult": 0.1,
+      "add_attunement_the_instrument_of_desire": "@ethic_attunement2"
+    },
+    "random_weight": 150
+  },
+  {
+    "id": "ethic_authoritarian",
+    "name": "ethic_authoritarian",
+    "cost": 1,
+    "category": "col",
+    "category_value": 1,
+    "use_for_pops": true,
+    "fanatic_variant": "ethic_fanatic_authoritarian",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_ALLOWS_STRATIFIED_SOCIETY",
+      "ETHIC_ALLOWS_SLAVERY",
+      "ETHIC_NEVER_DEMOCRACY"
+    ],
+    "effects": "country_ethic_influence_produces_add: +50.0%; planet_jobs_worker_produces_mult: +5.0%",
+    "modifier": {
+      "country_ethic_influence_produces_add": 0.5,
+      "planet_jobs_worker_produces_mult": 0.05,
+      "add_attunement_the_instrument_of_desire": "@ethic_attunement1"
+    },
+    "random_weight": 100
+  },
+  {
+    "id": "ethic_fanatic_egalitarian",
+    "name": "ethic_fanatic_egalitarian",
+    "cost": 2,
+    "category": "col",
+    "category_value": 4,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "ethic_egalitarian",
+    "tags": [
+      "ETHIC_ONLY_DEMOCRACY",
+      "ETHIC_ALLOWS_UTOPIA"
+    ],
+    "effects": "pop_factions_produces_mult: +50.0%; planet_jobs_specialist_produces_mult: +10.0%",
+    "modifier": {
+      "pop_factions_produces_mult": 0.5,
+      "planet_jobs_specialist_produces_mult": 0.1,
+      "add_attunement_the_composer_of_strands": "@ethic_attunement2"
+    },
+    "random_weight": 150
+  },
+  {
+    "id": "ethic_egalitarian",
+    "name": "ethic_egalitarian",
+    "cost": 1,
+    "category": "col",
+    "category_value": 3,
+    "use_for_pops": true,
+    "fanatic_variant": "ethic_fanatic_egalitarian",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_NEVER_AUTOCRACY",
+      "ETHIC_ALLOWS_UTOPIA"
+    ],
+    "effects": "pop_factions_produces_mult: +25.0%; planet_jobs_specialist_produces_mult: +5.0%",
+    "modifier": {
+      "pop_factions_produces_mult": 0.25,
+      "planet_jobs_specialist_produces_mult": 0.05,
+      "add_attunement_the_composer_of_strands": "@ethic_attunement1"
+    },
+    "random_weight": 100
+  },
+  {
+    "id": "ethic_fanatic_xenophobe",
+    "name": "ethic_fanatic_xenophobe",
+    "cost": 2,
+    "category": "xen",
+    "category_value": 0,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "ethic_xenophobe",
+    "tags": [
+      "ETHIC_ALLOWS_PURGE",
+      "ETHIC_ALLOWS_SLAVERY",
+      "ETHIC_REDUCED_DIPLOMACY",
+      "ETHIC_NEVER_ALIEN_CITIZENSHIP",
+      "ETHIC_NEVER_ALIEN_MILITARY_SERVICE",
+      "ETHIC_NO_REFUGEES"
+    ],
+    "effects": "country_starbase_influence_cost_mult: -40.0%; founder_species_growth_mult: +20.0%",
+    "modifier": {
+      "country_starbase_influence_cost_mult": -0.4,
+      "founder_species_growth_mult": 0.2,
+      "add_attunement_the_eater_of_worlds": "@ethic_attunement2"
+    },
+    "random_weight": 150
+  },
+  {
+    "id": "ethic_xenophobe",
+    "name": "ethic_xenophobe",
+    "cost": 1,
+    "category": "xen",
+    "category_value": 1,
+    "use_for_pops": true,
+    "fanatic_variant": "ethic_fanatic_xenophobe",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_ALLOWS_PURGE",
+      "ETHIC_ALLOWS_SLAVERY",
+      "ETHIC_REDUCED_DIPLOMACY",
+      "ETHIC_NEVER_ALIEN_CITIZENSHIP",
+      "ETHIC_NEVER_ALIEN_MILITARY_SERVICE",
+      "ETHIC_NO_REFUGEES"
+    ],
+    "effects": "country_starbase_influence_cost_mult: -20.0%; founder_species_growth_mult: +10.0%",
+    "modifier": {
+      "country_starbase_influence_cost_mult": -0.2,
+      "founder_species_growth_mult": 0.1,
+      "add_attunement_the_eater_of_worlds": "@ethic_attunement1"
+    },
+    "random_weight": 100
+  },
+  {
+    "id": "ethic_fanatic_xenophile",
+    "name": "ethic_fanatic_xenophile",
+    "cost": 2,
+    "category": "xen",
+    "category_value": 4,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "ethic_xenophile",
+    "tags": [
+      "ETHIC_IMPROVED_DIPLOMACY",
+      "ETHIC_ALWAYS_REFUGEES",
+      "ETHIC_DISALLOWS_SLAVERY",
+      "ETHIC_DISALLOWS_DISPLACE"
+    ],
+    "effects": "planet_jobs_trade_produces_mult: +20.0%; envoys_add: +2; show_only_custom_tooltip: False",
+    "modifier": {
+      "planet_jobs_trade_produces_mult": 0.2,
+      "envoys_add": 2,
+      "show_only_custom_tooltip": false,
+      "custom_tooltip": "fan_xenophile_insight_gain",
+      "add_attunement_the_cradle_of_souls": "@ethic_attunement2"
+    },
+    "random_weight": 100
+  },
+  {
+    "id": "ethic_xenophile",
+    "name": "ethic_xenophile",
+    "cost": 1,
+    "category": "xen",
+    "category_value": 3,
+    "use_for_pops": true,
+    "fanatic_variant": "ethic_fanatic_xenophile",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_IMPROVED_DIPLOMACY",
+      "ETHIC_ALWAYS_REFUGEES",
+      "ETHIC_DISALLOWS_SLAVERY",
+      "ETHIC_DISALLOWS_DISPLACE"
+    ],
+    "effects": "planet_jobs_trade_produces_mult: +10.0%; envoys_add: +1; show_only_custom_tooltip: False",
+    "modifier": {
+      "planet_jobs_trade_produces_mult": 0.1,
+      "envoys_add": 1,
+      "add_attunement_the_cradle_of_souls": "@ethic_attunement1",
+      "show_only_custom_tooltip": false,
+      "custom_tooltip": "xenophile_insight_gain"
+    },
+    "random_weight": 66
+  },
+  {
+    "id": "ethic_fanatic_militarist",
+    "name": "ethic_fanatic_militarist",
+    "cost": 2,
+    "category": "mil",
+    "category_value": 0,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "ethic_militarist",
+    "tags": [
+      "ETHIC_ALLOW_NO_RETREAT"
+    ],
+    "effects": "country_claim_influence_cost_mult: -20.0%; ship_fire_rate_mult: +20.0%",
+    "modifier": {
+      "country_claim_influence_cost_mult": -0.2,
+      "ship_fire_rate_mult": 0.2,
+      "add_attunement_the_eater_of_worlds": "@ethic_attunement2"
+    },
+    "random_weight": 250
+  },
+  {
+    "id": "ethic_militarist",
+    "name": "ethic_militarist",
+    "cost": 1,
+    "category": "mil",
+    "category_value": 1,
+    "use_for_pops": true,
+    "fanatic_variant": "ethic_fanatic_militarist",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_ALLOW_NO_RETREAT"
+    ],
+    "effects": "country_claim_influence_cost_mult: -10.0%; ship_fire_rate_mult: +10.0%",
+    "modifier": {
+      "country_claim_influence_cost_mult": -0.1,
+      "ship_fire_rate_mult": 0.1,
+      "add_attunement_the_eater_of_worlds": "@ethic_attunement1"
+    },
+    "random_weight": 150
+  },
+  {
+    "id": "ethic_fanatic_pacifist",
+    "name": "ethic_fanatic_pacifist",
+    "cost": 2,
+    "category": "mil",
+    "category_value": 4,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "ethic_pacifist",
+    "tags": [
+      "ETHIC_DISALLOW_OFFENSIVE_WARS",
+      "ETHIC_DISALLOW_FULL_BOMBARDMENT"
+    ],
+    "effects": "empire_size_pops_mult: -30.0%; planet_stability_add: +10; the_eater_of_worlds_attunement_mult: -35.0%",
+    "modifier": {
+      "empire_size_pops_mult": -0.3,
+      "planet_stability_add": 10,
+      "add_attunement_the_cradle_of_souls": "@ethic_attunement2",
+      "the_eater_of_worlds_attunement_mult": -0.35
+    },
+    "random_weight": 33
+  },
+  {
+    "id": "ethic_pacifist",
+    "name": "ethic_pacifist",
+    "cost": 1,
+    "category": "mil",
+    "category_value": 3,
+    "use_for_pops": true,
+    "fanatic_variant": "ethic_fanatic_pacifist",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_DISALLOW_CONQUEST_WARS",
+      "ETHIC_DISALLOW_FULL_BOMBARDMENT"
+    ],
+    "effects": "empire_size_pops_mult: -15.0%; planet_stability_add: +5; the_eater_of_worlds_attunement_mult: -25.0%",
+    "modifier": {
+      "empire_size_pops_mult": -0.15,
+      "planet_stability_add": 5,
+      "add_attunement_the_cradle_of_souls": "@ethic_attunement1",
+      "the_eater_of_worlds_attunement_mult": -0.25
+    },
+    "random_weight": 66
+  },
+  {
+    "id": "ethic_fanatic_spiritualist",
+    "name": "ethic_fanatic_spiritualist",
+    "cost": 2,
+    "category": "spi",
+    "category_value": 0,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "ethic_spiritualist",
+    "tags": [
+      "ETHIC_ALLOWS_TEMPLE",
+      "ETHIC_DISALLOW_AI"
+    ],
+    "effects": "country_unity_produces_mult: +20.0%; edicts_upkeep_mult: -20.0%; edicts_cost_mult: -20.0%",
+    "modifier": {
+      "country_unity_produces_mult": 0.2,
+      "edicts_upkeep_mult": -0.2,
+      "edicts_cost_mult": -0.2,
+      "add_attunement_the_composer_of_strands": "@ethic_attunement2"
+    },
+    "random_weight": 150
+  },
+  {
+    "id": "ethic_spiritualist",
+    "name": "ethic_spiritualist",
+    "cost": 1,
+    "category": "spi",
+    "category_value": 1,
+    "use_for_pops": true,
+    "fanatic_variant": "ethic_fanatic_spiritualist",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_ALLOWS_TEMPLE",
+      "ETHIC_DISALLOW_AI"
+    ],
+    "effects": "country_unity_produces_mult: +10.0%; edicts_upkeep_mult: -10.0%; edicts_cost_mult: -10.0%",
+    "modifier": {
+      "country_unity_produces_mult": 0.1,
+      "edicts_upkeep_mult": -0.1,
+      "edicts_cost_mult": -0.1,
+      "add_attunement_the_composer_of_strands": "@ethic_attunement1"
+    },
+    "random_weight": 100
+  },
+  {
+    "id": "ethic_fanatic_materialist",
+    "name": "ethic_fanatic_materialist",
+    "cost": 2,
+    "category": "spi",
+    "category_value": 4,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "ethic_materialist",
+    "tags": [
+      "ETHIC_ALLOWS_ACADEMIC_PRIVILEGE",
+      "ETHIC_DISALLOW_BAN_AI",
+      "ETHIC_DISALLOW_BAN_ROBOTS"
+    ],
+    "effects": "planet_pops_robotics_upkeep_mult: -20.0%; all_technology_research_speed: +10.0%",
+    "modifier": {
+      "planet_pops_robotics_upkeep_mult": -0.2,
+      "all_technology_research_speed": 0.1,
+      "add_attunement_the_instrument_of_desire": "@ethic_attunement2"
+    },
+    "random_weight": 150
+  },
+  {
+    "id": "ethic_materialist",
+    "name": "ethic_materialist",
+    "cost": 1,
+    "category": "spi",
+    "category_value": 3,
+    "use_for_pops": true,
+    "fanatic_variant": "ethic_fanatic_materialist",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_ALLOWS_ACADEMIC_PRIVILEGE",
+      "ETHIC_DISALLOW_BAN_AI",
+      "ETHIC_DISALLOW_BAN_ROBOTS"
+    ],
+    "effects": "planet_pops_robotics_upkeep_mult: -10.0%; all_technology_research_speed: +5.0%",
+    "modifier": {
+      "planet_pops_robotics_upkeep_mult": -0.1,
+      "all_technology_research_speed": 0.05,
+      "add_attunement_the_instrument_of_desire": "@ethic_attunement1"
+    },
+    "random_weight": 100
+  },
+  {
+    "id": "ethic_gestalt_consciousness",
+    "name": "ethic_gestalt_consciousness",
+    "cost": 3,
+    "category": "hive",
+    "category_value": 0,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_GESTALT_CONSCIOUSNESS_NO_TUTORIAL",
+      "ETHIC_GESTALT_CONSCIOUSNESS_AUTHORITY",
+      "ETHIC_GESTALT_CONSCIOUSNESS_IMMORTAL_RULER",
+      "ETHIC_GESTALT_CONSCIOUSNESS_NO_FACTIONS",
+      "ETHIC_GESTALT_CONSCIOUSNESS_NO_CONSUMER_GOODS",
+      "ETHIC_GESTALT_CONSCIOUSNESS_DOMESTIC_POP_SURVIVAL",
+      "ETHIC_ALLOW_NO_RETREAT"
+    ],
+    "effects": "country_war_exhaustion_mult: -20.0%; country_ethic_influence_produces_add: +1; intel_encryption_add: +2",
+    "modifier": {
+      "country_war_exhaustion_mult": -0.2,
+      "country_ethic_influence_produces_add": 1,
+      "intel_encryption_add": 2,
+      "add_attunement_the_cradle_of_souls": "@ethic_attunement3"
+    },
+    "random_weight": 300
+  }
+]
