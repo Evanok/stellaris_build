@@ -28,6 +28,18 @@ interface Origin {
   };
 }
 
+interface AscensionPerk {
+  id: string;
+  name: string;
+  effects: string;
+  modifier?: {
+    [key: string]: number;
+  };
+  potential?: any;
+  possible?: any;
+  is_path_perk: boolean;
+}
+
 // Stellaris 4.X base rules (can be modified by origins)
 const BASE_MAX_TRAIT_POINTS = 2;
 const BASE_MAX_TRAIT_COUNT = 5;
@@ -51,6 +63,11 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   // Origin data from API
   const [allOrigins, setAllOrigins] = useState<Origin[]>([]);
   const [originSearchQuery, setOriginSearchQuery] = useState('');
+
+  // Ascension perk data from API
+  const [allAscensionPerks, setAllAscensionPerks] = useState<AscensionPerk[]>([]);
+  const [selectedAscensionPerks, setSelectedAscensionPerks] = useState<string[]>([]);
+  const [ascensionPerkSearchQuery, setAscensionPerkSearchQuery] = useState('');
 
   // UI state
   const [error, setError] = useState<string | null>(null);
@@ -97,6 +114,26 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
         setAllOrigins(sanitizedOrigins);
       })
       .catch(() => setError('Could not load origins data.'));
+
+    // Load ascension perks
+    fetch('/api/ascension-perks')
+      .then(res => res.json())
+      .then(data => {
+        // Get the 'all' array from the data
+        const perksArray = Array.isArray(data) ? data : (data.all || []);
+
+        // Filter and sanitize ascension perks
+        const sanitizedPerks = perksArray
+          .filter((perk: any) => perk.type === 'ascension_perk')
+          .map((perk: any) => ({
+            ...perk,
+            effects: typeof perk.effects === 'string' ? perk.effects : '',
+          }))
+          .sort((a: any, b: any) => a.id.localeCompare(b.id));
+
+        setAllAscensionPerks(sanitizedPerks);
+      })
+      .catch(() => setError('Could not load ascension perks data.'));
   }, []);
 
   // Get origin bonuses for current species type
@@ -208,6 +245,18 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     return true;
   });
 
+  // Filter ascension perks based on search query
+  const filteredAscensionPerks = allAscensionPerks.filter(perk => {
+    if (ascensionPerkSearchQuery) {
+      const query = ascensionPerkSearchQuery.toLowerCase();
+      return (
+        perk.id.toLowerCase().includes(query) ||
+        perk.effects.toLowerCase().includes(query)
+      );
+    }
+    return true;
+  });
+
   const handleTraitChange = (traitId: string) => {
     const trait = allTraits.find(t => t.id === traitId);
     if (!trait) return;
@@ -222,6 +271,14 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     if (canSelectTrait(trait)) {
       setSelectedTraits(prev => [...prev, traitId]);
     }
+  };
+
+  const handleAscensionPerkChange = (perkId: string) => {
+    setSelectedAscensionPerks(prev =>
+      prev.includes(perkId)
+        ? prev.filter(p => p !== perkId)
+        : [...prev, perkId]
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -243,7 +300,8 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           dlcs,
           tags,
           traits: selectedTraits.join(', '), // Convert array to comma-separated string
-          origin: selectedOrigin
+          origin: selectedOrigin,
+          ascension_perks: selectedAscensionPerks.join(', ') // Convert array to comma-separated string
         }),
       });
 
@@ -265,6 +323,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
       setTags('');
       setSelectedTraits([]);
       setSelectedOrigin('');
+      setSelectedAscensionPerks([]);
 
     } catch (err: any) {
       setError(err.message);
@@ -480,6 +539,61 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           <div className="mb-3">
             <label htmlFor="civics" className="form-label">Civics (comma-separated)</label>
             <input type="text" className="form-control bg-secondary text-white border-secondary" id="civics" value={civics} onChange={(e) => setCivics(e.target.value)} />
+          </div>
+
+          {/* Recommended Ascension Perks */}
+          <div className="mb-3">
+            <label className="form-label">
+              Recommended Ascension Perks ({selectedAscensionPerks.length} selected)
+              <small className="text-muted d-block">These are strategic suggestions for your build, not requirements</small>
+            </label>
+            <input
+              type="text"
+              className="form-control bg-secondary text-white border-secondary mb-2"
+              placeholder="Search ascension perks..."
+              value={ascensionPerkSearchQuery}
+              onChange={(e) => setAscensionPerkSearchQuery(e.target.value)}
+            />
+            <div className="card bg-secondary" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+              <div className="card-body">
+                {filteredAscensionPerks.length > 0 ? (
+                  filteredAscensionPerks.map(perk => {
+                    const isSelected = selectedAscensionPerks.includes(perk.id);
+                    return (
+                      <div
+                        key={perk.id}
+                        className={`form-check mb-2 pb-2 border-bottom border-dark`}
+                      >
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id={`perk-${perk.id}`}
+                          checked={isSelected}
+                          onChange={() => handleAscensionPerkChange(perk.id)}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor={`perk-${perk.id}`}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <strong className="text-white">{perk.id}</strong>
+                          {perk.is_path_perk && (
+                            <span className="badge bg-warning text-dark ms-2">Path Perk</span>
+                          )}
+                          {perk.effects && (
+                            <div className="mt-1">
+                              <small className="text-info d-block">{perk.effects}</small>
+                            </div>
+                          )}
+                        </label>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-center text-muted">No ascension perks match your search.</p>
+                )}
+              </div>
+            </div>
           </div>
 
           <button type="submit" className="btn btn-primary" disabled={submitting || hasInvalidTraits}>

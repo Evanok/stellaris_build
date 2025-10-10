@@ -27,6 +27,7 @@ const setupDatabase = () => {
       civics TEXT, -- Stored as JSON string
       traits TEXT, -- Stored as JSON string
       origin TEXT, -- Origin ID
+      ascension_perks TEXT, -- Recommended ascension perks (JSON string)
       dlcs TEXT, -- Stored as JSON string
       game_version TEXT,
       tags TEXT, -- Stored as JSON string
@@ -40,6 +41,13 @@ const setupDatabase = () => {
     db.run(`ALTER TABLE builds ADD COLUMN origin TEXT`, (err) => {
       if (err && !err.message.includes('duplicate column')) {
         console.error('Error adding origin column:', err.message);
+      }
+    });
+
+    // Add ascension_perks column if it doesn't exist (for existing databases)
+    db.run(`ALTER TABLE builds ADD COLUMN ascension_perks TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding ascension_perks column:', err.message);
       }
     });
 
