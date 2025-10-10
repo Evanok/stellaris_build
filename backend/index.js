@@ -69,6 +69,17 @@ app.get('/api/traditions', (req, res) => {
   });
 });
 
+// Get all authorities
+app.get('/api/authorities', (req, res) => {
+  fs.readFile('./data/authorities.json', 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json({ error: "Could not read authorities data." });
+      return;
+    }
+    res.json(JSON.parse(data));
+  });
+});
+
 // Get all ascension perks
 app.get('/api/ascension-perks', (req, res) => {
   fs.readFile('./data/ascension_perks.json', 'utf8', (err, data) => {
@@ -94,7 +105,7 @@ app.get('/api/builds', (req, res) => {
 
 // Create a new build
 app.post('/api/builds', (req, res) => {
-  const { name, description, game_version, civics, traits, origin, ethics, ascension_perks, dlcs, tags } = req.body;
+  const { name, description, game_version, civics, traits, origin, ethics, authority, ascension_perks, dlcs, tags } = req.body;
   if (!name) {
     return res.status(400).json({ error: 'Build name is required.' });
   }
@@ -109,8 +120,8 @@ app.post('/api/builds', (req, res) => {
     }
 
     // If no duplicate, proceed with insert
-    const sql = `INSERT INTO builds (name, description, game_version, civics, traits, origin, ethics, ascension_perks, dlcs, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    const params = [name, description, game_version, civics, traits, origin, ethics, ascension_perks, dlcs, tags];
+    const sql = `INSERT INTO builds (name, description, game_version, civics, traits, origin, ethics, authority, ascension_perks, dlcs, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const params = [name, description, game_version, civics, traits, origin, ethics, authority, ascension_perks, dlcs, tags];
 
     db.run(sql, params, function(err) {
       if (err) {

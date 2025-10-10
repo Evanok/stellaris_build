@@ -55,6 +55,20 @@ interface Ethic {
   };
 }
 
+interface Authority {
+  id: string;
+  name: string;
+  description: string;
+  effects: string;
+  election_term_years?: number;
+  election_type?: string;
+  has_agendas?: boolean;
+  tags: string[];
+  required_ethics: string[];
+  blocked_ethics: string[];
+  required_dlc?: string;
+}
+
 // Stellaris 4.X base rules (can be modified by origins)
 const BASE_MAX_TRAIT_POINTS = 2;
 const BASE_MAX_TRAIT_COUNT = 5;
@@ -89,6 +103,10 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   const [allEthics, setAllEthics] = useState<Ethic[]>([]);
   const [selectedEthics, setSelectedEthics] = useState<string[]>([]);
   const [ethicsSearchQuery, setEthicsSearchQuery] = useState('');
+
+  // Authority data from API
+  const [allAuthorities, setAllAuthorities] = useState<Authority[]>([]);
+  const [selectedAuthority, setSelectedAuthority] = useState<string>('');
 
   // UI state
   const [error, setError] = useState<string | null>(null);
@@ -177,7 +195,38 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
         setAllEthics(sanitizedEthics);
       })
       .catch(() => setError('Could not load ethics data.'));
+
+    // Load authorities
+    fetch('/api/authorities')
+      .then(res => res.json())
+      .then(data => {
+        // Filter and sanitize authorities
+        const sanitizedAuthorities = data
+          .map((auth: any) => ({
+            ...auth,
+            description: typeof auth.description === 'string' ? auth.description : '',
+            effects: typeof auth.effects === 'string' ? auth.effects : '',
+            tags: Array.isArray(auth.tags) ? auth.tags : [],
+            required_ethics: Array.isArray(auth.required_ethics) ? auth.required_ethics : [],
+            blocked_ethics: Array.isArray(auth.blocked_ethics) ? auth.blocked_ethics : [],
+          }))
+          .sort((a: any, b: any) => a.id.localeCompare(b.id));
+
+        setAllAuthorities(sanitizedAuthorities);
+      })
+      .catch(() => setError('Could not load authorities data.'));
   }, []);
+
+  // Validate authority when ethics change
+  useEffect(() => {
+    if (selectedAuthority) {
+      const authority = allAuthorities.find(a => a.id === selectedAuthority);
+      if (authority && !canSelectAuthority(authority)) {
+        // Authority is no longer valid, clear it
+        setSelectedAuthority('');
+      }
+    }
+  }, [selectedEthics, allAuthorities]);
 
   // Get origin bonuses for current species type
   const getOriginTraitBonuses = () => {
@@ -238,6 +287,34 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
 
   const currentEthicsPoints = calculateEthicsPoints();
   const exceedsEthicsPoints = currentEthicsPoints > MAX_ETHICS_POINTS;
+
+  // Check if an authority can be selected based on current ethics
+  const canSelectAuthority = (authority: Authority): boolean => {
+    // Check if any required ethics are missing
+    if (authority.required_ethics.length > 0) {
+      const hasRequiredEthic = authority.required_ethics.some(requiredEthic =>
+        selectedEthics.includes(requiredEthic)
+      );
+      if (!hasRequiredEthic) {
+        return false;
+      }
+    }
+
+    // Check if any blocked ethics are present
+    if (authority.blocked_ethics.length > 0) {
+      const hasBlockedEthic = authority.blocked_ethics.some(blockedEthic =>
+        selectedEthics.includes(blockedEthic)
+      );
+      if (hasBlockedEthic) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  // Get available authorities based on current ethics selection
+  const availableAuthorities = allAuthorities.filter(auth => canSelectAuthority(auth));
 
   // Check if an ethic can be selected
   const canSelectEthic = (ethic: Ethic): boolean => {
@@ -449,6 +526,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           traits: selectedTraits.join(', '), // Convert array to comma-separated string
           origin: selectedOrigin,
           ethics: selectedEthics.join(', '), // Convert array to comma-separated string
+          authority: selectedAuthority,
           ascension_perks: selectedAscensionPerks.join(', ') // Convert array to comma-separated string
         }),
       });
@@ -472,6 +550,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
       setSelectedTraits([]);
       setSelectedOrigin('');
       setSelectedEthics([]);
+      setSelectedAuthority('');
       setSelectedAscensionPerks([]);
 
     } catch (err: any) {
@@ -780,6 +859,85 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                   })
                 ) : (
                   <p className="text-center text-muted">No ethics match your search.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Authority Selection */}
+          <div className="mb-3">
+            <label className="form-label">
+              Authority {selectedAuthority && <span className="badge bg-success ms-2">Selected: {allAuthorities.find(a => a.id === selectedAuthority)?.name}</span>}
+            </label>
+
+            {/* Info about authority selection */}
+            {selectedEthics.length === 0 && (
+              <div className="alert alert-info mb-2">
+                <strong>ℹ️ Select ethics first</strong>
+                <div className="mt-1">
+                  Your authority options are determined by your ethics selection.
+                </div>
+              </div>
+            )}
+
+            {/* Warning if selected authority became invalid */}
+            {selectedEthics.length > 0 && availableAuthorities.length === 0 && (
+              <div className="alert alert-warning mb-2">
+                <strong>⚠️ No valid authorities</strong>
+                <div className="mt-1">
+                  Your current ethics combination doesn't match any authority. Please adjust your ethics.
+                </div>
+              </div>
+            )}
+
+            <div className="card bg-secondary" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+              <div className="card-body">
+                {availableAuthorities.length > 0 ? (
+                  availableAuthorities.map(authority => {
+                    const isSelected = selectedAuthority === authority.id;
+                    return (
+                      <div
+                        key={authority.id}
+                        className={`form-check mb-3 pb-3 border-bottom border-dark ${isSelected ? 'bg-primary bg-opacity-25' : ''}`}
+                      >
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          id={`authority-${authority.id}`}
+                          name="authority"
+                          checked={isSelected}
+                          onChange={() => setSelectedAuthority(authority.id)}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor={`authority-${authority.id}`}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <strong className="text-white">{authority.name}</strong>
+                          {authority.required_dlc && (
+                            <span className="badge bg-warning text-dark ms-2">Requires: {authority.required_dlc}</span>
+                          )}
+                          {authority.tags.includes('GESTALT') && (
+                            <span className="badge bg-info ms-2">Gestalt</span>
+                          )}
+                          <div className="mt-1">
+                            <small className="text-light d-block">{authority.description}</small>
+                          </div>
+                          {authority.effects && (
+                            <div className="mt-2">
+                              <small className="text-info d-block"><strong>Effects:</strong> {authority.effects}</small>
+                            </div>
+                          )}
+                        </label>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-center text-muted">
+                    {selectedEthics.length === 0
+                      ? 'Select ethics to see available authorities.'
+                      : 'No authorities available for selected ethics.'}
+                  </p>
                 )}
               </div>
             </div>

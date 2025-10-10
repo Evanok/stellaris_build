@@ -59,6 +59,13 @@ const setupDatabase = () => {
       }
     });
 
+    // Add authority column if it doesn't exist (for existing databases)
+    db.run(`ALTER TABLE builds ADD COLUMN authority TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding authority column:', err.message);
+      }
+    });
+
     console.log('Database tables checked/created.');
   });
 };
