@@ -99,21 +99,32 @@ app.post('/api/builds', (req, res) => {
     return res.status(400).json({ error: 'Build name is required.' });
   }
 
-  const sql = `INSERT INTO builds (name, description, game_version, civics, traits, dlcs, tags) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-  const params = [name, description, game_version, civics, traits, dlcs, tags];
-
-  db.run(sql, params, function(err) {
+  // Check if a build with the same name already exists
+  db.get(`SELECT id FROM builds WHERE name = ?`, [name], (err, row) => {
     if (err) {
-      res.status(500).json({ error: err.message });
-      return;
+      return res.status(500).json({ error: err.message });
     }
-    // Get the newly created build and return it
-    db.get(`SELECT * FROM builds WHERE id = ?`, [this.lastID], (err, row) => {
+    if (row) {
+      return res.status(409).json({ error: 'A build with this name already exists. Please choose a different name.' });
+    }
+
+    // If no duplicate, proceed with insert
+    const sql = `INSERT INTO builds (name, description, game_version, civics, traits, dlcs, tags) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    const params = [name, description, game_version, civics, traits, dlcs, tags];
+
+    db.run(sql, params, function(err) {
       if (err) {
         res.status(500).json({ error: err.message });
         return;
       }
-      res.status(201).json({ build: row });
+      // Get the newly created build and return it
+      db.get(`SELECT * FROM builds WHERE id = ?`, [this.lastID], (err, row) => {
+        if (err) {
+          res.status(500).json({ error: err.message });
+          return;
+        }
+        res.status(201).json({ build: row });
+      });
     });
   });
 });
