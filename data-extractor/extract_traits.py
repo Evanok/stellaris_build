@@ -1,0 +1,220 @@
+#!/usr/bin/env python3
+"""
+Stellaris Traits Extractor
+Extracts species traits from Stellaris game files and outputs to JSON
+"""
+
+import json
+import os
+import sys
+from pathlib import Path
+from typing import Dict, List, Any
+from paradox_parser import parse_stellaris_file
+
+
+def extract_modifier_effects(modifier_data: Any) -> str:
+    """
+    Extract and format modifier effects into readable text
+
+    Args:
+        modifier_data: The modifier object from the trait
+
+    Returns:
+        Formatted string describing the effects
+    """
+    if not modifier_data or not isinstance(modifier_data, dict):
+        return ""
+
+    effects = []
+    for key, value in modifier_data.items():
+        if isinstance(value, (int, float)):
+            # Format percentage modifiers
+            if '_mult' in key or 'speed' in key:
+                percentage = value * 100
+                sign = '+' if percentage > 0 else ''
+                effects.append(f"{key}: {sign}{percentage}%")
+            else:
+                sign = '+' if value > 0 else ''
+                effects.append(f"{key}: {sign}{value}")
+        elif isinstance(value, dict):
+            # Nested modifiers
+            nested_effects = extract_modifier_effects(value)
+            if nested_effects:
+                effects.append(nested_effects)
+
+    return "; ".join(effects)
+
+
+def extract_trait_data(trait_key: str, trait_data: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Extract relevant data from a single trait
+
+    Args:
+        trait_key: The trait identifier
+        trait_data: Raw trait data from parser
+
+    Returns:
+        Cleaned trait data dictionary
+    """
+    trait = {
+        "id": trait_key,
+        "name": trait_key,  # Will use localization later
+        "cost": trait_data.get("cost", 0),
+        "category": trait_data.get("category", "unknown"),
+        "initial": trait_data.get("initial", False),
+        "randomized": trait_data.get("randomized", True),
+        "modification_species_add": trait_data.get("modification_species_add", True)
+    }
+
+    # Extract opposites (mutually exclusive traits)
+    opposites = trait_data.get("opposites", {})
+    if isinstance(opposites, dict):
+        trait["opposites"] = list(opposites.values()) if opposites else []
+    elif isinstance(opposites, list):
+        trait["opposites"] = opposites
+    else:
+        trait["opposites"] = [opposites] if opposites else []
+
+    # Extract prerequisites
+    prereqs = trait_data.get("prerequisites", {})
+    if isinstance(prereqs, dict):
+        trait["prerequisites"] = list(prereqs.values()) if prereqs else []
+    elif isinstance(prereqs, list):
+        trait["prerequisites"] = prereqs
+    else:
+        trait["prerequisites"] = [prereqs] if prereqs else []
+
+    # Extract allowed archetypes
+    archetypes = trait_data.get("allowed_archetypes", {})
+    if isinstance(archetypes, dict):
+        trait["allowed_archetypes"] = list(archetypes.values()) if archetypes else []
+    elif isinstance(archetypes, list):
+        trait["allowed_archetypes"] = archetypes
+    else:
+        trait["allowed_archetypes"] = []
+
+    # Extract tags
+    tags = trait_data.get("tags", {})
+    if isinstance(tags, dict):
+        trait["tags"] = list(tags.values()) if tags else []
+    elif isinstance(tags, list):
+        trait["tags"] = tags
+    else:
+        trait["tags"] = []
+
+    # Extract modifier effects
+    modifier = trait_data.get("modifier", {})
+    trait["effects"] = extract_modifier_effects(modifier)
+    trait["modifier"] = modifier
+
+    # Extract custom tooltips
+    trait["custom_tooltip"] = trait_data.get("custom_tooltip_with_modifiers", "")
+
+    # Extract slave cost if present
+    slave_cost = trait_data.get("slave_cost", {})
+    if isinstance(slave_cost, dict):
+        trait["slave_cost"] = slave_cost
+
+    return trait
+
+
+def extract_traits_from_file(filepath: str) -> List[Dict[str, Any]]:
+    """
+    Extract all traits from a single file
+
+    Args:
+        filepath: Path to the traits file
+
+    Returns:
+        List of trait dictionaries
+    """
+    print(f"Processing: {os.path.basename(filepath)}")
+
+    try:
+        data = parse_stellaris_file(filepath)
+        traits = []
+
+        for key, value in data.items():
+            if isinstance(value, dict) and not key.startswith('_'):
+                # Skip documentation and internal keys
+                if 'documentation' in key.lower():
+                    continue
+
+                trait = extract_trait_data(key, value)
+                traits.append(trait)
+
+        print(f"  Found {len(traits)} traits")
+        return traits
+
+    except Exception as e:
+        print(f"  Error processing file: {e}")
+        return []
+
+
+def extract_all_traits(stellaris_path: str, output_file: str = "output/traits.json"):
+    """
+    Extract all species traits from Stellaris installation
+
+    Args:
+        stellaris_path: Path to Stellaris installation directory
+        output_file: Output JSON file path
+    """
+    traits_dir = os.path.join(stellaris_path, "common", "traits")
+
+    if not os.path.exists(traits_dir):
+        print(f"Error: Traits directory not found at {traits_dir}")
+        sys.exit(1)
+
+    all_traits = []
+
+    # Files to process (species traits only, not leader traits)
+    species_trait_files = [
+        "01_species_traits_habitability.txt",
+        "02_species_traits_basic_characteristics.txt",
+        "03_species_traits_presapients.txt",
+        "04_species_traits.txt",
+        "05_species_traits_robotic.txt",
+        "06_distant_stars_traits.txt",
+        "07_megacorp_traits.txt",
+        "08_ancrel_traits.txt",
+        "09_ascension_traits.txt",
+        "09_overlord_traits.txt",
+        "09_tox_traits.txt",
+        "10_species_traits_cyborg.txt",
+        "11_first_contact_traits.txt",
+        "12_astral_planes_traits.txt",
+        "13_cosmic_storms_traits.txt",
+        "13_machine_age_traits.txt",
+        "14_grand_archive_traits.txt",
+        "15_biogenesis_species_traits.txt",
+        "15_extreme_frontiers_traits.txt",
+        "15_strange_worlds_traits.txt",
+        "15_unplugged_traits.txt",
+        "17_shroud_species_traits.txt"
+    ]
+
+    for filename in species_trait_files:
+        filepath = os.path.join(traits_dir, filename)
+        if os.path.exists(filepath):
+            traits = extract_traits_from_file(filepath)
+            all_traits.extend(traits)
+
+    # Create output directory if it doesn't exist
+    os.makedirs(os.path.dirname(output_file), exist_ok=True)
+
+    # Write to JSON
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(all_traits, f, indent=2, ensure_ascii=False)
+
+    print(f"\nTotal traits extracted: {len(all_traits)}")
+    print(f"Output saved to: {output_file}")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        stellaris_path = sys.argv[1]
+    else:
+        # Default path for WSL
+        stellaris_path = "/mnt/c/Program Files (x86)/Steam/steamapps/common/Stellaris"
+
+    extract_all_traits(stellaris_path)

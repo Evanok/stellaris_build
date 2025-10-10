@@ -1,0 +1,2 @@
+# Stellaris Data Extractor - Python Dependencies
+# No external dependencies required - uses only Python standard library
