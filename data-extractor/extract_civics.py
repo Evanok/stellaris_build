@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Any
 from paradox_parser import parse_stellaris_file
+from localization_parser import load_all_localizations, get_localized_text, clean_localized_text
 
 
 def extract_trigger_info(trigger_data: Any) -> List[str]:
@@ -90,25 +91,47 @@ def extract_modifier_effects(modifier_data: Any) -> str:
     return "; ".join(effects)
 
 
-def extract_civic_data(civic_key: str, civic_data: Dict[str, Any]) -> Dict[str, Any]:
+def extract_civic_data(civic_key: str, civic_data: Dict[str, Any], localizations: Dict[str, str] = None) -> Dict[str, Any]:
     """
     Extract relevant data from a single civic
 
     Args:
         civic_key: The civic identifier
         civic_data: Raw civic data from parser
+        localizations: Optional dictionary of localization strings
 
     Returns:
         Cleaned civic data dictionary
     """
+    if localizations is None:
+        localizations = {}
+
+    # Get localized name and descriptions
+    name = get_localized_text(civic_key, localizations)
+    desc_key = f"{civic_key}_desc"
+    description_raw = get_localized_text(desc_key, localizations)
+
+    # For tooltips (effects description)
+    tooltip_key = civic_data.get("description", "")
+    tooltip_text = ""
+    if tooltip_key and isinstance(tooltip_key, str):
+        tooltip_text = clean_localized_text(get_localized_text(tooltip_key, localizations))
+
+    # For negative effects
+    negative_tooltip_key = civic_data.get("negative_description", "")
+    negative_tooltip_text = ""
+    if negative_tooltip_key and isinstance(negative_tooltip_key, str):
+        negative_tooltip_text = clean_localized_text(get_localized_text(negative_tooltip_key, localizations))
+
     civic = {
         "id": civic_key,
-        "name": civic_key,  # Will use localization later
+        "name": name,
+        "description": clean_localized_text(description_raw) if description_raw != desc_key else "",
         "is_origin": civic_data.get("is_origin", False),
         "playable": True,  # Default to playable unless specified
         "pickable_at_start": civic_data.get("pickable_at_start", True),
-        "description": civic_data.get("description", ""),
-        "negative_description": civic_data.get("negative_description", "")
+        "tooltip": tooltip_text,
+        "negative_tooltip": negative_tooltip_text
     }
 
     # Check if it has playable restrictions
@@ -179,12 +202,13 @@ def extract_civic_data(civic_key: str, civic_data: Dict[str, Any]) -> Dict[str, 
     return civic
 
 
-def extract_civics_from_file(filepath: str) -> List[Dict[str, Any]]:
+def extract_civics_from_file(filepath: str, localizations: Dict[str, str] = None) -> List[Dict[str, Any]]:
     """
     Extract all civics from a single file
 
     Args:
         filepath: Path to the civics file
+        localizations: Optional dictionary of localization strings
 
     Returns:
         List of civic dictionaries
@@ -201,7 +225,17 @@ def extract_civics_from_file(filepath: str) -> List[Dict[str, Any]]:
                 if 'documentation' in key.lower() or 'example' in key.lower():
                     continue
 
-                civic = extract_civic_data(key, value)
+                # Skip NPC-only civics (e.g., caravaneer_home, etc.)
+                potential = value.get("potential", {})
+                if isinstance(potential, dict) and "country_type" in potential:
+                    country_type = potential["country_type"]
+                    if isinstance(country_type, dict) and "value" in country_type:
+                        # If country_type is specified and not default, skip it
+                        if country_type["value"] not in ["default", ""]:
+                            print(f"  Skipping {key} (NPC country_type: {country_type['value']})")
+                            continue
+
+                civic = extract_civic_data(key, value, localizations)
                 civics.append(civic)
 
         print(f"  Found {len(civics)} civics/origins")
@@ -228,6 +262,10 @@ def extract_all_civics(stellaris_path: str, output_file: str = "output/civics.js
         print(f"Error: Civics directory not found at {civics_dir}")
         sys.exit(1)
 
+    # Load localizations
+    print("Loading localizations...")
+    localizations = load_all_localizations(stellaris_path)
+
     all_civics = []
 
     # Files to process
@@ -242,7 +280,7 @@ def extract_all_civics(stellaris_path: str, output_file: str = "output/civics.js
     for filename in civic_files:
         filepath = os.path.join(civics_dir, filename)
         if os.path.exists(filepath):
-            civics = extract_civics_from_file(filepath)
+            civics = extract_civics_from_file(filepath, localizations)
             all_civics.extend(civics)
 
     # Separate civics and origins

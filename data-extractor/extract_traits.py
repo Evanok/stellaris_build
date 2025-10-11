@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Any
 from paradox_parser import parse_stellaris_file
+from localization_parser import load_all_localizations, get_localized_text, clean_localized_text
 
 
 def extract_modifier_effects(modifier_data: Any) -> str:
@@ -45,20 +46,30 @@ def extract_modifier_effects(modifier_data: Any) -> str:
     return "; ".join(effects)
 
 
-def extract_trait_data(trait_key: str, trait_data: Dict[str, Any]) -> Dict[str, Any]:
+def extract_trait_data(trait_key: str, trait_data: Dict[str, Any], localizations: Dict[str, str] = None) -> Dict[str, Any]:
     """
     Extract relevant data from a single trait
 
     Args:
         trait_key: The trait identifier
         trait_data: Raw trait data from parser
+        localizations: Optional dictionary of localization strings
 
     Returns:
         Cleaned trait data dictionary
     """
+    if localizations is None:
+        localizations = {}
+
+    # Get localized name and description
+    name = get_localized_text(trait_key, localizations)
+    desc_key = f"{trait_key}_desc"
+    description_raw = get_localized_text(desc_key, localizations)
+
     trait = {
         "id": trait_key,
-        "name": trait_key,  # Will use localization later
+        "name": name,
+        "description": clean_localized_text(description_raw) if description_raw != desc_key else "",
         "cost": trait_data.get("cost", 0),
         "category": trait_data.get("category", "unknown"),
         "initial": trait_data.get("initial", False),
@@ -118,12 +129,13 @@ def extract_trait_data(trait_key: str, trait_data: Dict[str, Any]) -> Dict[str, 
     return trait
 
 
-def extract_traits_from_file(filepath: str) -> List[Dict[str, Any]]:
+def extract_traits_from_file(filepath: str, localizations: Dict[str, str] = None) -> List[Dict[str, Any]]:
     """
     Extract all traits from a single file
 
     Args:
         filepath: Path to the traits file
+        localizations: Optional dictionary of localization strings
 
     Returns:
         List of trait dictionaries
@@ -140,7 +152,11 @@ def extract_traits_from_file(filepath: str) -> List[Dict[str, Any]]:
                 if 'documentation' in key.lower():
                     continue
 
-                trait = extract_trait_data(key, value)
+                # Skip leader traits (these are not species traits)
+                if key.startswith('leader_trait'):
+                    continue
+
+                trait = extract_trait_data(key, value, localizations)
                 traits.append(trait)
 
         print(f"  Found {len(traits)} traits")
@@ -164,6 +180,10 @@ def extract_all_traits(stellaris_path: str, output_file: str = "output/traits.js
     if not os.path.exists(traits_dir):
         print(f"Error: Traits directory not found at {traits_dir}")
         sys.exit(1)
+
+    # Load localizations
+    print("Loading localizations...")
+    localizations = load_all_localizations(stellaris_path)
 
     all_traits = []
 
@@ -196,7 +216,7 @@ def extract_all_traits(stellaris_path: str, output_file: str = "output/traits.js
     for filename in species_trait_files:
         filepath = os.path.join(traits_dir, filename)
         if os.path.exists(filepath):
-            traits = extract_traits_from_file(filepath)
+            traits = extract_traits_from_file(filepath, localizations)
             all_traits.extend(traits)
 
     # Create output directory if it doesn't exist

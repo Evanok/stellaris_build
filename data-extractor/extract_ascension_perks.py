@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Any
 from paradox_parser import parse_stellaris_file
+from localization_parser import load_all_localizations, get_localized_text, clean_localized_text
 
 
 def extract_modifier_effects(modifier_data: Any) -> str:
@@ -35,11 +36,20 @@ def extract_modifier_effects(modifier_data: Any) -> str:
     return "; ".join(effects)
 
 
-def extract_perk_data(perk_key: str, perk_data: Dict[str, Any]) -> Dict[str, Any]:
+def extract_perk_data(perk_key: str, perk_data: Dict[str, Any], localizations: Dict[str, str] = None) -> Dict[str, Any]:
     """Extract relevant data from a single ascension perk"""
+    if localizations is None:
+        localizations = {}
+
+    # Get localized name and description
+    name = get_localized_text(perk_key, localizations)
+    desc_key = f"{perk_key}_desc"
+    description_raw = get_localized_text(desc_key, localizations)
+
     perk = {
         "id": perk_key,
-        "name": perk_key,
+        "name": name,
+        "description": clean_localized_text(description_raw) if description_raw != desc_key else "",
         "custom_tooltip": perk_data.get("custom_tooltip", "")
     }
 
@@ -96,7 +106,7 @@ def extract_perk_data(perk_key: str, perk_data: Dict[str, Any]) -> Dict[str, Any
     return perk
 
 
-def extract_perks_from_file(filepath: str) -> List[Dict[str, Any]]:
+def extract_perks_from_file(filepath: str, localizations: Dict[str, str] = None) -> List[Dict[str, Any]]:
     """Extract all ascension perks from a single file"""
     print(f"Processing: {os.path.basename(filepath)}")
 
@@ -106,7 +116,14 @@ def extract_perks_from_file(filepath: str) -> List[Dict[str, Any]]:
 
         for key, value in data.items():
             if isinstance(value, dict) and key.startswith('ap_'):
-                perk = extract_perk_data(key, value)
+                # Check if perk is actually available (potential != { always = no })
+                potential = value.get("potential", {})
+                # Parser converts 'no' to False
+                if isinstance(potential, dict) and potential.get("always") == False:
+                    print(f"  Skipping {key} (potential = always no)")
+                    continue
+
+                perk = extract_perk_data(key, value, localizations)
                 perks.append(perk)
 
         print(f"  Found {len(perks)} ascension perks")
@@ -127,6 +144,10 @@ def extract_all_ascension_perks(stellaris_path: str, output_file: str = "output/
         print(f"Error: Ascension perks directory not found at {perks_dir}")
         sys.exit(1)
 
+    # Load localizations
+    print("Loading localizations...")
+    localizations = load_all_localizations(stellaris_path)
+
     all_perks = []
 
     # Files to process
@@ -138,7 +159,7 @@ def extract_all_ascension_perks(stellaris_path: str, output_file: str = "output/
     for filename in perk_files:
         filepath = os.path.join(perks_dir, filename)
         if os.path.exists(filepath):
-            perks = extract_perks_from_file(filepath)
+            perks = extract_perks_from_file(filepath, localizations)
             all_perks.extend(perks)
 
     # Separate path perks from regular perks

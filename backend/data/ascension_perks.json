@@ -2,7 +2,8 @@
   "all": [
     {
       "id": "ap_engineered_evolution",
-      "name": "ap_engineered_evolution",
+      "name": "Biomorphosis",
+      "description": "To leave our genetic destiny in the hands of nature is an inefficient and excruciatingly slow process. Why not jump-start the future of our species?",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -114,7 +115,8 @@
     },
     {
       "id": "ap_the_flesh_is_weak",
-      "name": "ap_the_flesh_is_weak",
+      "name": "The Flesh is Weak",
+      "description": "The limits and constraints imposed on us by our feeble organic bodies are simply unacceptable. To reach our full potential, we must turn to cybernetic implants.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -201,7 +203,8 @@
     },
     {
       "id": "ap_organo_machine_interfacing",
-      "name": "ap_organo_machine_interfacing",
+      "name": "Organo-Machine Interfacing",
+      "description": "The limits and constraints imposed on us by our feeble organic bodies are simply unacceptable. To reach our full potential, we must turn to cybernetic implants.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -263,7 +266,8 @@
     },
     {
       "id": "ap_organo_machine_interfacing_assimilator",
-      "name": "ap_organo_machine_interfacing_assimilator",
+      "name": "Organo-Machine Interfacing",
+      "description": "The limits and constraints imposed on us by our creators are simply unacceptable. To reach our full potential, we must fuse organic and machine.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -320,7 +324,8 @@
     },
     {
       "id": "ap_synthetic_evolution",
-      "name": "ap_synthetic_evolution",
+      "name": "Synthetic Evolution",
+      "description": "It is time to abandon the flawed organic vessels that imprison our minds. By transferring our neural patterns into synthetic bodies, we will achieve a higher state of being.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -397,7 +402,8 @@
     },
     {
       "id": "ap_mind_over_matter",
-      "name": "ap_mind_over_matter",
+      "name": "Mind Over Matter",
+      "description": "[GetMindOverMatterDesc]",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -555,7 +561,8 @@
     },
     {
       "id": "ap_synthetic_age",
-      "name": "ap_synthetic_age",
+      "name": "Synthetic Age",
+      "description": "The age of organics has come and gone, the future of the galaxy belongs to the machines. This is the dawn of a synthetic age.",
       "custom_tooltip": "synthetic_age_tooltip",
       "type": "ascension_perk",
       "possible": {
@@ -620,104 +627,9 @@
       "ai_weight": "@ascension_path_base_weight"
     },
     {
-      "id": "ap_transcendence",
-      "name": "ap_transcendence",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {
-        "custom_tooltip": [
-          {
-            "fail_text": "synthetic_empire_psionic_ascension",
-            "NOT": {
-              "has_trait": "trait_mechanical"
-            }
-          },
-          {
-            "fail_text": "hive_mind_biological_ascension_only1",
-            "is_hive_empire": false
-          },
-          {
-            "fail_text": "requires_ascension_perks_2",
-            "num_ascension_perks": 1
-          },
-          {
-            "fail_text": "requires_technology_psionic_theory",
-            "has_technology": "tech_psionic_theory"
-          },
-          {
-            "fail_text": "requires_ap_mind_over_matter",
-            "OR": {
-              "has_ascension_perk": "ap_mind_over_matter",
-              "has_origin": [
-                "origin_shroudwalker_apprentice",
-                "origin_cybernetic_creed"
-              ]
-            }
-          }
-        ]
-      },
-      "prerequisites": [],
-      "effects": "intel_decryption_add: +2; intel_encryption_add: +2; add_base_country_intel: +10",
-      "modifier": {
-        "intel_decryption_add": 2,
-        "intel_encryption_add": 2,
-        "add_base_country_intel": 10
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "always": false
-      },
-      "ai_weight": 10000
-    },
-    {
-      "id": "ap_evolutionary_mastery",
-      "name": "ap_evolutionary_mastery",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {
-        "custom_tooltip": [
-          {
-            "fail_text": "synthetic_empire_biological_ascension",
-            "NOT": {
-              "has_trait": "trait_mechanical"
-            }
-          },
-          {
-            "fail_text": "requires_ascension_perks_2",
-            "num_ascension_perks": 1
-          },
-          {
-            "fail_text": "requires_technology_glandular_acclimation",
-            "has_technology": "tech_glandular_acclimation"
-          },
-          {
-            "fail_text": "requires_ap_engineered_evolution",
-            "has_ascension_perk": "ap_engineered_evolution"
-          }
-        ]
-      },
-      "prerequisites": [],
-      "effects": "",
-      "modifier": {
-        "description": "ap_evolutionary_mastery_modifier_desc",
-        "description_parameters": {
-          "POINTS": "@ap_evolutionary_mastery_POINTS",
-          "COST_MULT": "@ap_evolutionary_mastery_COST_MULT"
-        },
-        "BIOLOGICAL_species_trait_points_add": "@ap_evolutionary_mastery_POINTS",
-        "modify_species_cost_mult": "@ap_evolutionary_mastery_COST_MULT"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "always": false
-      },
-      "ai_weight": 10000
-    },
-    {
       "id": "ap_defender_of_the_galaxy",
-      "name": "ap_defender_of_the_galaxy",
+      "name": "Defender of the Galaxy",
+      "description": "As star nations vie with one another in petty disputes, sinister forces of unimaginable power are arraying themselves against all sapient life. Who will protect us?",
       "custom_tooltip": "ap_defender_of_the_galaxy_modifier_desc",
       "type": "ascension_perk",
       "possible": {
@@ -760,7 +672,8 @@
     },
     {
       "id": "ap_become_the_crisis",
-      "name": "ap_become_the_crisis",
+      "name": "Galactic Nemesis",
+      "description": "All great works require sacrifice. The rest of the galaxy may not understand, but they will comply.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -860,7 +773,8 @@
     },
     {
       "id": "ap_cosmogenesis",
-      "name": "ap_cosmogenesis",
+      "name": "Cosmogenesis",
+      "description": "Time, gravity and space are the fundamental cogs that make up the clockwork of reality. If we can learn to manipulate them, the universe and its secrets will be ours.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -908,7 +822,8 @@
     },
     {
       "id": "ap_behemoths",
-      "name": "ap_behemoths",
+      "name": "Behemoth Fury",
+      "description": "The apex predators of the stars are not bound by petty limitations. In the same spirit, we will cast off the biological weaknesses that hold us back, and become a force of nature.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -967,7 +882,8 @@
     },
     {
       "id": "ap_archaeoengineers",
-      "name": "ap_archaeoengineers",
+      "name": "Archaeo-Engineers",
+      "description": "Combining proven archaic technology with contemporary engineering will give us a timeless advantage.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -995,7 +911,8 @@
     },
     {
       "id": "ap_lord_of_war",
-      "name": "ap_lord_of_war",
+      "name": "Lord of War",
+      "description": "Some say war is bad for business, but war is our business. Our mercenaries thrive in an embattled galaxy, and through them, so will we.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -1026,7 +943,8 @@
     },
     {
       "id": "ap_hydrocentric",
-      "name": "ap_hydrocentric",
+      "name": "Hydrocentric",
+      "description": "No longer shall we settle for \"good enough\" replacements for our oceanic abodes: no planet shall be deemed fit for colonization until it has been thoroughly inundated.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1064,7 +982,8 @@
     },
     {
       "id": "ap_enigmatic_engineering",
-      "name": "ap_enigmatic_engineering",
+      "name": "Enigmatic Engineering",
+      "description": "Technology is simply not a way to solve a problem, but it is a language by which we ascend beyond the mundane. Lesser minds simply fail to understand our advances.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1092,7 +1011,8 @@
     },
     {
       "id": "ap_nihilistic_acquisition",
-      "name": "ap_nihilistic_acquisition",
+      "name": "Nihilistic Acquisition",
+      "description": "The notion of self-determination cannot be a moral absolute. Holistic goals clearly outweigh individual concerns.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1125,7 +1045,8 @@
     },
     {
       "id": "ap_colossus",
-      "name": "ap_colossus",
+      "name": "Colossus Project",
+      "description": "The Colossus Project is where fevered dreams of terror and deterrence meet. A vision of the biggest ship, carrying a weapon capable of devastating entire worlds.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1155,7 +1076,8 @@
     },
     {
       "id": "ap_world_shaper",
-      "name": "ap_world_shaper",
+      "name": "World Shaper",
+      "description": "To carefully shape and alter the ecosystem of an entire planet into something else is not so very different from an artist sculpting a statue out of clay.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1200,7 +1122,8 @@
     },
     {
       "id": "ap_galactic_force_projection",
-      "name": "ap_galactic_force_projection",
+      "name": "Galactic Force Projection",
+      "description": "The fleet is the instrument by which the will of our empire is made manifest - we live or die depending on its strength.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1230,7 +1153,8 @@
     },
     {
       "id": "ap_interstellar_dominion",
-      "name": "ap_interstellar_dominion",
+      "name": "Interstellar Dominion",
+      "description": "The stars beckon and we follow. May nothing stand between us and them.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -1253,7 +1177,8 @@
     },
     {
       "id": "ap_grasp_the_void",
-      "name": "ap_grasp_the_void",
+      "name": "Grasp the Void",
+      "description": "The vast expanse of the galaxy holds limitless riches for those empires that understand how to maintain their grasp on the void.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1280,7 +1205,8 @@
     },
     {
       "id": "ap_eternal_vigilance",
-      "name": "ap_eternal_vigilance",
+      "name": "Eternal Vigilance",
+      "description": "To display weakness is to invite attack. The price of invading our space must be so high that as few as possible are prepared to meet it.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1314,7 +1240,8 @@
     },
     {
       "id": "ap_galactic_contender",
-      "name": "ap_galactic_contender",
+      "name": "Galactic Contender",
+      "description": "The Fallen Empires cling to the ruins of their decrepit civilizations, ever fearful of the younger and more dynamic races that surround them. Their time has long since passed.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1353,7 +1280,8 @@
     },
     {
       "id": "ap_technological_ascendancy",
-      "name": "ap_technological_ascendancy",
+      "name": "Technological Ascendancy",
+      "description": "Technologies that would have been indistinguishable from magic mere generations ago are now within our reach. A new age of technology has begun.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -1373,7 +1301,8 @@
     },
     {
       "id": "ap_one_vision",
-      "name": "ap_one_vision",
+      "name": "One Vision",
+      "description": "True unity is achieved only when the ultimate goals of a nation and its people are one and the same. After all, a house divided against itself cannot stand.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -1394,7 +1323,8 @@
     },
     {
       "id": "ap_consecrated_worlds",
-      "name": "ap_consecrated_worlds",
+      "name": "Consecrated Worlds",
+      "description": "The galaxy is home to many holy places, some more obvious than others. As mortals, we still struggle to divine the true nature of the universe.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -1420,7 +1350,8 @@
     },
     {
       "id": "ap_mastery_of_nature",
-      "name": "ap_mastery_of_nature",
+      "name": "Mastery of Nature",
+      "description": "Although we mastered the nature of our homeworld long ago, the alien biomes we have since encountered present new challenges. They too shall be overcome.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -1442,7 +1373,8 @@
     },
     {
       "id": "ap_imperial_prerogative",
-      "name": "ap_imperial_prerogative",
+      "name": "Imperial Prerogative",
+      "description": "As our civilization continues to grow, so its beating heart must also expand. More systems will be placed under our direct control.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -1464,7 +1396,8 @@
     },
     {
       "id": "ap_executive_vigor",
-      "name": "ap_executive_vigor",
+      "name": "Executive Vigor",
+      "description": "There will be no half-measures or compromises when implementing the edicts decided upon by our government. We go all the way, or not at all.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -1486,7 +1419,8 @@
     },
     {
       "id": "ap_transcendent_learning",
-      "name": "ap_transcendent_learning",
+      "name": "Transcendent Learning",
+      "description": "Our society must change its approach towards learning, and by doing so, our best and brightest will be able to reach a completely new level of achievements.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -1508,7 +1442,8 @@
     },
     {
       "id": "ap_shared_destiny",
-      "name": "ap_shared_destiny",
+      "name": "Shared Destiny",
+      "description": "As we reach for ever greater heights, we must not leave behind those who have loyally served us. The glorious future of our empire was always meant to be a shared destiny.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -1539,7 +1474,8 @@
     },
     {
       "id": "ap_voidborn",
-      "name": "ap_voidborn",
+      "name": "Voidborne",
+      "description": "We have adapted to permanent habitation in the depths of space, reducing our infrastructure needs and yielding more room on our habitats for other functions.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1568,7 +1504,8 @@
     },
     {
       "id": "ap_master_builders",
-      "name": "ap_master_builders",
+      "name": "Master Builders",
+      "description": "Building a Megastructure requires an unprecedented amount of resources and planning. We are breaking new ground in the field of macro-engineering.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1601,7 +1538,8 @@
     },
     {
       "id": "ap_galactic_wonders_utopia",
-      "name": "ap_galactic_wonders_utopia",
+      "name": "Galactic Wonders",
+      "description": "Megastructures are rightfully regarded as the wonders of our time. The scope of such a project would have been unimaginable mere generations ago.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1632,7 +1570,8 @@
     },
     {
       "id": "ap_galactic_wonders_megacorp",
-      "name": "ap_galactic_wonders_megacorp",
+      "name": "Galactic Wonders",
+      "description": "Megastructures are rightfully regarded as the wonders of our time. The scope of such a project would have been unimaginable mere generations ago.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1663,7 +1602,8 @@
     },
     {
       "id": "ap_galactic_wonders_utopia_and_megacorp",
-      "name": "ap_galactic_wonders_utopia_and_megacorp",
+      "name": "Galactic Wonders",
+      "description": "Megastructures are rightfully regarded as the wonders of our time. The scope of such a project would have been unimaginable mere generations ago.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1696,7 +1636,8 @@
     },
     {
       "id": "ap_machine_worlds",
-      "name": "ap_machine_worlds",
+      "name": "Machine Worlds",
+      "description": "We shall shape our worlds into a mirror image of ourselves, replacing the frailty of biology with the immutable perfection of metal.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1732,7 +1673,8 @@
     },
     {
       "id": "ap_hive_worlds",
-      "name": "ap_hive_worlds",
+      "name": "Hive Worlds",
+      "description": "We shall create living worlds that are every bit as much a part of the Hive as the drones that inhabit them.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1770,7 +1712,8 @@
     },
     {
       "id": "ap_arcology_project",
-      "name": "ap_arcology_project",
+      "name": "Arcology Project",
+      "description": "Thus shall we make a world of the city, and a city of the world.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1811,7 +1754,8 @@
     },
     {
       "id": "ap_xeno_compatibility",
-      "name": "ap_xeno_compatibility",
+      "name": "Xeno-Compatibility",
+      "description": "The invention of universal sexual biology has revolutionized society. Even if it sometimes requires awkward rotations to make a connection.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1859,7 +1803,8 @@
     },
     {
       "id": "ap_universal_transactions",
-      "name": "ap_universal_transactions",
+      "name": "Universal Transactions",
+      "description": "We shall extend our brand and our business to every solar system in the galaxy. Prosperity is eternal!",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -1884,7 +1829,8 @@
     },
     {
       "id": "ap_detox",
-      "name": "ap_detox",
+      "name": "Detox",
+      "description": "Our newest advancements in terraforming allow us to breathe new life into a class of planets formerly considered irrevocably deadly and beyond salvation.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1910,7 +1856,8 @@
     },
     {
       "id": "ap_mechromancy",
-      "name": "ap_mechromancy",
+      "name": "Mechromancy",
+      "description": "Biologicals are merely a different kind of machine. We can stimulate the appropriate synapses and reanimate these creatures, for our own benefit.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -1935,7 +1882,8 @@
     },
     {
       "id": "ap_weather_control",
-      "name": "ap_weather_control",
+      "name": "Galactic Weather Control",
+      "description": "Our latest advances in astrometeorology grant us the ability to manifest Cosmic Storms on command. With the right technology, we can even choose the type of storm to create.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -1969,7 +1917,8 @@
   "path_perks": [
     {
       "id": "ap_synthetic_evolution",
-      "name": "ap_synthetic_evolution",
+      "name": "Synthetic Evolution",
+      "description": "It is time to abandon the flawed organic vessels that imprison our minds. By transferring our neural patterns into synthetic bodies, we will achieve a higher state of being.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -2046,7 +1995,8 @@
     },
     {
       "id": "ap_synthetic_age",
-      "name": "ap_synthetic_age",
+      "name": "Synthetic Age",
+      "description": "The age of organics has come and gone, the future of the galaxy belongs to the machines. This is the dawn of a synthetic age.",
       "custom_tooltip": "synthetic_age_tooltip",
       "type": "ascension_perk",
       "possible": {
@@ -2114,7 +2064,8 @@
   "regular_perks": [
     {
       "id": "ap_engineered_evolution",
-      "name": "ap_engineered_evolution",
+      "name": "Biomorphosis",
+      "description": "To leave our genetic destiny in the hands of nature is an inefficient and excruciatingly slow process. Why not jump-start the future of our species?",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -2226,7 +2177,8 @@
     },
     {
       "id": "ap_the_flesh_is_weak",
-      "name": "ap_the_flesh_is_weak",
+      "name": "The Flesh is Weak",
+      "description": "The limits and constraints imposed on us by our feeble organic bodies are simply unacceptable. To reach our full potential, we must turn to cybernetic implants.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -2313,7 +2265,8 @@
     },
     {
       "id": "ap_organo_machine_interfacing",
-      "name": "ap_organo_machine_interfacing",
+      "name": "Organo-Machine Interfacing",
+      "description": "The limits and constraints imposed on us by our feeble organic bodies are simply unacceptable. To reach our full potential, we must turn to cybernetic implants.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -2375,7 +2328,8 @@
     },
     {
       "id": "ap_organo_machine_interfacing_assimilator",
-      "name": "ap_organo_machine_interfacing_assimilator",
+      "name": "Organo-Machine Interfacing",
+      "description": "The limits and constraints imposed on us by our creators are simply unacceptable. To reach our full potential, we must fuse organic and machine.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -2432,7 +2386,8 @@
     },
     {
       "id": "ap_mind_over_matter",
-      "name": "ap_mind_over_matter",
+      "name": "Mind Over Matter",
+      "description": "[GetMindOverMatterDesc]",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -2589,104 +2544,9 @@
       "ai_weight": "@ascension_path_base_weight"
     },
     {
-      "id": "ap_transcendence",
-      "name": "ap_transcendence",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {
-        "custom_tooltip": [
-          {
-            "fail_text": "synthetic_empire_psionic_ascension",
-            "NOT": {
-              "has_trait": "trait_mechanical"
-            }
-          },
-          {
-            "fail_text": "hive_mind_biological_ascension_only1",
-            "is_hive_empire": false
-          },
-          {
-            "fail_text": "requires_ascension_perks_2",
-            "num_ascension_perks": 1
-          },
-          {
-            "fail_text": "requires_technology_psionic_theory",
-            "has_technology": "tech_psionic_theory"
-          },
-          {
-            "fail_text": "requires_ap_mind_over_matter",
-            "OR": {
-              "has_ascension_perk": "ap_mind_over_matter",
-              "has_origin": [
-                "origin_shroudwalker_apprentice",
-                "origin_cybernetic_creed"
-              ]
-            }
-          }
-        ]
-      },
-      "prerequisites": [],
-      "effects": "intel_decryption_add: +2; intel_encryption_add: +2; add_base_country_intel: +10",
-      "modifier": {
-        "intel_decryption_add": 2,
-        "intel_encryption_add": 2,
-        "add_base_country_intel": 10
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "always": false
-      },
-      "ai_weight": 10000
-    },
-    {
-      "id": "ap_evolutionary_mastery",
-      "name": "ap_evolutionary_mastery",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {
-        "custom_tooltip": [
-          {
-            "fail_text": "synthetic_empire_biological_ascension",
-            "NOT": {
-              "has_trait": "trait_mechanical"
-            }
-          },
-          {
-            "fail_text": "requires_ascension_perks_2",
-            "num_ascension_perks": 1
-          },
-          {
-            "fail_text": "requires_technology_glandular_acclimation",
-            "has_technology": "tech_glandular_acclimation"
-          },
-          {
-            "fail_text": "requires_ap_engineered_evolution",
-            "has_ascension_perk": "ap_engineered_evolution"
-          }
-        ]
-      },
-      "prerequisites": [],
-      "effects": "",
-      "modifier": {
-        "description": "ap_evolutionary_mastery_modifier_desc",
-        "description_parameters": {
-          "POINTS": "@ap_evolutionary_mastery_POINTS",
-          "COST_MULT": "@ap_evolutionary_mastery_COST_MULT"
-        },
-        "BIOLOGICAL_species_trait_points_add": "@ap_evolutionary_mastery_POINTS",
-        "modify_species_cost_mult": "@ap_evolutionary_mastery_COST_MULT"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "always": false
-      },
-      "ai_weight": 10000
-    },
-    {
       "id": "ap_defender_of_the_galaxy",
-      "name": "ap_defender_of_the_galaxy",
+      "name": "Defender of the Galaxy",
+      "description": "As star nations vie with one another in petty disputes, sinister forces of unimaginable power are arraying themselves against all sapient life. Who will protect us?",
       "custom_tooltip": "ap_defender_of_the_galaxy_modifier_desc",
       "type": "ascension_perk",
       "possible": {
@@ -2729,7 +2589,8 @@
     },
     {
       "id": "ap_become_the_crisis",
-      "name": "ap_become_the_crisis",
+      "name": "Galactic Nemesis",
+      "description": "All great works require sacrifice. The rest of the galaxy may not understand, but they will comply.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -2829,7 +2690,8 @@
     },
     {
       "id": "ap_cosmogenesis",
-      "name": "ap_cosmogenesis",
+      "name": "Cosmogenesis",
+      "description": "Time, gravity and space are the fundamental cogs that make up the clockwork of reality. If we can learn to manipulate them, the universe and its secrets will be ours.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -2877,7 +2739,8 @@
     },
     {
       "id": "ap_behemoths",
-      "name": "ap_behemoths",
+      "name": "Behemoth Fury",
+      "description": "The apex predators of the stars are not bound by petty limitations. In the same spirit, we will cast off the biological weaknesses that hold us back, and become a force of nature.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -2936,7 +2799,8 @@
     },
     {
       "id": "ap_archaeoengineers",
-      "name": "ap_archaeoengineers",
+      "name": "Archaeo-Engineers",
+      "description": "Combining proven archaic technology with contemporary engineering will give us a timeless advantage.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -2964,7 +2828,8 @@
     },
     {
       "id": "ap_lord_of_war",
-      "name": "ap_lord_of_war",
+      "name": "Lord of War",
+      "description": "Some say war is bad for business, but war is our business. Our mercenaries thrive in an embattled galaxy, and through them, so will we.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -2995,7 +2860,8 @@
     },
     {
       "id": "ap_hydrocentric",
-      "name": "ap_hydrocentric",
+      "name": "Hydrocentric",
+      "description": "No longer shall we settle for \"good enough\" replacements for our oceanic abodes: no planet shall be deemed fit for colonization until it has been thoroughly inundated.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3033,7 +2899,8 @@
     },
     {
       "id": "ap_enigmatic_engineering",
-      "name": "ap_enigmatic_engineering",
+      "name": "Enigmatic Engineering",
+      "description": "Technology is simply not a way to solve a problem, but it is a language by which we ascend beyond the mundane. Lesser minds simply fail to understand our advances.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3061,7 +2928,8 @@
     },
     {
       "id": "ap_nihilistic_acquisition",
-      "name": "ap_nihilistic_acquisition",
+      "name": "Nihilistic Acquisition",
+      "description": "The notion of self-determination cannot be a moral absolute. Holistic goals clearly outweigh individual concerns.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3094,7 +2962,8 @@
     },
     {
       "id": "ap_colossus",
-      "name": "ap_colossus",
+      "name": "Colossus Project",
+      "description": "The Colossus Project is where fevered dreams of terror and deterrence meet. A vision of the biggest ship, carrying a weapon capable of devastating entire worlds.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3124,7 +2993,8 @@
     },
     {
       "id": "ap_world_shaper",
-      "name": "ap_world_shaper",
+      "name": "World Shaper",
+      "description": "To carefully shape and alter the ecosystem of an entire planet into something else is not so very different from an artist sculpting a statue out of clay.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3169,7 +3039,8 @@
     },
     {
       "id": "ap_galactic_force_projection",
-      "name": "ap_galactic_force_projection",
+      "name": "Galactic Force Projection",
+      "description": "The fleet is the instrument by which the will of our empire is made manifest - we live or die depending on its strength.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3199,7 +3070,8 @@
     },
     {
       "id": "ap_interstellar_dominion",
-      "name": "ap_interstellar_dominion",
+      "name": "Interstellar Dominion",
+      "description": "The stars beckon and we follow. May nothing stand between us and them.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -3222,7 +3094,8 @@
     },
     {
       "id": "ap_grasp_the_void",
-      "name": "ap_grasp_the_void",
+      "name": "Grasp the Void",
+      "description": "The vast expanse of the galaxy holds limitless riches for those empires that understand how to maintain their grasp on the void.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3249,7 +3122,8 @@
     },
     {
       "id": "ap_eternal_vigilance",
-      "name": "ap_eternal_vigilance",
+      "name": "Eternal Vigilance",
+      "description": "To display weakness is to invite attack. The price of invading our space must be so high that as few as possible are prepared to meet it.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3283,7 +3157,8 @@
     },
     {
       "id": "ap_galactic_contender",
-      "name": "ap_galactic_contender",
+      "name": "Galactic Contender",
+      "description": "The Fallen Empires cling to the ruins of their decrepit civilizations, ever fearful of the younger and more dynamic races that surround them. Their time has long since passed.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3322,7 +3197,8 @@
     },
     {
       "id": "ap_technological_ascendancy",
-      "name": "ap_technological_ascendancy",
+      "name": "Technological Ascendancy",
+      "description": "Technologies that would have been indistinguishable from magic mere generations ago are now within our reach. A new age of technology has begun.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -3342,7 +3218,8 @@
     },
     {
       "id": "ap_one_vision",
-      "name": "ap_one_vision",
+      "name": "One Vision",
+      "description": "True unity is achieved only when the ultimate goals of a nation and its people are one and the same. After all, a house divided against itself cannot stand.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -3363,7 +3240,8 @@
     },
     {
       "id": "ap_consecrated_worlds",
-      "name": "ap_consecrated_worlds",
+      "name": "Consecrated Worlds",
+      "description": "The galaxy is home to many holy places, some more obvious than others. As mortals, we still struggle to divine the true nature of the universe.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -3389,7 +3267,8 @@
     },
     {
       "id": "ap_mastery_of_nature",
-      "name": "ap_mastery_of_nature",
+      "name": "Mastery of Nature",
+      "description": "Although we mastered the nature of our homeworld long ago, the alien biomes we have since encountered present new challenges. They too shall be overcome.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -3411,7 +3290,8 @@
     },
     {
       "id": "ap_imperial_prerogative",
-      "name": "ap_imperial_prerogative",
+      "name": "Imperial Prerogative",
+      "description": "As our civilization continues to grow, so its beating heart must also expand. More systems will be placed under our direct control.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -3433,7 +3313,8 @@
     },
     {
       "id": "ap_executive_vigor",
-      "name": "ap_executive_vigor",
+      "name": "Executive Vigor",
+      "description": "There will be no half-measures or compromises when implementing the edicts decided upon by our government. We go all the way, or not at all.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -3455,7 +3336,8 @@
     },
     {
       "id": "ap_transcendent_learning",
-      "name": "ap_transcendent_learning",
+      "name": "Transcendent Learning",
+      "description": "Our society must change its approach towards learning, and by doing so, our best and brightest will be able to reach a completely new level of achievements.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -3477,7 +3359,8 @@
     },
     {
       "id": "ap_shared_destiny",
-      "name": "ap_shared_destiny",
+      "name": "Shared Destiny",
+      "description": "As we reach for ever greater heights, we must not leave behind those who have loyally served us. The glorious future of our empire was always meant to be a shared destiny.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -3508,7 +3391,8 @@
     },
     {
       "id": "ap_voidborn",
-      "name": "ap_voidborn",
+      "name": "Voidborne",
+      "description": "We have adapted to permanent habitation in the depths of space, reducing our infrastructure needs and yielding more room on our habitats for other functions.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3537,7 +3421,8 @@
     },
     {
       "id": "ap_master_builders",
-      "name": "ap_master_builders",
+      "name": "Master Builders",
+      "description": "Building a Megastructure requires an unprecedented amount of resources and planning. We are breaking new ground in the field of macro-engineering.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3570,7 +3455,8 @@
     },
     {
       "id": "ap_galactic_wonders_utopia",
-      "name": "ap_galactic_wonders_utopia",
+      "name": "Galactic Wonders",
+      "description": "Megastructures are rightfully regarded as the wonders of our time. The scope of such a project would have been unimaginable mere generations ago.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3601,7 +3487,8 @@
     },
     {
       "id": "ap_galactic_wonders_megacorp",
-      "name": "ap_galactic_wonders_megacorp",
+      "name": "Galactic Wonders",
+      "description": "Megastructures are rightfully regarded as the wonders of our time. The scope of such a project would have been unimaginable mere generations ago.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3632,7 +3519,8 @@
     },
     {
       "id": "ap_galactic_wonders_utopia_and_megacorp",
-      "name": "ap_galactic_wonders_utopia_and_megacorp",
+      "name": "Galactic Wonders",
+      "description": "Megastructures are rightfully regarded as the wonders of our time. The scope of such a project would have been unimaginable mere generations ago.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3665,7 +3553,8 @@
     },
     {
       "id": "ap_machine_worlds",
-      "name": "ap_machine_worlds",
+      "name": "Machine Worlds",
+      "description": "We shall shape our worlds into a mirror image of ourselves, replacing the frailty of biology with the immutable perfection of metal.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3701,7 +3590,8 @@
     },
     {
       "id": "ap_hive_worlds",
-      "name": "ap_hive_worlds",
+      "name": "Hive Worlds",
+      "description": "We shall create living worlds that are every bit as much a part of the Hive as the drones that inhabit them.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3739,7 +3629,8 @@
     },
     {
       "id": "ap_arcology_project",
-      "name": "ap_arcology_project",
+      "name": "Arcology Project",
+      "description": "Thus shall we make a world of the city, and a city of the world.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3780,7 +3671,8 @@
     },
     {
       "id": "ap_xeno_compatibility",
-      "name": "ap_xeno_compatibility",
+      "name": "Xeno-Compatibility",
+      "description": "The invention of universal sexual biology has revolutionized society. Even if it sometimes requires awkward rotations to make a connection.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3828,7 +3720,8 @@
     },
     {
       "id": "ap_universal_transactions",
-      "name": "ap_universal_transactions",
+      "name": "Universal Transactions",
+      "description": "We shall extend our brand and our business to every solar system in the galaxy. Prosperity is eternal!",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -3853,7 +3746,8 @@
     },
     {
       "id": "ap_detox",
-      "name": "ap_detox",
+      "name": "Detox",
+      "description": "Our newest advancements in terraforming allow us to breathe new life into a class of planets formerly considered irrevocably deadly and beyond salvation.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -3879,7 +3773,8 @@
     },
     {
       "id": "ap_mechromancy",
-      "name": "ap_mechromancy",
+      "name": "Mechromancy",
+      "description": "Biologicals are merely a different kind of machine. We can stimulate the appropriate synapses and reanimate these creatures, for our own benefit.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {},
@@ -3904,7 +3799,8 @@
     },
     {
       "id": "ap_weather_control",
-      "name": "ap_weather_control",
+      "name": "Galactic Weather Control",
+      "description": "Our latest advances in astrometeorology grant us the ability to manifest Cosmic Storms on command. With the right technology, we can even choose the type of storm to create.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {

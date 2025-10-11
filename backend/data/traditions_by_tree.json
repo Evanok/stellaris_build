@@ -39,7 +39,7 @@
       {
         "id": "tr_adaptability_recycling",
         "name": "Enhanced Recycling",
-        "description": "Building and District Strategic Resource Cost and Upkeep reduced by -15%.",
+        "description": "Building and District $r_strategic$ Cost and Upkeep reduced by -15%.",
         "custom_tooltip": "tr_adaptability_recycling_desc",
         "type": "tradition",
         "tree": "adaptability",
@@ -59,7 +59,7 @@
       {
         "id": "tr_adaptability_survival_fittest",
         "name": "Survival of the Fittest",
-        "description": "Orbital Bombardment Damage reduced by 25% and Defense Army Damage increased by +25%.",
+        "description": "reduced by 25% and increased by +25%.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "adaptability",
@@ -77,7 +77,7 @@
       {
         "id": "tr_adaptability_environmental_diversification",
         "name": "Environmental Diversification",
-        "description": "Habitability increased by +10%.",
+        "description": "increased by +10%.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "adaptability",
@@ -109,7 +109,7 @@
       {
         "id": "tr_adaptability_appropriation",
         "name": "Appropriation",
-        "description": "Resettlement Cost reduced by 33%.",
+        "description": "reduced by 33%.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "adaptability",
@@ -233,7 +233,7 @@
       {
         "id": "tr_aptitude_champions_of_the_empire",
         "name": "Champions of the Empire",
-        "description": "Per Commander and General level  Naval Capacity: +2 Per Official level  Empire Size: -2 Per Scientist level  Leader Experience Gain: +0.5%",
+        "description": "Per $commander_with_icon$ and $general_with_icon$ level $t$ : +2 Per $official_with_icon$ level $t$ : -2 Per $scientist_with_icon$ level $t$ : +0.5%",
         "custom_tooltip": "tr_aptitude_adopt_desc",
         "type": "tradition",
         "tree": "aptitude",
@@ -251,7 +251,7 @@
     "name": "tr_archivism",
     "adopt": {
       "id": "tr_archivism_adopt",
-      "name": "Archivism Traditions",
+      "name": "tr_archivism_adopt",
       "description": "",
       "custom_tooltip": "",
       "type": "adopt",
@@ -269,7 +269,7 @@
     },
     "finish": {
       "id": "tr_archivism_finish",
-      "name": "Archivism Traditions Finished",
+      "name": "tr_archivism_finish",
       "description": "",
       "custom_tooltip": "",
       "type": "finish",
@@ -292,7 +292,7 @@
     "traditions": [
       {
         "id": "tr_archivism_xeno_paleontology",
-        "name": "Xeno-Paleontology",
+        "name": "tr_archivism_xeno_paleontology",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -309,7 +309,7 @@
       },
       {
         "id": "tr_archivism_expert_negociation",
-        "name": "Expert Negotiation",
+        "name": "tr_archivism_expert_negociation",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -324,7 +324,7 @@
       },
       {
         "id": "tr_archivism_frontier_archaeology",
-        "name": "Frontier Archaeology",
+        "name": "tr_archivism_frontier_archaeology",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -342,7 +342,7 @@
       },
       {
         "id": "tr_archivism_flawless_display",
-        "name": "Flawless Display",
+        "name": "tr_archivism_flawless_display",
         "description": "",
         "custom_tooltip": "tr_archivism_flawless_display_tt",
         "type": "tradition",
@@ -357,7 +357,7 @@
       },
       {
         "id": "tr_archivism_exhibition_specialization",
-        "name": "Exhibition Specialization",
+        "name": "tr_archivism_exhibition_specialization",
         "description": "",
         "custom_tooltip": "tr_archivism_exhibition_specialization_tt",
         "type": "tradition",
@@ -377,7 +377,7 @@
     "adopt": {
       "id": "tr_diplomacy_adopt",
       "name": "Diplomacy Traditions",
-      "description": "Unlocks Edict: Diplomatic Grants",
+      "description": "Unlocks Edict: $edict_diplomatic_grants$",
       "custom_tooltip": "",
       "type": "adopt",
       "tree": "tr_diplomacy",
@@ -418,7 +418,7 @@
       {
         "id": "tr_diplomacy_the_federation",
         "name": "The Federation",
-        "description": "Unlocks Diplomacy: Form Federation Available Envoys are increased by 1.",
+        "description": "are increased by 1.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "diplomacy",
@@ -504,7 +504,7 @@
     "adopt": {
       "id": "tr_discovery_adopt",
       "name": "Discovery Traditions",
-      "description": "Unlocks Edict: Map the Stars Anomaly Research Speed increased by +20%.",
+      "description": "Unlocks Edict: $edict_map_the_stars$  increased by +20%.",
       "custom_tooltip": "tr_discovery_adopt_desc",
       "type": "adopt",
       "tree": "tr_discovery",
@@ -542,7 +542,7 @@
       {
         "id": "tr_discovery_to_boldly_go",
         "name": "To Boldly Go",
-        "description": "Survey Speed increased by +35% and Science Ship Disengage Chance increased by +50%.",
+        "description": "increased by +35% and $mod_shipclass_science_ship_disengage_mult$ increased by +50%.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "discovery",
@@ -557,8 +557,8 @@
       },
       {
         "id": "tr_discovery_databank_uplinks",
-        "name": "Databank Uplinks",
-        "description": "Unlocks Edict: Research Subsidies Research Station Output increased by 20%. Research from Starbase Constructions increased by 20%.",
+        "name": "$tech_databank_uplinks$",
+        "description": "Unlocks Edict: $edict_research_subsidies$ $mod_station_researchers_produces_mult$ increased by 20%. $starbase_constructions_research_produces$ increased by 20%.",
         "custom_tooltip": "tr_discovery_databank_uplinks_desc",
         "type": "tradition",
         "tree": "discovery",
@@ -578,7 +578,7 @@
       {
         "id": "tr_discovery_science_division",
         "name": "Science Division",
-        "description": "Research Alternatives increased by 1 and Scientist Level Cap increased by 2.",
+        "description": "increased by 1 and increased by 2.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "discovery",
@@ -595,7 +595,7 @@
       {
         "id": "tr_discovery_polytechnic_education",
         "name": "Polytechnic Education",
-        "description": "Leader Experience Gain increased by +25% and Leader Level Cap increased by 1.",
+        "description": "increased by +25% and increased by 1.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "discovery",
@@ -633,7 +633,7 @@
     "name": "tr_domestication",
     "adopt": {
       "id": "tr_domestication_adopt",
-      "name": "Domestication Traditions",
+      "name": "tr_domestication_adopt",
       "description": "",
       "custom_tooltip": "",
       "type": "adopt",
@@ -651,8 +651,8 @@
     },
     "finish": {
       "id": "tr_domestication_finish",
-      "name": "Domestication Traditions Finished",
-      "description": "[GetDomesticationFinishEffectDesc]",
+      "name": "tr_domestication_finish",
+      "description": "",
       "custom_tooltip": "tr_domestication_finish_desc",
       "type": "finish",
       "tree": "tr_domestication",
@@ -674,7 +674,7 @@
     "traditions": [
       {
         "id": "tr_domestication_containment_protocols",
-        "name": "Containment Protocols",
+        "name": "tr_domestication_containment_protocols",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -690,7 +690,7 @@
       },
       {
         "id": "tr_domestication_bio_repurposing",
-        "name": "Bio-Repurposing",
+        "name": "tr_domestication_bio_repurposing",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -705,7 +705,7 @@
       },
       {
         "id": "tr_domestication_astrozoology",
-        "name": "Astrozoology",
+        "name": "tr_domestication_astrozoology",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -723,7 +723,7 @@
       },
       {
         "id": "tr_domestication_metabolic_regulation",
-        "name": "Metabolic Regulation",
+        "name": "tr_domestication_metabolic_regulation",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -744,7 +744,7 @@
       },
       {
         "id": "tr_domestication_killer_instinct",
-        "name": "Killer Instinct",
+        "name": "tr_domestication_killer_instinct",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -824,7 +824,7 @@
       {
         "id": "tr_domination_imperious_architecture",
         "name": "Imperious Architecture",
-        "description": "Capital Buildings and Housing Buildings provide +100 Housing each.",
+        "description": "Capital Buildings and Housing Buildings provide +100 each.",
         "custom_tooltip": "tr_domination_imperious_architecture_desc",
         "type": "tradition",
         "tree": "domination",
@@ -858,7 +858,7 @@
       {
         "id": "tr_domination_judgment_corps",
         "name": "Judgment Corps",
-        "description": "Unlocks Edict: Enhanced Surveillance",
+        "description": "Unlocks Edict: $edict_enhanced_surveillance$",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "domination",
@@ -873,7 +873,7 @@
       {
         "id": "tr_domination_workplace_motivators",
         "name": "Workplace Motivators",
-        "description": "Unlocks Edict: Extended Shifts",
+        "description": "Unlocks Edict: $edict_extended_shifts$",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "domination",
@@ -894,8 +894,8 @@
     "name": "tr_enmity",
     "adopt": {
       "id": "tr_enmity_adopt",
-      "name": "Enmity Traditions",
-      "description": "Pop Growth per neighboring Rival: +3%  Pop Assembly per neighboring Rival: +3%",
+      "name": "tr_enmity_adopt",
+      "description": "",
       "custom_tooltip": "",
       "type": "adopt",
       "tree": "tr_enmity",
@@ -909,8 +909,8 @@
     },
     "finish": {
       "id": "tr_enmity_finish",
-      "name": "Enmity Finished",
-      "description": "Available Envoys: +1 Unlocks the Antagonistic Diplomatic Stance. Ascension Perks Unlocked: +1",
+      "name": "tr_enmity_finish",
+      "description": "",
       "custom_tooltip": "tr_enmity_finish_desc",
       "type": "finish",
       "tree": "tr_enmity",
@@ -932,7 +932,7 @@
     "traditions": [
       {
         "id": "tr_enmity_rise_to_the_occasion",
-        "name": "Rise to the Occasion",
+        "name": "tr_enmity_rise_to_the_occasion",
         "description": "",
         "custom_tooltip": "tr_enmity_rise_to_the_occasion_effect",
         "type": "tradition",
@@ -945,7 +945,7 @@
       },
       {
         "id": "tr_enmity_consumate_contrarian",
-        "name": "Consummate Contrarian",
+        "name": "tr_enmity_consumate_contrarian",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -962,7 +962,7 @@
       },
       {
         "id": "tr_enmity_match",
-        "name": "Match",
+        "name": "tr_enmity_match",
         "description": "",
         "custom_tooltip": "tr_enmity_match_effect",
         "type": "tradition",
@@ -975,7 +975,7 @@
       },
       {
         "id": "tr_enmity_outpace",
-        "name": "Outpace",
+        "name": "tr_enmity_outpace",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -992,7 +992,7 @@
       },
       {
         "id": "tr_enmity_eclipse",
-        "name": "Eclipse",
+        "name": "tr_enmity_eclipse",
         "description": "",
         "custom_tooltip": "tr_enmity_eclipse_effect",
         "type": "tradition",
@@ -1064,7 +1064,7 @@
       {
         "id": "tr_expansion_a_new_life",
         "name": "A New Life",
-        "description": "Pop Growth Speed increased by +10%.",
+        "description": "",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "expansion",
@@ -1081,7 +1081,7 @@
       {
         "id": "tr_expansion_courier_network",
         "name": "Courier Network",
-        "description": "Empire Size from Systems and Colonies is reduced by 25%.",
+        "description": "from Systems and Colonies is reduced by 25%.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "expansion",
@@ -1099,7 +1099,7 @@
       {
         "id": "tr_expansion_reach_for_the_stars",
         "name": "Reach for the Stars",
-        "description": "Starbase Influence Cost reduced by 10%.",
+        "description": "reduced by 10%.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "expansion",
@@ -1114,7 +1114,7 @@
       {
         "id": "tr_expansion_galactic_ambition",
         "name": "Galactic Ambition",
-        "description": "Starbase Upkeep reduced by 20%.",
+        "description": "$mod_starbases_upkeep_mult$ reduced by 20%.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "expansion",
@@ -1205,7 +1205,7 @@
       {
         "id": "tr_harmony_utopian_dream",
         "name": "Utopian Dream",
-        "description": "Stability increased by 5% on all our planets.",
+        "description": "$r_stability$ increased by 5% on all our planets.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "harmony",
@@ -1262,7 +1262,7 @@
     "name": "tr_logistics",
     "adopt": {
       "id": "tr_logistics_adopt",
-      "name": "Logistics Traditions",
+      "name": "tr_logistics_adopt",
       "description": "",
       "custom_tooltip": "",
       "type": "adopt",
@@ -1277,7 +1277,7 @@
     },
     "finish": {
       "id": "tr_logistics_finish",
-      "name": "Logistics Traditions Finished",
+      "name": "tr_logistics_finish",
       "description": "",
       "custom_tooltip": "",
       "type": "finish",
@@ -1300,7 +1300,7 @@
     "traditions": [
       {
         "id": "tr_logistics_1",
-        "name": "Nested Coordination",
+        "name": "tr_logistics_1",
         "description": "",
         "custom_tooltip": "tr_logistics_1_tt",
         "type": "tradition",
@@ -1315,7 +1315,7 @@
       },
       {
         "id": "tr_logistics_2",
-        "name": "Distributed Delivery Systems",
+        "name": "tr_logistics_2",
         "description": "",
         "custom_tooltip": "tr_logistics_2_tt",
         "type": "tradition",
@@ -1330,7 +1330,7 @@
       },
       {
         "id": "tr_logistics_3",
-        "name": "Autonomous Maintenance",
+        "name": "tr_logistics_3",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -1346,7 +1346,7 @@
       },
       {
         "id": "tr_logistics_4",
-        "name": "Galactic Exchange Efficiencies",
+        "name": "tr_logistics_4",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -1363,7 +1363,7 @@
       },
       {
         "id": "tr_logistics_5",
-        "name": "Predictive Resupply Patterns",
+        "name": "tr_logistics_5",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -1423,7 +1423,7 @@
       {
         "id": "tr_mercantile_trickle_up_economics",
         "name": "Trickle Up Economics",
-        "description": "Trade per 100 [civilian.GetIcon] [civilian.GetNamePlural]: +1  Amenities per 100 [civilian.GetIcon] [civilian.GetNamePlural]: +100  Consumer Goods Upkeep per 100 [civilian.GetIcon] [civilian.GetNamePlural]: +0.1",
+        "description": "$r_trade$ per 100 $job_civilian_plural_with_icon$: +1 $r_amenities$ per 100 $job_civilian_plural_with_icon$: +100 $r_consumer_goods$ Upkeep per 100 $job_civilian_plural_with_icon$: +0.1",
         "custom_tooltip": "tr_mercantile_trickle_up_economics_desc",
         "type": "tradition",
         "tree": "mercantile",
@@ -1439,7 +1439,7 @@
       {
         "id": "tr_mercantile_commercial_enterprise",
         "name": "Commercial Enterprise",
-        "description": "Amenities per 100 [trader.GetIcon] [trader.GetNamePlural]: +200  City Districts with a Commercial Nexus, and Trade Buildings, receive additional [trader.GetIcon] [trader.GetName] Jobs.",
+        "description": "$r_amenities$ per $pop_group_unit$ $job_trader_plural_with_icon$: +200  $district_city_plural$ with a $zone_trade$, and Trade Buildings, receive additional $job_trader_with_icon$ Jobs.",
         "custom_tooltip": "tr_mercantile_commercial_enterprise_desc",
         "type": "tradition",
         "tree": "mercantile",
@@ -1454,7 +1454,7 @@
       {
         "id": "tr_mercantile_adaptive_economic_policies",
         "name": "Adaptive Economic Policies",
-        "description": "Unlocks Consumer Benefits and Marketplace of Ideas Trade Policies, which allow us to convert a portion of our Trade into Consumer Goods or Unity.",
+        "description": "Unlocks $trade_policy_consumer_goods$ and $trade_policy_unity$ Trade Policies, which allow us to convert a portion of our $r_trade$ into Consumer Goods or Unity.",
         "custom_tooltip": "tr_mercantile_adaptive_economic_policies_desc",
         "type": "tradition",
         "tree": "mercantile",
@@ -1504,8 +1504,8 @@
     "name": "tr_politics",
     "adopt": {
       "id": "tr_politics_adopt",
-      "name": "Politics Traditions",
-      "description": "+1 Envoy  Officials assigned to the [GetGalCommunityOrGalImperium] now produce 0.1 Influence per Skill Level.",
+      "name": "$tradition_politics$ Traditions",
+      "description": "+1 Envoy $official_plural_with_icon$ assigned to the [GetGalCommunityOrGalImperium] now produce 0.1 Influence per Skill Level.",
       "custom_tooltip": "tr_politics_adopt_desc",
       "type": "adopt",
       "tree": "tr_politics",
@@ -1521,8 +1521,8 @@
     },
     "finish": {
       "id": "tr_politics_finish",
-      "name": "Politics Traditions Finished",
-      "description": "+10% Diplomatic Weight Unlocks 4 special Resolutions in the [GetGalCommunityOrGalImperium]. Ascension Perks Unlocked: +1",
+      "name": "$tr_politics_adopt$ Finished",
+      "description": "+10% Diplomatic Weight Unlocks 4 special Resolutions in the [GetGalCommunityOrGalImperium].",
       "custom_tooltip": "",
       "type": "finish",
       "tree": "tr_politics",
@@ -1559,7 +1559,7 @@
       {
         "id": "tr_politics_gravitas",
         "name": "Gravitas",
-        "description": "-25% Influence cost to veto or propose Resolutions  Officials assigned to the [GetGalCommunityOrGalImperium] provide an additional 2.5% Diplomatic Weight per Skill Level.",
+        "description": "-25% Influence cost to veto or propose Resolutions $official_plural_with_icon$ assigned to the [GetGalCommunityOrGalImperium] provide an additional 2.5% Diplomatic Weight per Skill Level.",
         "custom_tooltip": "tr_politics_gravitas_desc",
         "type": "tradition",
         "tree": "politics",
@@ -1684,7 +1684,7 @@
       {
         "id": "tr_prosperity_administrative_operations",
         "name": "Administrative Operations",
-        "description": "Building Upkeep and District Upkeep reduced by 10%.",
+        "description": "$mod_planet_buildings_upkeep_mult$ and $mod_planet_districts_upkeep_mult$ reduced by 10%.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "prosperity",
@@ -1699,7 +1699,7 @@
       {
         "id": "tr_prosperity_public_works",
         "name": "Public Works Division",
-        "description": "City Districts provide 100 additional Housing. Ring World City Segments and Ecumenopolis Residential Arcologies also provide additional Housing.",
+        "description": "City Districts provide 100 additional . Ring World $district_rw_city_plural$ and Ecumenopolis $district_arcology_housing_plural$ also provide additional .",
         "custom_tooltip": "tr_prosperity_public_works_desc",
         "type": "tradition",
         "tree": "prosperity",
@@ -1805,7 +1805,7 @@
       {
         "id": "tr_statecraft_inspiring_agendas",
         "name": "Inspiring Agendas",
-        "description": "Unlocks Agenda: Rightful Claims Unlocks Agenda: Oppose the Fallen",
+        "description": "Unlocks Agenda: $council_agenda_agenda_rightful_claims_name$ Unlocks Agenda: $council_agenda_agenda_oppose_the_fallen_name$",
         "custom_tooltip": "tr_statecraft_inspiring_agendas_desc",
         "type": "tradition",
         "tree": "statecraft",
@@ -1850,7 +1850,7 @@
       {
         "id": "tr_statecraft_shared_benefits",
         "name": "Shared Benefits",
-        "description": "Whenever an Agenda is Launched:  All Councilors gain $@statecraft_amongst_peers_exp_reward|G0$ Experience per Skill Level",
+        "description": "Whenever an Agenda is Launched: $t$$tr_statecraft_amongst_peers_effect_desc$",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "statecraft",
@@ -1887,7 +1887,7 @@
     "finish": {
       "id": "tr_subterfuge_finish",
       "name": "Subterfuge Traditions Finished",
-      "description": "Successful Operations refund 50% of their Infiltration Level Cost. Ascension Perks Unlocked: +1",
+      "description": "$tr_subterfuge_finish_effect$",
       "custom_tooltip": "tr_subterfuge_finish_desc",
       "type": "finish",
       "tree": "tr_subterfuge",
@@ -2042,7 +2042,7 @@
       {
         "id": "tr_supremacy_fleet_logistical_corps",
         "name": "Fleet Logistics Corps",
-        "description": "Ship Upkeep reduced by 10% and Naval Capacity increased by 20%.",
+        "description": "$mod_ships_upkeep_mult$ reduced by 10% and increased by 20%.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "supremacy",
@@ -2058,7 +2058,7 @@
       {
         "id": "tr_supremacy_master_shipwrights",
         "name": "Master Shipwrights",
-        "description": "Ship Build Speed increased by +25%.",
+        "description": "increased by +25%.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "supremacy",
@@ -2073,7 +2073,7 @@
       {
         "id": "tr_supremacy_war_games",
         "name": "War Games",
-        "description": "Fleet Command Limit increased by +20 and Admiral Level Cap is increased by 2.",
+        "description": "increased by +20 and is increased by 2.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "supremacy",
@@ -2095,7 +2095,7 @@
       {
         "id": "tr_supremacy_overwhelming_force",
         "name": "Overwhelming Force",
-        "description": "Ship Fire Rate increased by +10% and Orbital Bombardment Damage increased by +20%.",
+        "description": "increased by +10% and increased by +20%.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "supremacy",
@@ -2132,7 +2132,7 @@
     "adopt": {
       "id": "tr_synchronicity_adopt",
       "name": "Synchronicity Traditions",
-      "description": "Unlocks Agenda: Growth Revision Unlocks Agenda: Cognitive Revision Unlocks Agenda: Regulatory Revision Unlocks Agenda: Legion Revision Pop Upkeep: -10%",
+      "description": "$council_agenda_agenda_gestalt_boost_growth_name$  $council_agenda_agenda_gestalt_boost_cognitive_name$  $council_agenda_agenda_gestalt_boost_regulatory_name$  $council_agenda_agenda_gestalt_boost_legion_name$ $mod_planet_pops_upkeep_mult$: -10%",
       "custom_tooltip": "tr_synchronicity_adopt_desc",
       "type": "adopt",
       "tree": "tr_synchronicity",
@@ -2168,7 +2168,7 @@
       {
         "id": "tr_synchronicity_integrated_preservation",
         "name": "Integrated Preservation",
-        "description": "[evaluator.GetNamePlural] reduce Deviancy by 3 Automatic Resettlement Chance: +30%",
+        "description": "[evaluator.GetNamePlural] reduce by 3 Automatic Resettlement Chance: +30%",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "synchronicity",
@@ -2183,7 +2183,7 @@
       {
         "id": "tr_synchronicity_kinship_gestalt",
         "name": "Synchronized Agents",
-        "description": "Leader Upkeep reduced by 20%.",
+        "description": "$mod_leaders_upkeep_mult$ reduced by 20%.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "synchronicity",
@@ -2332,7 +2332,7 @@
       {
         "id": "tr_unyielding_bulwark_of_harmony",
         "name": "Bulwark of Harmony",
-        "description": "While in a defensive war with another empire, Ship Build Speed is increased by +33%. In addition, the Ship Fire Rate is increased by +15% for ships within your borders.",
+        "description": "While in a defensive war with another empire, is increased by +33%. In addition, the is increased by +15% for ships within your borders.",
         "custom_tooltip": "tr_unyielding_bulwark_of_harmony_desc",
         "type": "tradition",
         "tree": "unyielding",
@@ -2445,7 +2445,7 @@
       {
         "id": "tr_versatility_adaptive_programming",
         "name": "Adaptive Programming",
-        "description": "Market Fee reduced by 10%.",
+        "description": "reduced by 10%.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "versatility",
@@ -2462,7 +2462,7 @@
       {
         "id": "tr_versatility_spatial_optimization",
         "name": "Spatial Optimization",
-        "description": "Pop Housing Usage reduced by 10%.",
+        "description": "reduced by 10%.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "versatility",
@@ -2514,7 +2514,7 @@
     "name": "tr_cloning",
     "adopt": {
       "id": "tr_cloning_adopt",
-      "name": "Cloning Traditions",
+      "name": "tr_cloning_adopt",
       "description": "",
       "custom_tooltip": "",
       "type": "adopt",
@@ -2532,7 +2532,7 @@
     },
     "finish": {
       "id": "tr_cloning_finish",
-      "name": "Cloning Traditions Finished",
+      "name": "tr_cloning_finish",
       "description": "",
       "custom_tooltip": "",
       "type": "finish",
@@ -2554,7 +2554,7 @@
     "traditions": [
       {
         "id": "tr_cloning_evolutionary_extrapolation",
-        "name": "Evolutionary Extrapolation",
+        "name": "tr_cloning_evolutionary_extrapolation",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -2570,7 +2570,7 @@
       },
       {
         "id": "tr_cloning_somatic_synthesization",
-        "name": "Somatic Synthesization",
+        "name": "tr_cloning_somatic_synthesization",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -2587,7 +2587,7 @@
       },
       {
         "id": "tr_cloning_stage_1_swap",
-        "name": "Flexible Tradition I",
+        "name": "tr_cloning_stage_1_swap",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -2602,7 +2602,7 @@
       },
       {
         "id": "tr_cloning_stage_2_swap",
-        "name": "Flexible Tradition II",
+        "name": "tr_cloning_stage_2_swap",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -2617,7 +2617,7 @@
       },
       {
         "id": "tr_cloning_stage_3_swap",
-        "name": "Flexible Tradition III",
+        "name": "tr_cloning_stage_3_swap",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -2635,7 +2635,7 @@
       },
       {
         "id": "tr_cloning_genomic_growth",
-        "name": "Genomic Growth",
+        "name": "tr_cloning_genomic_growth",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -2650,7 +2650,7 @@
       },
       {
         "id": "tr_cloning_artificial_population",
-        "name": "Artificial Population",
+        "name": "tr_cloning_artificial_population",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -2665,7 +2665,7 @@
       },
       {
         "id": "tr_cloning_biochemical_composure",
-        "name": "Biochemical Composure",
+        "name": "tr_cloning_biochemical_composure",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -2680,7 +2680,7 @@
       },
       {
         "id": "tr_cloning_biochemical_composure_clones",
-        "name": "Regenerative Cloning",
+        "name": "tr_cloning_biochemical_composure_clones",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -2700,7 +2700,7 @@
     "adopt": {
       "id": "tr_cybernetics_adopt",
       "name": "Cybernetic Traditions",
-      "description": "Starts a Situation to grant the founding species the Cybernetic trait",
+      "description": "Starts a Situation to grant the founding species the $trait_cybernetic$ trait",
       "custom_tooltip": "tr_cybernetics_adopt_desc",
       "type": "adopt",
       "tree": "tr_cybernetics",
@@ -2790,7 +2790,7 @@
       {
         "id": "tr_cybernetics_transubstantiation_synthesis",
         "name": "Transubstantiation Synthesis",
-        "description": "Gain access to the Assimilation Citizenship Species Right, allowing future additions to the populace to be turned into Cyborgs.",
+        "description": "",
         "custom_tooltip": "tr_cybernetics_transubstantiation_synthesis_desc",
         "type": "tradition",
         "tree": "cybernetics",
@@ -2837,7 +2837,7 @@
       {
         "id": "tr_cybernetics_integrated_anatomy",
         "name": "Integrated Anatomy",
-        "description": "Allows selection of Cyborg traits for Species Modification that can be applied to species with the Cybernetic trait.",
+        "description": "Allows selection of Cyborg traits for Species Modification that can be applied to species with the $trait_cybernetic$ trait.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "cybernetics",
@@ -2853,8 +2853,8 @@
       },
       {
         "id": "tr_cybernetics_augmentation_overload",
-        "name": "Augmentation Overload",
-        "description": "Augmentors per Augmentation Center: +200",
+        "name": "tr_cybernetics_augmentation_overload",
+        "description": "",
         "custom_tooltip": "tr_cybernetics_augmentation_overload_desc",
         "type": "tradition",
         "tree": "cybernetics",
@@ -2936,7 +2936,7 @@
       {
         "id": "tr_cybernetics_assimilator_gestation",
         "name": "Gestation Worlds",
-        "description": "Gain access to the Gestation World Colony Desigation. Gestation Worlds provide [gestation_drone.GetIcon] [gestation_drone.GetName] Jobs providing Empire-wide Pop Growth Speed",
+        "description": "",
         "custom_tooltip": "tr_cybernetics_assimilator_gestation_desc",
         "type": "tradition",
         "tree": "cybernetics",
@@ -3113,7 +3113,7 @@
       {
         "id": "tr_genetics_efficient_cloning",
         "name": "Stem Cell Stimulation",
-        "description": "produce an additional +1.5 Monthly Organic Pop Growth",
+        "description": "produce an additional +1.5",
         "custom_tooltip": "tr_genetics_efficient_cloning_desc",
         "type": "tradition",
         "tree": "genetics",
@@ -3131,7 +3131,7 @@
     "name": "tr_modularity",
     "adopt": {
       "id": "tr_modularity_adopt",
-      "name": "Modularity Traditions",
+      "name": "tr_modularity_adopt",
       "description": "",
       "custom_tooltip": "",
       "type": "adopt",
@@ -3151,7 +3151,7 @@
     },
     "finish": {
       "id": "tr_modularity_finish",
-      "name": "Modularity Traditions Finished",
+      "name": "tr_modularity_finish",
       "description": "",
       "custom_tooltip": "",
       "type": "finish",
@@ -3174,7 +3174,7 @@
     "traditions": [
       {
         "id": "tr_modularity_1",
-        "name": "High-Speed Replacements",
+        "name": "tr_modularity_1",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3192,7 +3192,7 @@
       },
       {
         "id": "tr_modularity_2",
-        "name": "Liquid Metal Joints",
+        "name": "tr_modularity_2",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3209,7 +3209,7 @@
       },
       {
         "id": "tr_modularity_3",
-        "name": "Pacification Modules",
+        "name": "tr_modularity_3",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3227,7 +3227,7 @@
       },
       {
         "id": "tr_modularity_4",
-        "name": "High-Level Enhancements",
+        "name": "tr_modularity_4",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3242,7 +3242,7 @@
       },
       {
         "id": "tr_modularity_5",
-        "name": "Advanced Tools",
+        "name": "tr_modularity_5",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3265,7 +3265,7 @@
     "name": "tr_mutation",
     "adopt": {
       "id": "tr_mutation_adopt",
-      "name": "Mutation Traditions",
+      "name": "tr_mutation_adopt",
       "description": "",
       "custom_tooltip": "",
       "type": "adopt",
@@ -3283,7 +3283,7 @@
     },
     "finish": {
       "id": "tr_mutation_finish",
-      "name": "Mutation Traditions Finished",
+      "name": "tr_mutation_finish",
       "description": "",
       "custom_tooltip": "",
       "type": "finish",
@@ -3305,7 +3305,7 @@
     "traditions": [
       {
         "id": "tr_mutation_stage_1_swap",
-        "name": "Flexible Tradition I",
+        "name": "tr_mutation_stage_1_swap",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3318,7 +3318,7 @@
       },
       {
         "id": "tr_mutation_stage_2_swap",
-        "name": "Flexible Tradition II",
+        "name": "tr_mutation_stage_2_swap",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3333,7 +3333,7 @@
       },
       {
         "id": "tr_mutation_stage_3_swap",
-        "name": "Flexible Tradition III",
+        "name": "tr_mutation_stage_3_swap",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3348,7 +3348,7 @@
       },
       {
         "id": "tr_mutation_planned_polymorphism",
-        "name": "Planned Polymorphism",
+        "name": "tr_mutation_planned_polymorphism",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3363,7 +3363,7 @@
       },
       {
         "id": "tr_mutation_unnatural_selection",
-        "name": "Unnatural Selection",
+        "name": "tr_mutation_unnatural_selection",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3382,7 +3382,7 @@
       },
       {
         "id": "tr_mutation_environmental_integration",
-        "name": "Environmental Integration",
+        "name": "tr_mutation_environmental_integration",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3397,7 +3397,7 @@
       },
       {
         "id": "tr_mutation_somatic_subversiveness",
-        "name": "Somatic Subversiveness",
+        "name": "tr_mutation_somatic_subversiveness",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3412,7 +3412,7 @@
       },
       {
         "id": "tr_mutation_nucleotide_isolation",
-        "name": "Nucleotide Isolation",
+        "name": "tr_mutation_nucleotide_isolation",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3431,7 +3431,7 @@
     "name": "tr_nanotech",
     "adopt": {
       "id": "tr_nanotech_adopt",
-      "name": "Nanotech Traditions",
+      "name": "tr_nanotech_adopt",
       "description": "",
       "custom_tooltip": "tr_nanotech_adopt_modifier_desc",
       "type": "adopt",
@@ -3449,7 +3449,7 @@
     },
     "finish": {
       "id": "tr_nanotech_finish",
-      "name": "Nanotech Traditions Finished",
+      "name": "tr_nanotech_finish",
       "description": "",
       "custom_tooltip": "",
       "type": "finish",
@@ -3472,7 +3472,7 @@
     "traditions": [
       {
         "id": "tr_nanotech_1",
-        "name": "Aggregation Systems",
+        "name": "tr_nanotech_1",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3490,7 +3490,7 @@
       },
       {
         "id": "tr_nanotech_2",
-        "name": "Molecular Reconfiguration",
+        "name": "tr_nanotech_2",
         "description": "",
         "custom_tooltip": "tr_nanotech_2_modifier_desc",
         "type": "tradition",
@@ -3503,7 +3503,7 @@
       },
       {
         "id": "tr_nanotech_3",
-        "name": "Unbridled Consumption",
+        "name": "tr_nanotech_3",
         "description": "",
         "custom_tooltip": "tr_nanotech_3_modifier_desc",
         "type": "tradition",
@@ -3518,7 +3518,7 @@
       },
       {
         "id": "tr_nanotech_4",
-        "name": "Flood of Supremacy",
+        "name": "tr_nanotech_4",
         "description": "",
         "custom_tooltip": "tr_nanotech_4_modifier_desc",
         "type": "tradition",
@@ -3533,7 +3533,7 @@
       },
       {
         "id": "tr_nanotech_5",
-        "name": "Nanite Augmentations",
+        "name": "tr_nanotech_5",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3583,7 +3583,7 @@
     "finish": {
       "id": "tr_psionics_finish",
       "name": "Psionic Traditions Finished",
-      "description": "Unlocks a Special Project to form a Covenant. Edict Fund: +50 Ascension Perks Unlocked: +1",
+      "description": "Unlocks a Special Project to form a Covenant.  : +50 Ascension Perks Unlocked: +1",
       "custom_tooltip": "",
       "type": "finish",
       "tree": "tr_psionics",
@@ -3606,8 +3606,8 @@
     "traditions": [
       {
         "id": "tr_psionics_psi_corps",
-        "name": "Psi Corps",
-        "description": "Unlocks Building:",
+        "name": "$building_psi_corps$",
+        "description": "",
         "custom_tooltip": "tr_psionics_psi_corps_desc",
         "type": "tradition",
         "tree": "psionics",
@@ -3636,7 +3636,7 @@
       {
         "id": "tr_psionics_psionic_assimilation",
         "name": "Great Awakening",
-        "description": "All Latent Psionic species will unlock their full psionic potential. Allows Psionic Assimilation of other species, unlocking their latent abilities.",
+        "description": "All $trait_latent_psionic$ species will unlock their full psionic potential. Allows Psionic Assimilation of other species, unlocking their latent abilities.",
         "custom_tooltip": "tr_psionics_psionic_assimilation_desc",
         "type": "tradition",
         "tree": "psionics",
@@ -3654,7 +3654,7 @@
       {
         "id": "tr_psionics_breach_shroud",
         "name": "Breach the Shroud",
-        "description": "Unlocks a Special Project to Breach the Shroud. Job Efficiency for Psionic Pops per 100 [telepath.GetIcon] [telepath.GetNamePlural]: +5%",
+        "description": "Unlocks a Special Project to Breach the Shroud. $mod_psionic_pop_bonus_workforce_mult$ per $pop_group_unit$ [telepath.GetIcon] [telepath.GetNamePlural]: +5%",
         "custom_tooltip": "tr_psionics_breach_shroud_desc",
         "type": "tradition",
         "tree": "psionics",
@@ -3686,7 +3686,7 @@
       },
       {
         "id": "tr_psionics_shroud_psi_corps",
-        "name": "Psi Corps",
+        "name": "tr_psionics_shroud_psi_corps",
         "description": "",
         "custom_tooltip": "tr_psionics_psi_corps_desc",
         "type": "tradition",
@@ -3699,7 +3699,7 @@
       },
       {
         "id": "tr_psionics_shroud_great_awakening",
-        "name": "Great Awakening",
+        "name": "tr_psionics_shroud_great_awakening",
         "description": "",
         "custom_tooltip": "tr_psionics_psionic_assimilation_desc",
         "type": "tradition",
@@ -3743,8 +3743,8 @@
       },
       {
         "id": "tr_psionics_shroud_telekinesis",
-        "name": "Telekinesis",
-        "description": "Psionic Pops Habitability: +$@telekinesis_mult|0%$ Psionic Pops Happiness: +$@telekinesis_mult|0%$",
+        "name": "tr_psionics_shroud_telekinesis",
+        "description": "",
         "custom_tooltip": "tr_psionics_shroud_telekinesis_desc",
         "type": "tradition",
         "tree": "psionics",
@@ -3758,8 +3758,8 @@
       },
       {
         "id": "tr_psionics_shroud_clairvoyance",
-        "name": "Clairvoyance",
-        "description": "Sensor Range from Psionic Commanders: $@clairvoyance_sensor_range|0=+$",
+        "name": "tr_psionics_shroud_clairvoyance",
+        "description": "",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "psionics",
@@ -3777,8 +3777,8 @@
       },
       {
         "id": "tr_psionics_shroud_psychometry",
-        "name": "Psychometry",
-        "description": "[GetCrimeDeviancy] from [GetTelepathSwapPluralWithIcon]: $@psionic_shroud_crime|0$",
+        "name": "tr_psionics_shroud_psychometry",
+        "description": "",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "psionics",
@@ -3801,8 +3801,8 @@
     "name": "tr_psionics_shroud",
     "adopt": {
       "id": "tr_psionics_shroud_adopt",
-      "name": "Psionic Traditions",
-      "description": "Starts a Situation to grant the founding species the Psionic trait.",
+      "name": "tr_psionics_shroud_adopt",
+      "description": "",
       "custom_tooltip": "tr_psionics_shroud_adopt_desc",
       "type": "adopt",
       "tree": "tr_psionics_shroud",
@@ -3840,8 +3840,8 @@
     },
     "finish": {
       "id": "tr_psionics_shroud_finish",
-      "name": "Psionic Traditions",
-      "description": "Unlocks Edict: Sight Beyond Sight",
+      "name": "tr_psionics_shroud_finish",
+      "description": "",
       "custom_tooltip": "",
       "type": "finish",
       "tree": "tr_psionics_shroud",
@@ -3860,7 +3860,7 @@
     "name": "tr_purity",
     "adopt": {
       "id": "tr_purity_adopt",
-      "name": "Purity Traditions",
+      "name": "tr_purity_adopt",
       "description": "",
       "custom_tooltip": "",
       "type": "adopt",
@@ -3880,7 +3880,7 @@
     },
     "finish": {
       "id": "tr_purity_finish",
-      "name": "Purity Traditions Finished",
+      "name": "tr_purity_finish",
       "description": "",
       "custom_tooltip": "",
       "type": "finish",
@@ -3902,7 +3902,7 @@
     "traditions": [
       {
         "id": "tr_purity_genotype_regeneration",
-        "name": "Genotype Regeneration",
+        "name": "tr_purity_genotype_regeneration",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3915,7 +3915,7 @@
       },
       {
         "id": "tr_purity_exemplary_genetics",
-        "name": "Exemplary Genetics",
+        "name": "tr_purity_exemplary_genetics",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3934,7 +3934,7 @@
       },
       {
         "id": "tr_purity_stage_1_swap",
-        "name": "Flexible Tradition I",
+        "name": "tr_purity_stage_1_swap",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3947,7 +3947,7 @@
       },
       {
         "id": "tr_purity_stage_2_swap",
-        "name": "Flexible Tradition II",
+        "name": "tr_purity_stage_2_swap",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3962,7 +3962,7 @@
       },
       {
         "id": "tr_purity_stage_3_swap",
-        "name": "Flexible Tradition III",
+        "name": "tr_purity_stage_3_swap",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3977,7 +3977,7 @@
       },
       {
         "id": "tr_purity_optimized_neurology",
-        "name": "Optimized Neurology",
+        "name": "tr_purity_optimized_neurology",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -3992,7 +3992,7 @@
       },
       {
         "id": "tr_purity_heightened_attributes",
-        "name": "Heightened Attributes",
+        "name": "tr_purity_heightened_attributes",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -4007,7 +4007,7 @@
       },
       {
         "id": "tr_purity_imperfection_remediation",
-        "name": "Imperfection Remediation",
+        "name": "tr_purity_imperfection_remediation",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -4027,7 +4027,7 @@
     "adopt": {
       "id": "tr_synthetics_adopt",
       "name": "Synthetic Traditions",
-      "description": "Starts a Situation to transform the founding species into a Mechanical species.",
+      "description": "",
       "custom_tooltip": "",
       "type": "adopt",
       "tree": "tr_synthetics",
@@ -4142,7 +4142,7 @@
       },
       {
         "id": "tr_synthetics_transubstatiation_synthesis",
-        "name": "Transubstantiation Synthesis",
+        "name": "$tr_cybernetics_transubstantiation_synthesis$",
         "description": "Grants access to the Assimilation Citizenship Species Right, allowing future additions to the populace to be turned into Synths.",
         "custom_tooltip": "tr_synthetics_transubstatiation_synthesis_desc",
         "type": "tradition",
@@ -4172,7 +4172,7 @@
       },
       {
         "id": "tr_synthetics_power_systems",
-        "name": "Efficient Power Systems",
+        "name": "tr_synthetics_power_systems",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -4209,7 +4209,7 @@
     "name": "tr_virtuality",
     "adopt": {
       "id": "tr_virtuality_adopt",
-      "name": "Virtuality Traditions",
+      "name": "tr_virtuality_adopt",
       "description": "",
       "custom_tooltip": "",
       "type": "adopt",
@@ -4231,7 +4231,7 @@
     },
     "finish": {
       "id": "tr_virtuality_finish",
-      "name": "Virtuality Traditions Finished",
+      "name": "tr_virtuality_finish",
       "description": "",
       "custom_tooltip": "",
       "type": "finish",
@@ -4253,7 +4253,7 @@
     "traditions": [
       {
         "id": "tr_virtuality_1",
-        "name": "Clustered Capacity",
+        "name": "tr_virtuality_1",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -4266,7 +4266,7 @@
       },
       {
         "id": "tr_virtuality_2",
-        "name": "Data-Driven Logic Loops",
+        "name": "tr_virtuality_2",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -4285,7 +4285,7 @@
       },
       {
         "id": "tr_virtuality_3",
-        "name": "Capacity Synchronization",
+        "name": "tr_virtuality_3",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -4303,7 +4303,7 @@
       },
       {
         "id": "tr_virtuality_4",
-        "name": "Productivity Simulations",
+        "name": "tr_virtuality_4",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",
@@ -4318,7 +4318,7 @@
       },
       {
         "id": "tr_virtuality_5",
-        "name": "Advanced Server Maintenance",
+        "name": "tr_virtuality_5",
         "description": "",
         "custom_tooltip": "",
         "type": "tradition",

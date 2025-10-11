@@ -7,6 +7,7 @@ interface BuildFormProps {
 interface Trait {
   id: string;
   name: string;
+  description: string;
   cost: number | string;
   effects: string;
   tags: any[];
@@ -31,6 +32,7 @@ interface Origin {
 interface AscensionPerk {
   id: string;
   name: string;
+  description: string;
   effects: string;
   modifier?: {
     [key: string]: number;
@@ -43,6 +45,7 @@ interface AscensionPerk {
 interface Ethic {
   id: string;
   name: string;
+  description: string;
   cost: number;
   category: string;
   category_value: number;
@@ -168,6 +171,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
             tags: Array.isArray(trait.tags) ? trait.tags.filter((t: any) => typeof t === 'string') : [],
             opposites: Array.isArray(trait.opposites) ? trait.opposites.filter((o: any) => typeof o === 'string') : [],
             effects: typeof trait.effects === 'string' ? trait.effects : '',
+            description: typeof trait.description === 'string' ? trait.description : '',
             cost: typeof trait.cost === 'number' ? trait.cost : 0,
           }))
           // Only show traits that are selectable during empire creation (non-zero cost)
@@ -183,8 +187,11 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     fetch('/api/origins')
       .then(res => res.json())
       .then(data => {
+        // Extract origins array from response
+        const originsArray = Array.isArray(data) ? data : (data.origins || []);
+
         // Filter and sanitize origins
-        const sanitizedOrigins = data
+        const sanitizedOrigins = originsArray
           .filter((origin: any) => origin.pickable_at_start && origin.is_origin)
           .map((origin: any) => ({
             ...origin,
@@ -210,6 +217,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           .map((perk: any) => ({
             ...perk,
             effects: typeof perk.effects === 'string' ? perk.effects : '',
+            description: typeof perk.description === 'string' ? perk.description : '',
           }))
           .sort((a: any, b: any) => a.id.localeCompare(b.id));
 
@@ -226,6 +234,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           .map((ethic: any) => ({
             ...ethic,
             effects: typeof ethic.effects === 'string' ? ethic.effects : '',
+            description: typeof ethic.description === 'string' ? ethic.description : '',
             tags: Array.isArray(ethic.tags) ? ethic.tags : [],
             cost: typeof ethic.cost === 'number' ? ethic.cost : 1,
           }))
@@ -263,8 +272,11 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     fetch('/api/civics')
       .then(res => res.json())
       .then(data => {
+        // Extract civics array from response
+        const civicsArray = Array.isArray(data) ? data : (data.civics || []);
+
         // Filter and sanitize civics
-        const sanitizedCivics = data
+        const sanitizedCivics = civicsArray
           .filter((civic: any) => civic.pickable_at_start && !civic.is_origin)
           .map((civic: any) => ({
             ...civic,
@@ -283,10 +295,11 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     fetch('/api/traditions')
       .then(res => res.json())
       .then(data => {
-        // Extract tradition trees (keys that don't start with "tr_")
+        // Extract tradition trees - only include trees with valid adopt data
         const trees: TraditionTree[] = [];
         for (const key in data) {
-          if (!key.startsWith('tr_') && data[key].name) {
+          // Only include trees that have an adopt field (skip duplicates without adopt)
+          if (data[key].adopt && data[key].adopt.name) {
             trees.push({
               name: key,
               adopt: data[key].adopt,
@@ -296,8 +309,12 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           }
         }
 
-        // Sort alphabetically
-        trees.sort((a, b) => a.name.localeCompare(b.name));
+        // Sort alphabetically by adopt name
+        trees.sort((a, b) => {
+          const nameA = a.adopt?.name || a.name;
+          const nameB = b.adopt?.name || b.name;
+          return nameA.localeCompare(nameB);
+        });
         setAllTraditionTrees(trees);
       })
       .catch(() => setError('Could not load traditions data.'));
@@ -947,8 +964,9 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                           className="form-check-label"
                           htmlFor={`trait-${trait.id}`}
                           style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
+                          title={trait.description || 'No description available'}
                         >
-                          <strong className="text-white">{trait.id}</strong>
+                          <strong className="text-white">{trait.name || trait.id}</strong>
                           <span className={`badge ms-2 ${typeof trait.cost === 'number' && trait.cost > 0 ? 'bg-primary' : 'bg-danger'}`}>
                             Cost: {trait.cost}
                           </span>
@@ -1008,8 +1026,9 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                           className="form-check-label"
                           htmlFor={`origin-${origin.id}`}
                           style={{ cursor: 'pointer' }}
+                          title={origin.description || 'No description available'}
                         >
-                          <strong className="text-white">{origin.id}</strong>
+                          <strong className="text-white">{origin.name || origin.id}</strong>
                           {origin.effects && (
                             <div className="mt-1">
                               <small className="text-info d-block">{origin.effects}</small>
@@ -1099,8 +1118,9 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                           className="form-check-label"
                           htmlFor={`ethic-${ethic.id}`}
                           style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
+                          title={ethic.description || 'No description available'}
                         >
-                          <strong className="text-white">{ethic.id}</strong>
+                          <strong className="text-white">{ethic.name || ethic.id}</strong>
                           <span className={`badge ms-2 ${ethic.cost === 3 ? 'bg-warning text-dark' : ethic.cost === 2 ? 'bg-primary' : 'bg-info'}`}>
                             Cost: {ethic.cost} {ethic.cost === 2 ? '(Fanatic)' : ethic.cost === 3 ? '(Gestalt)' : ''}
                           </span>
@@ -1271,8 +1291,9 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                           className="form-check-label"
                           htmlFor={`civic-${civic.id}`}
                           style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
+                          title={civic.description || 'No description available'}
                         >
-                          <strong className="text-white">{civic.id}</strong>
+                          <strong className="text-white">{civic.name || civic.id}</strong>
                           {!civic.can_modify && (
                             <span className="badge bg-warning text-dark ms-2">Permanent</span>
                           )}
@@ -1350,8 +1371,9 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                           className="form-check-label"
                           htmlFor={`perk-${perk.id}`}
                           style={{ cursor: 'pointer' }}
+                          title={perk.description || 'No description available'}
                         >
-                          <strong className="text-white">{perk.id}</strong>
+                          <strong className="text-white">{perk.name || perk.id}</strong>
                           {orderNumber !== null && (
                             <span className="badge bg-success ms-2">#{orderNumber}</span>
                           )}
@@ -1386,11 +1408,15 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
               <div className="alert alert-info mb-2">
                 <strong>Tradition Order:</strong>
                 <div className="mt-1">
-                  {selectedTraditions.map((treeId, index) => (
-                    <span key={treeId} className="badge bg-primary me-1 mb-1">
-                      {index + 1}. {treeId}
-                    </span>
-                  ))}
+                  {selectedTraditions.map((treeId, index) => {
+                    const tree = allTraditionTrees.find(t => t.name === treeId);
+                    const displayName = tree?.adopt?.name || treeId;
+                    return (
+                      <span key={treeId} className="badge bg-primary me-1 mb-1">
+                        {index + 1}. {displayName}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -1424,14 +1450,25 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                           className="form-check-label"
                           htmlFor={`tradition-${tree.name}`}
                           style={{ cursor: 'pointer' }}
+                          title={tree.adopt?.description || tree.adopt?.effects || tree.finish?.description || 'Tradition tree'}
                         >
-                          <strong className="text-white">{tree.name}</strong>
+                          <strong className="text-white">{tree.adopt?.name || tree.name}</strong>
                           {orderNumber !== null && (
                             <span className="badge bg-success ms-2">#{orderNumber}</span>
                           )}
+                          {tree.adopt?.description && (
+                            <div className="mt-1">
+                              <small className="text-light d-block">{tree.adopt.description}</small>
+                            </div>
+                          )}
+                          {tree.adopt?.effects && (
+                            <div className="mt-1">
+                              <small className="text-info d-block"><strong>Adopt:</strong> {tree.adopt.effects}</small>
+                            </div>
+                          )}
                           {tree.finish && tree.finish.effects && (
                             <div className="mt-1">
-                              <small className="text-info d-block"><strong>Completion:</strong> {tree.finish.effects}</small>
+                              <small className="text-warning d-block"><strong>Completion:</strong> {tree.finish.effects}</small>
                             </div>
                           )}
                         </label>

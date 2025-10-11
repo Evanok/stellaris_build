@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Any
 from paradox_parser import parse_stellaris_file
+from localization_parser import load_all_localizations, get_localized_text, clean_localized_text
 
 
 def extract_modifier_effects(modifier_data: Any) -> str:
@@ -44,20 +45,30 @@ def extract_modifier_effects(modifier_data: Any) -> str:
     return "; ".join(effects)
 
 
-def extract_ethic_data(ethic_key: str, ethic_data: Dict[str, Any]) -> Dict[str, Any]:
+def extract_ethic_data(ethic_key: str, ethic_data: Dict[str, Any], localizations: Dict[str, str] = None) -> Dict[str, Any]:
     """
     Extract relevant data from a single ethic
 
     Args:
         ethic_key: The ethic identifier
         ethic_data: Raw ethic data from parser
+        localizations: Optional dictionary of localization strings
 
     Returns:
         Cleaned ethic data dictionary
     """
+    if localizations is None:
+        localizations = {}
+
+    # Get localized name and description
+    name = get_localized_text(ethic_key, localizations)
+    desc_key = f"{ethic_key}_desc"
+    description_raw = get_localized_text(desc_key, localizations)
+
     ethic = {
         "id": ethic_key,
-        "name": ethic_key,
+        "name": name,
+        "description": clean_localized_text(description_raw) if description_raw != desc_key else "",
         "cost": ethic_data.get("cost", 0),
         "category": ethic_data.get("category", "unknown"),
         "category_value": ethic_data.get("category_value", 0),
@@ -92,7 +103,7 @@ def extract_ethic_data(ethic_key: str, ethic_data: Dict[str, Any]) -> Dict[str, 
     return ethic
 
 
-def extract_ethics_from_file(filepath: str) -> List[Dict[str, Any]]:
+def extract_ethics_from_file(filepath: str, localizations: Dict[str, str] = None) -> List[Dict[str, Any]]:
     """
     Extract all ethics from a single file
 
@@ -110,7 +121,7 @@ def extract_ethics_from_file(filepath: str) -> List[Dict[str, Any]]:
 
         for key, value in data.items():
             if isinstance(value, dict) and key.startswith('ethic_'):
-                ethic = extract_ethic_data(key, value)
+                ethic = extract_ethic_data(key, value, localizations)
                 ethics.append(ethic)
 
         print(f"  Found {len(ethics)} ethics")
@@ -137,6 +148,10 @@ def extract_all_ethics(stellaris_path: str, output_file: str = "output/ethics.js
         print(f"Error: Ethics directory not found at {ethics_dir}")
         sys.exit(1)
 
+    # Load localizations
+    print("Loading localizations...")
+    localizations = load_all_localizations(stellaris_path)
+
     all_ethics = []
 
     # Files to process
@@ -147,7 +162,7 @@ def extract_all_ethics(stellaris_path: str, output_file: str = "output/ethics.js
     for filename in ethics_files:
         filepath = os.path.join(ethics_dir, filename)
         if os.path.exists(filepath):
-            ethics = extract_ethics_from_file(filepath)
+            ethics = extract_ethics_from_file(filepath, localizations)
             all_ethics.extend(ethics)
 
     # Create output directory if it doesn't exist

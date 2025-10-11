@@ -1,7 +1,8 @@
 [
   {
     "id": "ethic_fanatic_authoritarian",
-    "name": "ethic_fanatic_authoritarian",
+    "name": "Fanatic Authoritarian",
+    "description": "A single voice, a single throne, a single state. It is the solemn duty of the masses to obey those enlightened few who have been charged with the great responsibility of leadership.",
     "cost": 2,
     "category": "col",
     "category_value": 0,
@@ -23,7 +24,8 @@
   },
   {
     "id": "ethic_authoritarian",
-    "name": "ethic_authoritarian",
+    "name": "Authoritarian",
+    "description": "A strong, guiding hand is essential to the success of any civilization - the alternative would be anarchy and chaos. It is the duty of the state to steer its citizens towards the paths that are the most productive.",
     "cost": 1,
     "category": "col",
     "category_value": 1,
@@ -45,7 +47,8 @@
   },
   {
     "id": "ethic_fanatic_egalitarian",
-    "name": "ethic_fanatic_egalitarian",
+    "name": "Fanatic Egalitarian",
+    "description": "Beware always those who would be despots, under the false presumption that their desires and agendas are somehow more imperative than those of their fellows. A society that does not see to the needs and rights of all of its members is not a society - it is a crime.",
     "cost": 2,
     "category": "col",
     "category_value": 4,
@@ -66,7 +69,8 @@
   },
   {
     "id": "ethic_egalitarian",
-    "name": "ethic_egalitarian",
+    "name": "Egalitarian",
+    "description": "Any society that does not embrace equality between its members - where an individual can rise to any position with enough hard work - is not only deeply unfair, but ultimately counterproductive.",
     "cost": 1,
     "category": "col",
     "category_value": 3,
@@ -87,7 +91,8 @@
   },
   {
     "id": "ethic_fanatic_xenophobe",
-    "name": "ethic_fanatic_xenophobe",
+    "name": "Fanatic Xenophobe",
+    "description": "Any alien influence must be ruthlessly quashed. Only by staying pure, and true to ourselves and the planet that gave us life can we guard against insidious Xeno plots. Even mastery over the Alien might not be enough to guarantee our own safety...",
     "cost": 2,
     "category": "xen",
     "category_value": 0,
@@ -112,7 +117,8 @@
   },
   {
     "id": "ethic_xenophobe",
-    "name": "ethic_xenophobe",
+    "name": "Xenophobe",
+    "description": "The stakes could not be higher as we reach into the vast uncharted expanses of the galaxy, for we are gambling with the very survival of our species! Never trust the alien; its false smile hides an unknowable mind...",
     "cost": 1,
     "category": "xen",
     "category_value": 1,
@@ -137,7 +143,8 @@
   },
   {
     "id": "ethic_fanatic_xenophile",
-    "name": "ethic_fanatic_xenophile",
+    "name": "Fanatic Xenophile",
+    "description": "If there ever was such a thing as an absolute moral imperative, it would be to explore the cosmos and embrace all within it. We were never meant to journey alone.",
     "cost": 2,
     "category": "xen",
     "category_value": 4,
@@ -162,7 +169,8 @@
   },
   {
     "id": "ethic_xenophile",
-    "name": "ethic_xenophile",
+    "name": "Xenophile",
+    "description": "There exists, in all of us, a deep-seated fascination for the unknown. An adventurous spirit that rejects the familiar and glories in the unfamiliar, whatever - or whomever - it may be.",
     "cost": 1,
     "category": "xen",
     "category_value": 3,
@@ -187,7 +195,8 @@
   },
   {
     "id": "ethic_fanatic_militarist",
-    "name": "ethic_fanatic_militarist",
+    "name": "Fanatic Militarist",
+    "description": "The ability to project force is of paramount importance. The only way to preserve our way of life is to make sure everyone shares it; willingly or not...",
     "cost": 2,
     "category": "mil",
     "category_value": 0,
@@ -207,7 +216,8 @@
   },
   {
     "id": "ethic_militarist",
-    "name": "ethic_militarist",
+    "name": "Militarist",
+    "description": "The only true virtues are courage and discipline, and channeled properly they can overcome any obstacle. Therein lies true strength; force withheld, a promise made.",
     "cost": 1,
     "category": "mil",
     "category_value": 1,
@@ -227,7 +237,8 @@
   },
   {
     "id": "ethic_fanatic_pacifist",
-    "name": "ethic_fanatic_pacifist",
+    "name": "Fanatic Pacifist",
+    "description": "As civilized beings, the end of all armed conflict should be our primary concern. War is an evolutionary dead end, as futile as it is wasteful.",
     "cost": 2,
     "category": "mil",
     "category_value": 4,
@@ -249,7 +260,8 @@
   },
   {
     "id": "ethic_pacifist",
-    "name": "ethic_pacifist",
+    "name": "Pacifist",
+    "description": "Conflict as a means to an end is a ridiculous concept. It is by nature destructive, destroying what was to be obtained or giving room to grow that which was to be destroyed.",
     "cost": 1,
     "category": "mil",
     "category_value": 3,
@@ -271,7 +283,8 @@
   },
   {
     "id": "ethic_fanatic_spiritualist",
-    "name": "ethic_fanatic_spiritualist",
+    "name": "Fanatic Spiritualist",
+    "description": "Our science has proved that Consciousness begets reality. We regard with patience the childlike efforts of those who delude themselves it is the other way around, as they play with their blocks of \"hard matter.\"",
     "cost": 2,
     "category": "spi",
     "category_value": 0,
@@ -293,7 +306,8 @@
   },
   {
     "id": "ethic_spiritualist",
-    "name": "ethic_spiritualist",
+    "name": "Spiritualist",
+    "description": "There are those who think it behooves us to remember how tiny we are, how pointless our lives are in this vast uncaring universe... What nonsense! The only truth we can ever know is that of our own existence. The universe - in all its apparent glory - is but a dream we all happen to share.",
     "cost": 1,
     "category": "spi",
     "category_value": 1,
@@ -315,7 +329,8 @@
   },
   {
     "id": "ethic_fanatic_materialist",
-    "name": "ethic_fanatic_materialist",
+    "name": "Fanatic Materialist",
+    "description": "Although it hurts, we must grow up and put aside our outdated notions of morality. There is no \"divine spark\" granting special value to a living mind. No object has any intrinsic value apart from what we choose to grant it. Let us embrace the freedom of certitude, and achieve maximum efficiency in all things!",
     "cost": 2,
     "category": "spi",
     "category_value": 4,
@@ -337,7 +352,8 @@
   },
   {
     "id": "ethic_materialist",
-    "name": "ethic_materialist",
+    "name": "Materialist",
+    "description": "As we reach for the stars, we must put away childish things; gods, spirits and other phantasms of the brain. Reality is cruel and unforgiving, yet we must steel ourselves and secure the survival of our race through the unflinching pursuit of science and technology.",
     "cost": 1,
     "category": "spi",
     "category_value": 3,
@@ -359,7 +375,8 @@
   },
   {
     "id": "ethic_gestalt_consciousness",
-    "name": "ethic_gestalt_consciousness",
+    "name": "Gestalt Consciousness",
+    "description": "We reach into the void. The vast expanse becomes us.",
     "cost": 3,
     "category": "hive",
     "category_value": 0,

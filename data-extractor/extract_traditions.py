@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Any
 from paradox_parser import parse_stellaris_file
+from localization_parser import load_all_localizations, get_localized_text, clean_localized_text
 
 
 def extract_modifier_effects(modifier_data: Any) -> str:
@@ -35,11 +36,20 @@ def extract_modifier_effects(modifier_data: Any) -> str:
     return "; ".join(effects)
 
 
-def extract_tradition_data(tradition_key: str, tradition_data: Dict[str, Any]) -> Dict[str, Any]:
+def extract_tradition_data(tradition_key: str, tradition_data: Dict[str, Any], localizations: Dict[str, str] = None) -> Dict[str, Any]:
     """Extract relevant data from a single tradition"""
+    if localizations is None:
+        localizations = {}
+
+    # Get localized name and description
+    name = get_localized_text(tradition_key, localizations)
+    desc_key = f"{tradition_key}_desc"
+    description_raw = get_localized_text(desc_key, localizations)
+
     tradition = {
         "id": tradition_key,
-        "name": tradition_key,
+        "name": name,
+        "description": clean_localized_text(description_raw) if description_raw != desc_key else "",
         "custom_tooltip": tradition_data.get("custom_tooltip", "")
     }
 
@@ -84,7 +94,7 @@ def extract_tradition_data(tradition_key: str, tradition_data: Dict[str, Any]) -
     return tradition
 
 
-def extract_traditions_from_file(filepath: str) -> List[Dict[str, Any]]:
+def extract_traditions_from_file(filepath: str, localizations: Dict[str, str] = None) -> List[Dict[str, Any]]:
     """Extract all traditions from a single file"""
     print(f"Processing: {os.path.basename(filepath)}")
 
@@ -94,7 +104,7 @@ def extract_traditions_from_file(filepath: str) -> List[Dict[str, Any]]:
 
         for key, value in data.items():
             if isinstance(value, dict) and key.startswith('tr_'):
-                tradition = extract_tradition_data(key, value)
+                tradition = extract_tradition_data(key, value, localizations)
                 traditions.append(tradition)
 
         print(f"  Found {len(traditions)} traditions")
@@ -115,6 +125,10 @@ def extract_all_traditions(stellaris_path: str, output_file: str = "output/tradi
         print(f"Error: Traditions directory not found at {traditions_dir}")
         sys.exit(1)
 
+    # Load localizations
+    print("Loading localizations...")
+    localizations = load_all_localizations(stellaris_path)
+
     all_traditions = []
 
     # Get all tradition files (exclude README)
@@ -124,7 +138,7 @@ def extract_all_traditions(stellaris_path: str, output_file: str = "output/tradi
     for filename in sorted(tradition_files):
         filepath = os.path.join(traditions_dir, filename)
         if os.path.exists(filepath):
-            traditions = extract_traditions_from_file(filepath)
+            traditions = extract_traditions_from_file(filepath, localizations)
             all_traditions.extend(traditions)
 
     # Organize by tree
