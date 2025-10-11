@@ -32,6 +32,7 @@ This project is currently in active development with the following features impl
 - Search and filtering
 - Build comparison tools
 - Community features (favorites, build of the month, etc.)
+- Exporting empire build from the website in the Stellaris game file to play it right away!
 
 ---
 
