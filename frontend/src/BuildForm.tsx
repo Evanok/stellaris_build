@@ -4,6 +4,26 @@ interface BuildFormProps {
   onBuildCreated: (newBuild: any) => void;
 }
 
+// Icon component for game elements
+const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type, id, size = 32 }) => {
+  const [hasError, setHasError] = useState(false);
+
+  if (hasError) {
+    return null; // Don't show anything if icon fails to load
+  }
+
+  return (
+    <img
+      src={`/icons/${type}/${id}.png`}
+      alt=""
+      width={size}
+      height={size}
+      style={{ marginRight: '8px', verticalAlign: 'middle' }}
+      onError={() => setHasError(true)}
+    />
+  );
+};
+
 interface Trait {
   id: string;
   name: string;
@@ -966,6 +986,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                           style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
                           title={trait.description || 'No description available'}
                         >
+                          <GameIcon type="traits" id={trait.id} size={32} />
                           <strong className="text-white">{trait.name || trait.id}</strong>
                           <span className={`badge ms-2 ${typeof trait.cost === 'number' && trait.cost > 0 ? 'bg-primary' : 'bg-danger'}`}>
                             Cost: {trait.cost}
@@ -1028,6 +1049,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                           style={{ cursor: 'pointer' }}
                           title={origin.description || 'No description available'}
                         >
+                          <GameIcon type="origins" id={origin.id} size={32} />
                           <strong className="text-white">{origin.name || origin.id}</strong>
                           {origin.effects && (
                             <div className="mt-1">
@@ -1120,6 +1142,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                           style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
                           title={ethic.description || 'No description available'}
                         >
+                          <GameIcon type="ethics" id={ethic.id} size={32} />
                           <strong className="text-white">{ethic.name || ethic.id}</strong>
                           <span className={`badge ms-2 ${ethic.cost === 3 ? 'bg-warning text-dark' : ethic.cost === 2 ? 'bg-primary' : 'bg-info'}`}>
                             Cost: {ethic.cost} {ethic.cost === 2 ? '(Fanatic)' : ethic.cost === 3 ? '(Gestalt)' : ''}
@@ -1195,6 +1218,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                           htmlFor={`authority-${authority.id}`}
                           style={{ cursor: 'pointer' }}
                         >
+                          <GameIcon type="authorities" id={authority.id} size={32} />
                           <strong className="text-white">{authority.name}</strong>
                           {authority.required_dlc && (
                             <span className="badge bg-warning text-dark ms-2">Requires: {authority.required_dlc}</span>
@@ -1293,6 +1317,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                           style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
                           title={civic.description || 'No description available'}
                         >
+                          <GameIcon type="civics" id={civic.id} size={32} />
                           <strong className="text-white">{civic.name || civic.id}</strong>
                           {!civic.can_modify && (
                             <span className="badge bg-warning text-dark ms-2">Permanent</span>
@@ -1373,6 +1398,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                           style={{ cursor: 'pointer' }}
                           title={perk.description || 'No description available'}
                         >
+                          <GameIcon type="ascension_perks" id={perk.id} size={32} />
                           <strong className="text-white">{perk.name || perk.id}</strong>
                           {orderNumber !== null && (
                             <span className="badge bg-success ms-2">#{orderNumber}</span>
@@ -1452,6 +1478,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                           style={{ cursor: 'pointer' }}
                           title={tree.adopt?.description || tree.adopt?.effects || tree.finish?.description || 'Tradition tree'}
                         >
+                          <GameIcon type="traditions" id={tree.name} size={32} />
                           <strong className="text-white">{tree.adopt?.name || tree.name}</strong>
                           {orderNumber !== null && (
                             <span className="badge bg-success ms-2">#{orderNumber}</span>
