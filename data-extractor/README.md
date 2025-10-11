@@ -1,93 +1,125 @@
 # Stellaris Data Extractor
 
-Un outil Python pour extraire les données du jeu Stellaris depuis les fichiers de métadonnées du jeu et les convertir en JSON.
+Python tool to extract game data from Stellaris metadata files and convert them to JSON with full localization support.
 
-## Fonctionnalités
+## Features
 
-- **Parser Paradox Script** : Parser générique pour les fichiers `.txt` au format Paradox Interactive
-- **Extraction de Traits** : Extrait tous les traits d'espèces avec leurs coûts, effets, prérequis, etc. (432 traits)
-- **Extraction de Civics & Origins** : Extrait tous les civics et origins avec leurs modificateurs, conditions, etc. (254 civics + 55 origins)
-- **Extraction d'Ethics** : Extrait toutes les éthiques avec leurs effets et variantes (17 ethics)
-- **Extraction de Traditions** : Extrait tous les arbres de traditions et traditions individuelles (234 traditions, 62 arbres)
-- **Extraction d'Ascension Perks** : Extrait tous les perks d'ascension (46 perks)
-- **Export JSON** : Données exportées en format JSON pour une utilisation facile dans d'autres applications
+- **Paradox Script Parser**: Generic parser for Paradox Interactive `.txt` format files
+- **Localization Parser**: Extracts and resolves localized names and descriptions from YAML files
+- **Species Traits Extraction**: Extracts all player-selectable species traits (349 traits)
+- **Civics & Origins Extraction**: Extracts all playable civics and origins (207 civics + 55 origins)
+- **Ethics Extraction**: Extracts all ethics with their effects and variants (17 ethics)
+- **Authorities Extraction**: Extracts all government authorities (7 authorities)
+- **Traditions Extraction**: Extracts all tradition trees and individual traditions (234 traditions, 32 trees)
+- **Ascension Perks Extraction**: Extracts all player-available ascension perks (44 perks)
+- **JSON Export**: Data exported in JSON format for easy use in other applications
 
-## Prérequis
+## Key Features
 
-- Python 3.6 ou supérieur
-- Stellaris installé (testé avec la version Steam)
+✅ **Fully Localized**: All names and descriptions are extracted in English
+✅ **Filtered Data**: Only player-accessible content (no NPC-only items, no obsolete content)
+✅ **Variable Resolution**: Automatically resolves `$variable$` references in localization
+✅ **Clean Output**: No underscores in names, no dollar signs in descriptions
+
+## Prerequisites
+
+- Python 3.6 or higher
+- Stellaris installed (tested with Steam version)
 
 ## Installation
 
-1. Aucune dépendance externe nécessaire - utilise uniquement la bibliothèèque standard Python
+No external dependencies required - uses only Python standard library.
 
 ```bash
-# Optionnel : créer un environnement virtuel
+# Optional: create virtual environment
 python3 -m venv venv
-source venv/bin/activate  # Sur Windows: venv\Scripts\activate
-
-# Installer les dépendances (aucune requise pour l'instant)
-pip install -r requirements.txt
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-## Utilisation
+## Usage
 
-### Extraction Complète (Recommandé)
+### Complete Extraction (Recommended)
 
 ```bash
-python3 extract_all.py [chemin_vers_stellaris]
+python3 extract_all.py [path_to_stellaris]
 ```
 
-Extrait toutes les données : ethics, traits, civics, origins, traditions et ascension perks.
+Extracts all data: ethics, authorities, traits, civics, origins, traditions, and ascension perks.
 
-**Exemple avec WSL:**
+**WSL Example:**
 ```bash
 python3 extract_all.py "/mnt/c/Program Files (x86)/Steam/steamapps/common/Stellaris"
 ```
 
-**Exemple Windows:**
+**Windows Example:**
 ```bash
 python extract_all.py "C:\Program Files (x86)\Steam\steamapps\common\Stellaris"
 ```
 
-**Sorties:**
+**Outputs:**
 - `output/ethics.json` - 17 ethics
-- `output/traits.json` - 432 traits
-- `output/civics.json` - Tous civics + origins
-- `output/civics_civics_only.json` - 254 civics seulement
-- `output/civics_origins_only.json` - 55 origins seulement
+- `output/authorities.json` - 7 authorities
+- `output/traits.json` - 349 species traits (player-selectable only)
+- `output/civics.json` - All civics + origins
+- `output/civics_civics_only.json` - 207 civics only (playable)
+- `output/civics_origins_only.json` - 55 origins only (playable)
 - `output/traditions.json` - 234 traditions
-- `output/traditions_by_tree.json` - Traditions organisées par arbre
-- `output/ascension_perks.json` - 46 ascension perks
+- `output/traditions_by_tree.json` - Traditions organized by tree (32 trees)
+- `output/ascension_perks.json` - 44 ascension perks (player-available)
 
-### Extraction Individuelle
+### Individual Extraction
 
-Vous pouvez aussi extraire chaque type de données séparément :
+You can also extract each data type separately:
 
 ```bash
-python3 extract_ethics.py [chemin]          # Ethics
-python3 extract_traits.py [chemin]          # Traits
-python3 extract_civics.py [chemin]          # Civics & Origins
-python3 extract_traditions.py [chemin]      # Traditions
-python3 extract_ascension_perks.py [chemin] # Ascension Perks
+python3 extract_ethics.py [path]            # Ethics
+python3 extract_authorities.py [path]       # Authorities
+python3 extract_traits.py [path]            # Traits
+python3 extract_civics.py [path]            # Civics & Origins
+python3 extract_traditions.py [path]        # Traditions
+python3 extract_ascension_perks.py [path]   # Ascension Perks
 ```
 
-### Chemin par défaut
+### Default Path
 
-Si aucun chemin n'est spécifié, le script utilise le chemin par défaut WSL :
+If no path is specified, the script uses the default WSL path:
 ```
 /mnt/c/Program Files (x86)/Steam/steamapps/common/Stellaris
 ```
 
-## Structure des Données
+## Data Filtering
+
+The extractors automatically filter out:
+
+- **Leader Traits**: Only species traits are included (83 leader traits filtered)
+- **NPC Civics**: Fallen empires, primitives, enclaves, etc. (47 NPC civics filtered)
+- **Obsolete Perks**: Perks with `potential = { always = no }` (48 obsolete perks filtered)
+- **Duplicate Trees**: Tradition tree duplicates without proper adoption data
+
+## Localization System
+
+The `localization_parser.py` module:
+
+1. **Loads all English localizations** from `localisation/english/*.yml` files
+2. **Resolves variable references** like `$civic_name$` recursively (up to 5 iterations)
+3. **Cleans markup** (removes color codes `§Y`, icons `£energy£`, etc.)
+4. **Handles multiple formats**:
+   - `key: "value"`
+   - `key:0 "value"`
+   - `key: 1 "value"`
+
+**Result**: 69,867 localization entries loaded for English
+
+## Data Structure
 
 ### Traits (traits.json)
 
-Chaque trait contient :
+Each trait contains:
 ```json
 {
   "id": "trait_intelligent",
-  "name": "trait_intelligent",
+  "name": "Intelligent",
+  "description": "This species is blessed with a greater capacity for abstract thought.",
   "cost": 2,
   "category": "normal",
   "initial": true,
@@ -101,23 +133,21 @@ Chaque trait contient :
     "engineering_research_add": 0.1,
     "physics_research_add": 0.1,
     "society_research_add": 0.1
-  },
-  "custom_tooltip": "",
-  "slave_cost": {}
+  }
 }
 ```
 
 ### Civics (civics.json)
 
-Chaque civic/origin contient :
+Each civic/origin contains:
 ```json
 {
   "id": "civic_technocracy",
-  "name": "civic_technocracy",
+  "name": "Technocracy",
+  "description": "This society is led by a council of scientists...",
   "is_origin": false,
   "playable": true,
   "pickable_at_start": true,
-  "description": "civic_tooltip_technocracy_effects",
   "potential": [],
   "possible": ["NOT auth_corporate"],
   "can_modify": true,
@@ -125,102 +155,175 @@ Chaque civic/origin contient :
   "modifier": {
     "country_scientist_cap_add": 1
   },
-  "enforced_traits": [],
-  "ai_weight": 10,
-  "random_weight": 10,
-  "alternate_version": "",
-  "can_build_ruler_ship": false,
-  "custom_tooltip": ""
+  "enforced_traits": []
+}
+```
+
+### Traditions (traditions_by_tree.json)
+
+Each tradition tree contains:
+```json
+{
+  "tr_expansion": {
+    "name": "tr_expansion",
+    "adopt": {
+      "id": "tr_expansion_adopt",
+      "name": "Expansion Traditions",
+      "description": "Pop Growth Speed: +10%",
+      "effects": "pop_growth_speed: +10.0%"
+    },
+    "finish": {
+      "id": "tr_expansion_finish",
+      "name": "Expansion Traditions Finished",
+      "description": "Completing this tradition grants +1 Ascension Perk slot.",
+      "effects": "ascension_perks_add: +1"
+    },
+    "traditions": [
+      {
+        "id": "tr_expansion_colonization_fever",
+        "name": "Colonization Fever",
+        "description": "New colonies start with additional pops...",
+        "type": "tradition",
+        "tree": "expansion"
+      }
+    ]
+  }
 }
 ```
 
 ## Architecture
 
-### Fichiers Principaux
+### Main Files
 
-- `paradox_parser.py` - Parser générique pour le format Paradox Script
-- `extract_all.py` - Script principal pour extraire toutes les données
-- `extract_ethics.py` - Extracteur d'ethics
-- `extract_traits.py` - Extracteur de traits d'espèces
-- `extract_civics.py` - Extracteur de civics et origins
-- `extract_traditions.py` - Extracteur de traditions
-- `extract_ascension_perks.py` - Extracteur d'ascension perks
+- `paradox_parser.py` - Generic parser for Paradox Script format
+- `localization_parser.py` - Localization YAML parser with variable resolution
+- `extract_all.py` - Main script to extract all data types
+- `extract_ethics.py` - Ethics extractor
+- `extract_authorities.py` - Authorities extractor
+- `extract_traits.py` - Species traits extractor
+- `extract_civics.py` - Civics and origins extractor
+- `extract_traditions.py` - Traditions extractor
+- `extract_ascension_perks.py` - Ascension perks extractor
 
-### Parser Paradox Script
+### Paradox Script Parser
 
-Le parser `ParadoxParser` gère :
-- Commentaires (`#`)
-- Objets imbriqués (`{ }`)
-- Opérateurs (`=`, `<`, `>`, `<=`, `>=`)
-- Types de données : booléens (`yes`/`no`), entiers, flottants, chaînes
-- Chaînes entre guillemets
-- Clés multiples (converties en listes)
+The `ParadoxParser` handles:
+- Comments (`#`)
+- Nested objects (`{ }`)
+- Operators (`=`, `<`, `>`, `<=`, `>=`)
+- Data types: booleans (`yes`/`no`), integers, floats, strings
+- Quoted strings
+- Multiple keys (converted to lists)
 
-### Fichiers Sources Stellaris
+### Stellaris Source Files
 
 **Traits:**
 - `common/traits/01_species_traits_habitability.txt`
 - `common/traits/02_species_traits_basic_characteristics.txt`
 - `common/traits/04_species_traits.txt`
 - `common/traits/05_species_traits_robotic.txt`
-- Et les DLCs (distant_stars, megacorp, etc.)
+- DLC files (distant_stars, megacorp, etc.)
 
 **Civics:**
 - `common/governments/civics/00_civics.txt`
 - `common/governments/civics/00_origins.txt`
+- `common/governments/civics/01_special_civics.txt` (filtered)
 - `common/governments/civics/02_gestalt_civics.txt`
 - `common/governments/civics/03_corporate_civics.txt`
 
 **Ethics:**
 - `common/ethics/00_ethics.txt`
 
+**Authorities:**
+- `common/governments/00_governments.txt`
+
 **Traditions:**
-- `common/traditions/*.txt` (tous les fichiers de traditions)
+- `common/traditions/*.txt` (all tradition files)
 
 **Ascension Perks:**
 - `common/ascension_perks/00_ascension_paths.txt`
 - `common/ascension_perks/00_ascension_perks.txt`
 
+**Localizations:**
+- `localisation/english/*.yml` (all English localization files)
+
 ## Extension
 
-Pour ajouter l'extraction d'autres types de données (technologies, buildings, etc.) :
+To add extraction for other data types (technologies, buildings, etc.):
 
-1. Créer un nouveau fichier `extract_xxx.py`
-2. Utiliser `paradox_parser.parse_stellaris_file(filepath)` pour parser
-3. Extraire et formater les données pertinentes
-4. Exporter en JSON
+1. Create a new file `extract_xxx.py`
+2. Use `paradox_parser.parse_stellaris_file(filepath)` to parse
+3. Use `localization_parser.load_all_localizations(stellaris_path)` for names
+4. Extract and format relevant data
+5. Export to JSON
 
-## Limitations
+## Extracted Data Summary
 
-- Les noms sont des clés techniques (ex: `trait_intelligent`), pas les noms localisés
-- Pour avoir les noms traduits, il faudrait parser les fichiers de localisation dans `localisation/`
-- Certaines conditions complexes peuvent être simplifiées
-- Les modificateurs dynamiques ou scriptés peuvent ne pas être complètement capturés
-
-## Données Extraites
-
-✅ **Implémenté:**
+✅ **Implemented:**
 - Ethics (17)
-- Traits d'espèces (432)
-- Civics (254)
-- Origins (55)
-- Traditions (234 dans 62 arbres)
-- Ascension Perks (46)
+- Authorities (7)
+- Species Traits (349 - player-selectable only)
+- Civics (207 - playable only)
+- Origins (55 - playable only)
+- Traditions (234 in 32 trees)
+- Ascension Perks (44 - player-available only)
 
-## Prochaines Étapes
+✅ **Localization:**
+- Full English localization with 69,867 entries
+- Automatic variable resolution
+- Clean text output (no markup, no dollar signs)
 
-- [ ] Extraction des noms localisés (français/anglais)
-- [ ] Extraction des technologies
-- [ ] Extraction des authorities (gouvernements)
-- [ ] Extraction des DLCs requis
-- [ ] Extraction des buildings et districts
-- [ ] Interface en ligne de commande améliorée
-- [ ] Export vers d'autres formats (CSV, SQL)
+## When to Re-Extract Data
 
-## Contribution
+You should re-run the extractor when:
 
-Pour signaler un bug ou proposer une amélioration, créez une issue ou un pull request.
+1. **Stellaris Major Updates**: New DLCs or major patches add new content
+2. **Game Balance Changes**: Stellaris updates trait costs, civic effects, etc.
+3. **Localization Updates**: Text descriptions or translations change
+4. **Bug Fixes**: Paradox fixes incorrect data in game files
 
-## Licence
+## Copying Data to Backend
 
-Ce projet est un outil d'extraction de données pour un usage personnel. Stellaris et ses données appartiennent à Paradox Interactive.
+After extraction:
+
+```bash
+cd data-extractor
+
+# Copy all extracted data to backend
+cp output/traits.json ../backend/data/
+cp output/civics_civics_only.json ../backend/data/civics.json
+cp output/civics_origins_only.json ../backend/data/origins.json
+cp output/ethics.json ../backend/data/
+cp output/authorities.json ../backend/data/
+cp output/ascension_perks.json ../backend/data/
+cp output/traditions_by_tree.json ../backend/data/traditions.json
+
+# Or use extract_all.py which does this automatically
+```
+
+## Known Limitations
+
+- ✅ ~~Names are technical keys, not localized~~ **FIXED**: Full localization implemented
+- ✅ ~~Dollar signs in descriptions~~ **FIXED**: Variable resolution implemented
+- ✅ ~~NPC content included~~ **FIXED**: Filtering implemented
+- Some complex scripted effects may not be fully captured
+- Dynamic modifiers may not be complete
+
+## Troubleshooting
+
+**Problem**: Extraction produces empty or incomplete data
+**Solution**: Verify Stellaris path is correct and files exist
+
+**Problem**: Localization shows IDs instead of names
+**Solution**: Check that `localisation/english/` directory exists in Stellaris folder
+
+**Problem**: Dollar signs still appear in text
+**Solution**: Re-run extraction - the localization parser should resolve all variables
+
+## Contributing
+
+To report a bug or suggest an improvement, create an issue or pull request.
+
+## License
+
+This project is an extraction tool for personal use. Stellaris and its data belong to Paradox Interactive.

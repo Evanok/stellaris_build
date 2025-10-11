@@ -4,87 +4,78 @@ Community-driven web platform for sharing, discovering, and optimizing Stellaris
 
 ---
 
-## Concept
+## Current Implementation Status
 
-**Stellaris Build Sharing** is a community website where players can create, share, and explore optimized empire configurations for *Stellaris*.  
-The goal is to help players experiment with different playstyles, theorycraft new combinations, and learn from others’ strategies.
+This project is currently in active development with the following features implemented:
 
----
+### ✅ Implemented Features
 
-## Authentication & User Accounts
+- **Build Creation Form**: Comprehensive form for creating empire builds with:
+  - Species type selection (Biological, Lithoid, Machine, Robot)
+  - Species traits with point/pick validation
+  - Origins with trait bonuses
+  - Ethics with point limits and compatibility checks
+  - Authorities with ethics requirements
+  - Civics with conditional filtering
+  - Recommended Ascension Perks (with ordering)
+  - Recommended Tradition Trees (with ordering)
+  - Game version tracking
 
-- User registration and login system  
-- Personal profile pages  
-- View all builds created by a specific user  
-- Basic user stats: number of builds, reputation, favorites, etc.
+- **Build Display**: View submitted builds with all details
+- **Data Extraction**: Automated extraction from Stellaris game files with full localization
+- **Tooltips**: Hover descriptions for all game elements
 
----
+### 🚧 Planned Features
 
-## Build Management
-
-Users can create detailed build sheets with the following information:
-
-- **Build name**
-- **Civics** (empire civic traits)
-- **Species traits**
-- **Detailed description**
-- **Required DLCs**
-- **Creation and last update dates**
-- **Tested Stellaris version/patch**
-- **Tags & categories**:
-  - Type: military, economic, diplomatic, roleplay
-  - Playstyle: tall, wide, rush
-  - Species archetype: humanoid, machine, hive mind, etc.
-
-**Additional features:**
-
-- Edit and update builds  
-- Delete own builds  
-- Tag system for filtering and organization
+- User authentication and profiles
+- Build rating and comments system
+- Search and filtering
+- Build comparison tools
+- Community features (favorites, build of the month, etc.)
 
 ---
 
-## Community Interaction
+## Tech Stack
 
-- Rating system (upvote/downvote or star rating)
-- Comment threads for feedback and discussion
-- Reporting system for outdated or inappropriate builds
-- “Build of the Month” highlight based on community votes
+**Current Implementation:**
 
----
-
-## Search & Discovery
-
-Advanced build search and filtering options:
-
-- Text-based search by keywords  
-- Filter by:
-  - Average rating  
-  - Number of views  
-  - Creation/update date  
-  - Tags & categories  
-  - DLC compatibility  
-  - Tested game version
-- Sort results by relevance, rating, popularity, or date
+- **Frontend:** React 18 + TypeScript + Vite + Bootstrap 5
+- **Backend:** Express 5 + SQLite3
+- **Build Tool:** Vite
+- **Architecture:** Monorepo with npm workspaces
+- **Data Extraction:** Python 3 (custom Paradox file parser)
 
 ---
 
-## Statistics & Insights
+## Project Structure
 
-- View counter per build  
-- Number of favorites/likes  
-- Leaderboards for most popular or top-rated builds  
-- Player contribution statistics  
-
----
-
-## Recommended Tech Stack
-
-- **Frontend:** Next.js + TailwindCSS
-- **Backend:** Next.js API routes or Node/Express
-- **Database:** PostgreSQL + Prisma ORM
-- **Authentication:** NextAuth.js
-- **Deployment:** Vercel (frontend) + Supabase or Railway (database/backend)
+```
+stellaris_build/
+├── frontend/          # React + Vite frontend
+│   ├── src/
+│   │   ├── App.tsx           # Main app component
+│   │   ├── BuildForm.tsx     # Build creation form
+│   │   └── main.tsx          # Entry point
+│   └── package.json
+├── backend/           # Express API server
+│   ├── index.js              # Server entry point
+│   ├── database.js           # SQLite setup
+│   └── data/                 # JSON data files
+│       ├── traits.json
+│       ├── civics.json
+│       ├── origins.json
+│       ├── ethics.json
+│       ├── authorities.json
+│       ├── ascension_perks.json
+│       └── traditions.json
+├── data-extractor/    # Python data extraction tools
+│   ├── extract_all.py        # Extract all data at once
+│   ├── paradox_parser.py     # Paradox file format parser
+│   ├── localization_parser.py # Extract localized names/descriptions
+│   ├── extract_*.py          # Individual extractors
+│   └── output/               # Extracted JSON files
+└── package.json       # Root workspace config
+```
 
 ---
 
@@ -92,52 +83,213 @@ Advanced build search and filtering options:
 
 ### Prerequisites
 
-- Node.js (version 18 or higher)
-- npm or yarn package manager
+- **Node.js** (version 18 or higher)
+- **npm** (comes with Node.js)
+- **Python 3** (for data extraction)
+- **Stellaris** installed (for extracting game data)
 
 ### Installation
 
 ```bash
-# Install dependencies
+# Clone the repository
+git clone <your-repo-url>
+cd stellaris_build
+
+# Install dependencies for all workspaces
 npm install
 ```
 
 ### Running the Development Server
 
 ```bash
-# Start the development server
+# Start both frontend and backend concurrently
 npm run dev
+
+# The application will be available at:
+# - Frontend: http://localhost:3000
+# - Backend API: http://localhost:3001
 ```
 
-The application will be available at `http://localhost:3000`
-
-### Testing the Website
-
-Once the development server is running:
-
-1. Open your browser and navigate to `http://localhost:3000`
-2. Test the build form and features
-3. Check the console for any errors
-
-### Stopping the Server
-
-- Press `Ctrl + C` in the terminal where the server is running
-
-### Production Build
+**Or run individually:**
 
 ```bash
-# Build for production
-npm run build
+# Frontend only (Vite dev server)
+npm run dev -w frontend
 
-# Start production server
-npm start
+# Backend only (Express server with nodemon)
+npm run dev -w backend
+```
+
+### Extracting Game Data
+
+The project includes Python scripts to extract data from Stellaris game files:
+
+```bash
+cd data-extractor
+
+# Extract all data at once (recommended)
+python3 extract_all.py "/mnt/c/Program Files (x86)/Steam/steamapps/common/Stellaris"
+
+# Copy extracted data to backend
+cp output/*.json ../backend/data/
+```
+
+**Note:** Data extraction is required when:
+- Setting up the project for the first time
+- Stellaris receives a major update with new content
+- You want to update game element descriptions
+
+See `data-extractor/README.md` for detailed extraction documentation.
+
+### Building for Production
+
+```bash
+# Build frontend
+npm run build -w frontend
+
+# The backend serves the built frontend in production
 ```
 
 ---
 
-## Future Ideas
+## Data Extraction
 
-- Import/export builds as JSON for easy sharing  
-- Integration with Paradox Mods or Steam Workshop  
-- Build comparison tools (stats, synergy analysis, etc.)  
-- Automatic parsing of Stellaris data files for updated civics and traits
+The `data-extractor` folder contains Python tools that parse Stellaris game files and extract:
+
+- **349 Species Traits** (filtered, player-selectable only)
+- **55 Origins** (playable only)
+- **17 Ethics** (with fanatic variants)
+- **7 Authorities** (with ethics requirements)
+- **207 Civics** (filtered, no NPC civics)
+- **44 Ascension Perks** (available to players)
+- **32 Tradition Trees** (with adoption and completion effects)
+
+All data includes:
+- ✅ Fully localized names (English)
+- ✅ Complete descriptions
+- ✅ Game effects and modifiers
+- ✅ Prerequisites and compatibility rules
+
+---
+
+## API Endpoints
+
+**Backend runs on `http://localhost:3001`**
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/test` | GET | Health check |
+| `/api/traits` | GET | Get all species traits |
+| `/api/origins` | GET | Get all origins |
+| `/api/ethics` | GET | Get all ethics |
+| `/api/authorities` | GET | Get all authorities |
+| `/api/civics` | GET | Get all civics |
+| `/api/ascension-perks` | GET | Get all ascension perks |
+| `/api/traditions` | GET | Get all tradition trees |
+| `/api/builds` | GET | Get all builds |
+| `/api/builds` | POST | Create a new build |
+
+---
+
+## Development
+
+### Frontend Development
+
+```bash
+npm run dev -w frontend     # Start dev server
+npm run build -w frontend   # Build for production
+npm run lint -w frontend    # Run ESLint
+npm run preview -w frontend # Preview production build
+```
+
+### Backend Development
+
+```bash
+npm run dev -w backend      # Start with nodemon (auto-reload)
+```
+
+**Note:** Nodemon only watches `.js` files. If you update JSON data files, you'll need to manually restart the backend.
+
+---
+
+## Database
+
+The project uses **SQLite** with the following schema:
+
+### `users` table
+- `id` (primary key)
+- `username`
+- `email`
+- `password_hash`
+- `created_at`
+
+### `builds` table
+- `id` (primary key)
+- `name`
+- `description`
+- `game_version` (Stellaris version)
+- `species_type` (BIOLOGICAL, LITHOID, MACHINE, ROBOT)
+- `origin` (origin ID)
+- `ethics` (comma-separated IDs)
+- `authority` (authority ID)
+- `civics` (comma-separated IDs)
+- `traits` (comma-separated IDs)
+- `ascension_perks` (comma-separated, ordered)
+- `traditions` (comma-separated, ordered)
+- `dlcs` (required DLCs)
+- `tags` (comma-separated)
+- `author_id` (foreign key to users)
+- `created_at`
+- `updated_at`
+
+**Database file:** `./stellaris_builds.db` (auto-created on first run)
+
+---
+
+## Contributing
+
+When contributing:
+
+1. **Data Updates**: If Stellaris updates, re-run the data extractor
+2. **Code Style**: Follow the existing ESLint configuration
+3. **Testing**: Test the build form thoroughly before submitting PRs
+4. **Documentation**: Update READMEs when adding new features
+
+---
+
+## Future Roadmap
+
+### Phase 1: Core Features (Current)
+- ✅ Build creation form
+- ✅ Data extraction with localization
+- ✅ Basic build storage
+
+### Phase 2: User Management
+- [ ] User registration and authentication
+- [ ] Personal profiles
+- [ ] User build library
+
+### Phase 3: Community Features
+- [ ] Rating system
+- [ ] Comments and discussions
+- [ ] Favorites/bookmarks
+- [ ] Build of the Month
+
+### Phase 4: Advanced Features
+- [ ] Build comparison tools
+- [ ] Advanced search and filtering
+- [ ] Synergy analysis
+- [ ] Build import/export
+- [ ] Automatic compatibility checking for game updates
+
+---
+
+## License
+
+This project is a community tool for personal use. Stellaris and all game data belong to Paradox Interactive.
+
+---
+
+## Credits
+
+Built with ❤️ by the Stellaris community
