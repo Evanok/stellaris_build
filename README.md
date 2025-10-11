@@ -290,7 +290,3 @@ When contributing:
 This project is a community tool for personal use. Stellaris and all game data belong to Paradox Interactive.
 
 ---
-
-## Credits
-
-Built with ❤️ by the Stellaris community
