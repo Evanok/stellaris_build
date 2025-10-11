@@ -29,7 +29,16 @@ def extract_trigger_info(trigger_data: Any) -> List[str]:
     requirements = []
 
     for key, value in trigger_data.items():
-        if key == 'ethics':
+        if key == 'species_archetype':
+            # Handle species archetype requirements (for origins)
+            if isinstance(value, dict):
+                if 'NOT' in value:
+                    not_val = value['NOT']
+                    if isinstance(not_val, dict) and 'value' in not_val:
+                        requirements.append(f"NOT species_archetype:{not_val['value']}")
+                elif 'value' in value:
+                    requirements.append(f"species_archetype:{value['value']}")
+        elif key == 'ethics':
             if isinstance(value, dict):
                 for ethic_key, ethic_val in value.items():
                     if ethic_key in ['NOT', 'NOR', 'OR', 'AND']:

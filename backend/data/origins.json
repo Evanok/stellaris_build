@@ -92,7 +92,8 @@
       "NOT ['ethic_pacifist', 'ethic_fanatic_pacifist']",
       "NOT ethic_gestalt_consciousness",
       "NOT ['civic_chosen', 'civic_corporate_chosen', 'civic_augmentation_bazaars']",
-      "NOT civic_natural_design"
+      "NOT civic_natural_design",
+      "NOT species_archetype:MACHINE"
     ],
     "can_modify": true,
     "effects": "",
@@ -115,7 +116,9 @@
     "negative_tooltip": "",
     "playable_conditions": "{'has_biogenesis_dlc': True}",
     "potential": [],
-    "possible": [],
+    "possible": [
+      "NOT species_archetype:MACHINE"
+    ],
     "can_modify": true,
     "effects": "BIOLOGICAL_species_trait_picks_add: +1",
     "modifier": {
@@ -219,6 +222,7 @@
     "playable_conditions": "{'has_grand_archive_dlc': True}",
     "potential": [],
     "possible": [
+      "NOT species_archetype:MACHINE",
       "NOT ['civic_tankbound', 'civic_tankbound_corporate']"
     ],
     "can_modify": true,
@@ -275,7 +279,8 @@
     "potential": [],
     "possible": [
       "NOT ['ethic_spiritualist', 'ethic_fanatic_spiritualist']",
-      "NOT ['ethic_egalitarian', 'ethic_fanatic_egalitarian']"
+      "NOT ['ethic_egalitarian', 'ethic_fanatic_egalitarian']",
+      "NOT species_archetype:MACHINE"
     ],
     "can_modify": true,
     "effects": "",
@@ -300,7 +305,8 @@
     "potential": [],
     "possible": [
       "NOT ethic_gestalt_consciousness",
-      "NOT ['ethic_spiritualist', 'ethic_fanatic_spiritualist']"
+      "NOT ['ethic_spiritualist', 'ethic_fanatic_spiritualist']",
+      "NOT species_archetype:MACHINE"
     ],
     "can_modify": true,
     "effects": "",
@@ -325,7 +331,9 @@
     "negative_tooltip": "- Initial Pops: -300  - Homeworld: Size: 15",
     "playable_conditions": "{'has_machine_age_dlc': True}",
     "potential": [],
-    "possible": [],
+    "possible": [
+      "species_archetype:MACHINE"
+    ],
     "can_modify": true,
     "effects": "country_megastructure_build_cap_add: +1; arc_furnace_limit_add: +1",
     "modifier": {
@@ -376,7 +384,8 @@
     "playable_conditions": "{'host_has_dlc': 'Galactic Paragons'}",
     "potential": [],
     "possible": [
-      "auth_dictatorial"
+      "auth_dictatorial",
+      "NOT species_archetype:MACHINE"
     ],
     "can_modify": true,
     "effects": "",
@@ -386,75 +395,6 @@
     ],
     "ai_weight": 1,
     "random_weight": 5,
-    "alternate_version": "",
-    "can_build_ruler_ship": false,
-    "custom_tooltip": ""
-  },
-  {
-    "id": "origin_legendary_leader_death",
-    "name": "Broken Rule",
-    "description": "Amidst political turmoil, and without the Luminary's guidance, the people must make their own way in the galaxy.",
-    "is_origin": true,
-    "playable": true,
-    "pickable_at_start": true,
-    "tooltip": "- Species Traits:  - Ruler Traits:",
-    "negative_tooltip": "",
-    "potential": [],
-    "possible": [],
-    "can_modify": true,
-    "effects": "",
-    "modifier": {},
-    "enforced_traits": [
-      "trait_perfected_genes"
-    ],
-    "ai_weight": 1,
-    "random_weight": 0,
-    "alternate_version": "",
-    "can_build_ruler_ship": false,
-    "custom_tooltip": ""
-  },
-  {
-    "id": "origin_legendary_leader_imperial",
-    "name": "Under One Rule",
-    "description": "Amidst violence and hardship, this civilization was unified by a single leader. Consolidating power through the repression of weaker factions, they have now become a fierce advocate for science and technological advancement. In the aftermath, an uneasy peace has descended. But peace rarely lasts.",
-    "is_origin": true,
-    "playable": true,
-    "pickable_at_start": true,
-    "tooltip": "- Species Traits:  - Ruler Traits:",
-    "negative_tooltip": "",
-    "potential": [],
-    "possible": [],
-    "can_modify": true,
-    "effects": "",
-    "modifier": {},
-    "enforced_traits": [
-      "trait_perfected_genes"
-    ],
-    "ai_weight": 1,
-    "random_weight": 0,
-    "alternate_version": "",
-    "can_build_ruler_ship": false,
-    "custom_tooltip": ""
-  },
-  {
-    "id": "origin_legendary_leader_dictatorial",
-    "name": "Under One Rule",
-    "description": "Amidst violence and hardship, this civilization was unified by a single leader. Consolidating power through the repression of weaker factions, they have now become a fierce advocate for science and technological advancement. In the aftermath, an uneasy peace has descended. But peace rarely lasts.",
-    "is_origin": true,
-    "playable": true,
-    "pickable_at_start": true,
-    "tooltip": "- Species Traits:  - Ruler Traits:",
-    "negative_tooltip": "",
-    "potential": [],
-    "possible": [],
-    "can_modify": true,
-    "effects": "",
-    "modifier": {},
-    "enforced_traits": [
-      "trait_perfected_genes"
-    ],
-    "ai_weight": 1,
-    "random_weight": 0,
     "alternate_version": "",
     "can_build_ruler_ship": false,
     "custom_tooltip": ""
@@ -471,7 +411,8 @@
     "playable_conditions": "{'has_first_contact_dlc': True}",
     "potential": [],
     "possible": [
-      "NOT ethic_gestalt_consciousness"
+      "NOT ethic_gestalt_consciousness",
+      "NOT species_archetype:MACHINE"
     ],
     "can_modify": true,
     "effects": "damage_vs_superior_empires_mult: +15.0%",
@@ -497,7 +438,8 @@
     "playable_conditions": "{'has_first_contact_dlc': True}",
     "potential": [],
     "possible": [
-      "NOT ethic_gestalt_consciousness"
+      "NOT ethic_gestalt_consciousness",
+      "NOT species_archetype:MACHINE"
     ],
     "can_modify": true,
     "effects": "envoys_add: +1; first_contact_speed_mult: +20.0%; spy_network_daily_value_mult: +20.0%",
@@ -525,7 +467,8 @@
     "playable_conditions": "{'has_first_contact_dlc': True}",
     "potential": [],
     "possible": [
-      "NOT ethic_gestalt_consciousness"
+      "NOT ethic_gestalt_consciousness",
+      "NOT species_archetype:MACHINE"
     ],
     "can_modify": true,
     "effects": "ship_anomaly_generation_chance_mult: +10.0%; ship_anomaly_research_speed_mult: +20.0%; num_tech_alternatives_add: -1; country_leader_pool_size: -1",
@@ -554,7 +497,8 @@
     "playable_conditions": "{'has_toxoids': True}",
     "potential": [],
     "possible": [
-      "NOT auth_machine_intelligence"
+      "NOT auth_machine_intelligence",
+      "NOT species_archetype:MACHINE"
     ],
     "can_modify": true,
     "effects": "BIOLOGICAL_species_trait_points_add: +2; BIOLOGICAL_species_trait_picks_add: +1",
@@ -581,7 +525,8 @@
     "playable_conditions": "{'has_toxoids': True}",
     "potential": [],
     "possible": [
-      "NOT ethic_gestalt_consciousness"
+      "NOT ethic_gestalt_consciousness",
+      "NOT species_archetype:MACHINE"
     ],
     "can_modify": true,
     "effects": "",
@@ -633,8 +578,12 @@
     "tooltip": "- Species Traits:  - ['concept_mining_district', Mining Districts]: Uncapped",
     "negative_tooltip": "",
     "playable_conditions": "{'has_overlord_dlc': True}",
-    "potential": [],
-    "possible": [],
+    "potential": [
+      "NOT species_archetype:MACHINE"
+    ],
+    "possible": [
+      "NOT species_archetype:MACHINE"
+    ],
     "can_modify": true,
     "effects": "mining_district_housing_add: +200; planet_orbital_bombardment_damage: -0.75; planet_structures_cost_mult: +10.0%; planet_structures_upkeep_mult: +10.0%; planet_building_build_speed_mult: -10.0%; planet_storm_devastation_mult: -25.0%",
     "modifier": {
@@ -664,8 +613,12 @@
     "tooltip": "- Species Traits:  - ['concept_mining_district', Mining Districts]: Uncapped",
     "negative_tooltip": "",
     "playable_conditions": "{'has_overlord_dlc': True}",
-    "potential": [],
-    "possible": [],
+    "potential": [
+      "species_archetype:MACHINE"
+    ],
+    "possible": [
+      "species_archetype:MACHINE"
+    ],
     "can_modify": true,
     "effects": "mining_district_housing_add: +200; planet_orbital_bombardment_damage: -0.75; planet_structures_cost_mult: +10.0%; planet_structures_upkeep_mult: +10.0%; planet_building_build_speed_mult: -10.0%; planet_storm_devastation_mult: -25.0%",
     "modifier": {
@@ -723,7 +676,8 @@
     "potential": [],
     "possible": [
       "NOT ['ethic_spiritualist', 'ethic_fanatic_spiritualist']",
-      "NOT ['civic_fanatic_purifiers', 'civic_natural_design', 'civic_augmentation_bazaars']"
+      "NOT ['civic_fanatic_purifiers', 'civic_natural_design', 'civic_augmentation_bazaars']",
+      "NOT species_archetype:MACHINE"
     ],
     "can_modify": true,
     "effects": "",
@@ -793,8 +747,12 @@
     "tooltip": "- Homeworld:  - (size: 30)  - Planetary Modifiers:   - Planetary Features:  - : Replaced with ['concept_pc_frozen', Frozen Worlds]",
     "negative_tooltip": "",
     "playable_conditions": "{'has_aquatics': True}",
-    "potential": [],
-    "possible": [],
+    "potential": [
+      "NOT species_archetype:MACHINE"
+    ],
+    "possible": [
+      "NOT species_archetype:MACHINE"
+    ],
     "can_modify": true,
     "effects": "",
     "modifier": {},
@@ -817,8 +775,12 @@
     "tooltip": "- Homeworld:  - (size: 30)  - Planetary Modifiers:   - Planetary Features:  - : Replaced with ['concept_pc_frozen', Frozen Worlds]",
     "negative_tooltip": "- Requires Machine Template System Technology for Species Modification",
     "playable_conditions": "{'has_aquatics': True}",
-    "potential": [],
-    "possible": [],
+    "potential": [
+      "species_archetype:MACHINE"
+    ],
+    "possible": [
+      "species_archetype:MACHINE"
+    ],
     "can_modify": true,
     "effects": "",
     "modifier": {},
@@ -843,7 +805,8 @@
     "playable_conditions": "{'host_has_dlc': 'Necroids Species Pack'}",
     "potential": [],
     "possible": [
-      "NOT auth_machine_intelligence"
+      "NOT auth_machine_intelligence",
+      "NOT species_archetype:MACHINE"
     ],
     "can_modify": true,
     "effects": "",
@@ -916,8 +879,11 @@
     "tooltip": "- Homeworld:  - Species Traits:  - ['concept_void_dweller', Void Dweller]  - ['concept_habitat_preference', Habitat Preference] - Additional Starting Technologies: ['concept_habitat_1', Orbital Habitats] - Guaranteed Research Options: ['concept_habitat_2', Habitat Expansion] - : Resource-rich systems instead of Colonizable Planets  - Can construct advanced housing buildings on Habitats - Waives Technology requirements for Basic District Specialization on Habitats",
     "negative_tooltip": "",
     "playable_conditions": "{'host_has_dlc': 'Federations'}",
-    "potential": [],
+    "potential": [
+      "NOT species_archetype:MACHINE"
+    ],
     "possible": [
+      "NOT species_archetype:MACHINE",
       "NOT civic_agrarian_idyll"
     ],
     "can_modify": true,
@@ -948,8 +914,11 @@
     "tooltip": "- Homeworld:  - Species Traits:  - ['concept_void_dweller_2', Zero-G Optimized]  - ['concept_habitat_preference', Habitat Preference] - Additional Starting Technologies: ['concept_habitat_1', Orbital Habitats] - Guaranteed Research Options: ['concept_habitat_2', Habitat Expansion] - : Resource-rich systems instead of Colonizable Planets  - Can construct advanced housing buildings on Habitats - Waives Technology requirements for Basic District Specialization on Habitats",
     "negative_tooltip": "- Requires Machine Template System Technology for Species Modification",
     "playable_conditions": "{'host_has_dlc': 'Federations'}",
-    "potential": [],
+    "potential": [
+      "species_archetype:MACHINE"
+    ],
     "possible": [
+      "species_archetype:MACHINE",
       "NOT civic_agrarian_idyll",
       "NOT ['civic_anglers', 'civic_corporate_anglers', 'civic_machine_anglers', 'civic_corporate_machine_anglers']"
     ],
@@ -984,7 +953,8 @@
     "potential": [],
     "possible": [
       "NOT ['ethic_gestalt_consciousness', 'ethic_fanatic_xenophobe']",
-      "NOT civic_pompous_purists"
+      "NOT civic_pompous_purists",
+      "NOT species_archetype:MACHINE"
     ],
     "can_modify": true,
     "effects": "",
@@ -1008,7 +978,8 @@
     "playable_conditions": "{'host_has_dlc': 'Federations'}",
     "potential": [],
     "possible": [
-      "NOT ethic_gestalt_consciousness"
+      "NOT ethic_gestalt_consciousness",
+      "NOT species_archetype:MACHINE"
     ],
     "can_modify": true,
     "effects": "",
@@ -1102,7 +1073,9 @@
     "negative_tooltip": "",
     "playable_conditions": "{'host_has_dlc': 'Lithoids Species Pack'}",
     "potential": [],
-    "possible": [],
+    "possible": [
+      "species_archetype:LITHOID"
+    ],
     "can_modify": true,
     "effects": "",
     "modifier": {},
@@ -1145,8 +1118,11 @@
     "tooltip": "- Homeworld:  - Species Traits:",
     "negative_tooltip": "",
     "playable_conditions": "{'host_has_dlc': 'Apocalypse'}",
-    "potential": [],
+    "potential": [
+      "NOT species_archetype:MACHINE"
+    ],
     "possible": [
+      "NOT species_archetype:MACHINE",
       "NOT civic_agrarian_idyll",
       "NOT ['civic_anglers', 'civic_corporate_anglers', 'civic_machine_anglers', 'civic_corporate_machine_anglers']"
     ],
@@ -1172,8 +1148,12 @@
     "tooltip": "- Homeworld:  - Species Traits:",
     "negative_tooltip": "",
     "playable_conditions": "{'host_has_dlc': 'Apocalypse'}",
-    "potential": [],
-    "possible": [],
+    "potential": [
+      "species_archetype:MACHINE"
+    ],
+    "possible": [
+      "species_archetype:MACHINE"
+    ],
     "can_modify": true,
     "effects": "",
     "modifier": {},
@@ -1198,7 +1178,8 @@
     "playable_conditions": "{'host_has_dlc': 'Humanoids Species Pack'}",
     "potential": [],
     "possible": [
-      "NOT ethic_gestalt_consciousness"
+      "NOT ethic_gestalt_consciousness",
+      "NOT species_archetype:MACHINE"
     ],
     "can_modify": true,
     "effects": "",
@@ -1249,6 +1230,7 @@
     "playable_conditions": "{'has_synthetic_dawn': True}",
     "potential": [],
     "possible": [
+      "NOT species_archetype:MACHINE",
       "NOT ['ethic_militarist', 'ethic_fanatic_militarist']",
       "NOT ['ethic_fanatic_spiritualist', 'ethic_fanatic_xenophile']"
     ],
@@ -1281,7 +1263,8 @@
     "possible": [
       "NOT ethic_gestalt_consciousness",
       "NOT ['ethic_materialist', 'ethic_fanatic_materialist']",
-      "NOT civic_permanent_employment"
+      "NOT civic_permanent_employment",
+      "NOT species_archetype:MACHINE"
     ],
     "can_modify": true,
     "effects": "planet_pop_assembly_mult: +15.0%; ROBOT_species_trait_picks_add: +1; ROBOT_species_trait_points_add: +2",

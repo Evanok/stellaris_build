@@ -82,6 +82,7 @@ def extract_icons_for_type(stellaris_path, output_path, icon_type, ids_list, tar
     source_dirs = {
         'civics': 'gfx/interface/icons/governments/civics',
         'origins': 'gfx/interface/icons/origins',
+        'origin_images': 'gfx/event_pictures/origins',  # Large origin illustrations
         'traits': 'gfx/interface/icons/traits',
         'ethics': 'gfx/interface/icons/ethics',
         'authorities': 'gfx/interface/icons/governments',
@@ -176,7 +177,7 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
             stats['total_extracted'] += extracted
             stats['total_missing'] += missing
 
-    # Extract Origins
+    # Extract Origins (small icons)
     origins_file = os.path.join(data_path, 'civics_origins_only.json')
     if os.path.exists(origins_file):
         with open(origins_file, 'r', encoding='utf-8') as f:
@@ -187,6 +188,14 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
             )
             stats['total_extracted'] += extracted
             stats['total_missing'] += missing
+
+            # Also extract large origin illustrations (event pictures)
+            # These are bigger and used for display, not target_size (keep original or larger)
+            extracted_large, missing_large = extract_icons_for_type(
+                stellaris_path, output_path, 'origin_images', origin_ids, target_size=256
+            )
+            stats['total_extracted'] += extracted_large
+            stats['total_missing'] += missing_large
 
     # Extract Ethics
     ethics_file = os.path.join(data_path, 'ethics.json')

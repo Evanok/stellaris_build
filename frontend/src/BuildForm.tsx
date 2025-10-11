@@ -24,6 +24,54 @@ const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type,
   );
 };
 
+// Origin display card with large image
+const OriginCard: React.FC<{ originId: string; origin: Origin | undefined }> = ({ originId, origin }) => {
+  const [imageError, setImageError] = useState(false);
+
+  return (
+    <div className="card bg-dark border-primary mb-2">
+      <div className="row g-0">
+        {!imageError && (
+          <div className="col-md-4" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backgroundColor: '#1a1a1a' }}>
+            <img
+              src={`/icons/origin_images/${originId}.png`}
+              alt={origin?.name || originId}
+              style={{
+                width: '100%',
+                height: 'auto',
+                maxHeight: '300px',
+                objectFit: 'contain',
+                borderRadius: '4px'
+              }}
+              onError={() => setImageError(true)}
+            />
+          </div>
+        )}
+        <div className={imageError ? 'col-md-12' : 'col-md-8'}>
+          <div className="card-body">
+            <div className="d-flex align-items-center mb-2">
+              <GameIcon type="origins" id={originId} size={48} />
+              <h5 className="card-title text-primary mb-0 ms-2">
+                {origin?.name || originId}
+              </h5>
+            </div>
+            <p className="card-text text-light">
+              {origin?.description}
+            </p>
+            {origin?.effects && (
+              <p className="card-text">
+                <small className="text-info">
+                  <strong>Effects:</strong> {origin.effects}
+                </small>
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 interface Trait {
   id: string;
   name: string;
@@ -1016,8 +1064,17 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           {/* Origin Selection */}
           <div className="mb-3">
             <label className="form-label">
-              Origin {selectedOrigin && <span className="badge bg-success ms-2">Selected: {selectedOrigin}</span>}
+              Origin {selectedOrigin && <span className="badge bg-success ms-2">Selected</span>}
             </label>
+
+            {/* Display selected origin with large image */}
+            {selectedOrigin && (
+              <OriginCard
+                originId={selectedOrigin}
+                origin={allOrigins.find(o => o.id === selectedOrigin)}
+              />
+            )}
+
             <input
               type="text"
               className="form-control bg-secondary text-white border-secondary mb-2"
@@ -1049,7 +1106,13 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                           style={{ cursor: 'pointer' }}
                           title={origin.description || 'No description available'}
                         >
-                          <GameIcon type="origins" id={origin.id} size={32} />
+                          <img
+                            src={`/icons/origin_images/${origin.id}.png`}
+                            alt=""
+                            width={48}
+                            height={48}
+                            style={{ marginRight: '8px', verticalAlign: 'middle', borderRadius: '4px', objectFit: 'cover' }}
+                          />
                           <strong className="text-white">{origin.name || origin.id}</strong>
                           {origin.effects && (
                             <div className="mt-1">
