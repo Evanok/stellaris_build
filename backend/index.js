@@ -151,6 +151,24 @@ app.post('/api/builds', (req, res) => {
   });
 });
 
+// Delete a build by ID
+app.delete('/api/builds/:id', (req, res) => {
+  const { id } = req.params;
+  const sql = `DELETE FROM builds WHERE id = ?`;
+
+  db.run(sql, [id], function(err) {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    if (this.changes === 0) {
+      res.status(404).json({ error: 'Build not found.' });
+      return;
+    }
+    res.json({ message: 'Build deleted successfully.', id: parseInt(id) });
+  });
+});
+
 app.listen(port, () => {
   console.log(`Backend server listening on port ${port}`);
 });

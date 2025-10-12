@@ -920,9 +920,40 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     return index >= 0 ? index + 1 : null;
   };
 
+  // Validation function to check if build is complete
+  const isBuildComplete = (): boolean => {
+    return (
+      name.trim() !== '' &&
+      selectedTraits.length > 0 &&
+      selectedOrigin !== '' &&
+      selectedEthics.length > 0 &&
+      selectedAuthority !== '' &&
+      selectedCivics.length > 0
+    );
+  };
+
+  const getMissingFields = (): string[] => {
+    const missing: string[] = [];
+    if (name.trim() === '') missing.push('Build Name');
+    if (selectedTraits.length === 0) missing.push('Species Traits');
+    if (selectedOrigin === '') missing.push('Origin');
+    if (selectedEthics.length === 0) missing.push('Ethics');
+    if (selectedAuthority === '') missing.push('Authority');
+    if (selectedCivics.length === 0) missing.push('Civics');
+    return missing;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    // Check if build is complete
+    if (!isBuildComplete()) {
+      const missing = getMissingFields();
+      setError(`Please complete the following required fields: ${missing.join(', ')}`);
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -1729,7 +1760,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary" disabled={submitting || hasInvalidTraits || exceedsEthicsPoints}>
+          <button type="submit" className="btn btn-primary" disabled={submitting || hasInvalidTraits || exceedsEthicsPoints || !isBuildComplete()}>
             {submitting ? 'Submitting...' : 'Submit Build'}
           </button>
           {hasInvalidTraits && (
@@ -1737,6 +1768,9 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           )}
           {exceedsEthicsPoints && (
             <small className="text-danger ms-2">Cannot submit: ethics points exceeded</small>
+          )}
+          {!isBuildComplete() && !hasInvalidTraits && !exceedsEthicsPoints && (
+            <small className="text-warning ms-2">Please fill all required fields: {getMissingFields().join(', ')}</small>
           )}
         </form>
       </div>
