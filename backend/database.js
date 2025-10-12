@@ -80,6 +80,20 @@ const setupDatabase = () => {
       }
     });
 
+    // Add deleted column if it doesn't exist (for soft delete functionality)
+    db.run(`ALTER TABLE builds ADD COLUMN deleted INTEGER DEFAULT 0`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding deleted column:', err.message);
+      }
+    });
+
+    // Add youtube_url column if it doesn't exist (for YouTube video links)
+    db.run(`ALTER TABLE builds ADD COLUMN youtube_url TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding youtube_url column:', err.message);
+      }
+    });
+
     console.log('Database tables checked/created.');
   });
 };

@@ -6,6 +6,7 @@ interface Build {
   name: string;
   description: string;
   game_version: string;
+  youtube_url?: string;
   origin: string;
   authority: string;
   ethics: string;
@@ -127,6 +128,10 @@ export const BuildDetail: React.FC = () => {
   // Image error states
   const [originImageError, setOriginImageError] = useState(false);
 
+  // Delete state
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
   useEffect(() => {
     if (!id) return;
 
@@ -189,6 +194,17 @@ export const BuildDetail: React.FC = () => {
     return str.split(',').map(s => s.trim()).filter(s => s);
   };
 
+  // Extract YouTube video ID from various URL formats
+  const getYoutubeVideoId = (url: string): string | null => {
+    if (!url) return null;
+
+    // Regular YouTube URLs: https://www.youtube.com/watch?v=VIDEO_ID
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
   const getTraitData = (traitId: string) => allTraits.find(t => t.id === traitId);
   const getOriginData = (originId: string) => allOrigins.find(o => o.id === originId);
   const getEthicData = (ethicId: string) => allEthics.find(e => e.id === ethicId);
@@ -197,6 +213,32 @@ export const BuildDetail: React.FC = () => {
   const getAscensionPerkData = (perkId: string) => allAscensionPerks.find(p => p.id === perkId);
   const getTraditionData = (treeId: string) => allTraditionTrees.find(t => t.name === treeId);
   const getRulerTraitData = (traitId: string) => allRulerTraits.find(t => t.id === traitId);
+
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this build? This action cannot be undone.')) {
+      return;
+    }
+
+    setDeleting(true);
+    setDeleteError(null);
+
+    try {
+      const response = await fetch(`/api/builds/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to delete build');
+      }
+
+      // Redirect to home after successful deletion
+      navigate('/');
+    } catch (err: any) {
+      setDeleteError(err.message);
+      setDeleting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -261,6 +303,34 @@ export const BuildDetail: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* YouTube Video */}
+      {build.youtube_url && (() => {
+        const videoId = getYoutubeVideoId(build.youtube_url);
+        if (!videoId) return null;
+
+        return (
+          <div className="card bg-dark border-secondary mb-4">
+            <div className="card-header bg-secondary">
+              <h4 className="mb-0 text-white">
+                <i className="bi bi-play-circle me-2"></i>
+                Video Presentation
+              </h4>
+            </div>
+            <div className="card-body">
+              <div className="ratio ratio-16x9">
+                <iframe
+                  src={`https://www.youtube.com/embed/${videoId}`}
+                  title="YouTube video player"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ borderRadius: '8px' }}
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       <div className="row">
         {/* Left Column */}
@@ -641,10 +711,23 @@ export const BuildDetail: React.FC = () => {
       {/* Actions */}
       <div className="row mb-4">
         <div className="col-12">
-          <Link to="/" className="btn btn-secondary btn-lg">
+          <Link to="/" className="btn btn-secondary btn-lg me-3">
             <i className="bi bi-arrow-left me-2"></i>
             Back to Builds
           </Link>
+          <button
+            onClick={handleDelete}
+            className="btn btn-danger btn-lg"
+            disabled={deleting}
+          >
+            <i className="bi bi-trash me-2"></i>
+            {deleting ? 'Deleting...' : 'Delete Build'}
+          </button>
+          {deleteError && (
+            <div className="alert alert-danger mt-3">
+              <strong>Error:</strong> {deleteError}
+            </div>
+          )}
         </div>
       </div>
     </div>

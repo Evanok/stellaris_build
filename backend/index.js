@@ -102,9 +102,9 @@ app.get('/api/ruler-traits', (req, res) => {
   });
 });
 
-// Get all builds
+// Get all builds (excluding soft-deleted ones)
 app.get('/api/builds', (req, res) => {
-  const sql = "SELECT * FROM builds ORDER BY created_at DESC";
+  const sql = "SELECT * FROM builds WHERE deleted = 0 ORDER BY created_at DESC";
   db.all(sql, [], (err, rows) => {
     if (err) {
       res.status(500).json({ error: err.message });
@@ -116,7 +116,7 @@ app.get('/api/builds', (req, res) => {
 
 // Create a new build
 app.post('/api/builds', (req, res) => {
-  const { name, description, game_version, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags } = req.body;
+  const { name, description, game_version, youtube_url, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags } = req.body;
   if (!name) {
     return res.status(400).json({ error: 'Build name is required.' });
   }
@@ -131,8 +131,8 @@ app.post('/api/builds', (req, res) => {
     }
 
     // If no duplicate, proceed with insert
-    const sql = `INSERT INTO builds (name, description, game_version, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    const params = [name, description, game_version, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags];
+    const sql = `INSERT INTO builds (name, description, game_version, youtube_url, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const params = [name, description, game_version, youtube_url, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags];
 
     db.run(sql, params, function(err) {
       if (err) {
@@ -151,10 +151,10 @@ app.post('/api/builds', (req, res) => {
   });
 });
 
-// Delete a build by ID
+// Soft delete a build by ID
 app.delete('/api/builds/:id', (req, res) => {
   const { id } = req.params;
-  const sql = `DELETE FROM builds WHERE id = ?`;
+  const sql = `UPDATE builds SET deleted = 1 WHERE id = ? AND deleted = 0`;
 
   db.run(sql, [id], function(err) {
     if (err) {
@@ -162,7 +162,7 @@ app.delete('/api/builds/:id', (req, res) => {
       return;
     }
     if (this.changes === 0) {
-      res.status(404).json({ error: 'Build not found.' });
+      res.status(404).json({ error: 'Build not found or already deleted.' });
       return;
     }
     res.json({ message: 'Build deleted successfully.', id: parseInt(id) });

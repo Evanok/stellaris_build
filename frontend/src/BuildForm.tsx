@@ -200,6 +200,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [game_version, setGameVersion] = useState('4.14');
+  const [youtube_url, setYoutubeUrl] = useState('');
   const [dlcs, setDlcs] = useState('');
   const [tags, setTags] = useState('');
   const [speciesType, setSpeciesType] = useState<string>('BIOLOGICAL');
@@ -966,6 +967,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           name,
           description,
           game_version,
+          youtube_url,
           civics: selectedCivics.join(', '), // Convert array to comma-separated string
           dlcs,
           tags,
@@ -992,6 +994,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
       setName('');
       setDescription('');
       setGameVersion('4.14'); // Reset to latest version
+      setYoutubeUrl('');
       setDlcs('');
       setTags('');
       setSelectedTraits([]);
@@ -1025,6 +1028,21 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           <div className="mb-3">
             <label htmlFor="buildDescription" className="form-label">Description</label>
             <textarea className="form-control bg-secondary text-white border-secondary" id="buildDescription" rows={3} value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="youtubeUrl" className="form-label">
+              YouTube Video URL (Optional)
+              <small className="text-muted d-block">Link to a YouTube video presenting this build</small>
+            </label>
+            <input
+              type="url"
+              className="form-control bg-secondary text-white border-secondary"
+              id="youtubeUrl"
+              value={youtube_url}
+              onChange={(e) => setYoutubeUrl(e.target.value)}
+              placeholder="https://www.youtube.com/watch?v=..."
+            />
           </div>
 
           <div className="mb-3">
