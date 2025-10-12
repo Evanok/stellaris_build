@@ -36,6 +36,10 @@ yarn-error.log*
 *.sqlite3
 stellaris_builds.db
 
+# Backups
+backups/
+backup.log
+
 # Data extractor output
 data-extractor/output/
 
