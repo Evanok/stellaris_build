@@ -88,6 +88,7 @@ interface Origin {
   name: string;
   description: string;
   effects: string;
+  potential: any[]; // Conditions that filter visibility (e.g., species_archetype)
   possible: any[];
   playable_conditions?: string;
   is_origin: boolean;
@@ -690,8 +691,33 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     return true;
   });
 
-  // Filter origins based on search query
+  // Filter origins based on species type and search query
   const filteredOrigins = allOrigins.filter(origin => {
+    // Check species archetype potential conditions
+    if (origin.potential && origin.potential.length > 0) {
+      for (const condition of origin.potential) {
+        if (typeof condition === 'string' && condition.includes('species_archetype:')) {
+          // Handle NOT species_archetype conditions
+          if (condition.startsWith('NOT species_archetype:')) {
+            const archetype = condition.replace('NOT species_archetype:', '');
+            // If current species type matches the NOT condition, exclude this origin
+            if (speciesType === archetype) {
+              return false;
+            }
+          }
+          // Handle positive species_archetype conditions
+          else if (condition.startsWith('species_archetype:')) {
+            const archetype = condition.replace('species_archetype:', '');
+            // If current species type doesn't match the positive condition, exclude this origin
+            if (speciesType !== archetype) {
+              return false;
+            }
+          }
+        }
+      }
+    }
+
+    // Filter by search query
     if (originSearchQuery) {
       const query = originSearchQuery.toLowerCase();
       return (
