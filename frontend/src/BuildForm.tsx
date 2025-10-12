@@ -164,6 +164,21 @@ interface TraditionTree {
   traditions: any[];
 }
 
+interface RulerTrait {
+  id: string;
+  name: string;
+  description: string;
+  cost: number;
+  leader_class: string[];
+  effects: string;
+  councilor_modifier?: {
+    [key: string]: number;
+  };
+  forbidden_origins: string[];
+  allowed_ethics: string[];
+  icon?: string;
+}
+
 // Stellaris 4.X base rules (can be modified by origins)
 const BASE_MAX_TRAIT_POINTS = 2;
 const BASE_MAX_TRAIT_COUNT = 5;
@@ -222,6 +237,10 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   const [allTraditionTrees, setAllTraditionTrees] = useState<TraditionTree[]>([]);
   const [selectedTraditions, setSelectedTraditions] = useState<string[]>([]);
   const [traditionsSearchQuery, setTraditionsSearchQuery] = useState('');
+
+  // Ruler traits data from API
+  const [allRulerTraits, setAllRulerTraits] = useState<RulerTrait[]>([]);
+  const [selectedRulerTrait, setSelectedRulerTrait] = useState<string>('');
 
   // UI state
   const [error, setError] = useState<string | null>(null);
@@ -387,6 +406,26 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
         setAllTraditionTrees(trees);
       })
       .catch(() => setError('Could not load traditions data.'));
+
+    // Load ruler traits
+    fetch('/api/ruler-traits')
+      .then(res => res.json())
+      .then(data => {
+        // Filter and sanitize ruler traits
+        const sanitizedTraits = data
+          .map((trait: any) => ({
+            ...trait,
+            effects: typeof trait.effects === 'string' ? trait.effects : '',
+            description: typeof trait.description === 'string' ? trait.description : '',
+            leader_class: Array.isArray(trait.leader_class) ? trait.leader_class : [],
+            forbidden_origins: Array.isArray(trait.forbidden_origins) ? trait.forbidden_origins : [],
+            allowed_ethics: Array.isArray(trait.allowed_ethics) ? trait.allowed_ethics : [],
+          }))
+          .sort((a: any, b: any) => a.id.localeCompare(b.id));
+
+        setAllRulerTraits(sanitizedTraits);
+      })
+      .catch(() => setError('Could not load ruler traits data.'));
   }, []);
 
   // Validate authority when ethics change
@@ -776,6 +815,27 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     return true;
   });
 
+  // Filter ruler traits based on origin and ethics
+  const filteredRulerTraits = allRulerTraits.filter(trait => {
+    // Check forbidden origins
+    if (selectedOrigin && trait.forbidden_origins.includes(selectedOrigin)) {
+      return false;
+    }
+
+    // Check allowed ethics (for gestalt-only traits)
+    if (trait.allowed_ethics.length > 0) {
+      // If trait has allowed_ethics, at least one must be selected
+      const hasAllowedEthic = trait.allowed_ethics.some(ethic =>
+        selectedEthics.includes(ethic)
+      );
+      if (!hasAllowedEthic) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
   const handleTraitChange = (traitId: string) => {
     const trait = allTraits.find(t => t.id === traitId);
     if (!trait) return;
@@ -883,7 +943,8 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           ethics: selectedEthics.join(', '), // Convert array to comma-separated string
           authority: selectedAuthority,
           ascension_perks: selectedAscensionPerks.join(', '), // Convert array to comma-separated string
-          traditions: selectedTraditions.join(', ') // Convert array to comma-separated string
+          traditions: selectedTraditions.join(', '), // Convert array to comma-separated string
+          ruler_trait: selectedRulerTrait
         }),
       });
 
@@ -909,6 +970,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
       setSelectedCivics([]);
       setSelectedAscensionPerks([]);
       setSelectedTraditions([]);
+      setSelectedRulerTrait('');
 
     } catch (err: any) {
       setError(err.message);
@@ -1151,6 +1213,75 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                   })
                 ) : (
                   <p className="text-center text-muted">No origins match your search.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Starting Ruler Trait Selection */}
+          <div className="mb-3">
+            <label className="form-label">
+              Starting Ruler Trait {selectedRulerTrait && <span className="badge bg-success ms-2">Selected</span>}
+            </label>
+
+            <div className="card bg-secondary" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+              <div className="card-body">
+                {filteredRulerTraits.length > 0 ? (
+                  filteredRulerTraits.map(trait => {
+                    const isSelected = selectedRulerTrait === trait.id;
+                    return (
+                      <div
+                        key={trait.id}
+                        className={`form-check mb-2 pb-2 border-bottom border-dark ${isSelected ? 'bg-primary bg-opacity-25' : ''}`}
+                      >
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          id={`ruler-trait-${trait.id}`}
+                          name="ruler_trait"
+                          checked={isSelected}
+                          onChange={() => setSelectedRulerTrait(trait.id)}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor={`ruler-trait-${trait.id}`}
+                          style={{ cursor: 'pointer' }}
+                          title={trait.description || 'No description available'}
+                        >
+                          {trait.icon && (
+                            <img
+                              src={trait.icon}
+                              alt=""
+                              width={32}
+                              height={32}
+                              style={{ marginRight: '8px', verticalAlign: 'middle' }}
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                              }}
+                            />
+                          )}
+                          <strong className="text-white">{trait.name || trait.id}</strong>
+                          {trait.leader_class && trait.leader_class.length > 0 && (
+                            <span className="ms-2">
+                              {trait.leader_class.map((cls: string, idx: number) => (
+                                <span key={idx} className="badge bg-secondary me-1">{cls}</span>
+                              ))}
+                            </span>
+                          )}
+                          <div className="mt-1">
+                            <small className="text-light d-block">{trait.description}</small>
+                          </div>
+                          {trait.effects && (
+                            <div className="mt-1">
+                              <small className="text-info d-block"><strong>Effects:</strong> {trait.effects}</small>
+                            </div>
+                          )}
+                        </label>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-center text-muted">No ruler traits available.</p>
                 )}
               </div>
             </div>

@@ -73,6 +73,13 @@ const setupDatabase = () => {
       }
     });
 
+    // Add ruler_trait column if it doesn't exist (for existing databases)
+    db.run(`ALTER TABLE builds ADD COLUMN ruler_trait TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding ruler_trait column:', err.message);
+      }
+    });
+
     console.log('Database tables checked/created.');
   });
 };
