@@ -2,6 +2,8 @@
 
 Community-driven web platform for sharing, discovering, and optimizing Stellaris empire builds.
 
+🌐 **Live Site:** https://stellaris-build.com
+
 ---
 
 ## Current Implementation Status
@@ -14,16 +16,21 @@ This project is currently in active development with the following features impl
   - Species type selection (Biological, Lithoid, Machine, Robot)
   - Species traits with point/pick validation
   - Origins with trait bonuses
+  - Starting ruler traits
   - Ethics with point limits and compatibility checks
   - Authorities with ethics requirements
   - Civics with conditional filtering
   - Recommended Ascension Perks (with ordering)
   - Recommended Tradition Trees (with ordering)
   - Game version tracking
+  - Optional YouTube video link
 
-- **Build Display**: View submitted builds with all details
+- **Build Display**: View submitted builds with all details and embedded YouTube videos
+- **Build Management**: Soft delete functionality (builds are hidden, not permanently deleted)
+- **Search & Filtering**: Search builds by name, origin, ethics, and tags
+- **Pagination**: Browse builds with paginated results
 - **Data Extraction**: Automated extraction from Stellaris game files with full localization
-- **Tooltips**: Hover descriptions for all game elements
+- **Production Deployment**: Fully deployed with HTTPS, auto-restart, and SSL certificates
 
 ### 🚧 Planned Features
 
@@ -45,6 +52,8 @@ This project is currently in active development with the following features impl
 - **Build Tool:** Vite
 - **Architecture:** Monorepo with npm workspaces
 - **Data Extraction:** Python 3 (custom Paradox file parser)
+- **Deployment:** PM2 + nginx + Let's Encrypt SSL
+- **Hosting:** Dedicated server (Scaleway Dedibox)
 
 ---
 
@@ -151,6 +160,37 @@ npm run build -w frontend
 # The backend serves the built frontend in production
 ```
 
+### Deployment (Production Server)
+
+The site is deployed on a dedicated server with the following setup:
+
+```bash
+# On the production server
+
+# 1. Update code
+cd ~/work/stellaris_build
+git pull
+npm install
+
+# 2. Rebuild frontend
+npm run build -w frontend
+
+# 3. Restart backend (PM2)
+pm2 restart stellaris-build
+
+# Useful PM2 commands:
+pm2 status                    # Check app status
+pm2 logs stellaris-build      # View logs
+pm2 restart stellaris-build   # Restart app
+pm2 stop stellaris-build      # Stop app
+```
+
+**Production Stack:**
+- **Process Manager:** PM2 (auto-restart on crash, startup on boot)
+- **Reverse Proxy:** nginx (serves static files, proxies API)
+- **SSL/TLS:** Let's Encrypt (auto-renewed every 90 days)
+- **Domain:** https://stellaris-build.com
+
 ---
 
 ## Data Extraction
@@ -187,8 +227,10 @@ All data includes:
 | `/api/civics` | GET | Get all civics |
 | `/api/ascension-perks` | GET | Get all ascension perks |
 | `/api/traditions` | GET | Get all tradition trees |
-| `/api/builds` | GET | Get all builds |
+| `/api/ruler-traits` | GET | Get all ruler traits |
+| `/api/builds` | GET | Get all builds (excludes soft-deleted) |
 | `/api/builds` | POST | Create a new build |
+| `/api/builds/:id` | DELETE | Soft delete a build (sets deleted flag) |
 
 ---
 
@@ -229,16 +271,18 @@ The project uses **SQLite** with the following schema:
 - `name`
 - `description`
 - `game_version` (Stellaris version)
-- `species_type` (BIOLOGICAL, LITHOID, MACHINE, ROBOT)
+- `youtube_url` (optional YouTube video link)
 - `origin` (origin ID)
 - `ethics` (comma-separated IDs)
 - `authority` (authority ID)
 - `civics` (comma-separated IDs)
 - `traits` (comma-separated IDs)
+- `ruler_trait` (starting ruler trait ID)
 - `ascension_perks` (comma-separated, ordered)
 - `traditions` (comma-separated, ordered)
 - `dlcs` (required DLCs)
 - `tags` (comma-separated)
+- `deleted` (soft delete flag, 0 = visible, 1 = hidden)
 - `author_id` (foreign key to users)
 - `created_at`
 - `updated_at`

@@ -6,10 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a community website for sharing Stellaris (game) builds. It's a monorepo with a React frontend, Express backend, and Python data extraction tools.
 
+**Live Site:** https://stellaris-build.com
+
 **Tech Stack:**
 - Frontend: React 18 + TypeScript + Vite + Bootstrap 5
 - Backend: Express 5 + SQLite3
 - Data Extraction: Python 3 (custom Paradox file parser)
+- Deployment: PM2 + nginx + Let's Encrypt SSL
+- Hosting: Scaleway Dedibox
 - Monorepo managed with npm workspaces
 
 ## Development Commands
@@ -46,6 +50,34 @@ npm run lint -w frontend
 npm run preview -w frontend
 ```
 
+### Production Deployment
+
+```bash
+# On production server (stellaris-build.com)
+
+# 1. Update code
+cd ~/work/stellaris_build
+git pull
+npm install
+
+# 2. Rebuild frontend (REQUIRED for frontend changes)
+npm run build -w frontend
+
+# 3. Restart backend
+pm2 restart stellaris-build
+
+# Useful commands:
+pm2 status                  # Check app status
+pm2 logs stellaris-build    # View logs
+pm2 restart stellaris-build # Restart (backend changes only)
+sudo systemctl restart nginx # Restart nginx (if config changed)
+```
+
+**Important:**
+- Frontend changes require `npm run build -w frontend` before restart
+- Backend changes only need `pm2 restart stellaris-build`
+- Database is at `/home/arthur/work/stellaris_build/backend/stellaris_builds.db`
+
 ## Architecture
 
 ### Monorepo Structure
@@ -66,13 +98,20 @@ The project uses npm workspaces with three main parts:
 - Species type selection (Biological, Lithoid, Machine, Robot)
 - Species traits with point/pick validation and origin bonuses
 - Origins with trait bonuses
+- Starting ruler traits (with origin/ethics filtering)
 - Ethics with point limits and compatibility checks
 - Authorities with ethics requirements
 - Civics with conditional filtering (potential/possible)
 - Recommended Ascension Perks with ordering
 - Recommended Tradition Trees with ordering
 - Game version tracking
+- Optional YouTube video link
 - Tooltips with descriptions for all game elements
+
+**Pages:**
+- `Home.tsx` - Displays all builds with search, filtering, and pagination
+- `Create.tsx` - Build creation page with BuildForm
+- `BuildDetail.tsx` - Individual build view with all details, embedded YouTube videos, and soft delete button
 
 **Data Flow:**
 - API calls to `/api/*` endpoints are proxied to backend via Vite config (vite.config.ts:9-14)
@@ -85,12 +124,15 @@ The project uses npm workspaces with three main parts:
 - Express server running on port 3001 (configurable via PORT env var)
 - Sets up database on startup via `setupDatabase()`
 - Serves static JSON data files from `backend/data/`
+- Serves compiled frontend from `frontend/dist/` in production
+- All non-API routes fallback to `index.html` for React Router
 
 **Database:** `backend/database.js`
 - SQLite database stored at `./stellaris_builds.db` (created at runtime)
 - Two tables: `users` and `builds`
-- Builds table stores complete empire configurations
+- Builds table stores complete empire configurations with soft delete support
 - Currently users table exists but authentication not implemented
+- Schema uses ALTER TABLE for migrations to add new columns without breaking existing data
 
 **API Endpoints:**
 - `GET /api/test` - Health check
@@ -101,8 +143,10 @@ The project uses npm workspaces with three main parts:
 - `GET /api/civics` - Returns civics (207 playable)
 - `GET /api/ascension-perks` - Returns ascension perks (44 player-available)
 - `GET /api/traditions` - Returns tradition trees (32 trees)
-- `GET /api/builds` - Returns all builds ordered by created_at DESC
-- `POST /api/builds` - Creates new build (requires name field)
+- `GET /api/ruler-traits` - Returns ruler traits filtered by origin/ethics compatibility
+- `GET /api/builds` - Returns all non-deleted builds ordered by created_at DESC
+- `POST /api/builds` - Creates new build (requires name, checks for duplicates)
+- `DELETE /api/builds/:id` - Soft deletes a build (sets deleted=1)
 
 **Static Data Files (backend/data/):**
 All data is fully localized (English) with clean names and descriptions:
@@ -113,6 +157,7 @@ All data is fully localized (English) with clean names and descriptions:
 - `civics.json` - 207 civics (filtered, no NPC civics)
 - `ascension_perks.json` - 44 perks (player-available only)
 - `traditions.json` - 32 tradition trees with adopt/finish/individual traditions
+- `ruler_traits.json` - Ruler/leader traits for starting leaders
 
 ### Data Extractor (data-extractor/)
 
@@ -171,10 +216,14 @@ cp output/traditions_by_tree.json ../backend/data/traditions.json
    - `civics`: "civic_police_state,civic_technocracy"
    - `ascension_perks`: "ap_technological_ascendancy,ap_master_builders" (ordered)
    - `traditions`: "tr_expansion,tr_supremacy,tr_prosperity" (ordered)
+   - `ruler_trait`: "leader_trait_spark_of_genius" (single value)
+   - `youtube_url`: Full YouTube URL (optional)
 
-4. **No Authentication Yet**: The users table exists but there's no auth implementation. Builds are created without author_id.
+4. **Soft Delete**: Builds have a `deleted` column (0=visible, 1=hidden). Deleted builds stay in the database for potential recovery.
 
-5. **Nodemon Limitation**: Backend nodemon only watches `.js` files. If you update JSON data files in `backend/data/`, you must manually restart the backend.
+5. **No Authentication Yet**: The users table exists but there's no auth implementation. Builds are created without author_id.
+
+6. **Nodemon Limitation**: Backend nodemon only watches `.js` files. If you update JSON data files in `backend/data/`, you must manually restart the backend.
 
 ## Common Patterns
 
