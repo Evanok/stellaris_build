@@ -16,7 +16,6 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_desert_habitability": "@primary",
       "pc_arid_habitability": "@secondary",
@@ -28,6 +27,7 @@
       "pc_ocean_habitability": "@tertiary",
       "pc_alpine_habitability": "@tertiary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -48,7 +48,6 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_arid_habitability": "@primary",
       "pc_desert_habitability": "@secondary",
@@ -60,6 +59,7 @@
       "pc_ocean_habitability": "@tertiary",
       "pc_alpine_habitability": "@tertiary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -80,7 +80,6 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_savannah_habitability": "@primary",
       "pc_desert_habitability": "@secondary",
@@ -92,6 +91,7 @@
       "pc_ocean_habitability": "@tertiary",
       "pc_alpine_habitability": "@tertiary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -112,7 +112,6 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_tropical_habitability": "@primary",
       "pc_continental_habitability": "@secondary",
@@ -124,6 +123,7 @@
       "pc_alpine_habitability": "@tertiary",
       "pc_savannah_habitability": "@tertiary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -144,7 +144,6 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_continental_habitability": "@primary",
       "pc_tropical_habitability": "@secondary",
@@ -156,6 +155,7 @@
       "pc_alpine_habitability": "@tertiary",
       "pc_savannah_habitability": "@tertiary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -176,7 +176,6 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_ocean_habitability": "@primary",
       "pc_continental_habitability": "@secondary",
@@ -188,6 +187,7 @@
       "pc_alpine_habitability": "@tertiary",
       "pc_savannah_habitability": "@tertiary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -208,7 +208,6 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_arctic_habitability": "@primary",
       "pc_tundra_habitability": "@secondary",
@@ -220,6 +219,7 @@
       "pc_arid_habitability": "@tertiary",
       "pc_savannah_habitability": "@tertiary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -240,7 +240,6 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_tundra_habitability": "@primary",
       "pc_arctic_habitability": "@secondary",
@@ -252,6 +251,7 @@
       "pc_arid_habitability": "@tertiary",
       "pc_savannah_habitability": "@tertiary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -272,7 +272,6 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_alpine_habitability": "@primary",
       "pc_arctic_habitability": "@secondary",
@@ -284,6 +283,7 @@
       "pc_arid_habitability": "@tertiary",
       "pc_savannah_habitability": "@tertiary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -304,7 +304,6 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "pc_ai_habitability: +1.0; pc_desert_habitability: +0.01; pc_tropical_habitability: +0.01; pc_continental_habitability: +0.01; pc_ocean_habitability: +0.01; pc_alpine_habitability: +0.01; pc_arctic_habitability: +0.01; pc_tundra_habitability: +0.01; pc_arid_habitability: +0.01; pc_savannah_habitability: +0.01",
     "modifier": {
       "pc_ai_habitability": 1.0,
       "pc_desert_habitability": 0.01,
@@ -317,6 +316,7 @@
       "pc_arid_habitability": 0.01,
       "pc_savannah_habitability": 0.01
     },
+    "effects": "pc_ai_habitability: +1.0; pc_desert_habitability: +0.01; pc_tropical_habitability: +0.01; pc_continental_habitability: +0.01; pc_ocean_habitability: +0.01; pc_alpine_habitability: +0.01; pc_arctic_habitability: +0.01; pc_tundra_habitability: +0.01; pc_arid_habitability: +0.01; pc_savannah_habitability: +0.01",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -337,7 +337,6 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_nuked_habitability": "@primary",
       "pc_desert_habitability": "@secondary",
@@ -350,6 +349,7 @@
       "pc_savannah_habitability": "@secondary",
       "pc_alpine_habitability": "@secondary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -370,10 +370,10 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "pc_gaia_habitability: +1.0",
     "modifier": {
       "pc_gaia_habitability": 1.0
     },
+    "effects": "pc_gaia_habitability: +1.0",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -394,10 +394,10 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "pc_ringworld_habitable_habitability: +1.0",
     "modifier": {
       "pc_ringworld_habitable_habitability": 1.0
     },
+    "effects": "pc_ringworld_habitable_habitability: +1.0",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -418,10 +418,10 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_habitat_habitability": "@primary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -442,10 +442,10 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "pc_machine_habitability: +1.0",
     "modifier": {
       "pc_machine_habitability": 1.0
     },
+    "effects": "pc_machine_habitability: +1.0",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -466,10 +466,10 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "pc_hive_habitability: +1.0",
     "modifier": {
       "pc_hive_habitability": 1.0
     },
+    "effects": "pc_hive_habitability: +1.0",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -490,10 +490,10 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_relic_habitability": "@primary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -514,10 +514,10 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "pc_ringworld_habitable_habitability: +1.0",
     "modifier": {
       "pc_ringworld_habitable_habitability": 1.0
     },
+    "effects": "pc_ringworld_habitable_habitability: +1.0",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -538,10 +538,10 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "pc_gaia_habitability: +1.0",
     "modifier": {
       "pc_gaia_habitability": 1.0
     },
+    "effects": "Pop Output on Gaia Worlds: +5% | pc_gaia_habitability: +1.0",
     "custom_tooltip": "gaia_preference_terraforming_trait_tooltip",
     "slave_cost": {}
   },
@@ -562,10 +562,10 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_city_habitability": "@primary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -585,7 +585,6 @@
       "ROBOT"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_desert_habitability": "@machine_primary",
       "pc_arid_habitability": "@machine_primary",
@@ -597,6 +596,7 @@
       "pc_alpine_habitability": "@machine_secondary",
       "pc_tundra_habitability": "@machine_secondary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -616,7 +616,6 @@
       "ROBOT"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_ocean_habitability": "@machine_primary",
       "pc_continental_habitability": "@machine_primary",
@@ -628,6 +627,7 @@
       "pc_alpine_habitability": "@machine_secondary",
       "pc_tundra_habitability": "@machine_secondary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -647,7 +647,6 @@
       "ROBOT"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_arctic_habitability": "@machine_primary",
       "pc_alpine_habitability": "@machine_primary",
@@ -659,6 +658,7 @@
       "pc_continental_habitability": "@machine_secondary",
       "pc_tropical_habitability": "@machine_secondary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -678,10 +678,10 @@
       "ROBOT"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_habitat_habitability": "@primary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -704,10 +704,10 @@
       "ROBOT"
     ],
     "tags": [],
-    "effects": "pc_cosmogenesis_world_habitability: +1.0",
     "modifier": {
       "pc_cosmogenesis_world_habitability": 1.0
     },
+    "effects": "pc_cosmogenesis_world_habitability: +1.0",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -727,10 +727,10 @@
       "MACHINE"
     ],
     "tags": [],
-    "effects": "pc_gaia_habitability: +1.0",
     "modifier": {
       "pc_gaia_habitability": 1.0
     },
+    "effects": "pc_gaia_habitability: +1.0",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -750,10 +750,10 @@
       "MACHINE"
     ],
     "tags": [],
-    "effects": "pc_machine_habitability: +1.0",
     "modifier": {
       "pc_machine_habitability": 1.0
     },
+    "effects": "pc_machine_habitability: +1.0",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -773,10 +773,10 @@
       "MACHINE"
     ],
     "tags": [],
-    "effects": "pc_ringworld_habitable_habitability: +1.0",
     "modifier": {
       "pc_ringworld_habitable_habitability": 1.0
     },
+    "effects": "pc_ringworld_habitable_habitability: +1.0",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -796,10 +796,10 @@
       "MACHINE"
     ],
     "tags": [],
-    "effects": "pc_ringworld_habitable_habitability: +1.0",
     "modifier": {
       "pc_ringworld_habitable_habitability": 1.0
     },
+    "effects": "pc_ringworld_habitable_habitability: +1.0",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -823,10 +823,10 @@
       ]
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_relic_habitability": "@primary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -846,7 +846,6 @@
       "MACHINE"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_nuked_habitability": "@primary",
       "pc_desert_habitability": "@secondary",
@@ -859,6 +858,7 @@
       "pc_savannah_habitability": "@secondary",
       "pc_alpine_habitability": "@secondary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -878,7 +878,6 @@
       "MACHINE"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_nanotech_habitability": "@primary",
       "pc_desert_habitability": "@secondary",
@@ -891,6 +890,7 @@
       "pc_savannah_habitability": "@secondary",
       "pc_alpine_habitability": "@secondary"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -911,7 +911,6 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_desert_habitability": "@auto_base",
       "pc_arid_habitability": "@auto_base",
@@ -924,7 +923,8 @@
       "pc_alpine_habitability": "@auto_base",
       "pc_nuked_habitability": "@auto_base"
     },
-    "custom_tooltip": "",
+    "effects": "['concept_automodding_habitability', Auto-Modding Habitability Preference Traits] automatically adjust to the Planet Class a Pops currently lives on.  Mutagenic Habitability picks modifiers from the .",
+    "custom_tooltip": "trait_auto_hab_preference_tt_desc",
     "slave_cost": {}
   },
   {
@@ -940,7 +940,6 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_desert_habitability": "@auto_penalty",
       "pc_arid_habitability": "@auto_penalty",
@@ -953,6 +952,7 @@
       "pc_alpine_habitability": "@auto_penalty",
       "pc_nuked_habitability": "@auto_penalty"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -969,7 +969,6 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_desert_habitability": "@auto_penalty",
       "pc_arid_habitability": "@auto_penalty",
@@ -982,6 +981,7 @@
       "pc_alpine_habitability": "@auto_bonus",
       "pc_nuked_habitability": "@auto_penalty"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -998,7 +998,6 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_desert_habitability": "@auto_bonus",
       "pc_arid_habitability": "@auto_bonus",
@@ -1011,6 +1010,7 @@
       "pc_alpine_habitability": "@auto_penalty",
       "pc_nuked_habitability": "@auto_penalty"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -1027,7 +1027,6 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_desert_habitability": "@auto_penalty",
       "pc_arid_habitability": "@auto_penalty",
@@ -1040,6 +1039,7 @@
       "pc_alpine_habitability": "@auto_penalty",
       "pc_nuked_habitability": "@auto_bonus"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -1056,7 +1056,6 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_desert_habitability": "@auto_penalty",
       "pc_arid_habitability": "@auto_penalty",
@@ -1071,6 +1070,7 @@
       "pc_nuked_habitability": "@auto_penalty",
       "pc_habitat_habitability": "@auto_penalty"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -1087,7 +1087,6 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_desert_habitability": "@auto_penalty",
       "pc_arid_habitability": "@auto_penalty",
@@ -1101,6 +1100,7 @@
       "pc_nuked_habitability": "@auto_penalty",
       "pc_habitat_habitability": "@auto_base"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -1117,7 +1117,6 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_desert_habitability": "@auto_penalty",
       "pc_arid_habitability": "@auto_penalty",
@@ -1131,6 +1130,7 @@
       "pc_city_habitability": "@auto_ideal_bonus",
       "pc_nuked_habitability": "@auto_penalty"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -1147,7 +1147,6 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_desert_habitability": "@auto_penalty",
       "pc_arid_habitability": "@auto_penalty",
@@ -1161,6 +1160,7 @@
       "pc_relic_habitability": "@auto_ideal_bonus",
       "pc_nuked_habitability": "@auto_penalty"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -1177,7 +1177,6 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_desert_habitability": "@auto_penalty",
       "pc_arid_habitability": "@auto_penalty",
@@ -1191,6 +1190,7 @@
       "pc_hive_habitability": "@auto_ideal_bonus",
       "pc_nuked_habitability": "@auto_penalty"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -1211,7 +1211,6 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_desert_habitability": "@auto_penalty",
       "pc_arid_habitability": "@auto_penalty",
@@ -1226,7 +1225,8 @@
       "pc_shattered_ring_habitable_habitability": "@auto_ideal_bonus",
       "pc_nuked_habitability": "@auto_penalty"
     },
-    "custom_tooltip": "",
+    "effects": "Ring World Habitability: $@auto_ideal_bonus|0%$  - Dry Climate Habitability: $@auto_base_penalty_sum|0%$  - Wet Climate Habitability: $@auto_base_penalty_sum|0%$  - Cold Climate Habitability: $@auto_base_penalty_sum|0%$  - Tomb World Habitability: $@auto_base_penalty_sum|0%$",
+    "custom_tooltip": "trait_auto_pc_ringworld_habitable_preference_tt",
     "slave_cost": {}
   },
   {
@@ -1242,7 +1242,6 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {
       "pc_desert_habitability": "@auto_penalty",
       "pc_arid_habitability": "@auto_penalty",
@@ -1256,6 +1255,7 @@
       "pc_cosmogenesis_world_habitability": "@auto_ideal_bonus",
       "pc_nuked_habitability": "@auto_penalty"
     },
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -1279,8 +1279,8 @@
       "leader",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -1306,12 +1306,12 @@
       "leader",
       "special"
     ],
-    "effects": "pc_machine_habitability: +1; leader_lifespan_add: +20; habitability_floor_add: +0.5",
     "modifier": {
       "pc_machine_habitability": 1,
       "leader_lifespan_add": 20,
       "habitability_floor_add": 0.5
     },
+    "effects": "Starting Age: 5-10 years  - Energy Credits Upkeep per 100 Pops: +$@living_standard_energy_normal|*0$ | pc_machine_habitability: +1; leader_lifespan_add: +20; habitability_floor_add: +0.5 | Triggered: pc_nanotech_habitability: +1",
     "custom_tooltip": "TRAIT_MACHINE_UNIT_EFFECT",
     "slave_cost": {}
   },
@@ -1336,11 +1336,11 @@
       "leader",
       "special"
     ],
-    "effects": "pc_machine_habitability: +1; habitability_floor_add: +0.5",
     "modifier": {
       "pc_machine_habitability": 1,
       "habitability_floor_add": 0.5
     },
+    "effects": "Starting Age: 1-10 years  - Energy Credits Upkeep per 100 Pops: +$@living_standard_energy_normal|*0$ | pc_machine_habitability: +1; habitability_floor_add: +0.5",
     "custom_tooltip": "TRAIT_MECHANICAL_UNIT_EFFECT",
     "slave_cost": {}
   },
@@ -1386,11 +1386,11 @@
       "blocks_leaders",
       "special"
     ],
-    "effects": "pop_happiness: +0.1; worker_and_simple_drone_cat_bonus_workforce_mult: +10.0%",
     "modifier": {
       "pop_happiness": 0.1,
       "worker_and_simple_drone_cat_bonus_workforce_mult": 0.1
     },
+    "effects": "Incompatible with Trait: Machine  Cannot generate Leaders Cannot be employed in Elite or Specialist Jobs | pop_happiness: +0.1; worker_and_simple_drone_cat_bonus_workforce_mult: +10.0%",
     "custom_tooltip": "TRAIT_SYNCRETIC_PROLES_EFFECT",
     "slave_cost": {
       "energy": 500
@@ -1416,8 +1416,8 @@
       "positive",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "Food Upkeep per 100 Pops: +$@living_standard_energy_normal|*0$",
     "custom_tooltip": "TRAIT_ORGANIC_EFFECT",
     "slave_cost": {}
   },
@@ -1445,7 +1445,6 @@
       "lithoid",
       "special"
     ],
-    "effects": "logistic_growth_mult: -25.0%; bonus_pop_growth_mult: -25.0%; pop_environment_tolerance: +0.5; army_health: +0.5; leader_lifespan_add: +50",
     "modifier": {
       "logistic_growth_mult": -0.25,
       "bonus_pop_growth_mult": -0.25,
@@ -1453,6 +1452,7 @@
       "army_health": 0.5,
       "leader_lifespan_add": 50
     },
+    "effects": "Minerals Upkeep per 100 Pops: +$@living_standard_energy_normal|*0$ | logistic_growth_mult: -25.0%; bonus_pop_growth_mult: -25.0%; pop_environment_tolerance: +0.5; army_health: +0.5; leader_lifespan_add: +50 | Triggered: pop_environment_tolerance: +0.5",
     "custom_tooltip": "TRAIT_LITHOID_EFFECT",
     "slave_cost": {}
   },
@@ -1479,10 +1479,10 @@
       "drawbacks",
       "special"
     ],
-    "effects": "pc_ocean_habitability: +0.2",
     "modifier": {
       "pc_ocean_habitability": 0.2
     },
+    "effects": "Housing Usage on Ocean worlds and Flooded Habitats: -10%  - Job Efficiency for Workers & Menial Drones on Ocean worlds: +10%  - Housing Usage on non-Wet worlds: +30%  - Habitability on non-Wet worlds: -20%  The Hydrocentric Ascension Perk amplifies this trait's effects. | pc_ocean_habitability: +0.2 | Triggered: is_ideal: False; pop_environment_tolerance: -0.2; is_ideal: False; pop_environment_tolerance: -0.1; pop_environment_tolerance: +0.2",
     "custom_tooltip": "trait_aquatic_tooltip",
     "slave_cost": {}
   },
@@ -1508,10 +1508,10 @@
       "drawbacks",
       "special"
     ],
-    "effects": "pc_ocean_habitability: +0.2",
     "modifier": {
       "pc_ocean_habitability": 0.2
     },
+    "effects": "Housing Usage on Ocean worlds and Flooded Habitats: -10%  - Job Efficiency for Workers & Menial Drones on Ocean worlds: +10%  - Housing Usage on non-Wet worlds: +30%  - Habitability on non-Wet worlds: -20%  The Hydrocentric Ascension Perk amplifies this trait's effects. | pc_ocean_habitability: +0.2 | Triggered: is_ideal: False; pop_environment_tolerance: -0.2; is_ideal: False; pop_environment_tolerance: -0.1; pop_environment_tolerance: +0.2",
     "custom_tooltip": "trait_robot_aquatic_tooltip",
     "slave_cost": {}
   },
@@ -1542,7 +1542,6 @@
       "drawbacks",
       "special"
     ],
-    "effects": "leader_lifespan_add: +80; logistic_growth_mult: -50.0%; bonus_pop_growth_mult: -50.0%; planet_pops_organics_food_upkeep_mult: -50.0%; planet_pops_organics_minerals_upkeep_mult: -50.0%; planet_pops_organics_energy_upkeep_mult: -50.0%; pop_cat_ruler_bonus_workforce_mult: +5.0%; pop_cat_specialist_bonus_workforce_mult: +5.0%; pop_cat_worker_bonus_workforce_mult: -10.0%",
     "modifier": {
       "leader_lifespan_add": 80,
       "logistic_growth_mult": -0.5,
@@ -1554,6 +1553,7 @@
       "pop_cat_specialist_bonus_workforce_mult": 0.05,
       "pop_cat_worker_bonus_workforce_mult": -0.1
     },
+    "effects": "These Pop Output modifiers do not apply to Hive-minded Pops. | leader_lifespan_add: +80; logistic_growth_mult: -50.0%; bonus_pop_growth_mult: -50.0%; planet_pops_organics_food_upkeep_mult: -50.0%; planet_pops_organics_minerals_upkeep_mult: -50.0%; planet_pops_organics_energy_upkeep_mult: -50.0%; pop_cat_ruler_bonus_workforce_mult: +5.0%; pop_cat_specialist_bonus_workforce_mult: +5.0%; pop_cat_worker_bonus_workforce_mult: -10.0%",
     "custom_tooltip": "trait_necrophage_gestalt_tooltip",
     "slave_cost": {}
   },
@@ -1592,12 +1592,12 @@
       "drawbacks",
       "special"
     ],
-    "effects": "pop_government_ethic_attraction: +0.5; leader_lifespan_add: -40; army_damage_mult: +50.0%",
     "modifier": {
       "pop_government_ethic_attraction": 0.5,
       "leader_lifespan_add": -40,
       "army_damage_mult": 0.5
     },
+    "effects": "pop_government_ethic_attraction: +0.5; leader_lifespan_add: -40; army_damage_mult: +50.0%",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -1637,7 +1637,6 @@
       "drawbacks",
       "special"
     ],
-    "effects": "pop_government_ethic_attraction: +0.5; pop_environment_tolerance: +0.2; pop_cat_ruler_bonus_workforce_mult: +40.0%; specialist_and_complex_drone_cat_bonus_workforce_mult: +25.0%; army_damage_mult: +75.0%; army_health: +0.25",
     "modifier": {
       "pop_government_ethic_attraction": 0.5,
       "pop_environment_tolerance": 0.2,
@@ -1646,6 +1645,7 @@
       "army_damage_mult": 0.75,
       "army_health": 0.25
     },
+    "effects": "pop_government_ethic_attraction: +0.5; pop_environment_tolerance: +0.2; pop_cat_ruler_bonus_workforce_mult: +40.0%; specialist_and_complex_drone_cat_bonus_workforce_mult: +25.0%; army_damage_mult: +75.0%; army_health: +0.25",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -1677,11 +1677,11 @@
       "ethic_attraction",
       "special"
     ],
-    "effects": "pop_government_ethic_attraction: +0.2; army_damage_mult: +20.0%",
     "modifier": {
       "pop_government_ethic_attraction": 0.2,
       "army_damage_mult": 0.2
     },
+    "effects": "pop_government_ethic_attraction: +0.2; army_damage_mult: +20.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1000
@@ -1713,12 +1713,12 @@
       "interesting",
       "special"
     ],
-    "effects": "habitability_floor_add: +0.5; miner_jobs_bonus_workforce_mult: +15.0%; species_empire_size_mult: +10.0%",
     "modifier": {
       "habitability_floor_add": 0.5,
       "miner_jobs_bonus_workforce_mult": 0.15,
       "species_empire_size_mult": 0.1
     },
+    "effects": "Biological Pop Growth Speed: -20% | habitability_floor_add: +0.5; miner_jobs_bonus_workforce_mult: +15.0%; species_empire_size_mult: +10.0% | Triggered: logistic_growth_mult: -20.0%",
     "custom_tooltip": "trait_cave_dweller_tooltip",
     "slave_cost": {
       "energy": 500
@@ -1747,12 +1747,12 @@
       "production",
       "special"
     ],
-    "effects": "habitability_floor_add: +0.5; miner_jobs_bonus_workforce_mult: +15.0%; species_empire_size_mult: +10.0%",
     "modifier": {
       "habitability_floor_add": 0.5,
       "miner_jobs_bonus_workforce_mult": 0.15,
       "species_empire_size_mult": 0.1
     },
+    "effects": "Pop Assembly Speed: -20% | habitability_floor_add: +0.5; miner_jobs_bonus_workforce_mult: +15.0%; species_empire_size_mult: +10.0% | Triggered: planet_pop_assembly_mult: -20.0%",
     "custom_tooltip": "trait_robot_cave_dweller_tooltip",
     "slave_cost": {
       "energy": 500
@@ -1773,12 +1773,12 @@
       "ROBOT"
     ],
     "tags": [],
-    "effects": "specialist_and_complex_drone_cat_bonus_workforce_mult: +25.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -25.0%",
     "modifier": {
       "specialist_and_complex_drone_cat_bonus_workforce_mult": 0.25,
       "worker_and_simple_drone_cat_bonus_workforce_mult": -0.25,
       "shroud_forged_consumer_goods_upkeep": "@living_standard_luxuries_high"
     },
+    "effects": "specialist_and_complex_drone_cat_bonus_workforce_mult: +25.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -25.0% | Triggered: planet_crime_no_happiness_add: +1",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -1807,11 +1807,11 @@
       "drawbacks",
       "special"
     ],
-    "effects": "leader_lifespan_add: +25; species_leader_exp_gain: -0.2",
     "modifier": {
       "leader_lifespan_add": 25,
       "species_leader_exp_gain": -0.2
     },
+    "effects": "leader_lifespan_add: +25; species_leader_exp_gain: -0.2",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -1842,11 +1842,11 @@
       "habitability",
       "presapient"
     ],
-    "effects": "pop_resettlement_cost_mult: -50.0%; pop_environment_tolerance: +0.1",
     "modifier": {
       "pop_resettlement_cost_mult": -0.5,
       "pop_environment_tolerance": 0.1
     },
+    "effects": "pop_resettlement_cost_mult: -50.0%; pop_environment_tolerance: +0.1",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -1877,11 +1877,11 @@
       "army",
       "presapient"
     ],
-    "effects": "technician_jobs_bonus_workforce_mult: +10.0%; army_defense_damage_mult: +50.0%",
     "modifier": {
       "technician_jobs_bonus_workforce_mult": 0.1,
       "army_defense_damage_mult": 0.5
     },
+    "effects": "technician_jobs_bonus_workforce_mult: +10.0%; army_defense_damage_mult: +50.0%",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -1912,12 +1912,12 @@
       "mineral",
       "presapient"
     ],
-    "effects": "bureaucrat_jobs_bonus_workforce_mult: +5.0%; researcher_jobs_bonus_workforce_mult: +10.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -10.0%",
     "modifier": {
       "bureaucrat_jobs_bonus_workforce_mult": 0.05,
       "researcher_jobs_bonus_workforce_mult": 0.1,
       "worker_and_simple_drone_cat_bonus_workforce_mult": -0.1
     },
+    "effects": "bureaucrat_jobs_bonus_workforce_mult: +5.0%; researcher_jobs_bonus_workforce_mult: +10.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -10.0%",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -1948,12 +1948,12 @@
       "research",
       "presapient"
     ],
-    "effects": "army_damage_mult: +10.0%; worker_and_simple_drone_cat_bonus_workforce_mult: +10.0%; researcher_jobs_bonus_workforce_mult: -15.0%",
     "modifier": {
       "army_damage_mult": 0.1,
       "worker_and_simple_drone_cat_bonus_workforce_mult": 0.1,
       "researcher_jobs_bonus_workforce_mult": -0.15
     },
+    "effects": "army_damage_mult: +10.0%; worker_and_simple_drone_cat_bonus_workforce_mult: +10.0%; researcher_jobs_bonus_workforce_mult: -15.0%",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -1981,12 +1981,12 @@
       "leader",
       "presapient"
     ],
-    "effects": "pop_happiness: +0.05; pop_government_ethic_attraction: +0.25; species_leader_exp_gain: -0.5",
     "modifier": {
       "pop_happiness": 0.05,
       "pop_government_ethic_attraction": 0.25,
       "species_leader_exp_gain": -0.5
     },
+    "effects": "pop_happiness: +0.05; pop_government_ethic_attraction: +0.25; species_leader_exp_gain: -0.5",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -2013,11 +2013,11 @@
       "habitability",
       "presapient"
     ],
-    "effects": "pc_nuked_habitability: +1; leader_lifespan_add: +30",
     "modifier": {
       "pc_nuked_habitability": 1,
       "leader_lifespan_add": 30
     },
+    "effects": "pc_nuked_habitability: +1; leader_lifespan_add: +30",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -2053,13 +2053,13 @@
       "research",
       "presapient"
     ],
-    "effects": "logistic_growth_mult: +30.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%; technician_jobs_bonus_workforce_mult: -50.0%; researcher_jobs_bonus_workforce_mult: -75.0%",
     "modifier": {
       "logistic_growth_mult": 0.3,
       "bureaucrat_jobs_bonus_workforce_mult": 0.1,
       "technician_jobs_bonus_workforce_mult": -0.5,
       "researcher_jobs_bonus_workforce_mult": -0.75
     },
+    "effects": "logistic_growth_mult: +30.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%; technician_jobs_bonus_workforce_mult: -50.0%; researcher_jobs_bonus_workforce_mult: -75.0%",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -2089,13 +2089,13 @@
       "presapient",
       "special"
     ],
-    "effects": "army_damage_mult: -10.0%; pop_bonus_workforce_mult: -10.0%; logistic_growth_mult: -10.0%; species_leader_exp_gain: -0.2",
     "modifier": {
       "army_damage_mult": -0.1,
       "pop_bonus_workforce_mult": -0.1,
       "logistic_growth_mult": -0.1,
       "species_leader_exp_gain": -0.2
     },
+    "effects": "army_damage_mult: -10.0%; pop_bonus_workforce_mult: -10.0%; logistic_growth_mult: -10.0%; species_leader_exp_gain: -0.2",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -2128,12 +2128,12 @@
       "research",
       "presapient"
     ],
-    "effects": "logistic_growth_mult: +20.0%; technician_jobs_bonus_workforce_mult: -100%; researcher_jobs_bonus_workforce_mult: -100%",
     "modifier": {
       "logistic_growth_mult": 0.2,
       "technician_jobs_bonus_workforce_mult": -1,
       "researcher_jobs_bonus_workforce_mult": -1
     },
+    "effects": "logistic_growth_mult: +20.0%; technician_jobs_bonus_workforce_mult: -100%; researcher_jobs_bonus_workforce_mult: -100%",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -2159,8 +2159,8 @@
       "presapient",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -2186,8 +2186,8 @@
       "automod",
       "positive"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Vocational Genomics picks modifiers from the",
     "custom_tooltip": "automodding_trait_biological_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -2214,10 +2214,10 @@
       "pop_output",
       "food"
     ],
-    "effects": "farmer_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "farmer_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "farmer_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -2244,10 +2244,10 @@
       "pop_output",
       "energy"
     ],
-    "effects": "technician_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "technician_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "technician_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -2274,10 +2274,10 @@
       "pop_output",
       "mineral"
     ],
-    "effects": "miner_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "miner_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "miner_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -2308,10 +2308,10 @@
       "pop_output",
       "research"
     ],
-    "effects": "researcher_jobs_bonus_workforce_mult: +10.0%",
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": 0.1
     },
+    "effects": "researcher_jobs_bonus_workforce_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -2340,10 +2340,10 @@
       "pop_output",
       "trade"
     ],
-    "effects": "trader_jobs_bonus_workforce_mult: +25.0%",
     "modifier": {
       "trader_jobs_bonus_workforce_mult": 0.25
     },
+    "effects": "trader_jobs_bonus_workforce_mult: +25.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -2374,10 +2374,10 @@
       "pop_output",
       "research"
     ],
-    "effects": "engineer_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "engineer_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "engineer_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -2410,10 +2410,10 @@
       "pop_output",
       "research"
     ],
-    "effects": "physicist_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "physicist_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "physicist_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -2444,10 +2444,10 @@
       "pop_output",
       "research"
     ],
-    "effects": "biologist_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "biologist_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "biologist_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -2478,10 +2478,10 @@
       "positive",
       "habitability"
     ],
-    "effects": "pop_environment_tolerance: +0.2",
     "modifier": {
       "pop_environment_tolerance": 0.2
     },
+    "effects": "pop_environment_tolerance: +0.2",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1000
@@ -2513,10 +2513,10 @@
       "positive",
       "habitability"
     ],
-    "effects": "pop_environment_tolerance: +0.1",
     "modifier": {
       "pop_environment_tolerance": 0.1
     },
+    "effects": "pop_environment_tolerance: +0.1",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -2549,10 +2549,10 @@
       "negative",
       "habitability"
     ],
-    "effects": "pop_environment_tolerance: -0.1",
     "modifier": {
       "pop_environment_tolerance": -0.1
     },
+    "effects": "pop_environment_tolerance: -0.1",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -2587,10 +2587,10 @@
       "positive",
       "pop_growth"
     ],
-    "effects": "logistic_growth_mult: +10.0%",
     "modifier": {
       "logistic_growth_mult": 0.1
     },
+    "effects": "logistic_growth_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1000
@@ -2627,10 +2627,10 @@
       "negative",
       "pop_growth"
     ],
-    "effects": "logistic_growth_mult: -10.0%",
     "modifier": {
       "logistic_growth_mult": -0.1
     },
+    "effects": "logistic_growth_mult: -10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -1000
@@ -2659,11 +2659,11 @@
       "positive",
       "leader"
     ],
-    "effects": "negative_leader_traits_species: -1; leaders_upkeep_mult: -10.0%",
     "modifier": {
       "negative_leader_traits_species": -1,
       "leaders_upkeep_mult": -0.1
     },
+    "effects": "negative_leader_traits_species: -1; leaders_upkeep_mult: -10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -2692,10 +2692,10 @@
       "positive",
       "leader"
     ],
-    "effects": "species_leader_exp_gain: +0.1",
     "modifier": {
       "species_leader_exp_gain": 0.1
     },
+    "effects": "species_leader_exp_gain: +0.1",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -2725,10 +2725,10 @@
       "negative",
       "leader"
     ],
-    "effects": "species_leader_exp_gain: -0.1",
     "modifier": {
       "species_leader_exp_gain": -0.1
     },
+    "effects": "species_leader_exp_gain: -0.1",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -250
@@ -2757,10 +2757,10 @@
       "pop_output",
       "unity"
     ],
-    "effects": "bureaucrat_jobs_bonus_workforce_mult: +10.0%",
     "modifier": {
       "bureaucrat_jobs_bonus_workforce_mult": 0.1
     },
+    "effects": "bureaucrat_jobs_bonus_workforce_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -2789,10 +2789,10 @@
       "pop_output",
       "unity"
     ],
-    "effects": "bureaucrat_jobs_bonus_workforce_mult: -10.0%",
     "modifier": {
       "bureaucrat_jobs_bonus_workforce_mult": -0.1
     },
+    "effects": "bureaucrat_jobs_bonus_workforce_mult: -10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -2820,10 +2820,10 @@
       "positive",
       "empire_size"
     ],
-    "effects": "species_empire_size_mult: -10.0%",
     "modifier": {
       "species_empire_size_mult": -0.1
     },
+    "effects": "species_empire_size_mult: -10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -2851,10 +2851,10 @@
       "negative",
       "empire_size"
     ],
-    "effects": "species_empire_size_mult: +10.0%",
     "modifier": {
       "species_empire_size_mult": 0.1
     },
+    "effects": "species_empire_size_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -2885,11 +2885,11 @@
       "pop_output",
       "army"
     ],
-    "effects": "army_damage_mult: +40.0%; worker_and_simple_drone_cat_bonus_workforce_mult: +5.0%",
     "modifier": {
       "army_damage_mult": 0.4,
       "worker_and_simple_drone_cat_bonus_workforce_mult": 0.05
     },
+    "effects": "army_damage_mult: +40.0%; worker_and_simple_drone_cat_bonus_workforce_mult: +5.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 2000
@@ -2920,11 +2920,11 @@
       "pop_output",
       "army"
     ],
-    "effects": "army_damage_mult: +20.0%; worker_and_simple_drone_cat_bonus_workforce_mult: +2.5%",
     "modifier": {
       "army_damage_mult": 0.2,
       "worker_and_simple_drone_cat_bonus_workforce_mult": 0.025
     },
+    "effects": "army_damage_mult: +20.0%; worker_and_simple_drone_cat_bonus_workforce_mult: +2.5%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1000
@@ -2955,11 +2955,11 @@
       "pop_output",
       "army"
     ],
-    "effects": "army_damage_mult: -20.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -2.5%",
     "modifier": {
       "army_damage_mult": -0.2,
       "worker_and_simple_drone_cat_bonus_workforce_mult": -0.025
     },
+    "effects": "army_damage_mult: -20.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -2.5%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -1000
@@ -2989,10 +2989,10 @@
       "positive",
       "migration"
     ],
-    "effects": "pop_resettlement_cost_mult: -35.0%",
     "modifier": {
       "pop_resettlement_cost_mult": -0.35
     },
+    "effects": "pop_resettlement_cost_mult: -35.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -3022,10 +3022,10 @@
       "negative",
       "migration"
     ],
-    "effects": "pop_resettlement_cost_mult: +35.0%",
     "modifier": {
       "pop_resettlement_cost_mult": 0.35
     },
+    "effects": "pop_resettlement_cost_mult: +35.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -3055,10 +3055,10 @@
       "positive",
       "housing"
     ],
-    "effects": "pop_housing_usage_mult: -10.0%",
     "modifier": {
       "pop_housing_usage_mult": -0.1
     },
+    "effects": "pop_housing_usage_mult: -10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -3086,10 +3086,10 @@
       "negative",
       "housing"
     ],
-    "effects": "pop_housing_usage_mult: +10.0%",
     "modifier": {
       "pop_housing_usage_mult": 0.1
     },
+    "effects": "pop_housing_usage_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -3118,10 +3118,10 @@
       "pop_output",
       "amenities"
     ],
-    "effects": "influential_jobs_bonus_workforce_mult: +20.0%",
     "modifier": {
       "influential_jobs_bonus_workforce_mult": 0.2
     },
+    "effects": "influential_jobs_bonus_workforce_mult: +20.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -3150,10 +3150,10 @@
       "pop_output",
       "amenities"
     ],
-    "effects": "influential_jobs_bonus_workforce_mult: -20.0%",
     "modifier": {
       "influential_jobs_bonus_workforce_mult": -0.2
     },
+    "effects": "influential_jobs_bonus_workforce_mult: -20.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -3179,8 +3179,8 @@
       "positive",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -3209,10 +3209,10 @@
       "ethic_attraction",
       "individual"
     ],
-    "effects": "pop_government_ethic_attraction: +0.3",
     "modifier": {
       "pop_government_ethic_attraction": 0.3
     },
+    "effects": "pop_government_ethic_attraction: +0.3",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -3242,10 +3242,10 @@
       "ethic_attraction",
       "individual"
     ],
-    "effects": "pop_government_ethic_attraction: -0.15",
     "modifier": {
       "pop_government_ethic_attraction": -0.15
     },
+    "effects": "pop_government_ethic_attraction: -0.15",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -3276,10 +3276,10 @@
       "positive",
       "leader"
     ],
-    "effects": "leader_lifespan_add: +80",
     "modifier": {
       "leader_lifespan_add": 80
     },
+    "effects": "leader_lifespan_add: +80",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1000
@@ -3310,10 +3310,10 @@
       "positive",
       "leader"
     ],
-    "effects": "leader_lifespan_add: +20",
     "modifier": {
       "leader_lifespan_add": 20
     },
+    "effects": "leader_lifespan_add: +20",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -3343,10 +3343,10 @@
       "negative",
       "leader"
     ],
-    "effects": "leader_lifespan_add: -10",
     "modifier": {
       "leader_lifespan_add": -10
     },
+    "effects": "leader_lifespan_add: -10",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -3378,10 +3378,10 @@
       "lithoid",
       "special"
     ],
-    "effects": "leader_lifespan_add: -25",
     "modifier": {
       "leader_lifespan_add": -25
     },
+    "effects": "leader_lifespan_add: -25",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -3411,11 +3411,11 @@
       "happiness",
       "individual"
     ],
-    "effects": "pop_cat_worker_happiness: -0.1; pop_cat_slave_happiness: -0.1",
     "modifier": {
       "pop_cat_worker_happiness": -0.1,
       "pop_cat_slave_happiness": -0.1
     },
+    "effects": "pop_cat_worker_happiness: -0.1; pop_cat_slave_happiness: -0.1",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -3441,10 +3441,10 @@
       "positive",
       "army"
     ],
-    "effects": "army_defense_damage_mult: +50.0%",
     "modifier": {
       "army_defense_damage_mult": 0.5
     },
+    "effects": "army_defense_damage_mult: +50.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -3475,10 +3475,10 @@
       "consumer_goods",
       "individual"
     ],
-    "effects": "planet_pops_consumer_goods_upkeep_mult: -10.0%",
     "modifier": {
       "planet_pops_consumer_goods_upkeep_mult": -0.1
     },
+    "effects": "planet_pops_consumer_goods_upkeep_mult: -10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -3509,10 +3509,10 @@
       "consumer_goods",
       "individual"
     ],
-    "effects": "planet_pops_consumer_goods_upkeep_mult: +10.0%",
     "modifier": {
       "planet_pops_consumer_goods_upkeep_mult": 0.1
     },
+    "effects": "planet_pops_consumer_goods_upkeep_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -3544,12 +3544,12 @@
       "leader",
       "cybernetic"
     ],
-    "effects": "pop_environment_tolerance: +0.2; army_damage_mult: +10.0%; leader_lifespan_add: +40",
     "modifier": {
       "pop_environment_tolerance": 0.2,
       "army_damage_mult": 0.1,
       "leader_lifespan_add": 40
     },
+    "effects": "pop_environment_tolerance: +0.2; army_damage_mult: +10.0%; leader_lifespan_add: +40 | Triggered: pop_environment_tolerance: -0.2",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1500
@@ -3581,8 +3581,8 @@
       "psionic",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -3613,8 +3613,8 @@
       "psionic",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -3637,8 +3637,8 @@
       "organic",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -3665,11 +3665,11 @@
       "interesting",
       "special"
     ],
-    "effects": "pc_nuked_habitability: +0.7; leader_lifespan_add: +10",
     "modifier": {
       "pc_nuked_habitability": 0.7,
       "leader_lifespan_add": 10
     },
+    "effects": "pc_nuked_habitability: +0.7; leader_lifespan_add: +10",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -3704,11 +3704,11 @@
       "interesting",
       "special"
     ],
-    "effects": "researcher_jobs_bonus_workforce_mult: +10.0%; species_leader_exp_gain: +0.1",
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": 0.1,
       "species_leader_exp_gain": 0.1
     },
+    "effects": "researcher_jobs_bonus_workforce_mult: +10.0%; species_leader_exp_gain: +0.1",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1250
@@ -3739,10 +3739,10 @@
       "presapient",
       "special"
     ],
-    "effects": "researcher_jobs_bonus_workforce_mult: +10.0%",
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": 0.1
     },
+    "effects": "researcher_jobs_bonus_workforce_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -3773,10 +3773,10 @@
       "presapient",
       "special"
     ],
-    "effects": "researcher_jobs_bonus_workforce_mult: -60.0%",
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": -0.6
     },
+    "effects": "researcher_jobs_bonus_workforce_mult: -60.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -150
@@ -3815,12 +3815,12 @@
       "interesting",
       "special"
     ],
-    "effects": "habitability_floor_add: +0.3; pop_amenities_usage_mult: -5.0%; logistic_growth_mult: +5.0%",
     "modifier": {
       "habitability_floor_add": 0.3,
       "pop_amenities_usage_mult": -0.05,
       "logistic_growth_mult": 0.05
     },
+    "effects": "habitability_floor_add: +0.3; pop_amenities_usage_mult: -5.0%; logistic_growth_mult: +5.0%",
     "custom_tooltip": ""
   },
   {
@@ -3856,12 +3856,12 @@
       "interesting",
       "special"
     ],
-    "effects": "pop_housing_usage_mult: -15.0%; pop_amenities_usage_mult: -10.0%; logistic_growth_mult: +5.0%",
     "modifier": {
       "pop_housing_usage_mult": -0.15,
       "pop_amenities_usage_mult": -0.1,
       "logistic_growth_mult": 0.05
     },
+    "effects": "pop_housing_usage_mult: -15.0%; pop_amenities_usage_mult: -10.0%; logistic_growth_mult: +5.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 250
@@ -3901,13 +3901,13 @@
       "interesting",
       "special"
     ],
-    "effects": "army_damage_mult: +15.0%; leader_lifespan_mult: +10.0%; pop_amenities_usage_mult: -5.0%; logistic_growth_mult: +5.0%",
     "modifier": {
       "army_damage_mult": 0.15,
       "leader_lifespan_mult": 0.1,
       "pop_amenities_usage_mult": -0.05,
       "logistic_growth_mult": 0.05
     },
+    "effects": "army_damage_mult: +15.0%; leader_lifespan_mult: +10.0%; pop_amenities_usage_mult: -5.0%; logistic_growth_mult: +5.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 250
@@ -3940,9 +3940,9 @@
       "lithoid",
       "species"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Every 100 Pops working as a slave or better produces 0.01 Rare Crystals per month.",
+    "custom_tooltip": "TRAIT_LITHOID_SCINTILLATING_EFFECT",
     "slave_cost": {
       "energy": 1000
     }
@@ -3974,9 +3974,9 @@
       "lithoid",
       "species"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Every 100 Pops working as a slave or better produces 0.01 Exotic Gases per month.",
+    "custom_tooltip": "TRAIT_LITHOID_GASEOUS_BYPRODUCTS_EFFECT",
     "slave_cost": {
       "energy": 1000
     }
@@ -4008,9 +4008,9 @@
       "lithoid",
       "species"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Every 100 Pops working as a slave or better produces 0.01 Volatile Motes per month.",
+    "custom_tooltip": "TRAIT_LITHOID_VOLATILE_EXCRETIONS_EFFECT",
     "slave_cost": {
       "energy": 1000
     }
@@ -4037,8 +4037,8 @@
       "pop_output",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "Pop Happiness on Non-Artificial Worlds: -30%  - Job Efficiency on Habitats: +15%  - Job Efficiency on Non-Artificial Worlds: -15%",
     "custom_tooltip": "void_dweller_trait_tooltip",
     "slave_cost": {
       "energy": 500
@@ -4066,8 +4066,8 @@
       "pop_output",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "Robot Upkeep on Non-Artificial Worlds: +15%  - Job Efficiency on Habitats: +15%  - Job Efficiency on Non-Artificial Worlds: -15%",
     "custom_tooltip": "void_dweller_2_trait_tooltip",
     "slave_cost": {
       "energy": 500
@@ -4099,8 +4099,8 @@
       "special",
       "species"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "Effects on Gaia Worlds:  Resources from Jobs: +10%  Pop Growth Speed: +10%  Pop Amenities Usage: -10%  Pop Housing Usage: -10%  These effects are increased by a Gaia Seeders - Final Phase. | Triggered: logistic_growth_mult: +10.0%; logistic_growth_mult: +15.0%",
     "custom_tooltip": "plantoid_bloomed_trait_tooltip",
     "slave_cost": {
       "energy": 2000
@@ -4133,9 +4133,9 @@
       "upkeep",
       "species"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Replaces 50% of Food (or Minerals) Upkeep with Energy Credits Upkeep",
+    "custom_tooltip": "TRAIT_PLANTOID_PHOTOTROPHIC_EFFECT",
     "slave_cost": {
       "energy": 1000
     }
@@ -4167,11 +4167,11 @@
       "upkeep",
       "species"
     ],
-    "effects": "pc_nuked_habitability: +0.1",
     "modifier": {
       "pc_nuked_habitability": 0.1
     },
-    "custom_tooltip": "",
+    "effects": "Replaces 50% of Food (or Minerals) Upkeep with Energy Credits Upkeep  - This Energy Upkeep is removed for Pops living on Tomb Worlds.  - Pop Growth Speed on Tomb Worlds +10%  - Tomb World Habitability: +10% | pc_nuked_habitability: +0.1 | Triggered: pc_nuked_habitability: +0.05; logistic_growth_mult: +10.0%",
+    "custom_tooltip": "TRAIT_PLANTOID_RADIOTROPHIC_EFFECT",
     "slave_cost": {
       "energy": 1500
     }
@@ -4209,9 +4209,9 @@
       "pop_growth",
       "species"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Every 100 Pops working as a slave or better produces 0.02 Monthly Organic Pop Growth.  This stacks with other sources of Monthly Organic Pop Growth such as Clone Vats or Spawning Drones. | Triggered: has_budding_trait: +True; divide_over_pop_groups: False",
+    "custom_tooltip": "TRAIT_PLANTOID_BUDDING_EFFECT",
     "slave_cost": {
       "energy": 2000
     }
@@ -4289,8 +4289,8 @@
       "habitability",
       "species"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "Can only select negative or botanical traits   - Habitability: +5% for each negative trait selected  - Pop Growth Speed: +5% for each negative trait selected | Triggered: logistic_growth_mult: +5.0%; pop_environment_tolerance: +0.05",
     "custom_tooltip": "TRAIT_INVASIVE_EFFECT",
     "slave_cost": {}
   },
@@ -4327,9 +4327,9 @@
       "pop_growth",
       "species"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Every 100 Pops working as a slave or better produces 0.02 Monthly Organic Pop Growth.  This stacks with other sources of Monthly Organic Pop Growth such as Clone Vats or Spawning Drones. | Triggered: has_budding_trait: +True; divide_over_pop_groups: False; has_budding_trait: +True",
+    "custom_tooltip": "TRAIT_LITHOID_BUDDING_EFFECT",
     "slave_cost": {
       "energy": 2000
     }
@@ -4358,13 +4358,13 @@
       "pop_output",
       "blocks_leaders"
     ],
-    "effects": "pop_bonus_workforce_mult: -25.0%; civilian_and_maintenance_drone_cat_bonus_workforce_mult: -50.0%; planet_pops_upkeep_mult: -100%",
     "modifier": {
       "pop_bonus_workforce_mult": -0.25,
       "civilian_and_maintenance_drone_cat_bonus_workforce_mult": -0.5,
       "planet_pops_upkeep_mult": -1
     },
-    "custom_tooltip": "",
+    "effects": "Job Efficiency: -25%  - Job Efficiency for Civilians & Maintenance Drones: -50%  - Pop Upkeep reduced by: 100%  - Cannot generate Leaders  - Cannot be employed in Elite or Specialist Jobs | pop_bonus_workforce_mult: -25.0%; civilian_and_maintenance_drone_cat_bonus_workforce_mult: -50.0%; planet_pops_upkeep_mult: -100%",
+    "custom_tooltip": "TRAIT_ZOMBIE_EFFECT",
     "slave_cost": {
       "energy": 500
     }
@@ -4399,9 +4399,9 @@
       "positive",
       "pop_growth"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Pop Growth During War and Crisis: +30% | Triggered: is_at_war: +True; has_crisis: +True; logistic_growth_mult: +30.0%",
+    "custom_tooltip": "TRAIT_HUMANOID_EXISTENTIAL_ITEROPARITY_EFFECT",
     "slave_cost": {
       "energy": 1000
     }
@@ -4433,9 +4433,9 @@
       "negative",
       "pop_growth"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Pop Growth During War and Crisis: -30% | Triggered: is_at_war: +True; has_crisis: +True; logistic_growth_mult: -30.0%",
+    "custom_tooltip": "TRAIT_HUMANOID_PSYCHOLOGICAL_INFERTILITY_EFFECT",
     "slave_cost": {
       "energy": -1000
     }
@@ -4463,11 +4463,11 @@
       "negative",
       "leader"
     ],
-    "effects": "negative_leader_traits_species: +1",
     "modifier": {
       "negative_leader_traits_species": 1
     },
-    "custom_tooltip": "",
+    "effects": "Leader Maximum Negative Traits: +1 | negative_leader_traits_species: +1",
+    "custom_tooltip": "TRAIT_HUMANOID_JINXED_EFFECT",
     "slave_cost": {
       "energy": -500
     }
@@ -4498,8 +4498,8 @@
       "positive",
       "automod"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Adaptive Frames picks modifiers from the",
     "custom_tooltip": "automodding_trait_robotic_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -4526,10 +4526,10 @@
       "pop_output",
       "mineral"
     ],
-    "effects": "miner_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "miner_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "miner_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -4556,10 +4556,10 @@
       "pop_output",
       "food"
     ],
-    "effects": "farmer_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "farmer_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "farmer_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -4586,10 +4586,10 @@
       "pop_output",
       "energy"
     ],
-    "effects": "technician_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "technician_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "technician_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -4615,10 +4615,10 @@
       "positive",
       "pop_output"
     ],
-    "effects": "pop_bonus_workforce_mult: +5.0%",
     "modifier": {
       "pop_bonus_workforce_mult": 0.05
     },
+    "effects": "pop_bonus_workforce_mult: +5.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -4646,10 +4646,10 @@
       "pop_output",
       "research"
     ],
-    "effects": "researcher_jobs_bonus_workforce_mult: +10.0%",
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": 0.1
     },
+    "effects": "researcher_jobs_bonus_workforce_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -4677,10 +4677,10 @@
       "happiness",
       "individual"
     ],
-    "effects": "pop_happiness: +0.1",
     "modifier": {
       "pop_happiness": 0.1
     },
+    "effects": "pop_happiness: +0.1",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -4709,10 +4709,10 @@
       "amenities",
       "individual"
     ],
-    "effects": "influential_jobs_bonus_workforce_mult: +20.0%",
     "modifier": {
       "influential_jobs_bonus_workforce_mult": 0.2
     },
+    "effects": "Can be employed in Servant Jobs if under AI Servitude | influential_jobs_bonus_workforce_mult: +20.0%",
     "custom_tooltip": "TRAIT_DOMESTIC_PROTOCOLS_EFFECT",
     "slave_cost": {
       "energy": 750
@@ -4740,10 +4740,10 @@
       "positive",
       "housing"
     ],
-    "effects": "pop_housing_usage_mult: -10.0%",
     "modifier": {
       "pop_housing_usage_mult": -0.1
     },
+    "effects": "pop_housing_usage_mult: -10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -4771,10 +4771,10 @@
       "negative",
       "housing"
     ],
-    "effects": "pop_housing_usage_mult: +10.0%",
     "modifier": {
       "pop_housing_usage_mult": 0.1
     },
+    "effects": "pop_housing_usage_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -150
@@ -4801,11 +4801,11 @@
       "positive",
       "leader"
     ],
-    "effects": "negative_leader_traits_species: -1; leaders_upkeep_mult: -25.0%",
     "modifier": {
       "negative_leader_traits_species": -1,
       "leaders_upkeep_mult": -0.25
     },
+    "effects": "negative_leader_traits_species: -1; leaders_upkeep_mult: -25.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -4834,10 +4834,10 @@
       "pop_output",
       "amenities"
     ],
-    "effects": "influential_jobs_bonus_workforce_mult: +20.0%",
     "modifier": {
       "influential_jobs_bonus_workforce_mult": 0.2
     },
+    "effects": "influential_jobs_bonus_workforce_mult: +20.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -4866,10 +4866,10 @@
       "pop_output",
       "amenities"
     ],
-    "effects": "influential_jobs_bonus_workforce_mult: -20.0%",
     "modifier": {
       "influential_jobs_bonus_workforce_mult": -0.2
     },
+    "effects": "influential_jobs_bonus_workforce_mult: -20.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -150
@@ -4897,10 +4897,10 @@
       "positive",
       "upkeep"
     ],
-    "effects": "planet_pops_robotics_upkeep_mult: -10.0%",
     "modifier": {
       "planet_pops_robotics_upkeep_mult": -0.1
     },
+    "effects": "planet_pops_robotics_upkeep_mult: -10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -4928,10 +4928,10 @@
       "negative",
       "upkeep"
     ],
-    "effects": "planet_pops_robotics_upkeep_mult: +10.0%",
     "modifier": {
       "planet_pops_robotics_upkeep_mult": 0.1
     },
+    "effects": "planet_pops_robotics_upkeep_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -150
@@ -4960,10 +4960,10 @@
       "positive",
       "leader"
     ],
-    "effects": "species_leader_exp_gain: +0.1",
     "modifier": {
       "species_leader_exp_gain": 0.1
     },
+    "effects": "species_leader_exp_gain: +0.1",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -4992,10 +4992,10 @@
       "negative",
       "leader"
     ],
-    "effects": "species_leader_exp_gain: -0.1",
     "modifier": {
       "species_leader_exp_gain": -0.1
     },
+    "effects": "species_leader_exp_gain: -0.1",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -250
@@ -5023,10 +5023,10 @@
       "positive",
       "pop_growth"
     ],
-    "effects": "planet_pop_assembly_mult: +15.0%",
     "modifier": {
       "planet_pop_assembly_mult": 0.15
     },
+    "effects": "planet_pop_assembly_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1500
@@ -5054,10 +5054,10 @@
       "negative",
       "pop_growth"
     ],
-    "effects": "planet_pop_assembly_mult: -15.0%",
     "modifier": {
       "planet_pop_assembly_mult": -0.15
     },
+    "effects": "planet_pop_assembly_mult: -15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -5086,10 +5086,10 @@
       "upkeep",
       "pop_growth"
     ],
-    "effects": "roboticist_jobs_bonus_workforce_mult: +20.0%",
     "modifier": {
       "roboticist_jobs_bonus_workforce_mult": 0.2
     },
+    "effects": "roboticist_jobs_bonus_workforce_mult: +20.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1500
@@ -5117,10 +5117,10 @@
       "negative",
       "pop_growth"
     ],
-    "effects": "roboticist_jobs_bonus_workforce_mult: -20.0%",
     "modifier": {
       "roboticist_jobs_bonus_workforce_mult": -0.2
     },
+    "effects": "roboticist_jobs_bonus_workforce_mult: -20.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -5151,10 +5151,10 @@
       "upkeep",
       "unity"
     ],
-    "effects": "bureaucrat_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "bureaucrat_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "bureaucrat_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -5182,10 +5182,10 @@
       "positive",
       "empire_size"
     ],
-    "effects": "species_empire_size_mult: -10.0%",
     "modifier": {
       "species_empire_size_mult": -0.1
     },
+    "effects": "species_empire_size_mult: -10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -5213,10 +5213,10 @@
       "negative",
       "empire_size"
     ],
-    "effects": "species_empire_size_mult: +10.0%",
     "modifier": {
       "species_empire_size_mult": 0.1
     },
+    "effects": "species_empire_size_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -150
@@ -5245,10 +5245,10 @@
       "positive",
       "trade"
     ],
-    "effects": "trader_jobs_bonus_workforce_mult: +25.0%",
     "modifier": {
       "trader_jobs_bonus_workforce_mult": 0.25
     },
+    "effects": "trader_jobs_bonus_workforce_mult: +25.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -5279,10 +5279,10 @@
       "unity",
       "individual"
     ],
-    "effects": "bureaucrat_jobs_bonus_workforce_mult: -10.0%",
     "modifier": {
       "bureaucrat_jobs_bonus_workforce_mult": -0.1
     },
+    "effects": "bureaucrat_jobs_bonus_workforce_mult: -10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -5310,10 +5310,10 @@
       "ethic_attraction",
       "individual"
     ],
-    "effects": "pop_government_ethic_attraction: -0.15",
     "modifier": {
       "pop_government_ethic_attraction": -0.15
     },
+    "effects": "pop_government_ethic_attraction: -0.15",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -5341,11 +5341,11 @@
       "happiness",
       "individual"
     ],
-    "effects": "pop_cat_worker_happiness: -0.1; pop_cat_slave_happiness: -0.1",
     "modifier": {
       "pop_cat_worker_happiness": -0.1,
       "pop_cat_slave_happiness": -0.1
     },
+    "effects": "pop_cat_worker_happiness: -0.1; pop_cat_slave_happiness: -0.1",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -5374,10 +5374,10 @@
       "upkeep",
       "individual"
     ],
-    "effects": "planet_pops_consumer_goods_upkeep_mult: +10.0%",
     "modifier": {
       "planet_pops_consumer_goods_upkeep_mult": 0.1
     },
+    "effects": "planet_pops_consumer_goods_upkeep_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -200
@@ -5408,10 +5408,10 @@
       "pop_output",
       "research"
     ],
-    "effects": "engineer_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "engineer_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "engineer_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -5442,10 +5442,10 @@
       "pop_output",
       "research"
     ],
-    "effects": "physicist_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "physicist_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "physicist_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -5476,10 +5476,10 @@
       "pop_output",
       "research"
     ],
-    "effects": "biologist_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "biologist_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "biologist_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -5508,11 +5508,11 @@
       "positive",
       "army"
     ],
-    "effects": "army_damage_mult: +100.0%; enforcer_jobs_bonus_workforce_mult: +20.0%",
     "modifier": {
       "army_damage_mult": 1.0,
       "enforcer_jobs_bonus_workforce_mult": 0.2
     },
+    "effects": "army_damage_mult: +100.0%; enforcer_jobs_bonus_workforce_mult: +20.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1000
@@ -5543,11 +5543,11 @@
       "army",
       "pop_output"
     ],
-    "effects": "army_damage_mult: -50.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -5.0%",
     "modifier": {
       "army_damage_mult": -0.5,
       "worker_and_simple_drone_cat_bonus_workforce_mult": -0.05
     },
+    "effects": "army_damage_mult: -50.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -5.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -250
@@ -5578,10 +5578,10 @@
       "pop_output",
       "trade"
     ],
-    "effects": "trader_jobs_bonus_workforce_mult: -25.0%",
     "modifier": {
       "trader_jobs_bonus_workforce_mult": -0.25
     },
+    "effects": "trader_jobs_bonus_workforce_mult: -25.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -150
@@ -5611,11 +5611,11 @@
       "alloys",
       "pop_output"
     ],
-    "effects": "army_damage_mult: +500%; foundry_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "army_damage_mult": 5,
       "foundry_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "army_damage_mult: +500%; foundry_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1500
@@ -5643,10 +5643,10 @@
       "leviathan",
       "amenities"
     ],
-    "effects": "pop_amenities_usage_mult: -50.0%",
     "modifier": {
       "pop_amenities_usage_mult": -0.5
     },
+    "effects": "pop_amenities_usage_mult: -50.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1500
@@ -5675,10 +5675,10 @@
       "research",
       "upkeep"
     ],
-    "effects": "planet_researchers_upkeep_mult: -50.0%",
     "modifier": {
       "planet_researchers_upkeep_mult": -0.5
     },
+    "effects": "planet_researchers_upkeep_mult: -50.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1500
@@ -5706,10 +5706,10 @@
       "leviathan",
       "pop_growth"
     ],
-    "effects": "planet_pop_assembly_mult: +50.0%",
     "modifier": {
       "planet_pop_assembly_mult": 0.5
     },
+    "effects": "planet_pop_assembly_mult: +50.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1500
@@ -5742,10 +5742,10 @@
       "background",
       "army"
     ],
-    "effects": "army_damage_mult: +5.0%",
     "modifier": {
       "army_damage_mult": 0.05
     },
+    "effects": "army_damage_mult: +5.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -5779,10 +5779,10 @@
       "pop_output",
       "amenities"
     ],
-    "effects": "influential_jobs_bonus_workforce_mult: +5.0%",
     "modifier": {
       "influential_jobs_bonus_workforce_mult": 0.05
     },
+    "effects": "influential_jobs_bonus_workforce_mult: +5.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -5816,10 +5816,10 @@
       "pop_output",
       "unity"
     ],
-    "effects": "bureaucrat_jobs_bonus_workforce_mult: +2.0%",
     "modifier": {
       "bureaucrat_jobs_bonus_workforce_mult": 0.02
     },
+    "effects": "bureaucrat_jobs_bonus_workforce_mult: +2.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -5853,10 +5853,10 @@
       "pop_output",
       "research"
     ],
-    "effects": "researcher_jobs_bonus_workforce_mult: +2.0%",
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": 0.02
     },
+    "effects": "researcher_jobs_bonus_workforce_mult: +2.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -5890,10 +5890,10 @@
       "pop_output",
       "mineral"
     ],
-    "effects": "miner_jobs_bonus_workforce_mult: +5.0%",
     "modifier": {
       "miner_jobs_bonus_workforce_mult": 0.05
     },
+    "effects": "miner_jobs_bonus_workforce_mult: +5.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -5926,10 +5926,10 @@
       "background",
       "upkeep"
     ],
-    "effects": "trader_jobs_bonus_workforce_mult: +5.0%",
     "modifier": {
       "trader_jobs_bonus_workforce_mult": 0.05
     },
+    "effects": "trader_jobs_bonus_workforce_mult: +5.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -5957,11 +5957,11 @@
       "leader",
       "special"
     ],
-    "effects": "pc_nuked_habitability: +0.7; leader_lifespan_add: +10",
     "modifier": {
       "pc_nuked_habitability": 0.7,
       "leader_lifespan_add": 10
     },
+    "effects": "pc_nuked_habitability: +0.7; leader_lifespan_add: +10",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -5992,12 +5992,12 @@
       "housing",
       "special"
     ],
-    "effects": "habitability_floor_add: +0.25; pop_housing_usage_mult: -90.0%",
     "modifier": {
       "habitability_floor_add": 0.25,
       "pop_housing_usage_mult": -0.9
     },
-    "custom_tooltip": "",
+    "effects": "Cannot be sold on the Slave Market or Abducted Pop Housing Usage: -90% Species Minimum Habitability: +25% | habitability_floor_add: +0.25; pop_housing_usage_mult: -90.0%",
+    "custom_tooltip": "trait_robot_digital_1_tt",
     "slave_cost": {
       "energy": 750
     }
@@ -6028,12 +6028,12 @@
       "housing",
       "special"
     ],
-    "effects": "habitability_floor_add: +0.25; pop_housing_usage_mult: -90.0%",
     "modifier": {
       "habitability_floor_add": 0.25,
       "pop_housing_usage_mult": -0.9
     },
-    "custom_tooltip": "",
+    "effects": "Cannot be sold on the Slave Market or Abducted Pop Housing Usage: -90% Species Minimum Habitability: +25% Job Efficiency: +175% (-25% per Colony) Pop Upkeep: +0.1 Energy per Colony | habitability_floor_add: +0.25; pop_housing_usage_mult: -90.0%",
+    "custom_tooltip": "trait_robot_digital_2_tt",
     "slave_cost": {
       "energy": 750
     }
@@ -6066,12 +6066,12 @@
       "blocks_leaders",
       "modularity"
     ],
-    "effects": "pop_bonus_workforce_mult: +10.0%; species_leader_exp_gain: -1; civilian_and_maintenance_drone_cat_bonus_workforce_mult: -85.0%",
     "modifier": {
       "pop_bonus_workforce_mult": 0.1,
       "species_leader_exp_gain": -1,
       "civilian_and_maintenance_drone_cat_bonus_workforce_mult": -0.85
     },
+    "effects": "Cannot generate Leaders Cannot be employed in Elite or Specialist Jobs | pop_bonus_workforce_mult: +10.0%; species_leader_exp_gain: -1; civilian_and_maintenance_drone_cat_bonus_workforce_mult: -85.0%",
     "custom_tooltip": "trait_robot_suppressed_tt",
     "slave_cost": {
       "energy": 750
@@ -6100,12 +6100,12 @@
       "leader",
       "modularity"
     ],
-    "effects": "pop_environment_tolerance: +0.3; pop_bonus_workforce_mult: +5.0%; leader_lifespan_add: +50",
     "modifier": {
       "pop_environment_tolerance": 0.3,
       "pop_bonus_workforce_mult": 0.05,
       "leader_lifespan_add": 50
     },
+    "effects": "pop_environment_tolerance: +0.3; pop_bonus_workforce_mult: +5.0%; leader_lifespan_add: +50",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -6133,11 +6133,11 @@
       "housing",
       "modularity"
     ],
-    "effects": "pop_housing_usage_mult: -80.0%; planet_pop_assembly_mult: +20.0%",
     "modifier": {
       "pop_housing_usage_mult": -0.8,
       "planet_pop_assembly_mult": 0.2
     },
+    "effects": "pop_housing_usage_mult: -80.0%; planet_pop_assembly_mult: +20.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -6168,12 +6168,12 @@
       "leader",
       "modularity"
     ],
-    "effects": "researcher_jobs_bonus_workforce_mult: +20.0%; leaders_upkeep_mult: -10.0%; negative_traits_leader: -1",
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": 0.2,
       "leaders_upkeep_mult": -0.1,
       "negative_traits_leader": -1
     },
+    "effects": "researcher_jobs_bonus_workforce_mult: +20.0%; leaders_upkeep_mult: -10.0%; negative_traits_leader: -1",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -6201,10 +6201,10 @@
       "upkeep",
       "modularity"
     ],
-    "effects": "pop_bonus_workforce_mult: +40.0%",
     "modifier": {
       "pop_bonus_workforce_mult": 0.4
     },
+    "effects": "Dark Matter Upkeep: +0.02 | pop_bonus_workforce_mult: +40.0%",
     "custom_tooltip": "trait_robot_ceaseless_symmetric_annihilation_engine_tt",
     "slave_cost": {
       "energy": 750
@@ -6233,10 +6233,10 @@
       "upkeep",
       "modularity"
     ],
-    "effects": "leader_lifespan_mult: +50.0%",
     "modifier": {
       "leader_lifespan_mult": 0.5
     },
+    "effects": "Pop Amenities Usage: -50%  Living Metal Upkeep: +0.01 | leader_lifespan_mult: +50.0%",
     "custom_tooltip": "trait_robot_ferro_viscosity_augmentation_tt",
     "slave_cost": {
       "energy": 750
@@ -6264,10 +6264,10 @@
       "upkeep",
       "modularity"
     ],
-    "effects": "roboticist_jobs_bonus_workforce_mult: +50.0%",
     "modifier": {
       "roboticist_jobs_bonus_workforce_mult": 0.5
     },
+    "effects": "Food Upkeep: +1  Exotic Gases Upkeep: +0.02 | roboticist_jobs_bonus_workforce_mult: +50.0%",
     "custom_tooltip": "trait_robot_biomimetic_assembly_tt",
     "slave_cost": {
       "energy": 750
@@ -6298,10 +6298,10 @@
       "upkeep",
       "modularity"
     ],
-    "effects": "trader_jobs_bonus_workforce_mult: +50.0%",
     "modifier": {
       "trader_jobs_bonus_workforce_mult": 0.5
     },
+    "effects": "Energy Credits Upkeep: +1  Rare Crystals Upkeep: +0.02 | trader_jobs_bonus_workforce_mult: +50.0%",
     "custom_tooltip": "trait_robot_matrix_trading_tt",
     "slave_cost": {
       "energy": 750
@@ -6331,8 +6331,8 @@
       "upkeep",
       "modularity"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "Job Efficiency for Industrial Jobs: +20%  Minerals Upkeep: +1  Volatile Motes Upkeep: +0.02",
     "custom_tooltip": "trait_robot_mote_powered_tools_tt",
     "slave_cost": {
       "energy": 750
@@ -6359,10 +6359,10 @@
       "pop_output",
       "upkeep"
     ],
-    "effects": "pop_bonus_workforce_mult: +10.0%",
     "modifier": {
       "pop_bonus_workforce_mult": 0.1
     },
+    "effects": "Exotic Gases Upkeep: +0.04 | pop_bonus_workforce_mult: +10.0%",
     "custom_tooltip": "trait_robot_exotic_fuel_consumption_tt",
     "slave_cost": {
       "energy": 750
@@ -6391,10 +6391,10 @@
       "production",
       "upkeep"
     ],
-    "effects": "foundry_jobs_bonus_workforce_mult: +20.0%",
     "modifier": {
       "foundry_jobs_bonus_workforce_mult": 0.2
     },
+    "effects": "Rare Crystals Upkeep: +0.02 | foundry_jobs_bonus_workforce_mult: +20.0%",
     "custom_tooltip": "trait_robot_rare_crystal_exterior_tt",
     "slave_cost": {
       "energy": 750
@@ -6422,10 +6422,10 @@
       "production",
       "upkeep"
     ],
-    "effects": "pop_environment_tolerance: +0.3",
     "modifier": {
       "pop_environment_tolerance": 0.3
     },
+    "effects": "Volatile Motes Upkeep: +0.02 | pop_environment_tolerance: +0.3",
     "custom_tooltip": "trait_robot_volatile_mote_reactor_tt",
     "slave_cost": {
       "energy": 750
@@ -6451,9 +6451,9 @@
       "positive",
       "leader"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Leader Lifespan: Immortal",
+    "custom_tooltip": "trait_robot_immortality_tt",
     "slave_cost": {
       "energy": 1000
     }
@@ -6474,12 +6474,12 @@
       "MACHINE"
     ],
     "tags": [],
-    "effects": "pop_government_ethic_attraction: +0.5; pop_happiness: +0.05; bureaucrat_jobs_bonus_workforce_mult: +5.0%",
     "modifier": {
       "pop_government_ethic_attraction": 0.5,
       "pop_happiness": 0.05,
       "bureaucrat_jobs_bonus_workforce_mult": 0.05
     },
+    "effects": "pop_government_ethic_attraction: +0.5; pop_happiness: +0.05; bureaucrat_jobs_bonus_workforce_mult: +5.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1000
@@ -6511,8 +6511,8 @@
       "unity",
       "psionic"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -6543,8 +6543,8 @@
       "happiness",
       "psionic"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -6572,12 +6572,12 @@
       "pop_growth",
       "special"
     ],
-    "effects": "researcher_jobs_bonus_workforce_mult: +10.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%; logistic_growth_mult: -25.0%",
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": 0.1,
       "bureaucrat_jobs_bonus_workforce_mult": 0.1,
       "logistic_growth_mult": -0.25
     },
+    "effects": "researcher_jobs_bonus_workforce_mult: +10.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%; logistic_growth_mult: -25.0%",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -6602,11 +6602,11 @@
       "pop_growth",
       "special"
     ],
-    "effects": "pop_environment_tolerance: +0.5; logistic_growth_mult: +15.0%",
     "modifier": {
       "pop_environment_tolerance": 0.5,
       "logistic_growth_mult": 0.15
     },
+    "effects": "pop_environment_tolerance: +0.5; logistic_growth_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 100
@@ -6634,10 +6634,10 @@
       "upkeep",
       "special"
     ],
-    "effects": "planet_pops_upkeep_mult: +10.0%",
     "modifier": {
       "planet_pops_upkeep_mult": 0.1
     },
+    "effects": "Every 100 Pops working as a slave or better produces 0.5 Physics Research per month. | planet_pops_upkeep_mult: +10.0%",
     "custom_tooltip": "TRAIT_NOTOFTHISWORLD_EFFECT",
     "slave_cost": {}
   },
@@ -6664,11 +6664,11 @@
       "leader",
       "special"
     ],
-    "effects": "leader_lifespan_add: -10; planet_pops_upkeep_mult: +10.0%",
     "modifier": {
       "leader_lifespan_add": -10,
       "planet_pops_upkeep_mult": 0.1
     },
+    "effects": "Every 100 Pops working as a slave or better produces 0.5 Physics Research per month. | leader_lifespan_add: -10; planet_pops_upkeep_mult: +10.0%",
     "custom_tooltip": "TRAIT_NOTOFTHISWORLD_EFFECT",
     "slave_cost": {}
   },
@@ -6685,12 +6685,12 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "pop_trader_bonus_workforce_mult: +33.0%; pop_merchant_bonus_workforce_mult: +33.0%; pop_maintenance_drone_bonus_workforce_mult: +33.0%",
     "modifier": {
       "pop_trader_bonus_workforce_mult": 0.33,
       "pop_merchant_bonus_workforce_mult": 0.33,
       "pop_maintenance_drone_bonus_workforce_mult": 0.33
     },
+    "effects": "pop_trader_bonus_workforce_mult: +33.0%; pop_merchant_bonus_workforce_mult: +33.0%; pop_maintenance_drone_bonus_workforce_mult: +33.0%",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -6723,10 +6723,10 @@
       "genetic_ascension",
       "special"
     ],
-    "effects": "pop_environment_tolerance: +0.1",
     "modifier": {
       "pop_environment_tolerance": 0.1
     },
+    "effects": "pop_environment_tolerance: +0.1",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1000
@@ -6763,10 +6763,10 @@
       "genetic_ascension",
       "special"
     ],
-    "effects": "logistic_growth_mult: +10.0%",
     "modifier": {
       "logistic_growth_mult": 0.1
     },
+    "effects": "logistic_growth_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 2000
@@ -6799,10 +6799,10 @@
       "livestock",
       "genetic_ascension"
     ],
-    "effects": "pop_livestock_bonus_workforce_mult: +100%",
     "modifier": {
       "pop_livestock_bonus_workforce_mult": 1
     },
+    "effects": "pop_livestock_bonus_workforce_mult: +100%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1000
@@ -6849,13 +6849,13 @@
       "genetic_ascension",
       "drawbacks"
     ],
-    "effects": "pop_bonus_workforce_mult: +15.0%; species_leader_exp_gain: -1; species_empire_size_mult: -15.0%; civilian_and_maintenance_drone_cat_bonus_workforce_mult: -90.0%",
     "modifier": {
       "pop_bonus_workforce_mult": 0.15,
       "species_leader_exp_gain": -1,
       "species_empire_size_mult": -0.15,
       "civilian_and_maintenance_drone_cat_bonus_workforce_mult": -0.9
     },
+    "effects": "Cannot generate Leaders Cannot be employed in Elite or Specialist Jobs | pop_bonus_workforce_mult: +15.0%; species_leader_exp_gain: -1; species_empire_size_mult: -15.0%; civilian_and_maintenance_drone_cat_bonus_workforce_mult: -90.0%",
     "custom_tooltip": "TRAIT_NERVE_STAPLED_EFFECT",
     "slave_cost": {
       "energy": 1500
@@ -6895,12 +6895,12 @@
       "happiness",
       "genetic_ascension"
     ],
-    "effects": "logistic_growth_mult: +30.0%; pop_housing_usage_mult: -10.0%; pop_happiness: +0.1",
     "modifier": {
       "logistic_growth_mult": 0.3,
       "pop_housing_usage_mult": -0.1,
       "pop_happiness": 0.1
     },
+    "effects": "logistic_growth_mult: +30.0%; pop_housing_usage_mult: -10.0%; pop_happiness: +0.1",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 2000
@@ -6941,12 +6941,12 @@
       "leader",
       "genetic_ascension"
     ],
-    "effects": "pop_environment_tolerance: +0.3; pop_bonus_workforce_mult: +5.0%; leader_lifespan_add: +50",
     "modifier": {
       "pop_environment_tolerance": 0.3,
       "pop_bonus_workforce_mult": 0.05,
       "leader_lifespan_add": 50
     },
+    "effects": "pop_environment_tolerance: +0.3; pop_bonus_workforce_mult: +5.0%; leader_lifespan_add: +50",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 2000
@@ -6985,12 +6985,12 @@
       "leader",
       "genetic_ascension"
     ],
-    "effects": "researcher_jobs_bonus_workforce_mult: +30.0%; negative_leader_traits_species: -1; leaders_upkeep_mult: -10.0%",
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": 0.3,
       "negative_leader_traits_species": -1,
       "leaders_upkeep_mult": -0.1
     },
+    "effects": "researcher_jobs_bonus_workforce_mult: +30.0%; negative_leader_traits_species: -1; leaders_upkeep_mult: -10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 2000
@@ -7050,12 +7050,12 @@
       "genetic_ascension",
       "drawbacks"
     ],
-    "effects": "bonus_pop_growth_mult: +33.0%; pop_housing_usage_mult: -10.0%; pop_amenities_usage_mult: -10.0%",
     "modifier": {
       "bonus_pop_growth_mult": 0.33,
       "pop_housing_usage_mult": -0.1,
       "pop_amenities_usage_mult": -0.1
     },
+    "effects": "bonus_pop_growth_mult: +33.0%; pop_housing_usage_mult: -10.0%; pop_amenities_usage_mult: -10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 2000
@@ -7088,10 +7088,10 @@
       "mineral",
       "genetic_ascension"
     ],
-    "effects": "pop_livestock_lithoid_bonus_workforce_mult: +100%",
     "modifier": {
       "pop_livestock_lithoid_bonus_workforce_mult": 1
     },
+    "effects": "pop_livestock_lithoid_bonus_workforce_mult: +100%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1000
@@ -7126,11 +7126,11 @@
       "consumer_goods",
       "genetic_ascension"
     ],
-    "effects": "foundry_jobs_bonus_workforce_mult: +25.0%; artisan_jobs_bonus_workforce_mult: +25.0%",
     "modifier": {
       "foundry_jobs_bonus_workforce_mult": 0.25,
       "artisan_jobs_bonus_workforce_mult": 0.25
     },
+    "effects": "foundry_jobs_bonus_workforce_mult: +25.0%; artisan_jobs_bonus_workforce_mult: +25.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 2000
@@ -7164,10 +7164,10 @@
       "leviathan",
       "genetic_ascension"
     ],
-    "effects": "army_health: +1.0",
     "modifier": {
       "army_health": 1.0
     },
+    "effects": "Every 100 Pops working as a slave or better produces 0.5 Alloys per month. | army_health: +1.0",
     "custom_tooltip": "TRAIT_DRAKE_SCALED_EFFECT",
     "slave_cost": {
       "energy": 1000
@@ -7199,10 +7199,10 @@
       "leviathan",
       "genetic_ascension"
     ],
-    "effects": "habitability_floor_add: +0.8",
     "modifier": {
       "habitability_floor_add": 0.8
     },
+    "effects": "Replaces Food (or Minerals) Upkeep with Energy Credits Upkeep | habitability_floor_add: +0.8",
     "custom_tooltip": "TRAIT_VOIDLING_EFFECT",
     "slave_cost": {
       "energy": 1500
@@ -7242,9 +7242,9 @@
       "leviathan",
       "genetic_ascension"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Every 100 Pops working as a slave or better produces $@tiyanki_budding_rate$ Monthly Organic Pop Growth.  This stacks with other sources of Monthly Organic Pop Growth such as Clone Vats or Spawning Drones. | Triggered: divide_over_pop_groups: False",
+    "custom_tooltip": "TRAIT_TIYANKI_BUDDING_EFFECT",
     "slave_cost": {
       "energy": 1500
     }
@@ -7262,8 +7262,8 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -7280,8 +7280,8 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -7298,8 +7298,8 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -7316,8 +7316,8 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -7334,12 +7334,12 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "science_ship_survey_speed: -25.0%; ship_archaeological_site_excavation_speed_mult: +20.0%; ship_archaeological_site_clues_add: +1",
     "modifier": {
       "science_ship_survey_speed": -0.25,
       "ship_archaeological_site_excavation_speed_mult": 0.2,
       "ship_archaeological_site_clues_add": 1
     },
+    "effects": "science_ship_survey_speed: -25.0%; ship_archaeological_site_excavation_speed_mult: +20.0%; ship_archaeological_site_clues_add: +1",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -7356,8 +7356,8 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -7374,8 +7374,8 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -7410,8 +7410,8 @@
       "positive",
       "pop_growth"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "Grants between +30% and -10% Pop Growth Speed, inversely proportional to the number of pops on the planet. | Triggered: logistic_growth_mult: +1.0%",
     "custom_tooltip": "incubator_tooltip",
     "slave_cost": {
       "energy": 2000
@@ -7439,10 +7439,10 @@
       "production",
       "drawbacks"
     ],
-    "effects": "planet_pops_upkeep_mult: +50.0%",
     "modifier": {
       "planet_pops_upkeep_mult": 0.5
     },
+    "effects": "Every 100 Pops working as a slave or better produces 0.02 Exotic Gases per month. | planet_pops_upkeep_mult: +50.0%",
     "custom_tooltip": "inorganic_breath_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7471,13 +7471,13 @@
       "housing",
       "drawbacks"
     ],
-    "effects": "habitability_floor_add: +0.3; habitability_ceil_add: -0.3; army_damage_mult: +50.0%; pop_housing_usage_mult: +10.0%",
     "modifier": {
       "habitability_floor_add": 0.3,
       "habitability_ceil_add": -0.3,
       "army_damage_mult": 0.5,
       "pop_housing_usage_mult": 0.1
     },
+    "effects": "Happiness to non-noxious Pops: $@noxious_happiness_penalty|%$  - Happiness per non-noxious Pop (not including Pops unaffected by Happiness): $@noxious_happiness_bonus|%$ (max: +40%) | habitability_floor_add: +0.3; habitability_ceil_add: -0.3; army_damage_mult: +50.0%; pop_housing_usage_mult: +10.0%",
     "custom_tooltip": "noxious_tooltip",
     "slave_cost": {
       "energy": -500
@@ -7508,10 +7508,10 @@
       "genetic_ascension",
       "drawbacks"
     ],
-    "effects": "leader_lifespan_add: +50",
     "modifier": {
       "leader_lifespan_add": 50
     },
+    "effects": "Exotic Gas Upkeep: +0.125  - Pop Growth Speed: + 25%  - Habitability: + 25% | leader_lifespan_add: +50 | Triggered: logistic_growth_mult: +25.0%; pop_environment_tolerance: +0.25",
     "custom_tooltip": "exotic_metabolism_tooltip",
     "slave_cost": {
       "energy": 750
@@ -7539,10 +7539,10 @@
       "leader",
       "special"
     ],
-    "effects": "leader_lifespan_add: -20",
     "modifier": {
       "leader_lifespan_add": -20
     },
+    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Fleeting Excellence picks modifiers from the | leader_lifespan_add: -20",
     "custom_tooltip": "automodding_trait_overtuned_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7570,10 +7570,10 @@
       "leader",
       "special"
     ],
-    "effects": "leader_lifespan_add: -10",
     "modifier": {
       "leader_lifespan_add": -10
     },
+    "effects": "Habitability: +20% | leader_lifespan_add: -10 | Triggered: pop_environment_tolerance: +0.2; pop_environment_tolerance: +0.4",
     "custom_tooltip": "spliced_adaptability_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7602,11 +7602,11 @@
       "leader",
       "special"
     ],
-    "effects": "army_damage_mult: +40.0%; leader_lifespan_add: -10",
     "modifier": {
       "army_damage_mult": 0.4,
       "leader_lifespan_add": -10
     },
+    "effects": "Job Efficiency for Workers: +5%. | army_damage_mult: +40.0%; leader_lifespan_add: -10",
     "custom_tooltip": "juiced_power_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7635,10 +7635,10 @@
       "leader",
       "special"
     ],
-    "effects": "leader_lifespan_add: -10",
     "modifier": {
       "leader_lifespan_add": -10
     },
+    "effects": "Job Efficiency for : +15% | leader_lifespan_add: -10",
     "custom_tooltip": "farm_hands_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7667,10 +7667,10 @@
       "leader",
       "special"
     ],
-    "effects": "leader_lifespan_add: -10",
     "modifier": {
       "leader_lifespan_add": -10
     },
+    "effects": "Job Efficiency for : +15% | leader_lifespan_add: -10",
     "custom_tooltip": "crack_miner_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7699,10 +7699,10 @@
       "leader",
       "special"
     ],
-    "effects": "leader_lifespan_add: -10",
     "modifier": {
       "leader_lifespan_add": -10
     },
+    "effects": "Job Efficiency for : +15% | leader_lifespan_add: -10",
     "custom_tooltip": "technical_skill_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7731,10 +7731,10 @@
       "leader",
       "special"
     ],
-    "effects": "leader_lifespan_add: -10",
     "modifier": {
       "leader_lifespan_add": -10
     },
+    "effects": "Job Efficiency for : +25% | leader_lifespan_add: -10",
     "custom_tooltip": "trait_commercial_genius_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7763,10 +7763,10 @@
       "leader",
       "special"
     ],
-    "effects": "leader_lifespan_add: -10",
     "modifier": {
       "leader_lifespan_add": -10
     },
+    "effects": "Job Efficiency for : +15% | leader_lifespan_add: -10",
     "custom_tooltip": "crafted_smiles_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7795,10 +7795,10 @@
       "leader",
       "special"
     ],
-    "effects": "leader_lifespan_add: -10",
     "modifier": {
       "leader_lifespan_add": -10
     },
+    "effects": "Pop Consumer Goods Upkeep: -10% | leader_lifespan_add: -10",
     "custom_tooltip": "low_maintenance_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7829,10 +7829,10 @@
       "leader",
       "special"
     ],
-    "effects": "leader_lifespan_add: -10",
     "modifier": {
       "leader_lifespan_add": -10
     },
+    "effects": "Job Efficiency for : +10% | leader_lifespan_add: -10",
     "custom_tooltip": "artificial_intelligence_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7861,10 +7861,10 @@
       "leader",
       "special"
     ],
-    "effects": "leader_lifespan_add: -10",
     "modifier": {
       "leader_lifespan_add": -10
     },
+    "effects": "Leader Experience Gain: +25% | leader_lifespan_add: -10",
     "custom_tooltip": "gene_mentorship_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7893,10 +7893,10 @@
       "leader",
       "special"
     ],
-    "effects": "leader_lifespan_add: -10",
     "modifier": {
       "leader_lifespan_add": -10
     },
+    "effects": "Job Efficiency for : +10% | leader_lifespan_add: -10",
     "custom_tooltip": "expressed_tradition_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7927,12 +7927,12 @@
       "leader",
       "special"
     ],
-    "effects": "leader_lifespan_add: -30; negative_leader_traits_species: -1; leaders_upkeep_mult: -25.0%",
     "modifier": {
       "leader_lifespan_add": -30,
       "negative_leader_traits_species": -1,
       "leaders_upkeep_mult": -0.25
     },
+    "effects": "Job Efficiency for : +20% | leader_lifespan_add: -30; negative_leader_traits_species: -1; leaders_upkeep_mult: -25.0%",
     "custom_tooltip": "elevated_synapses_tooltip",
     "slave_cost": {
       "energy": 2000
@@ -7961,10 +7961,10 @@
       "leader",
       "special"
     ],
-    "effects": "leader_lifespan_add: -30",
     "modifier": {
       "leader_lifespan_add": -30
     },
+    "effects": "Pop Growth Speed: +30%  - Pop Housing Usage: -10% | leader_lifespan_add: -30 | Triggered: logistic_growth_mult: +30.0%; logistic_growth_mult: +60.0%",
     "custom_tooltip": "preplanned_growth_tooltip",
     "slave_cost": {
       "energy": 2000
@@ -7993,10 +7993,10 @@
       "leader",
       "special"
     ],
-    "effects": "leader_lifespan_add: -30",
     "modifier": {
       "leader_lifespan_add": -30
     },
+    "effects": "Habitability: +30%  - Job Efficiency: +5% | leader_lifespan_add: -30 | Triggered: pop_environment_tolerance: +0.3; pop_environment_tolerance: +0.6",
     "custom_tooltip": "excessive_endurance_tooltip",
     "slave_cost": {
       "energy": 2000
@@ -8023,8 +8023,8 @@
       "automod",
       "cybernetic"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Universal Augmentations picks modifiers from the   Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$",
     "custom_tooltip": "automodding_trait_cyborg_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -8060,10 +8060,10 @@
       "mineral",
       "cybernetic"
     ],
-    "effects": "miner_jobs_bonus_workforce_mult: +10.0%",
     "modifier": {
       "miner_jobs_bonus_workforce_mult": 0.1
     },
+    "effects": "miner_jobs_bonus_workforce_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -8099,10 +8099,10 @@
       "food",
       "cybernetic"
     ],
-    "effects": "farmer_jobs_bonus_workforce_mult: +10.0%",
     "modifier": {
       "farmer_jobs_bonus_workforce_mult": 0.1
     },
+    "effects": "farmer_jobs_bonus_workforce_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -8138,10 +8138,10 @@
       "energy",
       "cybernetic"
     ],
-    "effects": "technician_jobs_bonus_workforce_mult: +10.0%",
     "modifier": {
       "technician_jobs_bonus_workforce_mult": 0.1
     },
+    "effects": "technician_jobs_bonus_workforce_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -8168,10 +8168,10 @@
       "pop_output",
       "cybernetic"
     ],
-    "effects": "pop_bonus_workforce_mult: +5.0%",
     "modifier": {
       "pop_bonus_workforce_mult": 0.05
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | pop_bonus_workforce_mult: +5.0%",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 500
@@ -8199,10 +8199,10 @@
       "research",
       "cybernetic"
     ],
-    "effects": "researcher_jobs_bonus_workforce_mult: +10.0%",
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": 0.1
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | researcher_jobs_bonus_workforce_mult: +10.0%",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 750
@@ -8232,10 +8232,10 @@
       "cybernetic",
       "individual"
     ],
-    "effects": "pop_happiness: +0.1",
     "modifier": {
       "pop_happiness": 0.1
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | pop_happiness: +0.1",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 500
@@ -8265,11 +8265,11 @@
       "migration",
       "cybernetic"
     ],
-    "effects": "pop_housing_usage_mult: -10.0%; pop_resettlement_cost_mult: -35.0%",
     "modifier": {
       "pop_housing_usage_mult": -0.1,
       "pop_resettlement_cost_mult": -0.35
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | pop_housing_usage_mult: -10.0%; pop_resettlement_cost_mult: -35.0%",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 1500
@@ -8299,11 +8299,11 @@
       "migration",
       "cybernetic"
     ],
-    "effects": "pop_housing_usage_mult: +10.0%; pop_resettlement_cost_mult: +35.0%",
     "modifier": {
       "pop_housing_usage_mult": 0.1,
       "pop_resettlement_cost_mult": 0.35
     },
+    "effects": "pop_housing_usage_mult: +10.0%; pop_resettlement_cost_mult: +35.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -500
@@ -8332,11 +8332,11 @@
       "leader",
       "cybernetic"
     ],
-    "effects": "negative_leader_traits_species: -1; leaders_upkeep_mult: -25.0%",
     "modifier": {
       "negative_leader_traits_species": -1,
       "leaders_upkeep_mult": -0.25
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | negative_leader_traits_species: -1; leaders_upkeep_mult: -25.0%",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 750
@@ -8365,10 +8365,10 @@
       "amenities",
       "cybernetic"
     ],
-    "effects": "pop_amenities_usage_add: -0.5",
     "modifier": {
       "pop_amenities_usage_add": -0.5
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | pop_amenities_usage_add: -0.5",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 750
@@ -8397,10 +8397,10 @@
       "amenities",
       "cybernetic"
     ],
-    "effects": "pop_amenities_usage_add: +0.5",
     "modifier": {
       "pop_amenities_usage_add": 0.5
     },
+    "effects": "pop_amenities_usage_add: +0.5",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -150
@@ -8429,12 +8429,12 @@
       "leader",
       "cybernetic"
     ],
-    "effects": "species_leader_exp_gain: +0.1; negative_leader_traits_species: -1; leaders_upkeep_mult: -10.0%",
     "modifier": {
       "species_leader_exp_gain": 0.1,
       "negative_leader_traits_species": -1,
       "leaders_upkeep_mult": -0.1
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | species_leader_exp_gain: +0.1; negative_leader_traits_species: -1; leaders_upkeep_mult: -10.0%",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 1500
@@ -8461,9 +8461,9 @@
       "upkeep",
       "cybernetic"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Increases Energy Credits Upkeep by +1",
+    "custom_tooltip": "TRAIT_POWER_INTENSIVE_EFFECT",
     "slave_cost": {
       "energy": -250
     }
@@ -8491,12 +8491,12 @@
       "leader",
       "cybernetic"
     ],
-    "effects": "species_leader_exp_gain: -0.1; negative_leader_traits_species: +1; leaders_upkeep_mult: +10.0%",
     "modifier": {
       "species_leader_exp_gain": -0.1,
       "negative_leader_traits_species": 1,
       "leaders_upkeep_mult": 0.1
     },
+    "effects": "species_leader_exp_gain: -0.1; negative_leader_traits_species: +1; leaders_upkeep_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -500
@@ -8525,10 +8525,10 @@
       "empire_size",
       "cybernetic"
     ],
-    "effects": "species_empire_size_mult: -10.0%",
     "modifier": {
       "species_empire_size_mult": -0.1
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | species_empire_size_mult: -10.0%",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 750
@@ -8557,10 +8557,10 @@
       "empire_size",
       "cybernetic"
     ],
-    "effects": "species_empire_size_mult: +10.0%",
     "modifier": {
       "species_empire_size_mult": 0.1
     },
+    "effects": "species_empire_size_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -150
@@ -8590,10 +8590,10 @@
       "trade",
       "cybernetic"
     ],
-    "effects": "trader_jobs_bonus_workforce_mult: +25.0%",
     "modifier": {
       "trader_jobs_bonus_workforce_mult": 0.25
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | trader_jobs_bonus_workforce_mult: +25.0%",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 500
@@ -8623,10 +8623,10 @@
       "amenities",
       "cybernetic"
     ],
-    "effects": "influential_jobs_bonus_workforce_mult: +20.0%",
     "modifier": {
       "influential_jobs_bonus_workforce_mult": 0.2
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | influential_jobs_bonus_workforce_mult: +20.0%",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 750
@@ -8655,10 +8655,10 @@
       "leader",
       "cybernetic"
     ],
-    "effects": "influential_jobs_bonus_workforce_mult: -20.0%",
     "modifier": {
       "influential_jobs_bonus_workforce_mult": -0.2
     },
+    "effects": "influential_jobs_bonus_workforce_mult: -20.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -500
@@ -8688,10 +8688,10 @@
       "cybernetic",
       "individual"
     ],
-    "effects": "pop_happiness: -0.1",
     "modifier": {
       "pop_happiness": -0.1
     },
+    "effects": "pop_happiness: -0.1",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -150
@@ -8722,10 +8722,10 @@
       "research",
       "cybernetic"
     ],
-    "effects": "engineer_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "engineer_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "engineer_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -8756,10 +8756,10 @@
       "research",
       "cybernetic"
     ],
-    "effects": "physicist_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "physicist_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "physicist_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -8790,10 +8790,10 @@
       "research",
       "cybernetic"
     ],
-    "effects": "biologist_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "biologist_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "biologist_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
@@ -8822,11 +8822,11 @@
       "army",
       "cybernetic"
     ],
-    "effects": "army_damage_mult: +100.0%; enforcer_jobs_bonus_workforce_mult: +20.0%",
     "modifier": {
       "army_damage_mult": 1.0,
       "enforcer_jobs_bonus_workforce_mult": 0.2
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | army_damage_mult: +100.0%; enforcer_jobs_bonus_workforce_mult: +20.0%",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 1000
@@ -8856,11 +8856,11 @@
       "pop_output",
       "cybernetic"
     ],
-    "effects": "army_damage_mult: -50.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -5.0%",
     "modifier": {
       "army_damage_mult": -0.5,
       "worker_and_simple_drone_cat_bonus_workforce_mult": -0.05
     },
+    "effects": "army_damage_mult: -50.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -5.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -250
@@ -8889,10 +8889,10 @@
       "leader",
       "cybernetic"
     ],
-    "effects": "species_leader_exp_gain: -0.4",
     "modifier": {
       "species_leader_exp_gain": -0.4
     },
+    "effects": "species_leader_exp_gain: -0.4",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -150
@@ -8923,10 +8923,10 @@
       "trade",
       "cybernetic"
     ],
-    "effects": "trader_jobs_bonus_workforce_mult: -25.0%",
     "modifier": {
       "trader_jobs_bonus_workforce_mult": -0.25
     },
+    "effects": "trader_jobs_bonus_workforce_mult: -25.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -150
@@ -8956,7 +8956,6 @@
       "habitability",
       "cybernetic"
     ],
-    "effects": "pc_desert_habitability: +0.3; pc_arid_habitability: +0.3; pc_savannah_habitability: +0.3; pc_tropical_habitability: -0.1; pc_continental_habitability: -0.1; pc_tundra_habitability: -0.1; pc_arctic_habitability: -0.1; pc_ocean_habitability: -0.1; pc_alpine_habitability: -0.1",
     "modifier": {
       "pc_desert_habitability": 0.3,
       "pc_arid_habitability": 0.3,
@@ -8968,6 +8967,7 @@
       "pc_ocean_habitability": -0.1,
       "pc_alpine_habitability": -0.1
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | pc_desert_habitability: +0.3; pc_arid_habitability: +0.3; pc_savannah_habitability: +0.3; pc_tropical_habitability: -0.1; pc_continental_habitability: -0.1; pc_tundra_habitability: -0.1; pc_arctic_habitability: -0.1; pc_ocean_habitability: -0.1; pc_alpine_habitability: -0.1",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 500
@@ -8997,7 +8997,6 @@
       "habitability",
       "cybernetic"
     ],
-    "effects": "pc_tropical_habitability: +0.3; pc_continental_habitability: +0.3; pc_ocean_habitability: +0.3; pc_desert_habitability: -0.1; pc_arid_habitability: -0.1; pc_savannah_habitability: -0.1; pc_arctic_habitability: -0.1; pc_tundra_habitability: -0.1; pc_alpine_habitability: -0.1",
     "modifier": {
       "pc_tropical_habitability": 0.3,
       "pc_continental_habitability": 0.3,
@@ -9009,6 +9008,7 @@
       "pc_tundra_habitability": -0.1,
       "pc_alpine_habitability": -0.1
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | pc_tropical_habitability: +0.3; pc_continental_habitability: +0.3; pc_ocean_habitability: +0.3; pc_desert_habitability: -0.1; pc_arid_habitability: -0.1; pc_savannah_habitability: -0.1; pc_arctic_habitability: -0.1; pc_tundra_habitability: -0.1; pc_alpine_habitability: -0.1",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 500
@@ -9038,7 +9038,6 @@
       "habitability",
       "cybernetic"
     ],
-    "effects": "pc_alpine_habitability: +0.3; pc_tundra_habitability: +0.3; pc_arctic_habitability: +0.3; pc_desert_habitability: -0.1; pc_arid_habitability: -0.1; pc_savannah_habitability: -0.1; pc_ocean_habitability: -0.1; pc_continental_habitability: -0.1; pc_tropical_habitability: -0.1",
     "modifier": {
       "pc_alpine_habitability": 0.3,
       "pc_tundra_habitability": 0.3,
@@ -9050,6 +9049,7 @@
       "pc_continental_habitability": -0.1,
       "pc_tropical_habitability": -0.1
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | pc_alpine_habitability: +0.3; pc_tundra_habitability: +0.3; pc_arctic_habitability: +0.3; pc_desert_habitability: -0.1; pc_arid_habitability: -0.1; pc_savannah_habitability: -0.1; pc_ocean_habitability: -0.1; pc_continental_habitability: -0.1; pc_tropical_habitability: -0.1",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 500
@@ -9079,11 +9079,11 @@
       "leviathan",
       "cybernetic"
     ],
-    "effects": "army_damage_mult: +500%; foundry_jobs_bonus_workforce_mult: +15.0%",
     "modifier": {
       "army_damage_mult": 5,
       "foundry_jobs_bonus_workforce_mult": 0.15
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | army_damage_mult: +500%; foundry_jobs_bonus_workforce_mult: +15.0%",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 1500
@@ -9111,10 +9111,10 @@
       "leviathan",
       "cybernetic"
     ],
-    "effects": "pop_amenities_usage_mult: -50.0%",
     "modifier": {
       "pop_amenities_usage_mult": -0.5
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | pop_amenities_usage_mult: -50.0%",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 1500
@@ -9142,10 +9142,10 @@
       "research",
       "cybernetic"
     ],
-    "effects": "planet_researchers_upkeep_mult: -50.0%",
     "modifier": {
       "planet_researchers_upkeep_mult": -0.5
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | planet_researchers_upkeep_mult: -50.0%",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 1500
@@ -9173,10 +9173,10 @@
       "leviathan",
       "cybernetic"
     ],
-    "effects": "logistic_growth_mult: +100%",
     "modifier": {
       "logistic_growth_mult": 1
     },
+    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | logistic_growth_mult: +100%",
     "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
     "slave_cost": {
       "energy": 1500
@@ -9207,12 +9207,12 @@
       "cybernetic",
       "special"
     ],
-    "effects": "foundry_jobs_bonus_workforce_mult: +20.0%; artisan_jobs_bonus_workforce_mult: +20.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%",
     "modifier": {
       "foundry_jobs_bonus_workforce_mult": 0.2,
       "artisan_jobs_bonus_workforce_mult": 0.2,
       "bureaucrat_jobs_bonus_workforce_mult": 0.1
     },
+    "effects": "foundry_jobs_bonus_workforce_mult: +20.0%; artisan_jobs_bonus_workforce_mult: +20.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -9242,12 +9242,12 @@
       "cybernetic",
       "special"
     ],
-    "effects": "army_health: +0.25; army_defense_damage_mult: +25.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%",
     "modifier": {
       "army_health": 0.25,
       "army_defense_damage_mult": 0.25,
       "bureaucrat_jobs_bonus_workforce_mult": 0.1
     },
+    "effects": "army_health: +0.25; army_defense_damage_mult: +25.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -9277,11 +9277,11 @@
       "cybernetic",
       "special"
     ],
-    "effects": "researcher_jobs_bonus_workforce_mult: +20.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%",
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": 0.2,
       "bureaucrat_jobs_bonus_workforce_mult": 0.1
     },
+    "effects": "researcher_jobs_bonus_workforce_mult: +20.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -9311,11 +9311,11 @@
       "cybernetic",
       "special"
     ],
-    "effects": "pop_cat_worker_bonus_workforce_mult: +20.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%",
     "modifier": {
       "pop_cat_worker_bonus_workforce_mult": 0.2,
       "bureaucrat_jobs_bonus_workforce_mult": 0.1
     },
+    "effects": "pop_cat_worker_bonus_workforce_mult: +20.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -9348,7 +9348,6 @@
       "cybernetic",
       "special"
     ],
-    "effects": "foundry_jobs_bonus_workforce_mult: +5.0%; engineer_jobs_bonus_workforce_mult: +5.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%; pop_cat_worker_bonus_workforce_mult: +5.0%; army_damage_mult: +5.0%",
     "modifier": {
       "foundry_jobs_bonus_workforce_mult": 0.05,
       "engineer_jobs_bonus_workforce_mult": 0.05,
@@ -9356,6 +9355,7 @@
       "pop_cat_worker_bonus_workforce_mult": 0.05,
       "army_damage_mult": 0.05
     },
+    "effects": "foundry_jobs_bonus_workforce_mult: +5.0%; engineer_jobs_bonus_workforce_mult: +5.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%; pop_cat_worker_bonus_workforce_mult: +5.0%; army_damage_mult: +5.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -9387,11 +9387,11 @@
       "habitability",
       "special"
     ],
-    "effects": "pop_resettlement_cost_mult: -50.0%; pop_environment_tolerance: +0.1",
     "modifier": {
       "pop_resettlement_cost_mult": -0.5,
       "pop_environment_tolerance": 0.1
     },
+    "effects": "pop_resettlement_cost_mult: -50.0%; pop_environment_tolerance: +0.1",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -9420,12 +9420,12 @@
       "habitability",
       "special"
     ],
-    "effects": "logistic_growth_mult: +15.0%; pop_housing_usage_mult: -15.0%; pop_environment_tolerance: +0.15",
     "modifier": {
       "logistic_growth_mult": 0.15,
       "pop_housing_usage_mult": -0.15,
       "pop_environment_tolerance": 0.15
     },
+    "effects": "logistic_growth_mult: +15.0%; pop_housing_usage_mult: -15.0%; pop_environment_tolerance: +0.15",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 2500
@@ -9453,13 +9453,13 @@
       "research",
       "special"
     ],
-    "effects": "leader_lifespan_mult: +50.0%; pop_environment_tolerance: +0.5; logistic_growth_mult: -25.0%; planet_pops_upkeep_mult: +50.0%",
     "modifier": {
       "leader_lifespan_mult": 0.5,
       "pop_environment_tolerance": 0.5,
       "logistic_growth_mult": -0.25,
       "planet_pops_upkeep_mult": 0.5
     },
+    "effects": "- Energy Credits Upkeep per 100 Pops: +$@living_standard_energy_normal|*0$  - Every 100 Pops working as a slave or better produces 0.5 Physics Research per month | leader_lifespan_mult: +50.0%; pop_environment_tolerance: +0.5; logistic_growth_mult: -25.0%; planet_pops_upkeep_mult: +50.0%",
     "custom_tooltip": "TRAIT_EXD_EFFECT",
     "slave_cost": {}
   },
@@ -9480,8 +9480,8 @@
       "MACHINE"
     ],
     "tags": [],
-    "effects": "",
     "modifier": {},
+    "effects": "While in a Cosmic Storm:  Job Efficiency: +10%  Amenity Usage: -10%",
     "custom_tooltip": "trait_storm_touched_modifier_tooltip",
     "slave_cost": {}
   },
@@ -9498,8 +9498,8 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "",
     "modifier": {},
+    "effects": "While in a Cosmic Storm: Job Efficiency: +10% Happiness: +5%",
     "custom_tooltip": "trait_storm_fused_modifier_tooltip",
     "slave_cost": {}
   },
@@ -9543,8 +9543,8 @@
       "negative",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "Cannot colonize planets or be resettled",
     "custom_tooltip": "pathogenic_genes_tooltip",
     "slave_cost": {}
   },
@@ -9573,10 +9573,10 @@
       "cybernetic",
       "special"
     ],
-    "effects": "pop_bonus_workforce_mult: +5.0%",
     "modifier": {
       "pop_bonus_workforce_mult": 0.05
     },
+    "effects": "pop_bonus_workforce_mult: +5.0%",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -9596,10 +9596,10 @@
       "MACHINE"
     ],
     "tags": [],
-    "effects": "pop_bonus_workforce_mult: -15.0%",
     "modifier": {
       "pop_bonus_workforce_mult": -0.15
     },
+    "effects": "pop_bonus_workforce_mult: -15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -500
@@ -9638,9 +9638,9 @@
       "aquatic",
       "species"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Pop Growth Speed: +15% while living on a planet with a local Food (or Minerals) Production Surplus | Triggered: logistic_growth_mult: +15.0%",
+    "custom_tooltip": "trait_egg_laying_effect",
     "slave_cost": {
       "energy": 500
     }
@@ -9672,11 +9672,11 @@
       "reptilian",
       "species"
     ],
-    "effects": "planet_pops_upkeep_mult: -15.0%",
     "modifier": {
       "planet_pops_upkeep_mult": -0.15
     },
-    "custom_tooltip": "",
+    "effects": "Employed Pop Upkeep: -15%  - Unemployed and Pop Upkeep: -75% | planet_pops_upkeep_mult: -15.0%",
+    "custom_tooltip": "trait_seasonal_dormancy_effect",
     "slave_cost": {
       "energy": 500
     }
@@ -9709,9 +9709,9 @@
       "toxoid",
       "species"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Job Efficiency for Workers & Menial Drones per Planet Size: -0.67%",
+    "custom_tooltip": "trait_hollow_bones_effect",
     "slave_cost": {
       "energy": -400
     }
@@ -9742,11 +9742,11 @@
       "plantoid",
       "species"
     ],
-    "effects": "pop_resettlement_cost_mult: +200%",
     "modifier": {
       "pop_resettlement_cost_mult": 2
     },
-    "custom_tooltip": "",
+    "effects": "Pops will not Automatically Resettle  - Resettlement Cost: +200% | pop_resettlement_cost_mult: +200%",
+    "custom_tooltip": "trait_rooted_effect",
     "slave_cost": {
       "energy": -400
     }
@@ -9774,11 +9774,11 @@
       "toxoid",
       "species"
     ],
-    "effects": "pop_cat_purge_bonus_workforce_mult: -75.0%",
     "modifier": {
       "pop_cat_purge_bonus_workforce_mult": -0.75
     },
-    "custom_tooltip": "",
+    "effects": "Armies Explode on Death for 250 Damage to Enemies  - Purged Pop Resource Output: -75% | pop_cat_purge_bonus_workforce_mult: -75.0%",
+    "custom_tooltip": "trait_acidic_vascularity_effect",
     "slave_cost": {
       "energy": 500
     }
@@ -9815,11 +9815,11 @@
       "molluscoid",
       "species"
     ],
-    "effects": "pop_housing_usage_mult: -75.0%; pop_environment_tolerance: +0.1",
     "modifier": {
       "pop_housing_usage_mult": -0.75,
       "pop_environment_tolerance": 0.1
     },
+    "effects": "pop_housing_usage_mult: -75.0%; pop_environment_tolerance: +0.1",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1500
@@ -9855,11 +9855,11 @@
       "reptilian",
       "species"
     ],
-    "effects": "physicist_jobs_bonus_workforce_mult: +10.0%; army_health: +0.2",
     "modifier": {
       "physicist_jobs_bonus_workforce_mult": 0.1,
       "army_health": 0.2
     },
+    "effects": "physicist_jobs_bonus_workforce_mult: +10.0%; army_health: +0.2",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -9896,13 +9896,13 @@
       "reptilian",
       "species"
     ],
-    "effects": "physicist_jobs_bonus_workforce_mult: +20.0%; bureaucrat_jobs_bonus_workforce_mult: +20.0%; army_health: +0.4; pop_government_ethic_attraction: +0.15",
     "modifier": {
       "physicist_jobs_bonus_workforce_mult": 0.2,
       "bureaucrat_jobs_bonus_workforce_mult": 0.2,
       "army_health": 0.4,
       "pop_government_ethic_attraction": 0.15
     },
+    "effects": "physicist_jobs_bonus_workforce_mult: +20.0%; bureaucrat_jobs_bonus_workforce_mult: +20.0%; army_health: +0.4; pop_government_ethic_attraction: +0.15",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1500
@@ -9931,10 +9931,10 @@
       "necroid",
       "species"
     ],
-    "effects": "pop_amenities_usage_add: +0.5",
     "modifier": {
       "pop_amenities_usage_add": 0.5
     },
+    "effects": "pop_amenities_usage_add: +0.5",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -1000
@@ -9965,9 +9965,9 @@
       "individual",
       "species"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Happiness per 100 Pops with this Trait on the same planet: 0.1% (Max: +20%)",
+    "custom_tooltip": "trait_familial_effect",
     "slave_cost": {
       "energy": 1000
     }
@@ -9998,9 +9998,9 @@
       "aquatic",
       "species"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Habitability on worlds with a different from our Preference: -20% | Triggered: pop_environment_tolerance: -0.2",
+    "custom_tooltip": "trait_permeable_skin_effect",
     "slave_cost": {
       "energy": -1000
     }
@@ -10031,9 +10031,9 @@
       "necroid",
       "species"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Habitability from Colony Age: +0.5% per Year (Max. +25%) | Triggered: is_colony: +True; pop_environment_tolerance: +0.005",
+    "custom_tooltip": "trait_genetic_memory_effect",
     "slave_cost": {
       "energy": 1000
     }
@@ -10071,9 +10071,9 @@
       "arthropoid",
       "species"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Newly grown Pops with this trait spend the first 5 Years after being grown as a Pre-Sapient.",
+    "custom_tooltip": "trait_nascent_stage_effect",
     "slave_cost": {
       "energy": -1000
     }
@@ -10104,11 +10104,11 @@
       "arthropoid",
       "species"
     ],
-    "effects": "commander_skill_add: +1; army_damage_taken_mult: -30.0%",
     "modifier": {
       "commander_skill_add": 1,
       "army_damage_taken_mult": -0.3
     },
+    "effects": "commander_skill_add: +1; army_damage_taken_mult: -30.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 500
@@ -10143,12 +10143,12 @@
       "arthropoid",
       "species"
     ],
-    "effects": "leader_skill_add: +1; army_damage_taken_mult: -50.0%; pop_housing_usage_mult: -15.0%",
     "modifier": {
       "leader_skill_add": 1,
       "army_damage_taken_mult": -0.5,
       "pop_housing_usage_mult": -0.15
     },
+    "effects": "leader_skill_add: +1; army_damage_taken_mult: -50.0%; pop_housing_usage_mult: -15.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1000
@@ -10179,11 +10179,11 @@
       "toxoid",
       "species"
     ],
-    "effects": "livestock_jobs_bonus_workforce_mult: +50.0%",
     "modifier": {
       "livestock_jobs_bonus_workforce_mult": 0.5
     },
-    "custom_tooltip": "",
+    "effects": "Leaders will survive their first death  - On Offensive Army Death: 20% Chance to spawn a Replacement Army  - Livestock Output: +50% | livestock_jobs_bonus_workforce_mult: +50.0%",
+    "custom_tooltip": "trait_spare_organs_effect",
     "slave_cost": {
       "energy": 1000
     }
@@ -10211,9 +10211,9 @@
       "automod",
       "special"
     ],
-    "effects": "",
     "modifier": {},
-    "custom_tooltip": "",
+    "effects": "Species with this Trait cannot be Genetically Modified ['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working. Malleable Genes picks modifiers from the",
+    "custom_tooltip": "trait_malleable_genes_cant_modify",
     "slave_cost": {
       "energy": 500
     }
@@ -10240,8 +10240,8 @@
       "mineral",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10267,8 +10267,8 @@
       "energy",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10294,8 +10294,8 @@
       "food",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10321,8 +10321,8 @@
       "research",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10348,8 +10348,8 @@
       "unity",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10376,8 +10376,8 @@
       "consumer_goods",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10403,8 +10403,8 @@
       "trade",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10430,8 +10430,8 @@
       "amenities",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10461,8 +10461,8 @@
       "automod",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Adaptive Mutations picks modifiers from the",
     "custom_tooltip": "automodding_trait_adaptive_mutations_tt",
     "slave_cost": {
       "energy": 500
@@ -10490,8 +10490,8 @@
       "mineral",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10517,8 +10517,8 @@
       "energy",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10544,8 +10544,8 @@
       "food",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10571,8 +10571,8 @@
       "research",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10598,8 +10598,8 @@
       "unity",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10626,8 +10626,8 @@
       "consumer_goods",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10653,8 +10653,8 @@
       "trade",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10680,8 +10680,8 @@
       "amenities",
       "special"
     ],
-    "effects": "",
     "modifier": {},
+    "effects": "",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10712,7 +10712,6 @@
       "organic",
       "special"
     ],
-    "effects": "pc_city_habitability: -2; pc_machine_habitability: -2; pc_relic_habitability: -2; pc_hive_habitability: -2; pc_ringworld_habitable_habitability: -2; pc_shattered_ring_habitable_habitability: -2; pc_nanotech_habitability: -2; pc_habitat_habitability: -2",
     "modifier": {
       "pc_city_habitability": -2,
       "pc_machine_habitability": -2,
@@ -10723,6 +10722,7 @@
       "pc_nanotech_habitability": -2,
       "pc_habitat_habitability": -2
     },
+    "effects": "pc_city_habitability: -2; pc_machine_habitability: -2; pc_relic_habitability: -2; pc_hive_habitability: -2; pc_ringworld_habitable_habitability: -2; pc_shattered_ring_habitable_habitability: -2; pc_nanotech_habitability: -2; pc_habitat_habitability: -2",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10741,11 +10741,11 @@
       "BIOLOGICAL"
     ],
     "tags": [],
-    "effects": "logistic_growth_mult: +10.0%; planet_pops_upkeep_mult: -10.0%",
     "modifier": {
       "logistic_growth_mult": 0.1,
       "planet_pops_upkeep_mult": -0.1
     },
+    "effects": "logistic_growth_mult: +10.0%; planet_pops_upkeep_mult: -10.0%",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10770,14 +10770,14 @@
       "pop_growth",
       "special"
     ],
-    "effects": "physicist_jobs_bonus_workforce_mult: +15.0%; leader_lifespan_add: -20; logistic_growth_mult: -20.0%; planet_pop_assembly_mult: -20.0%",
     "modifier": {
       "physicist_jobs_bonus_workforce_mult": 0.15,
       "leader_lifespan_add": -20,
       "logistic_growth_mult": -0.2,
       "planet_pop_assembly_mult": -0.2
     },
-    "custom_tooltip": "",
+    "effects": "Dark Matter per Pop per month : +$@inner_darkness_dark_matter_production$. | physicist_jobs_bonus_workforce_mult: +15.0%; leader_lifespan_add: -20; logistic_growth_mult: -20.0%; planet_pop_assembly_mult: -20.0%",
+    "custom_tooltip": "trait_inner_darkness_ct",
     "slave_cost": {}
   },
   {
@@ -10802,13 +10802,13 @@
       "research",
       "special"
     ],
-    "effects": "leader_lifespan_mult: -20.0%; logistic_growth_mult: -20.0%; pop_happiness: -0.1; biologist_jobs_bonus_workforce_mult: +25.0%",
     "modifier": {
       "leader_lifespan_mult": -0.2,
       "logistic_growth_mult": -0.2,
       "pop_happiness": -0.1,
       "biologist_jobs_bonus_workforce_mult": 0.25
     },
+    "effects": "leader_lifespan_mult: -20.0%; logistic_growth_mult: -20.0%; pop_happiness: -0.1; biologist_jobs_bonus_workforce_mult: +25.0%",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -10832,11 +10832,11 @@
       "psionic",
       "special"
     ],
-    "effects": "pop_happiness: +0.05; planet_jobs_produces_mult: +5.0%",
     "modifier": {
       "pop_happiness": 0.05,
       "planet_jobs_produces_mult": 0.05
     },
+    "effects": "If Species is Psionic or Latent Psionic: Job Efficiency for Administrative jobs: +5% Job Efficiency for Researcher jobs: +5% | pop_happiness: +0.05; planet_jobs_produces_mult: +5.0%",
     "custom_tooltip": "trait_psionic_ephapse_modifier_tooltip",
     "slave_cost": {}
   },
@@ -10858,11 +10858,11 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "army_damage_mult: +75.0%; logistic_growth_mult: -20.0%",
     "modifier": {
       "army_damage_mult": 0.75,
       "logistic_growth_mult": -0.2
     },
+    "effects": "Happiness During War and Crisis: +30%  - Commanders Provide Ship Fire Rate: +20% | army_damage_mult: +75.0%; logistic_growth_mult: -20.0%",
     "custom_tooltip": "trait_unplugged_cybernetic_positives_3_tt",
     "slave_cost": {}
   },
@@ -10884,11 +10884,11 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "army_damage_mult: +50.0%; logistic_growth_mult: -10.0%",
     "modifier": {
       "army_damage_mult": 0.5,
       "logistic_growth_mult": -0.1
     },
+    "effects": "Commanders Provide Ship Fire Rate: +10% | army_damage_mult: +50.0%; logistic_growth_mult: -10.0%",
     "custom_tooltip": "trait_unplugged_cybernetic_positives_2_tt",
     "slave_cost": {}
   },
@@ -10910,10 +10910,10 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "army_damage_mult: +25.0%",
     "modifier": {
       "army_damage_mult": 0.25
     },
+    "effects": "Commanders Provide Ship Fire Rate: +5% | army_damage_mult: +25.0%",
     "custom_tooltip": "trait_unplugged_cybernetic_positives_1_tt",
     "slave_cost": {}
   },
@@ -10933,11 +10933,11 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "pop_amenities_usage_add: +1; leader_lifespan_add: -20",
     "modifier": {
       "pop_amenities_usage_add": 1,
       "leader_lifespan_add": -20
     },
+    "effects": "Happiness When Not in War or Crisis: -10% | pop_amenities_usage_add: +1; leader_lifespan_add: -20",
     "custom_tooltip": "trait_unplugged_cybernetic_negatives_3_tt",
     "slave_cost": {}
   },
@@ -10957,10 +10957,10 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "pop_amenities_usage_add: +1",
     "modifier": {
       "pop_amenities_usage_add": 1
     },
+    "effects": "Happiness When Not in War or Crisis: -10% | pop_amenities_usage_add: +1",
     "custom_tooltip": "trait_unplugged_cybernetic_negatives_3_tt",
     "slave_cost": {}
   },
@@ -10980,10 +10980,10 @@
       "LITHOID"
     ],
     "tags": [],
-    "effects": "pop_amenities_usage_add: +1",
     "modifier": {
       "pop_amenities_usage_add": 1
     },
+    "effects": "pop_amenities_usage_add: +1",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -11012,13 +11012,13 @@
       "ethic_attraction",
       "individual"
     ],
-    "effects": "biologist_jobs_bonus_workforce_mult: +10.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%; pop_happiness: +0.05; pop_government_ethic_attraction: +0.2",
     "modifier": {
       "biologist_jobs_bonus_workforce_mult": 0.1,
       "bureaucrat_jobs_bonus_workforce_mult": 0.1,
       "pop_happiness": 0.05,
       "pop_government_ethic_attraction": 0.2
     },
+    "effects": "biologist_jobs_bonus_workforce_mult: +10.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%; pop_happiness: +0.05; pop_government_ethic_attraction: +0.2",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -11046,11 +11046,11 @@
       "ethic_attraction",
       "individual"
     ],
-    "effects": "species_empire_size_mult: -5.0%; pop_government_ethic_attraction: +0.15",
     "modifier": {
       "species_empire_size_mult": -0.05,
       "pop_government_ethic_attraction": 0.15
     },
+    "effects": "species_empire_size_mult: -5.0%; pop_government_ethic_attraction: +0.15",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -11076,11 +11076,11 @@
       "positive",
       "leader"
     ],
-    "effects": "negative_leader_traits_species: -1; species_leader_exp_gain: +0.1",
     "modifier": {
       "negative_leader_traits_species": -1,
       "species_leader_exp_gain": 0.1
     },
+    "effects": "negative_leader_traits_species: -1; species_leader_exp_gain: +0.1",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -11107,11 +11107,11 @@
       "habitability",
       "pop_growth"
     ],
-    "effects": "pop_environment_tolerance: +0.1; logistic_growth_mult: +10.0%",
     "modifier": {
       "pop_environment_tolerance": 0.1,
       "logistic_growth_mult": 0.1
     },
+    "effects": "pop_environment_tolerance: +0.1; logistic_growth_mult: +10.0%",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -11131,12 +11131,12 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "planet_pops_food_upkeep_mult: -50.0%; pop_amenities_usage_mult: +50.0%; logistic_growth_mult: -25.0%",
     "modifier": {
       "planet_pops_food_upkeep_mult": -0.5,
       "pop_amenities_usage_mult": 0.5,
       "logistic_growth_mult": -0.25
     },
+    "effects": "Cannot occupy Worker Jobs  - Cannot be recruited in Armies | planet_pops_food_upkeep_mult: -50.0%; pop_amenities_usage_mult: +50.0%; logistic_growth_mult: -25.0%",
     "custom_tooltip": "trait_tankbound_effects",
     "slave_cost": {}
   },
@@ -11161,10 +11161,10 @@
       "psionic",
       "species"
     ],
-    "effects": "councilor_skill_add: +2",
     "modifier": {
       "councilor_skill_add": 2
     },
+    "effects": "councilor_skill_add: +2",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 2000
@@ -11195,11 +11195,11 @@
       "psionic",
       "species"
     ],
-    "effects": "researcher_jobs_bonus_workforce_mult: +15.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -10.0%",
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": 0.15,
       "worker_and_simple_drone_cat_bonus_workforce_mult": -0.1
     },
+    "effects": "researcher_jobs_bonus_workforce_mult: +15.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 1500
@@ -11230,11 +11230,11 @@
       "psionic",
       "species"
     ],
-    "effects": "researcher_jobs_bonus_workforce_mult: +25.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -20.0%",
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": 0.25,
       "worker_and_simple_drone_cat_bonus_workforce_mult": -0.2
     },
+    "effects": "researcher_jobs_bonus_workforce_mult: +25.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -20.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": 2000
@@ -11262,11 +11262,11 @@
       "psionic",
       "species"
     ],
-    "effects": "specialist_and_complex_drone_cat_bonus_workforce_mult: -10.0%; pop_cat_ruler_bonus_workforce_mult: -10.0%",
     "modifier": {
       "specialist_and_complex_drone_cat_bonus_workforce_mult": -0.1,
       "pop_cat_ruler_bonus_workforce_mult": -0.1
     },
+    "effects": "specialist_and_complex_drone_cat_bonus_workforce_mult: -10.0%; pop_cat_ruler_bonus_workforce_mult: -10.0%",
     "custom_tooltip": "",
     "slave_cost": {
       "energy": -1000
@@ -11285,10 +11285,10 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "bureaucrat_jobs_bonus_workforce_mult: +25.0%",
     "modifier": {
       "bureaucrat_jobs_bonus_workforce_mult": 0.25
     },
+    "effects": "bureaucrat_jobs_bonus_workforce_mult: +25.0%",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -11305,11 +11305,11 @@
     "prerequisites": [],
     "allowed_archetypes": [],
     "tags": [],
-    "effects": "army_health: -0.06; army_morale_damage_mult: +6.0%",
     "modifier": {
       "army_health": -0.06,
       "army_morale_damage_mult": 0.06
     },
+    "effects": "Produced per 100 Pops : +0.06 | army_health: -0.06; army_morale_damage_mult: +6.0%",
     "custom_tooltip": "trait_marked_unity_bonus",
     "slave_cost": {}
   }

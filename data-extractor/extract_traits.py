@@ -46,6 +46,47 @@ def extract_modifier_effects(modifier_data: Any) -> str:
     return "; ".join(effects)
 
 
+def extract_triggered_modifiers(trait_data: Dict[str, Any]) -> str:
+    """
+    Extract effects from triggered modifiers (triggered_planet_growth_habitability_modifier, etc.)
+
+    Args:
+        trait_data: Raw trait data
+
+    Returns:
+        Formatted string describing triggered effects
+    """
+    effects = []
+
+    # Look for all triggered modifier types
+    triggered_keys = [
+        'triggered_planet_growth_habitability_modifier',
+        'triggered_pop_modifier',
+        'triggered_modifier',
+        'triggered_country_modifier',
+        'triggered_planet_pop_group_modifier_for_species',
+        'triggered_pop_modifier_for_species',
+        'triggered_planet_modifier'
+    ]
+
+    for key in triggered_keys:
+        if key in trait_data:
+            modifier_data = trait_data[key]
+            # Can be a single dict or list of dicts
+            if isinstance(modifier_data, dict):
+                modifier_data = [modifier_data]
+            elif not isinstance(modifier_data, list):
+                continue
+
+            for mod in modifier_data:
+                if isinstance(mod, dict):
+                    mod_effects = extract_modifier_effects(mod)
+                    if mod_effects:
+                        effects.append(mod_effects)
+
+    return "; ".join(effects)
+
+
 def extract_trait_data(trait_key: str, trait_data: Dict[str, Any], localizations: Dict[str, str] = None) -> Dict[str, Any]:
     """
     Extract relevant data from a single trait
@@ -115,11 +156,35 @@ def extract_trait_data(trait_key: str, trait_data: Dict[str, Any], localizations
 
     # Extract modifier effects
     modifier = trait_data.get("modifier", {})
-    trait["effects"] = extract_modifier_effects(modifier)
     trait["modifier"] = modifier
 
-    # Extract custom tooltips
-    trait["custom_tooltip"] = trait_data.get("custom_tooltip_with_modifiers", "")
+    # Build effects string from multiple sources
+    effects_parts = []
+
+    # 1. Get custom tooltip from localizations if it exists
+    custom_tooltip_key = trait_data.get("custom_tooltip_with_modifiers", "") or trait_data.get("custom_tooltip", "")
+    if custom_tooltip_key:
+        tooltip_text = get_localized_text(custom_tooltip_key, localizations)
+        if tooltip_text and tooltip_text != custom_tooltip_key:
+            # Clean the tooltip (remove color codes, etc.)
+            cleaned_tooltip = clean_localized_text(tooltip_text)
+            effects_parts.append(cleaned_tooltip)
+
+    # 2. Extract regular modifier effects
+    modifier_effects = extract_modifier_effects(modifier)
+    if modifier_effects:
+        effects_parts.append(modifier_effects)
+
+    # 3. Extract triggered modifiers
+    triggered_effects = extract_triggered_modifiers(trait_data)
+    if triggered_effects:
+        effects_parts.append(f"Triggered: {triggered_effects}")
+
+    # Combine all effects
+    trait["effects"] = " | ".join(effects_parts) if effects_parts else ""
+
+    # Keep custom tooltip key for reference
+    trait["custom_tooltip"] = custom_tooltip_key
 
     # Extract slave cost if present
     slave_cost = trait_data.get("slave_cost", {})
