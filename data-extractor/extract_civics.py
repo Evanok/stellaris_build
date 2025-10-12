@@ -96,6 +96,50 @@ def extract_modifier_effects(modifier_data: Any) -> str:
             else:
                 sign = '+' if value > 0 else ''
                 effects.append(f"{key}: {sign}{value}")
+        elif isinstance(value, dict):
+            # Nested modifiers
+            nested_effects = extract_modifier_effects(value)
+            if nested_effects:
+                effects.append(nested_effects)
+
+    return "; ".join(effects)
+
+
+def extract_triggered_modifiers(civic_data: Dict[str, Any]) -> str:
+    """
+    Extract effects from triggered modifiers
+
+    Args:
+        civic_data: Raw civic data
+
+    Returns:
+        Formatted string describing triggered effects
+    """
+    effects = []
+
+    # Look for all triggered modifier types
+    triggered_keys = [
+        'triggered_planet_modifier',
+        'triggered_pop_modifier',
+        'triggered_modifier',
+        'triggered_country_modifier',
+        'triggered_desc'
+    ]
+
+    for key in triggered_keys:
+        if key in civic_data:
+            modifier_data = civic_data[key]
+            # Can be a single dict or list of dicts
+            if isinstance(modifier_data, dict):
+                modifier_data = [modifier_data]
+            elif not isinstance(modifier_data, list):
+                continue
+
+            for mod in modifier_data:
+                if isinstance(mod, dict):
+                    mod_effects = extract_modifier_effects(mod)
+                    if mod_effects:
+                        effects.append(mod_effects)
 
     return "; ".join(effects)
 
@@ -124,18 +168,18 @@ def extract_civic_data(civic_key: str, civic_data: Dict[str, Any], localizations
     tooltip_key = civic_data.get("description", "")
     tooltip_text = ""
     if tooltip_key and isinstance(tooltip_key, str):
-        tooltip_text = clean_localized_text(get_localized_text(tooltip_key, localizations))
+        tooltip_text = clean_localized_text(get_localized_text(tooltip_key, localizations), localizations)
 
     # For negative effects
     negative_tooltip_key = civic_data.get("negative_description", "")
     negative_tooltip_text = ""
     if negative_tooltip_key and isinstance(negative_tooltip_key, str):
-        negative_tooltip_text = clean_localized_text(get_localized_text(negative_tooltip_key, localizations))
+        negative_tooltip_text = clean_localized_text(get_localized_text(negative_tooltip_key, localizations), localizations)
 
     civic = {
         "id": civic_key,
         "name": name,
-        "description": clean_localized_text(description_raw) if description_raw != desc_key else "",
+        "description": clean_localized_text(description_raw, localizations) if description_raw != desc_key else "",
         "is_origin": civic_data.get("is_origin", False),
         "playable": True,  # Default to playable unless specified
         "pickable_at_start": civic_data.get("pickable_at_start", True),
@@ -170,8 +214,36 @@ def extract_civic_data(civic_key: str, civic_data: Dict[str, Any], localizations
 
     # Extract modifier effects
     modifier = civic_data.get("modifier", {})
-    civic["effects"] = extract_modifier_effects(modifier)
     civic["modifier"] = modifier
+
+    # Build effects string from multiple sources
+    effects_parts = []
+
+    # 1. Use the tooltip if it contains useful info (not just a reference)
+    if tooltip_text and len(tooltip_text) > 10:
+        effects_parts.append(tooltip_text)
+
+    # 2. Extract regular modifier effects
+    modifier_effects = extract_modifier_effects(modifier)
+    if modifier_effects:
+        effects_parts.append(modifier_effects)
+
+    # 3. Extract triggered modifiers
+    triggered_effects = extract_triggered_modifiers(civic_data)
+    if triggered_effects:
+        effects_parts.append(f"Triggered: {triggered_effects}")
+
+    # 4. Check for custom_tooltip_with_modifiers
+    custom_tooltip_key = civic_data.get("custom_tooltip_with_modifiers", "") or civic_data.get("custom_tooltip", "")
+    if custom_tooltip_key:
+        custom_text = get_localized_text(custom_tooltip_key, localizations)
+        if custom_text and custom_text != custom_tooltip_key:
+            cleaned_custom = clean_localized_text(custom_text, localizations)
+            if cleaned_custom not in effects_parts:  # Avoid duplicates
+                effects_parts.append(cleaned_custom)
+
+    # Combine all effects
+    civic["effects"] = " | ".join(effects_parts) if effects_parts else ""
 
     # Extract traits (enforced on species)
     traits = civic_data.get("traits", {})

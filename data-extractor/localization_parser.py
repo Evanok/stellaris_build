@@ -130,12 +130,13 @@ def get_localized_text(key: str, localizations: Dict[str, str]) -> str:
     return text
 
 
-def clean_localized_text(text: str) -> str:
+def clean_localized_text(text: str, localizations: Optional[Dict[str, str]] = None) -> str:
     """
     Clean up Stellaris-specific markup from localized text
 
     Args:
         text: Raw localized text
+        localizations: Optional dictionary to resolve concept references
 
     Returns:
         Cleaned text
@@ -147,10 +148,27 @@ def clean_localized_text(text: str) -> str:
     text = re.sub(r'£[a-z_]+£', '', text)
 
     # Remove special formatting like $TABBED_NEW_LINE$
-    text = re.sub(r'\$[A-Z_]+\$', ' ', text)
+    text = re.sub(r'\$[A-Z_]+\$', '\n', text)
 
-    # Remove concept references like ['concept_foo']
-    text = re.sub(r"\['[^']+'\]", '', text)
+    # Resolve concept references like ['concept_foo'] or ['building:building_foo']
+    if localizations:
+        def resolve_concept(match):
+            concept_ref = match.group(1)
+            # Handle building:building_foo format
+            if ':' in concept_ref:
+                concept_ref = concept_ref.split(':')[1]
+
+            # Try to resolve the concept
+            resolved = get_localized_text(concept_ref, localizations)
+            if resolved != concept_ref:
+                return resolved
+            # If can't resolve, return a cleaned version
+            return concept_ref.replace('_', ' ').title()
+
+        text = re.sub(r"\['([^']+)'\]", resolve_concept, text)
+    else:
+        # If no localizations available, just remove the brackets and clean up
+        text = re.sub(r"\['([^']+)'\]", lambda m: m.group(1).split(':')[-1].replace('_', ' ').title(), text)
 
     # Clean up multiple spaces
     text = re.sub(r'\s+', ' ', text)

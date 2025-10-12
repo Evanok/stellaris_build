@@ -110,7 +110,7 @@ def extract_trait_data(trait_key: str, trait_data: Dict[str, Any], localizations
     trait = {
         "id": trait_key,
         "name": name,
-        "description": clean_localized_text(description_raw) if description_raw != desc_key else "",
+        "description": clean_localized_text(description_raw, localizations) if description_raw != desc_key else "",
         "cost": trait_data.get("cost", 0),
         "category": trait_data.get("category", "unknown"),
         "initial": trait_data.get("initial", False),
@@ -167,7 +167,7 @@ def extract_trait_data(trait_key: str, trait_data: Dict[str, Any], localizations
         tooltip_text = get_localized_text(custom_tooltip_key, localizations)
         if tooltip_text and tooltip_text != custom_tooltip_key:
             # Clean the tooltip (remove color codes, etc.)
-            cleaned_tooltip = clean_localized_text(tooltip_text)
+            cleaned_tooltip = clean_localized_text(tooltip_text, localizations)
             effects_parts.append(cleaned_tooltip)
 
     # 2. Extract regular modifier effects

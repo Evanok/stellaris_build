@@ -923,7 +923,7 @@
       "pc_alpine_habitability": "@auto_base",
       "pc_nuked_habitability": "@auto_base"
     },
-    "effects": "['concept_automodding_habitability', Auto-Modding Habitability Preference Traits] automatically adjust to the Planet Class a Pops currently lives on.  Mutagenic Habitability picks modifiers from the .",
+    "effects": "['concept_automodding_habitability', Auto-Modding Habitability Preference Traits] automatically adjust to the Planet Class a Pops currently lives on.  Mutagenic Habitability picks modifiers from the Mutagenic Habitability Trait List.",
     "custom_tooltip": "trait_auto_hab_preference_tt_desc",
     "slave_cost": {}
   },
@@ -2187,7 +2187,7 @@
       "positive"
     ],
     "modifier": {},
-    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Vocational Genomics picks modifiers from the",
+    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Vocational Genomics picks modifiers from the Biological Auto-Mod Trait List",
     "custom_tooltip": "automodding_trait_biological_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -4499,7 +4499,7 @@
       "automod"
     ],
     "modifier": {},
-    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Adaptive Frames picks modifiers from the",
+    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Adaptive Frames picks modifiers from the Mechanical Auto-Mod Trait List",
     "custom_tooltip": "automodding_trait_robotic_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7542,7 +7542,7 @@
     "modifier": {
       "leader_lifespan_add": -20
     },
-    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Fleeting Excellence picks modifiers from the | leader_lifespan_add: -20",
+    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Fleeting Excellence picks modifiers from the Overtuned Auto-Mod Trait List | leader_lifespan_add: -20",
     "custom_tooltip": "automodding_trait_overtuned_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7638,7 +7638,7 @@
     "modifier": {
       "leader_lifespan_add": -10
     },
-    "effects": "Job Efficiency for : +15% | leader_lifespan_add: -10",
+    "effects": "Job Efficiency for Farming Jobs: +15% | leader_lifespan_add: -10",
     "custom_tooltip": "farm_hands_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7670,7 +7670,7 @@
     "modifier": {
       "leader_lifespan_add": -10
     },
-    "effects": "Job Efficiency for : +15% | leader_lifespan_add: -10",
+    "effects": "Job Efficiency for Mining Jobs: +15% | leader_lifespan_add: -10",
     "custom_tooltip": "crack_miner_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7702,7 +7702,7 @@
     "modifier": {
       "leader_lifespan_add": -10
     },
-    "effects": "Job Efficiency for : +15% | leader_lifespan_add: -10",
+    "effects": "Job Efficiency for Technician Jobs: +15% | leader_lifespan_add: -10",
     "custom_tooltip": "technical_skill_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7734,7 +7734,7 @@
     "modifier": {
       "leader_lifespan_add": -10
     },
-    "effects": "Job Efficiency for : +25% | leader_lifespan_add: -10",
+    "effects": "Job Efficiency for Trader Jobs: +25% | leader_lifespan_add: -10",
     "custom_tooltip": "trait_commercial_genius_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7766,7 +7766,7 @@
     "modifier": {
       "leader_lifespan_add": -10
     },
-    "effects": "Job Efficiency for : +15% | leader_lifespan_add: -10",
+    "effects": "Job Efficiency for Influential Jobs: +15% | leader_lifespan_add: -10",
     "custom_tooltip": "crafted_smiles_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7832,7 +7832,7 @@
     "modifier": {
       "leader_lifespan_add": -10
     },
-    "effects": "Job Efficiency for : +10% | leader_lifespan_add: -10",
+    "effects": "Job Efficiency for Researcher Jobs: +10% | leader_lifespan_add: -10",
     "custom_tooltip": "artificial_intelligence_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7896,7 +7896,7 @@
     "modifier": {
       "leader_lifespan_add": -10
     },
-    "effects": "Job Efficiency for : +10% | leader_lifespan_add: -10",
+    "effects": "Job Efficiency for Bureaucrat Jobs: +10% | leader_lifespan_add: -10",
     "custom_tooltip": "expressed_tradition_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -7932,7 +7932,7 @@
       "negative_leader_traits_species": -1,
       "leaders_upkeep_mult": -0.25
     },
-    "effects": "Job Efficiency for : +20% | leader_lifespan_add: -30; negative_leader_traits_species: -1; leaders_upkeep_mult: -25.0%",
+    "effects": "Job Efficiency for Researcher Jobs: +20% | leader_lifespan_add: -30; negative_leader_traits_species: -1; leaders_upkeep_mult: -25.0%",
     "custom_tooltip": "elevated_synapses_tooltip",
     "slave_cost": {
       "energy": 2000
@@ -8024,7 +8024,7 @@
       "cybernetic"
     ],
     "modifier": {},
-    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Universal Augmentations picks modifiers from the   Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$",
+    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Universal Augmentations picks modifiers from the Cybernetic Auto-Mod Trait List  Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$",
     "custom_tooltip": "automodding_trait_cyborg_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -9675,7 +9675,7 @@
     "modifier": {
       "planet_pops_upkeep_mult": -0.15
     },
-    "effects": "Employed Pop Upkeep: -15%  - Unemployed and Pop Upkeep: -75% | planet_pops_upkeep_mult: -15.0%",
+    "effects": "Employed Pop Upkeep: -15%  - Unemployed and Denizen Pop Upkeep: -75% | planet_pops_upkeep_mult: -15.0%",
     "custom_tooltip": "trait_seasonal_dormancy_effect",
     "slave_cost": {
       "energy": 500
@@ -9999,7 +9999,7 @@
       "species"
     ],
     "modifier": {},
-    "effects": "Habitability on worlds with a different from our Preference: -20% | Triggered: pop_environment_tolerance: -0.2",
+    "effects": "Habitability on worlds with a different Climate Category from our Preference: -20% | Triggered: pop_environment_tolerance: -0.2",
     "custom_tooltip": "trait_permeable_skin_effect",
     "slave_cost": {
       "energy": -1000
@@ -10212,7 +10212,7 @@
       "special"
     ],
     "modifier": {},
-    "effects": "Species with this Trait cannot be Genetically Modified ['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working. Malleable Genes picks modifiers from the",
+    "effects": "Species with this Trait cannot be Genetically Modified ['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working. Malleable Genes picks modifiers from the Malleable Genes Auto-Mod Trait List",
     "custom_tooltip": "trait_malleable_genes_cant_modify",
     "slave_cost": {
       "energy": 500
@@ -10462,7 +10462,7 @@
       "special"
     ],
     "modifier": {},
-    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Adaptive Mutations picks modifiers from the",
+    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Adaptive Mutations picks modifiers from the Adaptive Mutations Auto-Mod Trait List",
     "custom_tooltip": "automodding_trait_adaptive_mutations_tt",
     "slave_cost": {
       "energy": 500
