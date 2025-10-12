@@ -1,11 +1,15 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
 const { setupDatabase, db } = require('./database');
 const app = express();
 const port = process.env.PORT || 3001;
 
 // Middlewares
 app.use(express.json());
+
+// Serve static files from the frontend build
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 // Setup the database
 setupDatabase();
@@ -169,6 +173,12 @@ app.delete('/api/builds/:id', (req, res) => {
   });
 });
 
+// Serve React app for all other routes (must be after API routes)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+});
+
 app.listen(port, () => {
-  console.log(`Backend server listening on port ${port}`);
+  console.log(`Server listening on port ${port}`);
+  console.log(`Access the app at: http://51.159.55.29:${port}`);
 });
