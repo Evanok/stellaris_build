@@ -147,7 +147,7 @@ export const BuildDetail: React.FC = () => {
         }
         setLoading(false);
       })
-      .catch(err => {
+      .catch(() => {
         setError('Failed to load build');
         setLoading(false);
       });

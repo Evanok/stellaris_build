@@ -33,7 +33,7 @@ export const Home: React.FC = () => {
         setBuilds(data.builds || []);
         setLoading(false);
       })
-      .catch(err => {
+      .catch(() => {
         setError('Failed to load builds');
         setLoading(false);
       });

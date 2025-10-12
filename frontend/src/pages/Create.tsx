@@ -5,7 +5,7 @@ import { BuildForm } from '../BuildForm';
 export const Create: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleBuildCreated = (newBuild: any) => {
+  const handleBuildCreated = () => {
     // Redirect to home page after successful creation
     navigate('/');
   };
