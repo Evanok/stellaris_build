@@ -1,0 +1,52 @@
+{
+  "name": "Generic Tech Rush Guide (1000 Tech by Year 30)",
+  "description": "A comprehensive generalized tech rush build that can achieve ~1000 tech output by year 30. This build focuses on early game optimization and can be adapted to any playstyle. Uses Parliamentary System for early unity, research-focused traits, and specialized research buildings. The guide emphasizes proper opening moves, research prioritization, and economic balance to establish a strong tech foundation.",
+  "game_version": "4.0+",
+  "youtube_url": "https://www.youtube.com/watch?v=rK6RstNJtXM",
+  "origin": "origin_prosperous_unification",
+  "ethics": [
+    "ethic_egalitarian",
+    "ethic_materialist",
+    "ethic_xenophile"
+  ],
+  "authority": "auth_democratic",
+  "civics": [
+    "civic_parliamentary_system",
+    "civic_masterful_crafters"
+  ],
+  "traits": [
+    "trait_intelligent",
+    "trait_natural_engineers",
+    "trait_rapid_breeders",
+    "trait_repugnant",
+    "trait_wasteful"
+  ],
+  "ascension_perks": [
+    "ap_technological_ascendancy"
+  ],
+  "traditions": [
+    "tr_discovery",
+    "tr_prosperity"
+  ],
+  "strategy": {
+    "key_principle": "This is a GENERALIZED guide applicable to any Stellaris 4.0 game. The specific choices can be swapped for equivalents based on your playstyle.",
+
+    "civic_alternatives": "Parliamentary System can be replaced with: Civil Education (educators give unity), Beacon of Liberty (+15% unity), Galactic Creators (unity from specimens), or Genesis Guides (unity from uplifting). The key is getting early unity without building unity buildings.",
+
+    "trait_choices": "Intelligent is mandatory (+10% researcher output). Pair with rapid growth trait (Rapid Breeders or Erudite). Natural Sociologists/Physicists/Engineers - choose based on ship type (biological ships = sociologists for biologist tech spam). Repugnant is FREE (-2 points, no downside with luxury housing). Wasteful or other -1 trait to balance points.",
+
+    "opening_moves": "1. Check research options for specialized research buildings (Xenobiology Labs, Materials Workshop, Research Station Output). 2. Survey home system immediately. 3. Set Isolationist diplomatic stance (+10% unity). 4. Buy maximum minerals (42 before inflation). 5. Replace Crew Quarters on starbase with Hydroponics Bay (10 food, no pop needed). 6. Promote factions for unity output. 7. Adjust policies to satisfy faction demands.",
+
+    "research_priority": "Tier 1: Get specialized research buildings (doubles output in chosen category). Xenobiology Labs gives +1 per 100 researchers + 200 biologist jobs. Always take lowest cost tech to reroll faster if you don't get what you want.",
+
+    "economy": "Trade from Artifices + Masterful Crafters helps consumer goods (scientists are expensive). Don't build mining stations early - minerals better spent on monument and districts. Colonize second planet (Arctic/Wet based on ship type) for minerals/food.",
+
+    "settings_recommended": "Grand Admiral, max AIs, small galaxy, 75% hyperlane density, MIDGAME SCALING at year 50 (simulates peaceful early meta), 0.75x tech/tradition cost, default pop growth.",
+
+    "why_it_works": "Early unity from Parliamentary System + Democratic + Egalitarian (40% faction output, more approval, utopian living standards boost monument). Specialized research buildings DOUBLE category output. Proper opening moves maximize early economy without wasting resources. Can later replace Parliamentary System with Crowdsourced Research (factions produce research instead of unity)."
+  },
+  "tags": ["tech rush", "generalized guide", "year 30 goal", "grand admiral viable", "midgame scaling", "beginner friendly", "flexible build"],
+  "dlcs": [],
+  "difficulty": "Medium - Good beginner framework with clear opening steps",
+  "notes": "This is a teaching/guide video rather than a specific meta build. The creator emphasizes this can be adapted to ANY playstyle by swapping equivalent civic/trait choices. Focus is on understanding WHY each choice is made rather than copying exactly."
+}

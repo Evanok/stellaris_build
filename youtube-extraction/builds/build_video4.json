@@ -1,0 +1,52 @@
+{
+  "name": "Knights of the Toxic God - Infinite Tech Scaling",
+  "description": "An exponentially scaling build that achieves 35,000+ tech by year 57 using the Knights of the Toxic God origin. The build abuses infinite Squire jobs (which buff Knights) combined with stackable politician/scientist bonuses. Knights convert alloys into research/unity/naval capacity, and their output scales infinitely with Squire support. Uses biological ships, spiritualist ethics for priest buffs, and focuses on spamming strongholds on the starting orbital habitat.",
+  "game_version": "4.0+",
+  "youtube_url": "https://www.youtube.com/watch?v=DygFg41Phlo",
+  "origin": "origin_toxic_knights",
+  "ethics": [
+    "ethic_spiritualist",
+    "ethic_xenophobe",
+    "ethic_egalitarian"
+  ],
+  "authority": "auth_democratic",
+  "civics": [
+    "civic_parliamentary_system",
+    "civic_environmentalist"
+  ],
+  "traits": [
+    "trait_intelligent",
+    "trait_natural_sociologists",
+    "trait_unruly",
+    "trait_repugnant"
+  ],
+  "ascension_perks": [],
+  "traditions": [],
+  "strategy": {
+    "core_mechanic": "Knights of the Toxic God origin provides an orbital habitat (Order's Keep) with Knight and Squire jobs. Knights consume alloys to produce research, unity, and naval capacity. Squires provide amenities and buff Knight output (job efficiency). Squire jobs are INFINITE in patch 4.0 - you can stack unlimited Squires by reducing housing costs to -100%. Knights inherit all politician and scientist buffs, allowing massive stacking.",
+
+    "origin_benefits": "Start with orbital habitat 'Order's Keep' that cannot be disabled. Get Knight jobs (produce research/unity/naval cap) and infinite Squire jobs (buff Knights + amenities). Toxic planetary features on homeworld (annoying). Situation quest provides additional bonuses. Policy 'Nightly Duties' available.",
+
+    "ethics_synergy": "Spiritualist: +10% unity, enables Veneration of Saints (+20% priest output applies to Knights). Xenophobe: +pop growth, enables livestock slavery (solves food deficit). Egalitarian: Fast unity via Parliamentary System, Planet Caretakers civic gives +10% resources from jobs at high stability.",
+
+    "trait_choices": "Intelligent (+10% research) is mandatory. Natural Sociologists chosen because using biological ships (biotech spam). Unruly and Repugnant are best negative traits (minimal downsides with this build).",
+
+    "civic_strategy": "Parliamentary System: Early unity boost. Planet Caretakers (Democratic): +10% resources from jobs, +pop growth, -pop upkeep, +blocker clearing speed. Both synergize with high-stability habitat spam.",
+
+    "early_game": "1. Focus on orbital habitat development. 2. Build strongholds to unlock more Knight job slots. 3. Spam Squire jobs (infinite!) by reducing housing with  modifiers. 4. Activate Veneration of Saints edict (+20% priest output → Knights). 5. Clear toxic blockers on homeworld for resources. 6. Research tech buildings (+1 to engineering/physics/society - applies to Knights!).",
+
+    "key_buildings": "Strongholds (unlock Knight job slots), Tech Research buildings (+1 bonus applies to Knights), Fortress habitats for Order's Keep expansion. Stack as many Squires as possible for infinite Knight buffs.",
+
+    "mid_game": "Continue spamming strongholds and Squires. Stack politician/scientist bonuses from traditions, edicts, and technologies - all apply to Knights. Expand habitat capacity. Consider conquering/colonizing for more resources to feed alloy consumption.",
+
+    "late_game": "With infinite Squires buffing Knights, tech output scales exponentially. Can reach 35,000+ research per month by year 57. Use massive tech advantage to rush dangerous technologies and military power.",
+
+    "housing_exploit": "Patch 4.0 allows reducing housing costs to -100% via modifiers. This enables infinite pop stacking (particularly Squires). May get patched but currently works.",
+
+    "why_broken": "Squire jobs are infinite with no cap. Each Squire buffs Knight output. Knights inherit ALL politician/scientist bonuses. Result: exponential scaling with no ceiling. Tech output grows faster than any other build in game."
+  },
+  "tags": ["tech rush", "infinite scaling", "Knights of the Toxic God", "grand admiral viable", "4.0 exploit", "biological ships", "habitat spam", "broken mechanic"],
+  "dlcs": ["Toxoids Species Pack (required for origin)"],
+  "difficulty": "Medium - Requires understanding Knight/Squire interaction and housing reduction mechanics",
+  "notes": "Creator mentions this build is likely overpowered and Squires being infinite may not be intended. Housing reduction to -100% may get patched. Playing on Grand Admiral with midgame scaling at year 50. Works best in 4.0 patch. Roleplay theme: Shell Guard of the Toxic Grail - toxic knights worshipping a mysterious god."
+}
