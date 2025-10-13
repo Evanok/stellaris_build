@@ -155,6 +155,30 @@ app.post('/api/builds', (req, res) => {
   });
 });
 
+// Update a build's description
+app.patch('/api/builds/:id', (req, res) => {
+  const { id } = req.params;
+  const { description } = req.body;
+
+  if (!description) {
+    return res.status(400).json({ error: 'Description is required.' });
+  }
+
+  const sql = `UPDATE builds SET description = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND deleted = 0`;
+
+  db.run(sql, [description, id], function(err) {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    if (this.changes === 0) {
+      res.status(404).json({ error: 'Build not found or already deleted.' });
+      return;
+    }
+    res.json({ success: true, changes: this.changes, id: parseInt(id) });
+  });
+});
+
 // Soft delete a build by ID
 app.delete('/api/builds/:id', (req, res) => {
   const { id } = req.params;
