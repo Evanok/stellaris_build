@@ -1,0 +1,41 @@
+# Build: Virtual Civilian Infinite Scaling (Synthetic Ascension)
+
+## Short Description
+An exponentially scaling build that abuses the Virtual Computational Core Focus policy. Every 100 civilians provides +0.5% to research/unity/alloys. With proper setup, you can reach millions of research per month through unlimited civilian pop scaling. The build transforms from biological → synthetic → virtual, then switches to Megacorp to maximize civilian production with Corporate Hedonism.
+
+## Detailed Strategy
+
+### Core Mechanic
+The build revolves around the "Computational Core Focus" policy. Every 100 civilians on your worlds grant a +0.5% output bonus to a chosen resource (in this case, research). By switching to a Megacorp with the Corporate Hedonism civic, your civilians will produce trade value and unity without requiring specific jobs, allowing for infinite scaling on a planet.
+
+### Early Game
+1.  **Origin:** Start with the Synthetic Fertility origin.
+2.  **Research Focus:** Rush engineering research to unlock the Artificial Workforce technology as quickly as possible.
+3.  **Specialization:** Build the Engineering Research Specialization district for a massive boost to engineering output.
+4.  **Conversion:** Use the "Digital Salvation" situation to convert your biological pops into an Identity Repository, which also unlocks robot assembly.
+
+### Mid Game
+1.  **Ascension:** Complete the Synthetic Ascension tradition tree to transform all your pops into synthetics.
+2.  **CRITICAL - Virtual Transformation:** During the subsequent Virtual transformation event chain, you must make specific choices to achieve a "fake virtual" state. The key choice is selecting the "Research Turning Into Profits" option, which allows you to maintain a corporate authority.
+
+### Government Reform
+1.  **Switch Authority:** After completing the synthetic and virtual transformations, reform your government into a Megacorp.
+2.  **Change Civics:** Replace the Parliamentary System civic with Corporate Hedonism. This grants access to "Heatedness" jobs that produce unity without consuming job slots, enabling unlimited civilian pop stacking.
+
+### Late Game
+1.  **Enable Policy:** Activate the "Computational Core Focus" policy and set it to boost Research.
+2.  **Build Tall:** Develop Ecumenopolises with maximum city districts to house your civilians.
+3.  **Maximize Pop Assembly:** Construct Robot Quantum Production Hubs (an empire-unique building from Cosmogenesis) on every planet. These provide 300 roboticist jobs each, drastically increasing pop assembly speed.
+4.  **Scale to Infinity:** With this setup, you can achieve massive research bonuses. The example build reached a 570%+ research bonus with over 71,000 civilians.
+
+### Why It's Powerful
+The scaling is exponential due to a feedback loop:
+1.  More civilians provide more assembly speed, leading to faster pop growth.
+2.  Every 100 civilians boosts research output by +0.5%.
+3.  Higher research leads to better technology, which further improves pop assembly and resource production.
+4.  The Corporate Hedonism civic allows civilians to be stacked infinitely on a planet since they don't require job slots.
+
+---
+
+- **Required DLCs:** Machine Age, Megacorp, First Contact
+- **Difficulty:** Very Complex (requires precise event choices)

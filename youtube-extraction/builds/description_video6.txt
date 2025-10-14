@@ -1,0 +1,37 @@
+# Build: Shroud-Forged Psionic Machines (Shadows of the Shroud DLC)
+
+## Short Description
+This build showcases the first-ever psionic machine empire, made possible by the "Shadows of the Shroud" DLC. Using the new Shroud-Forged origin, you play as a machine intelligence reshaped by a shroud entity. The strategy revolves around unique, powerful "shroud-forged" pops who excel at complex research, new buildings that generate Zro, and special civics that enable psionic ascension for machines and introduce cyclical, galaxy-wide buffs.
+
+## Detailed Strategy
+
+### Core Mechanic: Psionic Machines
+The **Shroud-Forged** origin allows a Machine Intelligence to pursue Psionic Ascension, which is normally impossible. Your empire is split between two pop types: elite **Shroud-Forged pops** who are excellent at research but cannot perform menial jobs, and standard machine pops for labor. The gameplay focuses on leveraging your elite pops for a massive technology advantage.
+
+### Key Origin Features
+- **Shroud-Forged Pops:** Your starting pops are specialists who get bonuses to complex jobs but are barred from worker-tier jobs. You must build regular machine pops to fill basic resource jobs.
+- **Shroud Observation Complex:** A unique building that provides 10 "Observation Drone" jobs, each producing physics research, society research, and Zro.
+- **Pierce the Shroud:** A planetary decision that uses the shroud to terraform planets, with powerful but unpredictable results.
+- **'Forged by the Shroud' Situation:** A unique questline that unfolds over the game, unlocking new powers and interactions.
+
+### Key Civics
+- **Energy Extractors (CRITICAL):** This civic is what enables psionic ascension for machines. It comes with significant trade-offs (reduced resource output, slower pop growth) in exchange for powerful leader bonuses and the ability to enter the shroud.
+- **Pattern Finders:** A new civic that provides buffs based on a 13-year cosmic cycle. This adds an element of randomness, as the effects can be either positive or negative. It also enhances surveying by occasionally increasing resource deposits.
+
+### Key Traits
+- **Cranial Megatrophy:** A new, expensive (4-point) trait that gives an incredible **+25% researcher efficiency** at the cost of -10% worker efficiency. This is the cornerstone of the tech-rush strategy.
+- To afford this, the build requires taking multiple negative traits like **Bulky** and **Repurposed Hardware**.
+
+### Game Progression
+1.  **Early Game:** Immediately focus on building Shroud Observation Complexes to generate a strong base of research and Zro. Assemble standard robot pops to run your economy (minerals, energy). Follow the 'Forged by the Shroud' situation log.
+2.  **Mid Game:** Rush the Psionic Ascension path (Mind Over Matter -> Transcendence). Use the unity generated from the Energy Extractors civic to progress through traditions quickly. Adapt your strategy to the buffs provided by the Pattern Finders' cosmic cycles.
+3.  **Late Game:** Once you achieve full Transcendence, you become a true psionic machine empire. Leverage your massive tech advantage from the Cranial Megatrophy trait and your specialized research buildings to outpace all other empires.
+
+### Why It's Unique
+This is a completely new playstyle for Stellaris. It combines the efficiency of a machine intelligence with the powerful, random nature of the shroud. The reliance on two different pop types for different strata of jobs, the trade-offs of the Energy Extractors civic, and the RNG of the Pattern Finders make for a complex but highly rewarding experience.
+
+---
+
+- **Required DLCs:** Shadows of the Shroud, Utopia, Toxoids Species Pack
+- **Difficulty:** Hard (Involves many new and complex mechanics with significant trade-offs)
+- **Note:** This build is experimental, showcasing new DLC features. It requires balancing the needs of two distinct pop types and managing the heavy penalties from the Energy Extractors civic.

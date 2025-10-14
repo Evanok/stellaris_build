@@ -1,0 +1,39 @@
+# Build: Overtuned Biomorphosis Rush (Second Ascension Perk)
+
+## Short Description
+A build that exploits a hidden mechanic of the Overtuned origin, allowing you to take the Biomorphosis ascension perk as your SECOND perk instead of the usual third. This provides an incredibly fast path to endgame biological ascension. The strategy combines this rush with the massive +40% starting pop growth from Overtuned traits and the Genesis Guides civic for a powerful, pop-focused exponential scaling build.
+
+## Detailed Strategy
+
+### Core Mechanic
+The entire build is centered around a hidden benefit of the **Overtuned origin**: it allows you to select the Evolutionary Mastery (Biomorphosis) ascension perk in your second slot, bypassing the normal requirement of needing a third slot. This saves years of game time and gives you a massive power spike much earlier than any other empire pursuing biological ascension.
+
+### Key Components
+- **Origin:** Overtuned (from Toxoids DLC). This gives you access to powerful "overtuned" traits, the Gene Tailoring tech from the start, and the ability to use the "Damn the Consequences" edict for a temporary power boost.
+- **Traits:** 
+    - **Intelligent** (+10% research) is mandatory.
+    - **Natural Sociologists** helps with rushing biological technologies.
+    - **Rapid Breeders** (+10% pop growth) stacks with the Overtuned trait **Pre-Planned Growth** (+30% pop growth) for a massive **+40% pop growth** from the start of the game.
+- **Civics:**
+    - **Parliamentary System:** Provides essential early-game unity from factions.
+    - **Genesis Guides:** Grants unity and influence every time you colonize a planet, which is critical for rushing the traditions needed for ascension perks.
+- **Ethics:** A non-fanatic combination like Egalitarian, Materialist, and Militarist works well. This is important because you need to be able to reform your government later.
+
+### Early Game Plan
+1.  **Setup:** Start with traits for maximum pop growth (Rapid Breeders + Pre-Planned Growth). Use civics that generate early unity (Parliamentary System + Genesis Guides).
+2.  **Opening Moves:** Set diplomatic stance to Isolationist (+10% unity), promote your Egalitarian faction for more unity, and focus on colonizing new planets to trigger the Genesis Guides bonus.
+3.  **Traditions & Ascension:** Rush the Discovery and Prosperity tradition trees. Take **One Vision** as your first ascension perk.
+4.  **The Rush:** As soon as your second perk slot is available, take **Evolutionary Mastery (Biomorphosis)**. You can now begin advanced genetic modification.
+
+### Mid Game Transition
+1.  **Genetic Mastery:** With Biomorphosis unlocked, begin modifying your species. Create specialized sub-species for different jobs (e.g., researchers, miners, soldiers) using the advanced gene-modding points.
+2.  **Government Reform:** Once you have a stable unity income, reform your government to swap **Parliamentary System** for **Crowdsourced Research**. This converts your faction influence into a powerful source of research, which scales with your massive population.
+3.  **Edict Power:** When your economy is strong enough, activate the "Damn the Consequences" edict to double the effects of your positive traits for a huge temporary boost.
+
+### Why It's Powerful
+This build exploits a unique advantage to achieve a power level that is normally only possible much later in the game. You get the benefits of full biological ascension while other empires are still working on their second tradition tree. The combination of extreme pop growth, early unity generation, and the civic-swap to research creates an unstoppable snowball effect.
+
+---
+
+- **Required DLCs:** Toxoids Species Pack (for Overtuned origin)
+- **Difficulty:** Medium (Requires careful management of government reforms and genetic modification)
