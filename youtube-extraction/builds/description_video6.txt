@@ -1,4 +1,4 @@
-# Build: Shroud-Forged Psionic Machines (Shadows of the Shroud DLC)
+# Build: Shroud-Forged Psionic Machines (Shadows DLC)
 
 ## Short Description
 This build showcases the first-ever psionic machine empire, made possible by the "Shadows of the Shroud" DLC. Using the new Shroud-Forged origin, you play as a machine intelligence reshaped by a shroud entity. The strategy revolves around unique, powerful "shroud-forged" pops who excel at complex research, new buildings that generate Zro, and special civics that enable psionic ascension for machines and introduce cyclical, galaxy-wide buffs.
