@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 
 interface Build {
   id: number;
@@ -284,7 +285,9 @@ export const BuildDetail: React.FC = () => {
             <div className="col-md-8">
               <h1 className="text-white mb-3">{build.name}</h1>
               {build.description && (
-                <p className="text-light fs-5">{build.description}</p>
+                <div className="text-light fs-5">
+                  <ReactMarkdown>{build.description}</ReactMarkdown>
+                </div>
               )}
             </div>
             <div className="col-md-4 text-end">
