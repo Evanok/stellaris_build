@@ -9,6 +9,9 @@ const { apiLimiter, createBuildLimiter, validateBuildData, sanitizeBuildData } =
 const app = express();
 const port = process.env.PORT || 3001;
 
+// Trust proxy - required when running behind nginx with HTTPS
+app.set('trust proxy', 1);
+
 // Middlewares
 app.use(express.json());
 
