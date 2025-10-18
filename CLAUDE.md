@@ -78,6 +78,44 @@ sudo systemctl restart nginx # Restart nginx (if config changed)
 - Backend changes only need `pm2 restart stellaris-build`
 - Database is at `/home/arthur/work/stellaris_build/backend/stellaris_builds.db`
 
+### OAuth Setup (Development)
+
+The site uses Google and Steam OAuth for authentication. To run locally:
+
+1. **Copy environment file:**
+```bash
+cd backend
+cp .env.example .env
+```
+
+2. **Get Google OAuth credentials:**
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a new project (or use existing)
+   - Enable "Google+ API" or "Google Identity"
+   - Go to Credentials > Create Credentials > OAuth 2.0 Client ID
+   - Add authorized redirect URI: `http://localhost:3001/auth/google/callback`
+   - Copy `Client ID` and `Client Secret` to `.env`
+
+3. **Get Steam API key (optional):**
+   - Go to [Steam API Key](https://steamcommunity.com/dev/apikey)
+   - Register your domain: `http://localhost:3001`
+   - Copy API key to `.env`
+
+4. **Update `.env` file:**
+```bash
+SESSION_SECRET=your-random-secret-key
+GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+STEAM_API_KEY=your-steam-api-key
+```
+
+5. **Restart backend:** The auth routes will now work
+
+**Production Setup:**
+- Update callback URLs in Google Cloud Console to use `https://stellaris-build.com`
+- Update `.env` on production server with production credentials
+- Set `NODE_ENV=production` for secure cookies
+
 ## Architecture
 
 ### Monorepo Structure
@@ -110,29 +148,53 @@ The project uses npm workspaces with three main parts:
 
 **Pages:**
 - `Home.tsx` - Displays all builds with search, filtering, and pagination
-- `Create.tsx` - Build creation page with BuildForm
+- `Create.tsx` - Build creation page with BuildForm (requires authentication)
 - `BuildDetail.tsx` - Individual build view with all details, embedded YouTube videos, and soft delete button
+- `Login.tsx` - OAuth login page with Google and Steam buttons
+
+**Authentication:**
+- `AuthContext.tsx` - React context providing authentication state and user info
+- `useAuth()` hook - Access current user, loading state, logout function
+- Protected routes redirect to `/login` if user not authenticated
+- Navbar shows user avatar and username when logged in
 
 **Data Flow:**
 - API calls to `/api/*` endpoints are proxied to backend via Vite config (vite.config.ts:9-14)
 - Build form fetches all game data from respective API endpoints
 - App component manages global build state and passes down callbacks
+- AuthProvider wraps the entire app to provide authentication state
 
 ### Backend Architecture
 
 **Entry Point:** `backend/index.js`
 - Express server running on port 3001 (configurable via PORT env var)
 - Sets up database on startup via `setupDatabase()`
+- Configures Passport.js for OAuth authentication (Google + Steam)
+- Uses express-session for maintaining user sessions
 - Serves static JSON data files from `backend/data/`
 - Serves compiled frontend from `frontend/dist/` in production
 - All non-API routes fallback to `index.html` for React Router
 
+**Authentication:** `backend/auth.js`
+- Passport.js configuration with Google OAuth 2.0 and Steam OpenID strategies
+- Serialization/deserialization for session management
+- `findOrCreateUser()` helper to automatically create users on first login
+- Stores provider info (google/steam), username, email, and avatar
+
 **Database:** `backend/database.js`
 - SQLite database stored at `./stellaris_builds.db` (created at runtime)
 - Two tables: `users` and `builds`
-- Builds table stores complete empire configurations with soft delete support
-- Currently users table exists but authentication not implemented
+- Users table: stores OAuth user info (provider, provider_id, username, email, avatar)
+- Builds table: stores complete empire configurations with soft delete support and author_id foreign key
 - Schema uses ALTER TABLE for migrations to add new columns without breaking existing data
+
+**Authentication Routes:**
+- `GET /auth/google` - Initiate Google OAuth flow
+- `GET /auth/google/callback` - Google OAuth callback (redirects to `/`)
+- `GET /auth/steam` - Initiate Steam OpenID flow
+- `GET /auth/steam/callback` - Steam OpenID callback (redirects to `/`)
+- `GET /auth/logout` - Logout and destroy session
+- `GET /api/user` - Get current authenticated user (or null)
 
 **API Endpoints:**
 - `GET /api/test` - Health check
@@ -145,7 +207,7 @@ The project uses npm workspaces with three main parts:
 - `GET /api/traditions` - Returns tradition trees (32 trees)
 - `GET /api/ruler-traits` - Returns ruler traits filtered by origin/ethics compatibility
 - `GET /api/builds` - Returns all non-deleted builds ordered by created_at DESC
-- `POST /api/builds` - Creates new build (requires name, checks for duplicates)
+- `POST /api/builds` - Creates new build (requires authentication, name, checks for duplicates)
 - `DELETE /api/builds/:id` - Soft deletes a build (sets deleted=1)
 
 **Static Data Files (backend/data/):**
@@ -221,7 +283,7 @@ cp output/traditions_by_tree.json ../backend/data/traditions.json
 
 4. **Soft Delete**: Builds have a `deleted` column (0=visible, 1=hidden). Deleted builds stay in the database for potential recovery.
 
-5. **No Authentication Yet**: The users table exists but there's no auth implementation. Builds are created without author_id.
+5. **Authentication**: OAuth-based authentication (Google + Steam). User sessions managed via express-session. Creating builds requires authentication (author_id automatically set).
 
 6. **Nodemon Limitation**: Backend nodemon only watches `.js` files. If you update JSON data files in `backend/data/`, you must manually restart the backend.
 
@@ -312,13 +374,47 @@ After making changes to game data:
 3. **Test in BuildForm**: Reload frontend and check tooltips, filtering, validation
 4. **Submit test build**: Ensure data is properly stored in SQLite
 
+## Authentication System
+
+**Implementation:** OAuth 2.0 (Google) + OpenID (Steam)
+
+**Backend:**
+- Passport.js handles OAuth flow and session management
+- `backend/auth.js` - Strategy configurations
+- `backend/index.js` - Auth routes and middleware
+- Sessions stored in memory (consider redis for production at scale)
+- `isAuthenticated` middleware protects routes requiring login
+
+**Frontend:**
+- `AuthContext.tsx` - React context for auth state
+- `useAuth()` hook - Access user, loading, logout, refreshUser
+- Protected routes redirect to `/login` when user is null
+- Navbar displays user info and conditional "Create Build" link
+
+**User Flow:**
+1. User clicks "Sign In" in navbar → redirected to `/login`
+2. User clicks Google/Steam button → OAuth flow starts
+3. Provider authenticates user → callback to backend
+4. Backend creates/finds user in database → session created
+5. User redirected to home → frontend fetches user via `/api/user`
+6. AuthContext updates, user can now create builds
+
+**Environment Variables Required:**
+- `SESSION_SECRET` - Random string for session encryption
+- `GOOGLE_CLIENT_ID` - From Google Cloud Console
+- `GOOGLE_CLIENT_SECRET` - From Google Cloud Console
+- `GOOGLE_CALLBACK_URL` - Your domain + `/auth/google/callback`
+- `STEAM_API_KEY` - From Steam Web API (optional but recommended)
+- `STEAM_RETURN_URL` - Your domain + `/auth/steam/callback`
+- `STEAM_REALM` - Your domain (e.g., https://stellaris-build.com/)
+
 ## Future Development
 
 Planned features (not yet implemented):
-- User authentication and profiles
+- User profiles and build history
 - Build rating and comments
 - Advanced search and filtering
 - Build comparison tools
 - Community features (favorites, build of the month)
-
-When implementing these features, refer to the database schema in `database.js` for the users table structure.
+- Build editing (only by author)
+- User-specific build management dashboard

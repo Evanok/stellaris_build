@@ -11,12 +11,16 @@ const db = new sqlite3.Database('./stellaris_builds.db', (err) => {
 // Create tables
 const setupDatabase = () => { 
   db.serialize(() => {
-    // User table
+    // User table for OAuth authentication
     db.run(`CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT NOT NULL UNIQUE,
-      password_hash TEXT NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      username TEXT NOT NULL,
+      email TEXT,
+      avatar TEXT,
+      provider TEXT NOT NULL,
+      provider_id TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(provider, provider_id)
     )`);
 
     // Build table
@@ -91,6 +95,31 @@ const setupDatabase = () => {
     db.run(`ALTER TABLE builds ADD COLUMN youtube_url TEXT`, (err) => {
       if (err && !err.message.includes('duplicate column')) {
         console.error('Error adding youtube_url column:', err.message);
+      }
+    });
+
+    // Migrate users table for OAuth (for existing databases)
+    db.run(`ALTER TABLE users ADD COLUMN email TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding email column:', err.message);
+      }
+    });
+
+    db.run(`ALTER TABLE users ADD COLUMN avatar TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding avatar column:', err.message);
+      }
+    });
+
+    db.run(`ALTER TABLE users ADD COLUMN provider TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding provider column:', err.message);
+      }
+    });
+
+    db.run(`ALTER TABLE users ADD COLUMN provider_id TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding provider_id column:', err.message);
       }
     });
 

@@ -1,18 +1,98 @@
+require('dotenv').config();
 const express = require('express');
+const session = require('express-session');
 const fs = require('fs');
 const path = require('path');
 const { setupDatabase, db } = require('./database');
+const passport = require('./auth');
 const app = express();
 const port = process.env.PORT || 3001;
 
 // Middlewares
 app.use(express.json());
 
+// Session configuration
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'stellaris-build-secret-change-in-production',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    },
+  })
+);
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Serve static files from the frontend build
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 // Setup the database
 setupDatabase();
+
+// Authentication middleware
+const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ error: 'Unauthorized. Please log in.' });
+};
+
+// ============ AUTH ROUTES ============
+
+// Google OAuth routes
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get(
+  '/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+    // In development, redirect to Vite dev server
+    const redirectUrl = process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:3000/';
+    res.redirect(redirectUrl);
+  }
+);
+
+// Steam OpenID routes
+app.get('/auth/steam', passport.authenticate('steam'));
+
+app.get(
+  '/auth/steam/callback',
+  passport.authenticate('steam', { failureRedirect: '/login' }),
+  (req, res) => {
+    // In development, redirect to Vite dev server
+    const redirectUrl = process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:3000/';
+    res.redirect(redirectUrl);
+  }
+);
+
+// Logout route
+app.get('/auth/logout', (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).json({ error: 'Logout failed.' });
+    }
+    // In development, redirect to Vite dev server
+    const redirectUrl = process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:3000/';
+    res.redirect(redirectUrl);
+  });
+});
+
+// Get current user
+app.get('/api/user', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json({ user: req.user });
+  } else {
+    res.json({ user: null });
+  }
+});
+
+// ============ API ROUTES ============
 
 app.get('/api/test', (req, res) => {
   res.json({ message: 'Hello from the backend!' });
@@ -118,12 +198,15 @@ app.get('/api/builds', (req, res) => {
   });
 });
 
-// Create a new build
-app.post('/api/builds', (req, res) => {
+// Create a new build (requires authentication)
+app.post('/api/builds', isAuthenticated, (req, res) => {
   const { name, description, game_version, youtube_url, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags } = req.body;
   if (!name) {
     return res.status(400).json({ error: 'Build name is required.' });
   }
+
+  // Get author_id from authenticated user
+  const author_id = req.user.id;
 
   // Check if a build with the same name already exists
   db.get(`SELECT id FROM builds WHERE name = ?`, [name], (err, row) => {
@@ -135,8 +218,8 @@ app.post('/api/builds', (req, res) => {
     }
 
     // If no duplicate, proceed with insert
-    const sql = `INSERT INTO builds (name, description, game_version, youtube_url, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    const params = [name, description, game_version, youtube_url, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags];
+    const sql = `INSERT INTO builds (name, description, game_version, youtube_url, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const params = [name, description, game_version, youtube_url, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags, author_id];
 
     db.run(sql, params, function(err) {
       if (err) {
@@ -179,21 +262,34 @@ app.patch('/api/builds/:id', (req, res) => {
   });
 });
 
-// Soft delete a build by ID
-app.delete('/api/builds/:id', (req, res) => {
+// Soft delete a build by ID (requires authentication and ownership)
+app.delete('/api/builds/:id', isAuthenticated, (req, res) => {
   const { id } = req.params;
-  const sql = `UPDATE builds SET deleted = 1 WHERE id = ? AND deleted = 0`;
+  const userId = req.user.id;
 
-  db.run(sql, [id], function(err) {
+  // First, check if the build exists and belongs to the user
+  db.get('SELECT * FROM builds WHERE id = ? AND deleted = 0', [id], (err, build) => {
     if (err) {
-      res.status(500).json({ error: err.message });
-      return;
+      return res.status(500).json({ error: err.message });
     }
-    if (this.changes === 0) {
-      res.status(404).json({ error: 'Build not found or already deleted.' });
-      return;
+
+    if (!build) {
+      return res.status(404).json({ error: 'Build not found or already deleted.' });
     }
-    res.json({ message: 'Build deleted successfully.', id: parseInt(id) });
+
+    // Check if user is the author
+    if (build.author_id !== userId) {
+      return res.status(403).json({ error: 'You can only delete your own builds.' });
+    }
+
+    // Proceed with deletion
+    const sql = `UPDATE builds SET deleted = 1 WHERE id = ?`;
+    db.run(sql, [id], function(err) {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ message: 'Build deleted successfully.', id: parseInt(id) });
+    });
   });
 });
 

@@ -3,6 +3,7 @@ import { Navbar } from './components/Navbar';
 import { Home } from './pages/Home';
 import { Create } from './pages/Create';
 import { BuildDetail } from './pages/BuildDetail';
+import Login from './pages/Login';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/create" element={<Create />} />
           <Route path="/build/:id" element={<BuildDetail />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </div>
     </Router>

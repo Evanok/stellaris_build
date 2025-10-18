@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import { useAuth } from '../AuthContext';
 
 interface Build {
   id: number;
@@ -18,6 +19,7 @@ interface Build {
   ruler_trait: string;
   dlcs: string;
   tags: string;
+  author_id: number;
   created_at: string;
   updated_at: string;
 }
@@ -112,6 +114,7 @@ const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type,
 export const BuildDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [build, setBuild] = useState<Build | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -718,14 +721,16 @@ export const BuildDetail: React.FC = () => {
             <i className="bi bi-arrow-left me-2"></i>
             Back to Builds
           </Link>
-          <button
-            onClick={handleDelete}
-            className="btn btn-danger btn-lg"
-            disabled={deleting}
-          >
-            <i className="bi bi-trash me-2"></i>
-            {deleting ? 'Deleting...' : 'Delete Build'}
-          </button>
+          {user && build.author_id === user.id && (
+            <button
+              onClick={handleDelete}
+              className="btn btn-danger btn-lg"
+              disabled={deleting}
+            >
+              <i className="bi bi-trash me-2"></i>
+              {deleting ? 'Deleting...' : 'Delete Build'}
+            </button>
+          )}
           {deleteError && (
             <div className="alert alert-danger mt-3">
               <strong>Error:</strong> {deleteError}
