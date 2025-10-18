@@ -403,7 +403,7 @@
     {
       "id": "ap_mind_over_matter",
       "name": "Mind Over Matter",
-      "description": "[GetMindOverMatterDesc]",
+      "description": "Only a fraction of the potential contained within our minds has been unlocked. The latent psionic abilities of our species are only now beginning to manifest in certain individuals.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -625,6 +625,104 @@
         "is_entropy_drinkers_empire": false
       },
       "ai_weight": "@ascension_path_base_weight"
+    },
+    {
+      "id": "ap_transcendence",
+      "name": "ap_transcendence",
+      "description": "",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "synthetic_empire_psionic_ascension",
+            "NOT": {
+              "has_trait": "trait_mechanical"
+            }
+          },
+          {
+            "fail_text": "hive_mind_biological_ascension_only1",
+            "is_hive_empire": false
+          },
+          {
+            "fail_text": "requires_ascension_perks_2",
+            "num_ascension_perks": 1
+          },
+          {
+            "fail_text": "requires_technology_psionic_theory",
+            "has_technology": "tech_psionic_theory"
+          },
+          {
+            "fail_text": "requires_ap_mind_over_matter",
+            "OR": {
+              "has_ascension_perk": "ap_mind_over_matter",
+              "has_origin": [
+                "origin_shroudwalker_apprentice",
+                "origin_cybernetic_creed"
+              ]
+            }
+          }
+        ]
+      },
+      "prerequisites": [],
+      "effects": "intel_decryption_add: +2; intel_encryption_add: +2; add_base_country_intel: +10",
+      "modifier": {
+        "intel_decryption_add": 2,
+        "intel_encryption_add": 2,
+        "add_base_country_intel": 10
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "always": false
+      },
+      "ai_weight": 10000
+    },
+    {
+      "id": "ap_evolutionary_mastery",
+      "name": "ap_evolutionary_mastery",
+      "description": "",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "synthetic_empire_biological_ascension",
+            "NOT": {
+              "has_trait": "trait_mechanical"
+            }
+          },
+          {
+            "fail_text": "requires_ascension_perks_2",
+            "num_ascension_perks": 1
+          },
+          {
+            "fail_text": "requires_technology_glandular_acclimation",
+            "has_technology": "tech_glandular_acclimation"
+          },
+          {
+            "fail_text": "requires_ap_engineered_evolution",
+            "has_ascension_perk": "ap_engineered_evolution"
+          }
+        ]
+      },
+      "prerequisites": [],
+      "effects": "",
+      "modifier": {
+        "description": "ap_evolutionary_mastery_modifier_desc",
+        "description_parameters": {
+          "POINTS": "@ap_evolutionary_mastery_POINTS",
+          "COST_MULT": "@ap_evolutionary_mastery_COST_MULT"
+        },
+        "BIOLOGICAL_species_trait_points_add": "@ap_evolutionary_mastery_POINTS",
+        "modify_species_cost_mult": "@ap_evolutionary_mastery_COST_MULT"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "always": false
+      },
+      "ai_weight": 10000
     },
     {
       "id": "ap_defender_of_the_galaxy",
@@ -2387,7 +2485,7 @@
     {
       "id": "ap_mind_over_matter",
       "name": "Mind Over Matter",
-      "description": "[GetMindOverMatterDesc]",
+      "description": "Only a fraction of the potential contained within our minds has been unlocked. The latent psionic abilities of our species are only now beginning to manifest in certain individuals.",
       "custom_tooltip": "",
       "type": "ascension_perk",
       "possible": {
@@ -2542,6 +2640,104 @@
         }
       },
       "ai_weight": "@ascension_path_base_weight"
+    },
+    {
+      "id": "ap_transcendence",
+      "name": "ap_transcendence",
+      "description": "",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "synthetic_empire_psionic_ascension",
+            "NOT": {
+              "has_trait": "trait_mechanical"
+            }
+          },
+          {
+            "fail_text": "hive_mind_biological_ascension_only1",
+            "is_hive_empire": false
+          },
+          {
+            "fail_text": "requires_ascension_perks_2",
+            "num_ascension_perks": 1
+          },
+          {
+            "fail_text": "requires_technology_psionic_theory",
+            "has_technology": "tech_psionic_theory"
+          },
+          {
+            "fail_text": "requires_ap_mind_over_matter",
+            "OR": {
+              "has_ascension_perk": "ap_mind_over_matter",
+              "has_origin": [
+                "origin_shroudwalker_apprentice",
+                "origin_cybernetic_creed"
+              ]
+            }
+          }
+        ]
+      },
+      "prerequisites": [],
+      "effects": "intel_decryption_add: +2; intel_encryption_add: +2; add_base_country_intel: +10",
+      "modifier": {
+        "intel_decryption_add": 2,
+        "intel_encryption_add": 2,
+        "add_base_country_intel": 10
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "always": false
+      },
+      "ai_weight": 10000
+    },
+    {
+      "id": "ap_evolutionary_mastery",
+      "name": "ap_evolutionary_mastery",
+      "description": "",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "synthetic_empire_biological_ascension",
+            "NOT": {
+              "has_trait": "trait_mechanical"
+            }
+          },
+          {
+            "fail_text": "requires_ascension_perks_2",
+            "num_ascension_perks": 1
+          },
+          {
+            "fail_text": "requires_technology_glandular_acclimation",
+            "has_technology": "tech_glandular_acclimation"
+          },
+          {
+            "fail_text": "requires_ap_engineered_evolution",
+            "has_ascension_perk": "ap_engineered_evolution"
+          }
+        ]
+      },
+      "prerequisites": [],
+      "effects": "",
+      "modifier": {
+        "description": "ap_evolutionary_mastery_modifier_desc",
+        "description_parameters": {
+          "POINTS": "@ap_evolutionary_mastery_POINTS",
+          "COST_MULT": "@ap_evolutionary_mastery_COST_MULT"
+        },
+        "BIOLOGICAL_species_trait_points_add": "@ap_evolutionary_mastery_POINTS",
+        "modify_species_cost_mult": "@ap_evolutionary_mastery_COST_MULT"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "always": false
+      },
+      "ai_weight": 10000
     },
     {
       "id": "ap_defender_of_the_galaxy",

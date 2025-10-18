@@ -150,6 +150,13 @@ def clean_localized_text(text: str, localizations: Optional[Dict[str, str]] = No
     # Remove special formatting like $TABBED_NEW_LINE$
     text = re.sub(r'\$[A-Z_]+\$', '\n', text)
 
+    # Remove dynamic function calls like [GetIndividualNamePlural], [GetSpeciesName], etc.
+    text = re.sub(r'\[Get[^\]]+\]', 'individuals', text)
+
+    # Remove concept references with comma format like ['edict:energy_drain',Energy Drain]
+    # Extract the display name (after the comma) if present, otherwise use the key
+    text = re.sub(r"\['[^']+',([^\]]+)\]", r'\1', text)
+
     # Resolve concept references like ['concept_foo'] or ['building:building_foo']
     if localizations:
         def resolve_concept(match):

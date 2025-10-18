@@ -652,7 +652,7 @@
     "finish": {
       "id": "tr_domestication_finish",
       "name": "Domestication Traditions Finished",
-      "description": "[GetDomesticationFinishEffectDesc]",
+      "description": "individuals",
       "custom_tooltip": "tr_domestication_finish_desc",
       "type": "finish",
       "tree": "tr_domestication",
@@ -1505,7 +1505,7 @@
     "adopt": {
       "id": "tr_politics_adopt",
       "name": "Politics Traditions",
-      "description": "+1 Envoy  Officials assigned to the [GetGalCommunityOrGalImperium] now produce 0.1 Influence per Skill Level.",
+      "description": "+1 Envoy  Officials assigned to the individuals now produce 0.1 Influence per Skill Level.",
       "custom_tooltip": "tr_politics_adopt_desc",
       "type": "adopt",
       "tree": "tr_politics",
@@ -1522,7 +1522,7 @@
     "finish": {
       "id": "tr_politics_finish",
       "name": "Politics Traditions Finished",
-      "description": "+10% Diplomatic Weight Unlocks 4 special Resolutions in the [GetGalCommunityOrGalImperium]. Ascension Perks Unlocked: +1",
+      "description": "+10% Diplomatic Weight Unlocks 4 special Resolutions in the individuals. Ascension Perks Unlocked: +1",
       "custom_tooltip": "",
       "type": "finish",
       "tree": "tr_politics",
@@ -1559,7 +1559,7 @@
       {
         "id": "tr_politics_gravitas",
         "name": "Gravitas",
-        "description": "-25% Influence cost to veto or propose Resolutions  Officials assigned to the [GetGalCommunityOrGalImperium] provide an additional 2.5% Diplomatic Weight per Skill Level.",
+        "description": "-25% Influence cost to veto or propose Resolutions  Officials assigned to the individuals provide an additional 2.5% Diplomatic Weight per Skill Level.",
         "custom_tooltip": "tr_politics_gravitas_desc",
         "type": "tradition",
         "tree": "politics",
@@ -3113,7 +3113,7 @@
       {
         "id": "tr_genetics_efficient_cloning",
         "name": "Stem Cell Stimulation",
-        "description": "produce an additional +1.5 Monthly Organic Pop Growth",
+        "description": "Building Clone Vats produce an additional +1.5 Monthly Organic Pop Growth",
         "custom_tooltip": "tr_genetics_efficient_cloning_desc",
         "type": "tradition",
         "tree": "genetics",
@@ -3607,7 +3607,7 @@
       {
         "id": "tr_psionics_psi_corps",
         "name": "Psi Corps",
-        "description": "Unlocks Building:",
+        "description": "Unlocks Building: Building Psi Corps",
         "custom_tooltip": "tr_psionics_psi_corps_desc",
         "type": "tradition",
         "tree": "psionics",
@@ -3778,7 +3778,7 @@
       {
         "id": "tr_psionics_shroud_psychometry",
         "name": "Psychometry",
-        "description": "[GetCrimeDeviancy] from [GetTelepathSwapPluralWithIcon]: $@psionic_shroud_crime|0$",
+        "description": "individuals from individuals: $@psionic_shroud_crime|0$",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "psionics",

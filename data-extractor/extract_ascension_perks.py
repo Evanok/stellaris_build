@@ -46,6 +46,17 @@ def extract_perk_data(perk_key: str, perk_data: Dict[str, Any], localizations: D
     desc_key = f"{perk_key}_desc"
     description_raw = get_localized_text(desc_key, localizations)
 
+    # If description contains dynamic function calls like [GetMindOverMatterDesc], try fallback variants
+    if description_raw and (description_raw.startswith('[Get') or description_raw == desc_key):
+        # Try organic/machine/hive variants
+        for variant in ['_organic', '_machine', '_hive']:
+            variant_key = f"{perk_key}_desc{variant}"
+            variant_desc = get_localized_text(variant_key, localizations)
+            # Accept variant if it's a real description (not starting with a dynamic function)
+            if variant_desc and variant_desc != variant_key and not variant_desc.startswith('[Get'):
+                description_raw = variant_desc
+                break
+
     perk = {
         "id": perk_key,
         "name": name,
@@ -110,18 +121,24 @@ def extract_perks_from_file(filepath: str, localizations: Dict[str, str] = None)
     """Extract all ascension perks from a single file"""
     print(f"Processing: {os.path.basename(filepath)}")
 
+    # Ascension paths file contains path perks that should always be included
+    is_paths_file = '00_ascension_paths.txt' in filepath
+
     try:
         data = parse_stellaris_file(filepath)
         perks = []
 
         for key, value in data.items():
             if isinstance(value, dict) and key.startswith('ap_'):
-                # Check if perk is actually available (potential != { always = no })
-                potential = value.get("potential", {})
-                # Parser converts 'no' to False
-                if isinstance(potential, dict) and potential.get("always") == False:
-                    print(f"  Skipping {key} (potential = always no)")
-                    continue
+                # For ascension paths (transcendence, evolutionary_mastery, etc.),
+                # ignore the potential check as they're core game features
+                if not is_paths_file:
+                    # Check if perk is actually available (potential != { always = no })
+                    potential = value.get("potential", {})
+                    # Parser converts 'no' to False
+                    if isinstance(potential, dict) and potential.get("always") == False:
+                        print(f"  Skipping {key} (potential = always no)")
+                        continue
 
                 perk = extract_perk_data(key, value, localizations)
                 perks.append(perk)
