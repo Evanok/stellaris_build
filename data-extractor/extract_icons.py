@@ -85,7 +85,7 @@ def extract_icons_for_type(stellaris_path, output_path, icon_type, ids_list, tar
         'origin_images': 'gfx/event_pictures/origins',  # Large origin illustrations
         'traits': 'gfx/interface/icons/traits',
         'ethics': 'gfx/interface/icons/ethics',
-        'authorities': 'gfx/interface/icons/governments',
+        'authorities': 'gfx/interface/icons/governments/authorities',
         'ascension_perks': 'gfx/interface/icons/ascension_perks',
         'traditions': 'gfx/interface/icons/traditions',
         'tradition_trees': 'gfx/interface/icons/traditions/tree_icons',
@@ -116,7 +116,16 @@ def extract_icons_for_type(stellaris_path, output_path, icon_type, ids_list, tar
         dds_filename = f"{item_id}.dds"
         dds_path = os.path.join(source_dir, dds_filename)
 
-        # Output PNG filename
+        # Special case: Origins use "origins_" (plural) prefix in file names
+        if icon_type == 'origins' and not os.path.exists(dds_path):
+            # Try with plural prefix: origin_xxx -> origins_xxx
+            alt_filename = item_id.replace('origin_', 'origins_', 1) + '.dds'
+            alt_path = os.path.join(source_dir, alt_filename)
+            if os.path.exists(alt_path):
+                dds_path = alt_path
+                dds_filename = alt_filename
+
+        # Output PNG filename (always use original item_id)
         png_filename = f"{item_id}.png"
         png_path = os.path.join(output_dir, png_filename)
 

@@ -81,164 +81,276 @@ export const Home: React.FC = () => {
   }
 
   return (
-    <div className="container mt-4">
-      {/* Header */}
-      <div className="row mb-4">
-        <div className="col-md-8">
-          <h1 className="text-white">Community Builds</h1>
-          <p className="text-muted">Browse and discover builds created by the community</p>
-        </div>
-        <div className="col-md-4 text-end">
-          <Link to="/create" className="btn btn-primary btn-lg">
-            <i className="bi bi-plus-circle me-2"></i>
-            Create New Build
-          </Link>
-        </div>
-      </div>
-
-      {/* Search */}
-      <div className="row mb-4">
-        <div className="col-12">
-          <input
-            type="text"
-            className="form-control form-control-lg bg-secondary text-white border-secondary"
-            placeholder="Search builds by name, origin, ethics, tags..."
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setCurrentPage(1); // Reset to first page on search
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Build Count */}
-      <div className="row mb-3">
-        <div className="col-12">
-          <p className="text-muted">
-            Showing {currentBuilds.length} of {filteredBuilds.length} builds
-            {searchQuery && ` (filtered from ${builds.length} total)`}
-          </p>
+    <div className="container-fluid p-0">
+      {/* Hero Banner */}
+      <div
+        className="position-relative mb-4"
+        style={{
+          background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+          padding: '4rem 0',
+          borderBottom: '3px solid #e94560'
+        }}
+      >
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-md-8">
+              <h1 className="display-3 fw-bold text-white mb-3">
+                Stellaris Build Archive
+              </h1>
+              <p className="lead text-light mb-0">
+                Discover, share, and master powerful empire builds from the community
+              </p>
+            </div>
+            <div className="col-md-4 text-end">
+              <div className="d-inline-block p-3 rounded" style={{ background: 'rgba(255, 255, 255, 0.1)' }}>
+                <h3 className="text-white mb-2">{builds.length}</h3>
+                <p className="text-light mb-0">Community Builds</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Builds Grid */}
-      {currentBuilds.length === 0 ? (
-        <div className="alert alert-info">
-          {searchQuery ? 'No builds match your search.' : 'No builds available yet. Be the first to create one!'}
+      <div className="container mt-4">
+        {/* Search */}
+        <div className="row mb-4">
+          <div className="col-12">
+            <input
+              type="text"
+              className="form-control form-control-lg bg-secondary text-white border-secondary"
+              placeholder="Search builds by name, origin, ethics, tags..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+            />
+          </div>
         </div>
-      ) : (
-        <>
-          <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            {currentBuilds.map(build => (
-              <div key={build.id} className="col">
-                <div className="card bg-dark border-secondary h-100">
-                  <div className="card-body">
-                    <h5 className="card-title text-white">
-                      <Link to={`/build/${build.id}`} className="text-decoration-none text-white">
-                        {build.name}
-                      </Link>
-                    </h5>
 
-                    {/* Game Version Badge */}
-                    <div className="mb-2">
-                      <span className="badge bg-primary">{build.game_version || 'Unknown'}</span>
-                    </div>
+        {/* Build Count */}
+        <div className="row mb-3">
+          <div className="col-12">
+            <p className="text-muted">
+              Showing {currentBuilds.length} of {filteredBuilds.length} builds
+              {searchQuery && ` (filtered from ${builds.length} total)`}
+            </p>
+          </div>
+        </div>
 
-                    {/* Description */}
-                    <p className="card-text text-light small">
-                      {build.description
-                        ? build.description.substring(0, 100) + (build.description.length > 100 ? '...' : '')
-                        : 'No description provided.'}
-                    </p>
-
-                    {/* Key Features */}
-                    <div className="mb-2">
-                      {build.origin && (
-                        <div className="mb-1">
-                          <small className="text-muted">Origin:</small>
-                          <small className="text-info ms-2">{build.origin}</small>
+        {/* Builds Grid */}
+        {currentBuilds.length === 0 ? (
+          <div className="alert alert-info">
+            {searchQuery ? 'No builds match your search.' : 'No builds available yet. Be the first to create one!'}
+          </div>
+        ) : (
+          <>
+            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+              {currentBuilds.map(build => (
+                <div key={build.id} className="col">
+                  <div className="card bg-dark border-secondary h-100">
+                    <div className="card-body">
+                      {/* Icon Gallery Header */}
+                      <div className="d-flex justify-content-between align-items-start mb-3">
+                        <div className="d-flex gap-2">
+                          {/* Origin Icon */}
+                          {build.origin && (
+                            <div
+                              className="d-flex align-items-center justify-content-center rounded"
+                              style={{
+                                width: '40px',
+                                height: '40px',
+                                background: 'rgba(255, 255, 255, 0.1)',
+                                border: '2px solid rgba(255, 255, 255, 0.2)'
+                              }}
+                            >
+                              <img
+                                src={`/icons/origins/${build.origin}.png`}
+                                alt=""
+                                style={{ width: '32px', height: '32px', objectFit: 'contain' }}
+                                onError={(e) => {
+                                  const img = e.target as HTMLImageElement;
+                                  img.style.opacity = '0';
+                                  const container = img.parentElement as HTMLElement;
+                                  if (container) {
+                                    container.style.visibility = 'hidden';
+                                    container.style.width = '0';
+                                    container.style.minWidth = '0';
+                                    container.style.padding = '0';
+                                    container.style.margin = '0';
+                                    container.style.border = 'none';
+                                  }
+                                }}
+                              />
+                            </div>
+                          )}
+                          {/* First Ethic Icon */}
+                          {build.ethics && build.ethics.split(',')[0] && (
+                            <div
+                              className="d-flex align-items-center justify-content-center rounded"
+                              style={{
+                                width: '40px',
+                                height: '40px',
+                                background: 'rgba(255, 193, 7, 0.1)',
+                                border: '2px solid rgba(255, 193, 7, 0.3)'
+                              }}
+                            >
+                              <img
+                                src={`/icons/ethics/${build.ethics.split(',')[0].trim()}.png`}
+                                alt=""
+                                style={{ width: '32px', height: '32px', objectFit: 'contain' }}
+                                onError={(e) => {
+                                  const img = e.target as HTMLImageElement;
+                                  img.style.opacity = '0';
+                                  const container = img.parentElement as HTMLElement;
+                                  if (container) {
+                                    container.style.visibility = 'hidden';
+                                    container.style.width = '0';
+                                    container.style.minWidth = '0';
+                                    container.style.padding = '0';
+                                    container.style.margin = '0';
+                                    container.style.border = 'none';
+                                  }
+                                }}
+                              />
+                            </div>
+                          )}
+                          {/* Authority Icon */}
+                          {build.authority && (
+                            <div
+                              className="d-flex align-items-center justify-content-center rounded"
+                              style={{
+                                width: '40px',
+                                height: '40px',
+                                background: 'rgba(40, 167, 69, 0.1)',
+                                border: '2px solid rgba(40, 167, 69, 0.3)'
+                              }}
+                            >
+                              <img
+                                src={`/icons/authorities/${build.authority}.png`}
+                                alt=""
+                                style={{ width: '32px', height: '32px', objectFit: 'contain' }}
+                                onError={(e) => {
+                                  const img = e.target as HTMLImageElement;
+                                  img.style.opacity = '0';
+                                  const container = img.parentElement as HTMLElement;
+                                  if (container) {
+                                    container.style.visibility = 'hidden';
+                                    container.style.width = '0';
+                                    container.style.minWidth = '0';
+                                    container.style.padding = '0';
+                                    container.style.margin = '0';
+                                    container.style.border = 'none';
+                                  }
+                                }}
+                              />
+                            </div>
+                          )}
                         </div>
-                      )}
-                      {build.ethics && (
-                        <div className="mb-1">
-                          <small className="text-muted">Ethics:</small>
-                          <small className="text-warning ms-2">
-                            {build.ethics.split(',').slice(0, 2).join(', ')}
-                            {build.ethics.split(',').length > 2 && '...'}
-                          </small>
-                        </div>
-                      )}
-                      {build.authority && (
-                        <div className="mb-1">
-                          <small className="text-muted">Authority:</small>
-                          <small className="text-success ms-2">{build.authority}</small>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Tags */}
-                    {build.tags && (
-                      <div className="mt-2">
-                        {build.tags.split(',').slice(0, 3).map((tag, idx) => (
-                          <span key={idx} className="badge bg-secondary me-1">
-                            {tag.trim()}
-                          </span>
-                        ))}
+                        <span className="badge bg-primary">{build.game_version || 'Unknown'}</span>
                       </div>
-                    )}
-                  </div>
-                  <div className="card-footer bg-dark border-secondary">
-                    <small className="text-muted">
-                      Created: {new Date(build.created_at).toLocaleDateString()}
-                    </small>
+
+                      <h5 className="card-title text-white mb-3">
+                        <Link to={`/build/${build.id}`} className="text-decoration-none text-white">
+                          {build.name}
+                        </Link>
+                      </h5>
+
+                      {/* Description */}
+                      <p className="card-text text-light small mb-3">
+                        {build.description
+                          ? build.description.substring(0, 100) + (build.description.length > 100 ? '...' : '')
+                          : 'No description provided.'}
+                      </p>
+
+                      {/* Key Features */}
+                      <div className="mb-2">
+                        {build.origin && (
+                          <div className="mb-1">
+                            <small className="text-muted">Origin:</small>
+                            <small className="text-info ms-2">{build.origin}</small>
+                          </div>
+                        )}
+                        {build.ethics && (
+                          <div className="mb-1">
+                            <small className="text-muted">Ethics:</small>
+                            <small className="text-warning ms-2">
+                              {build.ethics.split(',').slice(0, 2).join(', ')}
+                              {build.ethics.split(',').length > 2 && '...'}
+                            </small>
+                          </div>
+                        )}
+                        {build.authority && (
+                          <div className="mb-1">
+                            <small className="text-muted">Authority:</small>
+                            <small className="text-success ms-2">{build.authority}</small>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Tags */}
+                      {build.tags && (
+                        <div className="mt-2">
+                          {build.tags.split(',').slice(0, 3).map((tag, idx) => (
+                            <span key={idx} className="badge bg-secondary me-1">
+                              {tag.trim()}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <div className="card-footer bg-dark border-secondary">
+                      <small className="text-muted">
+                        Created: {new Date(build.created_at).toLocaleDateString()}
+                      </small>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <nav className="mt-4">
-              <ul className="pagination justify-content-center">
-                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                  <button
-                    className="page-link bg-secondary text-white border-secondary"
-                    onClick={() => paginate(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
-                    Previous
-                  </button>
-                </li>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
-                  <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <nav className="mt-4 mb-4">
+                <ul className="pagination justify-content-center">
+                  <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                     <button
-                      className={`page-link ${
-                        currentPage === number
-                          ? 'bg-primary border-primary'
-                          : 'bg-secondary text-white border-secondary'
-                      }`}
-                      onClick={() => paginate(number)}
+                      className="page-link bg-secondary text-white border-secondary"
+                      onClick={() => paginate(currentPage - 1)}
+                      disabled={currentPage === 1}
                     >
-                      {number}
+                      Previous
                     </button>
                   </li>
-                ))}
-                <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                  <button
-                    className="page-link bg-secondary text-white border-secondary"
-                    onClick={() => paginate(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                  >
-                    Next
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          )}
-        </>
-      )}
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
+                    <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
+                      <button
+                        className={`page-link ${
+                          currentPage === number
+                            ? 'bg-primary border-primary'
+                            : 'bg-secondary text-white border-secondary'
+                        }`}
+                        onClick={() => paginate(number)}
+                      >
+                        {number}
+                      </button>
+                    </li>
+                  ))}
+                  <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                    <button
+                      className="page-link bg-secondary text-white border-secondary"
+                      onClick={() => paginate(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                    >
+                      Next
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
