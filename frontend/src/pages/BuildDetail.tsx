@@ -405,9 +405,9 @@ export const BuildDetail: React.FC = () => {
                             style={{
                               width: '100%',
                               maxWidth: '400px',
-                              height: 'auto',
+                              maxHeight: '300px',
                               borderRadius: '8px',
-                              objectFit: 'contain'
+                              objectFit: 'cover'
                             }}
                             onError={() => setOriginImageError(true)}
                           />
