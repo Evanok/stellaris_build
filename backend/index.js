@@ -5,11 +5,15 @@ const fs = require('fs');
 const path = require('path');
 const { setupDatabase, db } = require('./database');
 const passport = require('./auth');
+const { apiLimiter, createBuildLimiter, validateBuildData, sanitizeBuildData } = require('./security');
 const app = express();
 const port = process.env.PORT || 3001;
 
 // Middlewares
 app.use(express.json());
+
+// Apply rate limiting to all API routes
+app.use('/api/', apiLimiter);
 
 // Session configuration
 app.use(
@@ -198,12 +202,20 @@ app.get('/api/builds', (req, res) => {
   });
 });
 
-// Create a new build (requires authentication)
-app.post('/api/builds', isAuthenticated, (req, res) => {
-  const { name, description, game_version, youtube_url, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags } = req.body;
-  if (!name) {
-    return res.status(400).json({ error: 'Build name is required.' });
+// Create a new build (requires authentication + rate limiting)
+app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
+  // Validate input data
+  const validationErrors = validateBuildData(req.body);
+  if (validationErrors.length > 0) {
+    return res.status(400).json({
+      error: 'Validation failed',
+      details: validationErrors
+    });
   }
+
+  // Sanitize input data to prevent XSS
+  const sanitizedData = sanitizeBuildData(req.body);
+  const { name, description, game_version, youtube_url, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags } = sanitizedData;
 
   // Get author_id from authenticated user
   const author_id = req.user.id;
