@@ -52,3 +52,26 @@ __pycache__/
 venv/
 ENV/
 env/
+
+# Save file cache
+.cache_*.sav/
+
+# Test save files
+*.sav
+
+# Temporary extraction folders
+*_extracted/
+
+# OAuth secrets (NEVER commit these!)
+client_secret_*.json
+
+# One-off scripts (temporary)
+update_*.js
+get_*.js
+
+# YouTube extraction test data
+youtube-extraction/
+
+# Old/backup files
+*_old.py
+*_backup.*
