@@ -22,24 +22,75 @@ This project is currently in active development with the following features impl
   - Civics with conditional filtering
   - Recommended Ascension Perks (with ordering)
   - Recommended Tradition Trees (with ordering)
-  - Game version tracking
+  - Game version tracking (4.1 Lyra, 4.0 Phoenix, 3.14 Circinus, 3.13 Vela)
+  - Difficulty rating (Overpowered, Strong, Balanced, Challenging, Extreme Challenge)
   - Optional YouTube video link
 
-- **Build Display**: View submitted builds with all details and embedded YouTube videos
+- **Build Display**: View submitted builds with all details, difficulty badges, and embedded YouTube videos
 - **Build Management**: Soft delete functionality (builds are hidden, not permanently deleted)
-- **Search & Filtering**: Search builds by name, origin, ethics, and tags
+- **Search & Filtering**: Search builds by name, origin, ethics, tags, and difficulty level
 - **Pagination**: Browse builds with paginated results
+- **Authentication**: OAuth 2.0 (Google) + OpenID (Steam) with session management
+- **Development Mode**: Localhost authentication bypass for easier testing
 - **Data Extraction**: Automated extraction from Stellaris game files with full localization
+- **Maintenance Mode**: Styled maintenance page with enable/disable scripts
 - **Production Deployment**: Fully deployed with HTTPS, auto-restart, and SSL certificates
 
 ### 🚧 Planned Features
 
-- User authentication and profiles
-- Build rating and comments system
-- Search and filtering
-- Build comparison tools
-- Community features (favorites, build of the month, etc.)
-- Exporting empire build from the website in the Stellaris game file to play it right away!
+#### Priority Features
+
+- **Comment System**: Discussion threads on each build page
+  - Nested comments/replies
+  - Upvote/downvote functionality
+  - Author notifications
+  - Moderation tools (report/delete)
+
+- **Build Import**: Extract builds from Stellaris save files
+  - Parse game save files automatically
+  - Auto-detect species, civics, origins, ethics
+  - Pre-fill build form with extracted data
+  - Handle missing/new content gracefully
+
+- **Improved Data Extraction**: Enhanced game data extraction
+  - Verify and add missing species
+  - Verify and add missing civics
+  - Verify and add missing origins
+  - Auto-detect new DLC content
+  - Cross-validation with latest game files
+
+- **Custom Usernames**: Personalized display names
+  - Allow users to choose/edit their username
+  - Username uniqueness validation
+  - Display username instead of OAuth email
+  - Editable user profiles
+
+- **Weekly Leaderboard**: Top contributors showcase
+  - Rank users by builds added (last 7 days)
+  - Display on homepage
+  - "Top Contributor" badge for #1
+  - Historical leaderboard archive
+
+- **Featured Build of the Week**: Weekly build spotlight
+  - Dedicated "Featured Builds" page
+  - Automatic selection (most liked/commented) or manual curation
+  - Weekly rotation
+  - Archive of past featured builds
+  - Special "Build of the Week" badge
+
+#### Secondary Features
+
+- User profiles with build history
+- Build editing (by author only)
+- Rating system (like/dislike)
+- Build export to Stellaris save files
+- Build comparison tool (compare 2-3 builds side-by-side)
+- Advanced search with combined filters
+- Custom build tags
+
+#### Bug Fixes
+
+- Fix maintenance mode script (502 error issue)
 
 ---
 
@@ -49,9 +100,10 @@ This project is currently in active development with the following features impl
 
 - **Frontend:** React 18 + TypeScript + Vite + Bootstrap 5
 - **Backend:** Express 5 + SQLite3
+- **Authentication:** Passport.js (Google OAuth 2.0 + Steam OpenID)
 - **Build Tool:** Vite
 - **Architecture:** Monorepo with npm workspaces
-- **Data Extraction:** Python 3 (custom Paradox file parser)
+- **Data Extraction:** Python 3 (custom Paradox file parser) + Gemini AI for descriptions
 - **Deployment:** PM2 + nginx + Let's Encrypt SSL
 - **Hosting:** Dedicated server (Scaleway Dedibox)
 
@@ -229,8 +281,14 @@ All data includes:
 | `/api/traditions` | GET | Get all tradition trees |
 | `/api/ruler-traits` | GET | Get all ruler traits |
 | `/api/builds` | GET | Get all builds (excludes soft-deleted) |
-| `/api/builds` | POST | Create a new build |
-| `/api/builds/:id` | DELETE | Soft delete a build (sets deleted flag) |
+| `/api/builds` | POST | Create a new build (requires authentication*) |
+| `/api/builds/:id` | DELETE | Soft delete a build (requires authentication*) |
+| `/api/user` | GET | Get current authenticated user |
+| `/auth/google` | GET | Initiate Google OAuth login |
+| `/auth/steam` | GET | Initiate Steam OpenID login |
+| `/auth/logout` | GET | Logout and destroy session |
+
+**Note:** *Authentication is bypassed on localhost for development convenience.
 
 ---
 
@@ -263,14 +321,17 @@ The project uses **SQLite** with the following schema:
 - `id` (primary key)
 - `username`
 - `email`
-- `password_hash`
+- `avatar` (profile picture URL)
+- `provider` (oauth provider: google/steam)
+- `provider_id` (unique ID from provider)
 - `created_at`
 
 ### `builds` table
 - `id` (primary key)
 - `name`
 - `description`
-- `game_version` (Stellaris version)
+- `game_version` (Stellaris version: 4.1, 4.0, 3.14, 3.13)
+- `difficulty` (optional: overpowered, strong, balanced, challenging, extreme)
 - `youtube_url` (optional YouTube video link)
 - `origin` (origin ID)
 - `ethics` (comma-separated IDs)
