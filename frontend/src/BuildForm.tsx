@@ -200,6 +200,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   const [description, setDescription] = useState('');
   const [game_version, setGameVersion] = useState('4.1');
   const [youtube_url, setYoutubeUrl] = useState('');
+  const [source_url, setSourceUrl] = useState('');
   const [difficulty, setDifficulty] = useState<string>('');
   const [dlcs, setDlcs] = useState('');
   const [tags, setTags] = useState('');
@@ -1043,6 +1044,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           description,
           game_version,
           youtube_url,
+          source_url,
           difficulty,
           civics: selectedCivics.join(', '), // Convert array to comma-separated string
           dlcs,
@@ -1071,6 +1073,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
       setDescription('');
       setGameVersion('4.1'); // Reset to latest version
       setYoutubeUrl('');
+      setSourceUrl('');
       setDifficulty('');
       setDlcs('');
       setTags('');
@@ -1175,6 +1178,21 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
               value={youtube_url}
               onChange={(e) => setYoutubeUrl(e.target.value)}
               placeholder="https://www.youtube.com/watch?v=..."
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="sourceUrl" className="form-label">
+              Source URL (Optional)
+              <small className="text-muted d-block">Original source of this build (Reddit post, forum thread, etc.)</small>
+            </label>
+            <input
+              type="url"
+              className="form-control bg-secondary text-white border-secondary"
+              id="sourceUrl"
+              value={source_url}
+              onChange={(e) => setSourceUrl(e.target.value)}
+              placeholder="https://www.reddit.com/r/Stellaris/..."
             />
           </div>
 

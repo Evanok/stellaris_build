@@ -105,6 +105,13 @@ const setupDatabase = () => {
       }
     });
 
+    // Add source_url column if it doesn't exist (for external source attribution)
+    db.run(`ALTER TABLE builds ADD COLUMN source_url TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding source_url column:', err.message);
+      }
+    });
+
     // Migrate users table for OAuth (for existing databases)
     db.run(`ALTER TABLE users ADD COLUMN email TEXT`, (err) => {
       if (err && !err.message.includes('duplicate column')) {

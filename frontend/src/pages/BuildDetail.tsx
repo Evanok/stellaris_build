@@ -9,6 +9,7 @@ interface Build {
   description: string;
   game_version: string;
   youtube_url?: string;
+  source_url?: string;
   difficulty?: string;
   origin: string;
   authority: string;
@@ -333,6 +334,30 @@ export const BuildDetail: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Source URL */}
+      {build.source_url && (
+        <div className="card bg-dark border-secondary mb-4">
+          <div className="card-header bg-secondary">
+            <h4 className="mb-0 text-white">
+              <i className="bi bi-link-45deg me-2"></i>
+              Original Source
+            </h4>
+          </div>
+          <div className="card-body">
+            <p className="text-muted mb-2">This build was shared from:</p>
+            <a
+              href={build.source_url}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+              className="btn btn-outline-primary"
+            >
+              <i className="bi bi-box-arrow-up-right me-2"></i>
+              View Original Post
+            </a>
+          </div>
+        </div>
+      )}
 
       {/* YouTube Video */}
       {build.youtube_url && (() => {
