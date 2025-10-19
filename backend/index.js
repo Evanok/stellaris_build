@@ -360,6 +360,15 @@ app.post('/api/import-build', isAuthenticated, upload.single('savefile'), (req, 
       if (err) console.error('Failed to delete uploaded file:', err);
     });
 
+    // Clean up cache directory (.cache_<filename>)
+    const savFileName = path.basename(savFilePath);
+    const cacheDir = path.join(path.dirname(savFilePath), `.cache_${savFileName}`);
+    if (fs.existsSync(cacheDir)) {
+      fs.rm(cacheDir, { recursive: true, force: true }, (err) => {
+        if (err) console.error('Failed to delete cache directory:', err);
+      });
+    }
+
     if (code !== 0) {
       console.error('Python script error:', stderr);
       return res.status(500).json({
