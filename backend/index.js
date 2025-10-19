@@ -3,11 +3,29 @@ const express = require('express');
 const session = require('express-session');
 const fs = require('fs');
 const path = require('path');
+const multer = require('multer');
+const { spawn } = require('child_process');
 const { setupDatabase, db } = require('./database');
 const passport = require('./auth');
 const { apiLimiter, createBuildLimiter, validateBuildData, sanitizeBuildData } = require('./security');
 const app = express();
 const port = process.env.PORT || 3001;
+
+// Configure multer for file uploads
+const upload = multer({
+  dest: path.join(__dirname, 'uploads'), // Temporary upload directory
+  limits: {
+    fileSize: 50 * 1024 * 1024, // 50MB max file size
+  },
+  fileFilter: (req, file, cb) => {
+    // Only accept .sav files
+    if (path.extname(file.originalname).toLowerCase() === '.sav') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only .sav files are allowed'));
+    }
+  }
+});
 
 // Trust proxy - required when running behind nginx with HTTPS
 app.set('trust proxy', 1);
@@ -310,6 +328,73 @@ app.delete('/api/builds/:id', isAuthenticated, (req, res) => {
       }
       res.json({ message: 'Build deleted successfully.', id: parseInt(id) });
     });
+  });
+});
+
+// Import build from .sav file
+app.post('/api/import-build', isAuthenticated, upload.single('savefile'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  const savFilePath = req.file.path;
+  const scriptPath = path.join(__dirname, '../data-extractor/import_build_from_save.py');
+
+  // Run Python script to extract build data
+  const python = spawn('python3', [scriptPath, savFilePath]);
+
+  let stdout = '';
+  let stderr = '';
+
+  python.stdout.on('data', (data) => {
+    stdout += data.toString();
+  });
+
+  python.stderr.on('data', (data) => {
+    stderr += data.toString();
+  });
+
+  python.on('close', (code) => {
+    // Clean up uploaded file
+    fs.unlink(savFilePath, (err) => {
+      if (err) console.error('Failed to delete uploaded file:', err);
+    });
+
+    if (code !== 0) {
+      console.error('Python script error:', stderr);
+      return res.status(500).json({
+        error: 'Failed to parse save file',
+        details: stderr,
+        output: stdout
+      });
+    }
+
+    try {
+      // Extract JSON from output (it's at the end after "JSON OUTPUT")
+      const jsonMatch = stdout.match(/\{[\s\S]*"ethics"[\s\S]*\}/);
+      if (!jsonMatch) {
+        return res.status(500).json({
+          error: 'Failed to extract build data from save file',
+          output: stdout
+        });
+      }
+
+      const buildData = JSON.parse(jsonMatch[0]);
+
+      // Return both the extracted data and the full output for debugging
+      res.json({
+        success: true,
+        buildData: buildData,
+        output: stdout, // Full script output for user to see/copy
+      });
+    } catch (error) {
+      console.error('JSON parse error:', error);
+      res.status(500).json({
+        error: 'Failed to parse extracted data',
+        details: error.message,
+        output: stdout
+      });
+    }
   });
 });
 
