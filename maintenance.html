@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stellaris Build - Maintenance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated background stars */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 60px 70px, #fff, transparent),
+                radial-gradient(1px 1px at 50px 50px, #ddd, transparent),
+                radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+                radial-gradient(2px 2px at 90px 10px, #eee, transparent);
+            background-size: 200px 200px;
+            animation: stars 20s linear infinite;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        @keyframes stars {
+            from { transform: translateY(0); }
+            to { transform: translateY(-200px); }
+        }
+
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+            background: rgba(26, 31, 58, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .image-container {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .maintenance-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(100, 150, 255, 0.3);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #64b5f6, #42a5f5, #1e88e5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+            text-shadow: 0 0 30px rgba(100, 181, 246, 0.5);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #90caf9;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #b0b0b0;
+            margin-bottom: 15px;
+        }
+
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+
+        .spinner {
+            margin: 30px auto;
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(100, 181, 246, 0.2);
+            border-top: 4px solid #64b5f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .eta {
+            font-size: 0.95rem;
+            color: #ffa726;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 167, 38, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 167, 38, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            h2 {
+                font-size: 1.2rem;
+            }
+            .container {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">🔧</div>
+
+        <div class="image-container">
+            <img
+                src="https://stellaris.paradoxwikis.com/images/thumb/b/b7/Apc_Loading_Screen.png/300px-Apc_Loading_Screen.png"
+                alt="Stellaris"
+                class="maintenance-image"
+                onerror="this.style.display='none'"
+            >
+        </div>
+
+        <h1>Under Maintenance</h1>
+        <h2>Stellaris Build Sharing Platform</h2>
+
+        <div class="spinner"></div>
+
+        <p>
+            We're currently performing scheduled maintenance to improve your experience.
+        </p>
+        <p>
+            The site will be back online shortly.
+        </p>
+
+        <div class="eta">
+            <strong>⏱️ Estimated Time:</strong> A few minutes
+        </div>
+    </div>
+</body>
+</html>
