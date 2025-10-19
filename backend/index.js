@@ -62,10 +62,7 @@ setupDatabase();
 
 // Authentication middleware
 const isAuthenticated = (req, res, next) => {
-  // Bypass authentication on localhost for development
-  const isLocalhost = req.hostname === 'localhost' || req.hostname === '127.0.0.1';
-
-  if (isLocalhost || req.isAuthenticated()) {
+  if (req.isAuthenticated()) {
     return next();
   }
   res.status(401).json({ error: 'Unauthorized. Please log in.' });
@@ -109,6 +106,114 @@ app.get('/auth/logout', (req, res) => {
     const redirectUrl = process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:3000/';
     res.redirect(redirectUrl);
   });
+});
+
+// Register route (create local account)
+app.post('/auth/register', async (req, res) => {
+  const { username, password } = req.body;
+
+  // Validation
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password are required.' });
+  }
+
+  if (username.length < 3 || username.length > 50) {
+    return res.status(400).json({ error: 'Username must be between 3 and 50 characters.' });
+  }
+
+  // Password validation (NIST/OWASP best practices)
+  if (password.length < 12) {
+    return res.status(400).json({ error: 'Password must be at least 12 characters long.' });
+  }
+
+  if (password.length > 128) {
+    return res.status(400).json({ error: 'Password must be less than 128 characters.' });
+  }
+
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]/;
+  if (!passwordRegex.test(password)) {
+    return res.status(400).json({
+      error: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#).'
+    });
+  }
+
+  // Check if username already exists (any provider)
+  db.get('SELECT * FROM users WHERE username = ?', [username], async (err, existingUser) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error.' });
+    }
+
+    if (existingUser) {
+      return res.status(409).json({ error: 'Username already taken.' });
+    }
+
+    // Hash password
+    const bcrypt = require('bcrypt');
+    const saltRounds = 10;
+    const password_hash = await bcrypt.hash(password, saltRounds);
+
+    // Create new user
+    db.run(
+      'INSERT INTO users (username, provider, provider_id, password_hash) VALUES (?, ?, ?, ?)',
+      [username, 'local', username, password_hash],
+      function (err) {
+        if (err) {
+          return res.status(500).json({ error: 'Failed to create user.' });
+        }
+
+        // Get the newly created user
+        db.get('SELECT * FROM users WHERE id = ?', [this.lastID], (err, newUser) => {
+          if (err) {
+            return res.status(500).json({ error: 'Failed to retrieve user.' });
+          }
+
+          // Log the user in
+          req.login(newUser, (err) => {
+            if (err) {
+              return res.status(500).json({ error: 'Login failed after registration.' });
+            }
+
+            res.status(201).json({
+              success: true,
+              user: {
+                id: newUser.id,
+                username: newUser.username,
+                provider: newUser.provider
+              }
+            });
+          });
+        });
+      }
+    );
+  });
+});
+
+// Login route (local account)
+app.post('/auth/login', (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      return res.status(500).json({ error: 'Authentication error.' });
+    }
+
+    if (!user) {
+      return res.status(401).json({ error: info.message || 'Invalid username or password.' });
+    }
+
+    req.login(user, (err) => {
+      if (err) {
+        return res.status(500).json({ error: 'Login failed.' });
+      }
+
+      res.json({
+        success: true,
+        user: {
+          id: user.id,
+          username: user.username,
+          provider: user.provider
+        }
+      });
+    });
+  })(req, res, next);
 });
 
 // Get current user
@@ -241,9 +346,8 @@ app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
   const sanitizedData = sanitizeBuildData(req.body);
   const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags } = sanitizedData;
 
-  // Get author_id from authenticated user (or use 1 for localhost dev)
-  const isLocalhost = req.hostname === 'localhost' || req.hostname === '127.0.0.1';
-  const author_id = isLocalhost ? 1 : req.user.id;
+  // Get author_id from authenticated user
+  const author_id = req.user.id;
 
   // Check if a build with the same name already exists
   db.get(`SELECT id FROM builds WHERE name = ?`, [name], (err, row) => {
@@ -302,8 +406,7 @@ app.patch('/api/builds/:id', (req, res) => {
 // Soft delete a build by ID (requires authentication and ownership)
 app.delete('/api/builds/:id', isAuthenticated, (req, res) => {
   const { id } = req.params;
-  const isLocalhost = req.hostname === 'localhost' || req.hostname === '127.0.0.1';
-  const userId = isLocalhost ? 1 : req.user.id;
+  const userId = req.user.id;
 
   // First, check if the build exists and belongs to the user
   db.get('SELECT * FROM builds WHERE id = ? AND deleted = 0', [id], (err, build) => {
@@ -315,8 +418,8 @@ app.delete('/api/builds/:id', isAuthenticated, (req, res) => {
       return res.status(404).json({ error: 'Build not found or already deleted.' });
     }
 
-    // Check if user is the author (bypass on localhost)
-    if (!isLocalhost && build.author_id !== userId) {
+    // Check if user is the author
+    if (build.author_id !== userId) {
       return res.status(403).json({ error: 'You can only delete your own builds.' });
     }
 

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
+import { AuthModal } from './components/AuthModal';
 
 interface BuildFormProps {
   onBuildCreated: (newBuild: any) => void;
@@ -262,6 +264,10 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   const [importing, setImporting] = useState(false);
   const [importOutput, setImportOutput] = useState<string>('');
   const [showImportOutput, setShowImportOutput] = useState(false);
+
+  // Auth state
+  const { user, refreshUser } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     // Load traits
@@ -1051,9 +1057,89 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     }
   };
 
+  // Save form data to localStorage
+  const saveFormDataToLocalStorage = () => {
+    const formData = {
+      name,
+      description,
+      game_version,
+      youtube_url,
+      source_url,
+      difficulty,
+      dlcs,
+      tags,
+      speciesType,
+      secondarySpeciesType,
+      selectedTraits,
+      selectedSecondaryTraits,
+      selectedOrigin,
+      selectedEthics,
+      selectedAuthority,
+      selectedCivics,
+      selectedAscensionPerks,
+      selectedTraditions,
+      selectedRulerTrait,
+    };
+    localStorage.setItem('stellaris_build_draft', JSON.stringify(formData));
+  };
+
+  // Restore form data from localStorage
+  const restoreFormDataFromLocalStorage = () => {
+    const savedData = localStorage.getItem('stellaris_build_draft');
+    if (savedData) {
+      try {
+        const formData = JSON.parse(savedData);
+        setName(formData.name || '');
+        setDescription(formData.description || '');
+        setGameVersion(formData.game_version || '4.1');
+        setYoutubeUrl(formData.youtube_url || '');
+        setSourceUrl(formData.source_url || '');
+        setDifficulty(formData.difficulty || '');
+        setDlcs(formData.dlcs || '');
+        setTags(formData.tags || '');
+        setSpeciesType(formData.speciesType || 'BIOLOGICAL');
+        setSecondarySpeciesType(formData.secondarySpeciesType || 'BIOLOGICAL');
+        setSelectedTraits(formData.selectedTraits || []);
+        setSelectedSecondaryTraits(formData.selectedSecondaryTraits || []);
+        setSelectedOrigin(formData.selectedOrigin || '');
+        setSelectedEthics(formData.selectedEthics || []);
+        setSelectedAuthority(formData.selectedAuthority || '');
+        setSelectedCivics(formData.selectedCivics || []);
+        setSelectedAscensionPerks(formData.selectedAscensionPerks || []);
+        setSelectedTraditions(formData.selectedTraditions || []);
+        setSelectedRulerTrait(formData.selectedRulerTrait || '');
+        // Clear localStorage after restoring
+        localStorage.removeItem('stellaris_build_draft');
+      } catch (error) {
+        console.error('Failed to restore form data:', error);
+      }
+    }
+  };
+
+  // Handle successful authentication
+  const handleAuthSuccess = async () => {
+    setShowAuthModal(false);
+    // Refresh user data
+    await refreshUser();
+    // Restore form data
+    restoreFormDataFromLocalStorage();
+    // Automatically submit the form
+    setTimeout(() => {
+      document.getElementById('build-form')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    }, 100);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    // Check if user is authenticated
+    if (!user) {
+      // Save form data to localStorage before showing auth modal
+      saveFormDataToLocalStorage();
+      setShowAuthModal(true);
+      return;
+    }
 
     // Check if build is complete
     if (!isBuildComplete()) {
@@ -1130,7 +1216,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     <div className="card bg-dark border-secondary mb-4">
       <div className="card-body">
         <h3 className="card-title">Create a New Build</h3>
-        <form onSubmit={handleSubmit}>
+        <form id="build-form" onSubmit={handleSubmit}>
           {error && <div className="alert alert-danger">{error}</div>}
 
           {/* Import from .sav file section */}
@@ -2081,6 +2167,13 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           )}
         </form>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        show={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={handleAuthSuccess}
+      />
     </div>
   );
 };

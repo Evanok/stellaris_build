@@ -144,6 +144,13 @@ const setupDatabase = () => {
       }
     });
 
+    // Add password_hash column for local authentication
+    db.run(`ALTER TABLE users ADD COLUMN password_hash TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding password_hash column:', err.message);
+      }
+    });
+
     console.log('Database tables checked/created.');
   });
 };

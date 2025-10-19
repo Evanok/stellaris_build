@@ -2,6 +2,8 @@ require('dotenv').config();
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const SteamStrategy = require('passport-steam').Strategy;
+const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcrypt');
 const { db } = require('./database');
 
 // Serialize user to session
@@ -93,6 +95,46 @@ passport.use(
       };
 
       findOrCreateUser(userProfile, done);
+    }
+  )
+);
+
+// Local Strategy (username + password)
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: 'username',
+      passwordField: 'password',
+    },
+    (username, password, done) => {
+      // Find user by username (for local accounts, provider is 'local')
+      db.get(
+        'SELECT * FROM users WHERE username = ? AND provider = ?',
+        [username, 'local'],
+        (err, user) => {
+          if (err) {
+            return done(err);
+          }
+
+          if (!user) {
+            return done(null, false, { message: 'Incorrect username or password.' });
+          }
+
+          // Compare password with hashed password
+          bcrypt.compare(password, user.password_hash, (err, isMatch) => {
+            if (err) {
+              return done(err);
+            }
+
+            if (!isMatch) {
+              return done(null, false, { message: 'Incorrect username or password.' });
+            }
+
+            // Password matches, return user
+            return done(null, user);
+          });
+        }
+      );
     }
   )
 );
