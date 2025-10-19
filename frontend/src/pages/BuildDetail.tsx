@@ -9,6 +9,7 @@ interface Build {
   description: string;
   game_version: string;
   youtube_url?: string;
+  difficulty?: string;
   origin: string;
   authority: string;
   ethics: string;
@@ -108,6 +109,28 @@ const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type,
       style={{ marginRight: '12px', borderRadius: '4px' }}
       onError={() => setHasError(true)}
     />
+  );
+};
+
+// Helper function to get difficulty badge styling
+const getDifficultyBadge = (difficulty: string | undefined) => {
+  if (!difficulty) return null;
+
+  const difficultyConfig: Record<string, { label: string; className: string }> = {
+    'overpowered': { label: 'Overpowered', className: 'bg-danger' },
+    'strong': { label: 'Strong', className: 'bg-warning text-dark' },
+    'balanced': { label: 'Balanced', className: 'bg-success' },
+    'challenging': { label: 'Challenging', className: 'bg-info text-dark' },
+    'extreme': { label: 'Extreme Challenge', className: 'bg-secondary' }
+  };
+
+  const config = difficultyConfig[difficulty];
+  if (!config) return null;
+
+  return (
+    <span className={`badge ${config.className} fs-6`}>
+      {config.label}
+    </span>
   );
 };
 
@@ -295,7 +318,8 @@ export const BuildDetail: React.FC = () => {
             </div>
             <div className="col-md-4 text-end">
               <div className="mb-2">
-                <span className="badge bg-primary fs-6">{build.game_version}</span>
+                <span className="badge bg-primary fs-6 me-2">{build.game_version}</span>
+                {getDifficultyBadge(build.difficulty)}
               </div>
               <div className="text-muted">
                 <small>Created: {new Date(build.created_at).toLocaleString()}</small>

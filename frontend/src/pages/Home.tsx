@@ -1,11 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+// Helper function to get difficulty badge styling
+const getDifficultyBadge = (difficulty: string | undefined) => {
+  if (!difficulty) return null;
+
+  const difficultyConfig: Record<string, { label: string; className: string }> = {
+    'overpowered': { label: 'Overpowered', className: 'bg-danger' },
+    'strong': { label: 'Strong', className: 'bg-warning text-dark' },
+    'balanced': { label: 'Balanced', className: 'bg-success' },
+    'challenging': { label: 'Challenging', className: 'bg-info text-dark' },
+    'extreme': { label: 'Extreme Challenge', className: 'bg-secondary' }
+  };
+
+  const config = difficultyConfig[difficulty];
+  if (!config) return null;
+
+  return (
+    <span className={`badge ${config.className}`}>
+      {config.label}
+    </span>
+  );
+};
+
 interface Build {
   id: number;
   name: string;
   description: string;
   game_version: string;
+  difficulty?: string;
   origin: string;
   authority: string;
   ethics: string;
@@ -24,6 +47,7 @@ export const Home: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
+  const [difficultyFilter, setDifficultyFilter] = useState<string>('');
   const buildsPerPage = 12;
 
   useEffect(() => {
@@ -39,17 +63,24 @@ export const Home: React.FC = () => {
       });
   }, []);
 
-  // Filter builds based on search query
+  // Filter builds based on search query and difficulty
   const filteredBuilds = builds.filter(build => {
-    if (!searchQuery) return true;
-    const query = searchQuery.toLowerCase();
-    return (
-      build.name.toLowerCase().includes(query) ||
-      build.description?.toLowerCase().includes(query) ||
-      build.tags?.toLowerCase().includes(query) ||
-      build.origin?.toLowerCase().includes(query) ||
-      build.ethics?.toLowerCase().includes(query)
-    );
+    // Search filter
+    const matchesSearch = !searchQuery || (() => {
+      const query = searchQuery.toLowerCase();
+      return (
+        build.name.toLowerCase().includes(query) ||
+        build.description?.toLowerCase().includes(query) ||
+        build.tags?.toLowerCase().includes(query) ||
+        build.origin?.toLowerCase().includes(query) ||
+        build.ethics?.toLowerCase().includes(query)
+      );
+    })();
+
+    // Difficulty filter
+    const matchesDifficulty = !difficultyFilter || build.difficulty === difficultyFilter;
+
+    return matchesSearch && matchesDifficulty;
   });
 
   // Pagination
@@ -112,9 +143,9 @@ export const Home: React.FC = () => {
       </div>
 
       <div className="container mt-4">
-        {/* Search */}
+        {/* Search and Filters */}
         <div className="row mb-4">
-          <div className="col-12">
+          <div className="col-md-8 mb-3 mb-md-0">
             <input
               type="text"
               className="form-control form-control-lg bg-secondary text-white border-secondary"
@@ -126,6 +157,23 @@ export const Home: React.FC = () => {
               }}
             />
           </div>
+          <div className="col-md-4">
+            <select
+              className="form-select form-select-lg bg-secondary text-white border-secondary"
+              value={difficultyFilter}
+              onChange={(e) => {
+                setDifficultyFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+            >
+              <option value="">All Difficulties</option>
+              <option value="overpowered">Overpowered</option>
+              <option value="strong">Strong</option>
+              <option value="balanced">Balanced</option>
+              <option value="challenging">Challenging</option>
+              <option value="extreme">Extreme Challenge</option>
+            </select>
+          </div>
         </div>
 
         {/* Build Count */}
@@ -133,7 +181,7 @@ export const Home: React.FC = () => {
           <div className="col-12">
             <p className="text-muted">
               Showing {currentBuilds.length} of {filteredBuilds.length} builds
-              {searchQuery && ` (filtered from ${builds.length} total)`}
+              {(searchQuery || difficultyFilter) && ` (filtered from ${builds.length} total)`}
             </p>
           </div>
         </div>
@@ -247,7 +295,10 @@ export const Home: React.FC = () => {
                             </div>
                           )}
                         </div>
-                        <span className="badge bg-primary">{build.game_version || 'Unknown'}</span>
+                        <div>
+                          <span className="badge bg-primary me-1">{build.game_version || 'Unknown'}</span>
+                          {getDifficultyBadge(build.difficulty)}
+                        </div>
                       </div>
 
                       <h5 className="card-title text-white mb-3">

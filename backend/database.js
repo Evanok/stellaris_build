@@ -98,6 +98,13 @@ const setupDatabase = () => {
       }
     });
 
+    // Add difficulty column if it doesn't exist (optional field for build difficulty rating)
+    db.run(`ALTER TABLE builds ADD COLUMN difficulty TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding difficulty column:', err.message);
+      }
+    });
+
     // Migrate users table for OAuth (for existing databases)
     db.run(`ALTER TABLE users ADD COLUMN email TEXT`, (err) => {
       if (err && !err.message.includes('duplicate column')) {

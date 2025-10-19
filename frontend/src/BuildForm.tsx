@@ -201,6 +201,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   const [description, setDescription] = useState('');
   const [game_version, setGameVersion] = useState('4.14');
   const [youtube_url, setYoutubeUrl] = useState('');
+  const [difficulty, setDifficulty] = useState<string>('');
   const [dlcs, setDlcs] = useState('');
   const [tags, setTags] = useState('');
   const [speciesType, setSpeciesType] = useState<string>('BIOLOGICAL');
@@ -968,6 +969,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           description,
           game_version,
           youtube_url,
+          difficulty,
           civics: selectedCivics.join(', '), // Convert array to comma-separated string
           dlcs,
           tags,
@@ -995,6 +997,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
       setDescription('');
       setGameVersion('4.14'); // Reset to latest version
       setYoutubeUrl('');
+      setDifficulty('');
       setDlcs('');
       setTags('');
       setSelectedTraits([]);
@@ -1058,6 +1061,26 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                   {version.label}
                 </option>
               ))}
+            </select>
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="difficulty" className="form-label">
+              Difficulty (Optional)
+              <small className="text-muted d-block">How challenging is this build to play?</small>
+            </label>
+            <select
+              className="form-select bg-secondary text-white border-secondary"
+              id="difficulty"
+              value={difficulty}
+              onChange={(e) => setDifficulty(e.target.value)}
+            >
+              <option value="">-- Select Difficulty --</option>
+              <option value="overpowered">Overpowered</option>
+              <option value="strong">Strong</option>
+              <option value="balanced">Balanced</option>
+              <option value="challenging">Challenging</option>
+              <option value="extreme">Extreme Challenge</option>
             </select>
           </div>
 

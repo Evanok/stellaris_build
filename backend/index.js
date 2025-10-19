@@ -218,7 +218,7 @@ app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
 
   // Sanitize input data to prevent XSS
   const sanitizedData = sanitizeBuildData(req.body);
-  const { name, description, game_version, youtube_url, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags } = sanitizedData;
+  const { name, description, game_version, youtube_url, difficulty, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags } = sanitizedData;
 
   // Get author_id from authenticated user
   const author_id = req.user.id;
@@ -233,8 +233,8 @@ app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
     }
 
     // If no duplicate, proceed with insert
-    const sql = `INSERT INTO builds (name, description, game_version, youtube_url, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    const params = [name, description, game_version, youtube_url, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags, author_id];
+    const sql = `INSERT INTO builds (name, description, game_version, youtube_url, difficulty, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const params = [name, description, game_version, youtube_url, difficulty, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags, author_id];
 
     db.run(sql, params, function(err) {
       if (err) {
