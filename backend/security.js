@@ -25,6 +25,12 @@ setInterval(() => {
 
 // General API rate limiter - 100 requests per 15 minutes per IP
 const apiLimiter = (req, res, next) => {
+  // Skip rate limiting on localhost for development
+  const isLocalhost = req.hostname === 'localhost' || req.hostname === '127.0.0.1';
+  if (isLocalhost) {
+    return next();
+  }
+
   // Use IP address as key
   const key = req.ip || req.connection.remoteAddress || 'unknown';
   const now = Date.now();
