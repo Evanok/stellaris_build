@@ -9,14 +9,14 @@ echo "📛 Stopping PM2 application..."
 pm2 stop stellaris-build
 
 # Backup current nginx config
-if [ ! -f /etc/nginx/sites-available/stellaris-build.conf.backup ]; then
+if [ ! -f /etc/nginx/sites-available/stellaris-build.backup ]; then
     echo "💾 Backing up nginx config..."
-    sudo cp /etc/nginx/sites-available/stellaris-build.conf /etc/nginx/sites-available/stellaris-build.conf.backup
+    sudo cp /etc/nginx/sites-available/stellaris-build /etc/nginx/sites-available/stellaris-build.backup
 fi
 
 # Create maintenance nginx config
 echo "📝 Creating maintenance nginx config..."
-sudo tee /etc/nginx/sites-available/stellaris-build.conf > /dev/null <<'EOF'
+sudo tee /etc/nginx/sites-available/stellaris-build > /dev/null <<'EOF'
 server {
     listen 80;
     listen [::]:80;
@@ -65,6 +65,6 @@ if [ $? -eq 0 ]; then
     echo "To disable maintenance mode, run: ./disable_maintenance.sh"
 else
     echo "❌ Nginx configuration test failed! Restoring backup..."
-    sudo cp /etc/nginx/sites-available/stellaris-build.conf.backup /etc/nginx/sites-available/stellaris-build.conf
+    sudo cp /etc/nginx/sites-available/stellaris-build.backup /etc/nginx/sites-available/stellaris-build
     pm2 start stellaris-build
 fi

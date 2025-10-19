@@ -5,9 +5,9 @@
 echo "🚀 Disabling maintenance mode..."
 
 # Restore nginx config from backup
-if [ -f /etc/nginx/sites-available/stellaris-build.conf.backup ]; then
+if [ -f /etc/nginx/sites-available/stellaris-build.backup ]; then
     echo "📝 Restoring original nginx config..."
-    sudo cp /etc/nginx/sites-available/stellaris-build.conf.backup /etc/nginx/sites-available/stellaris-build.conf
+    sudo cp /etc/nginx/sites-available/stellaris-build.backup /etc/nginx/sites-available/stellaris-build
 else
     echo "❌ Backup config not found! Please restore nginx config manually."
     exit 1
