@@ -213,6 +213,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   const [dlcs, setDlcs] = useState('');
   const [tags, setTags] = useState('');
   const [speciesType, setSpeciesType] = useState<string>('BIOLOGICAL');
+  const [secondarySpeciesType, setSecondarySpeciesType] = useState<string>('BIOLOGICAL');
   const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
   const [selectedSecondaryTraits, setSelectedSecondaryTraits] = useState<string[]>([]);
   const [selectedOrigin, setSelectedOrigin] = useState<string>('');
@@ -746,6 +747,27 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     return true;
   });
 
+  // Filter secondary species traits based on secondary species type
+  const filteredSecondaryTraits = allTraits.filter(trait => {
+    // Filter by species archetype for secondary species
+    const archetypes = (trait as any).allowed_archetypes || [];
+    if (archetypes.length > 0 && !archetypes.includes(secondarySpeciesType)) {
+      return false;
+    }
+
+    // Use same search query as primary traits
+    if (traitSearchQuery) {
+      const query = traitSearchQuery.toLowerCase();
+      return (
+        trait.id.toLowerCase().includes(query) ||
+        trait.effects.toLowerCase().includes(query) ||
+        trait.tags.some(tag => tag.toLowerCase().includes(query))
+      );
+    }
+
+    return true;
+  });
+
   // Filter origins based on species type and search query
   const filteredOrigins = allOrigins.filter(origin => {
     // Check species archetype potential conditions
@@ -1244,18 +1266,23 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="speciesType" className="form-label">Species Type</label>
-            <select
-              className="form-select bg-secondary text-white border-secondary"
-              id="speciesType"
-              value={speciesType}
-              onChange={(e) => setSpeciesType(e.target.value)}
-            >
-              <option value="BIOLOGICAL">Biological</option>
-              <option value="LITHOID">Lithoid</option>
-              <option value="MACHINE">Machine</option>
-              <option value="ROBOT">Robot</option>
-            </select>
+            <label className="form-label">Primary Species Type</label>
+            <div className="btn-group w-100" role="group">
+              {['BIOLOGICAL', 'LITHOID', 'MACHINE', 'ROBOT'].map(type => (
+                <button
+                  key={type}
+                  type="button"
+                  className={`btn ${speciesType === type ? 'btn-primary' : 'btn-outline-primary'}`}
+                  onClick={() => {
+                    setSpeciesType(type);
+                    // Clear traits when changing species type to avoid invalid combinations
+                    setSelectedTraits([]);
+                  }}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Species Traits */}
@@ -1393,9 +1420,30 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                 </small>
               </label>
 
+              {/* Secondary Species Type Selector */}
+              <div className="mb-3">
+                <label className="form-label">Secondary Species Type</label>
+                <div className="btn-group w-100" role="group">
+                  {['BIOLOGICAL', 'LITHOID', 'MACHINE', 'ROBOT'].map(type => (
+                    <button
+                      key={type}
+                      type="button"
+                      className={`btn ${secondarySpeciesType === type ? 'btn-primary' : 'btn-outline-primary'}`}
+                      onClick={() => {
+                        setSecondarySpeciesType(type);
+                        // Clear secondary traits when changing species type to avoid invalid combinations
+                        setSelectedSecondaryTraits([]);
+                      }}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className="card bg-secondary" style={{ maxHeight: '300px', overflowY: 'auto' }}>
                 <div className="card-body">
-                  {filteredTraits.map(trait => {
+                  {filteredSecondaryTraits.map(trait => {
                     const isSelected = selectedSecondaryTraits.includes(trait.id);
                     const canSelect = canSelectTrait(trait);
 
@@ -1443,14 +1491,6 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
             <label className="form-label">
               Origin {selectedOrigin && <span className="badge bg-success ms-2">Selected</span>}
             </label>
-
-            {/* Display selected origin with large image */}
-            {selectedOrigin && (
-              <OriginCard
-                originId={selectedOrigin}
-                origin={allOrigins.find(o => o.id === selectedOrigin)}
-              />
-            )}
 
             <input
               type="text"
@@ -1505,6 +1545,16 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                 )}
               </div>
             </div>
+
+            {/* Display selected origin with large image BELOW the list */}
+            {selectedOrigin && (
+              <div className="mt-3">
+                <OriginCard
+                  originId={selectedOrigin}
+                  origin={allOrigins.find(o => o.id === selectedOrigin)}
+                />
+              </div>
+            )}
           </div>
 
           {/* Starting Ruler Trait Selection */}
