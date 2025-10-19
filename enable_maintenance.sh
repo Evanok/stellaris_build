@@ -42,16 +42,13 @@ server {
 
     # Serve maintenance page
     root /home/arthur/work/stellaris_build;
-    index maintenance.html;
 
     location / {
-        try_files /maintenance.html =503;
+        try_files $uri /maintenance.html;
     }
 
-    # Return 503 for all other requests
-    error_page 503 /maintenance.html;
     location = /maintenance.html {
-        internal;
+        # Serve the maintenance page directly
     }
 }
 EOF
