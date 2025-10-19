@@ -194,6 +194,14 @@ const GAME_VERSIONS = [
   { value: 'other', label: 'Other (specify in description)' },
 ];
 
+// Origins that require a secondary species
+const ORIGINS_WITH_SECONDARY_SPECIES = [
+  'origin_necrophage',
+  'origin_syncretic_evolution',
+  'origin_clone_army',
+  'origin_overtuned',
+];
+
 export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   // Form fields state
   const [name, setName] = useState('');
@@ -206,6 +214,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   const [tags, setTags] = useState('');
   const [speciesType, setSpeciesType] = useState<string>('BIOLOGICAL');
   const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
+  const [selectedSecondaryTraits, setSelectedSecondaryTraits] = useState<string[]>([]);
   const [selectedOrigin, setSelectedOrigin] = useState<string>('');
 
   // Trait data from API
@@ -1050,6 +1059,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
           dlcs,
           tags,
           traits: selectedTraits.join(', '), // Convert array to comma-separated string
+          secondary_traits: selectedSecondaryTraits.join(', '), // Convert array to comma-separated string
           origin: selectedOrigin,
           ethics: selectedEthics.join(', '), // Convert array to comma-separated string
           authority: selectedAuthority,
@@ -1078,6 +1088,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
       setDlcs('');
       setTags('');
       setSelectedTraits([]);
+      setSelectedSecondaryTraits([]);
       setSelectedOrigin('');
       setSelectedEthics([]);
       setSelectedAuthority('');
@@ -1368,6 +1379,64 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
               </div>
             </div>
           </div>
+
+          {/* Secondary Species Traits (for specific origins) */}
+          {ORIGINS_WITH_SECONDARY_SPECIES.includes(selectedOrigin) && (
+            <div className="mb-3">
+              <label className="form-label">
+                Secondary Species Traits ({selectedSecondaryTraits.length} traits)
+                <small className="text-muted d-block">
+                  {selectedOrigin === 'origin_syncretic_evolution' && 'Servile species traits'}
+                  {selectedOrigin === 'origin_necrophage' && 'Pre-sapient species traits'}
+                  {selectedOrigin === 'origin_clone_army' && 'Template species traits'}
+                  {selectedOrigin === 'origin_overtuned' && 'Base species traits'}
+                </small>
+              </label>
+
+              <div className="card bg-secondary" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                <div className="card-body">
+                  {filteredTraits.map(trait => {
+                    const isSelected = selectedSecondaryTraits.includes(trait.id);
+                    const canSelect = canSelectTrait(trait);
+
+                    return (
+                      <div
+                        key={`secondary-${trait.id}`}
+                        className="form-check mb-2 pb-2 border-bottom border-dark"
+                      >
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id={`secondary-trait-${trait.id}`}
+                          checked={isSelected}
+                          onChange={() => {
+                            if (isSelected) {
+                              setSelectedSecondaryTraits(selectedSecondaryTraits.filter(t => t !== trait.id));
+                            } else {
+                              setSelectedSecondaryTraits([...selectedSecondaryTraits, trait.id]);
+                            }
+                          }}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor={`secondary-trait-${trait.id}`}
+                          style={{ cursor: 'pointer' }}
+                          title={trait.description || 'No description available'}
+                        >
+                          <GameIcon type="traits" id={trait.id} size={32} />
+                          <strong className="text-white">{trait.name || trait.id}</strong>
+                          <span className={`badge ms-2 ${typeof trait.cost === 'number' && trait.cost > 0 ? 'bg-primary' : 'bg-danger'}`}>
+                            Cost: {trait.cost}
+                          </span>
+                          <small className="d-block text-light mt-1">{trait.effects || 'No effects listed'}</small>
+                        </label>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Origin Selection */}
           <div className="mb-3">

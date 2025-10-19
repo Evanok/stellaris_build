@@ -16,6 +16,7 @@ interface Build {
   ethics: string;
   civics: string;
   traits: string;
+  secondary_traits?: string;
   ascension_perks: string;
   traditions: string;
   ruler_trait: string;
@@ -396,11 +397,51 @@ export const BuildDetail: React.FC = () => {
               <div className="card-header bg-secondary">
                 <h4 className="mb-0 text-white">
                   <i className="bi bi-dna me-2"></i>
-                  Species Traits
+                  Primary Species Traits
                 </h4>
               </div>
               <div className="card-body">
                 {parseList(build.traits).map((traitId, idx) => {
+                  const trait = getTraitData(traitId);
+                  return (
+                    <div key={idx} className="mb-3 pb-3 border-bottom border-secondary">
+                      <div className="d-flex align-items-start">
+                        <GameIcon type="traits" id={traitId} size={48} />
+                        <div className="flex-grow-1">
+                          <h5 className="text-white mb-1">
+                            {trait?.name || traitId}
+                            <span className={`badge ms-2 ${trait && trait.cost > 0 ? 'bg-success' : 'bg-danger'}`}>
+                              {trait?.cost || 0} points
+                            </span>
+                          </h5>
+                          {trait?.description && (
+                            <p className="text-light mb-2">{trait.description}</p>
+                          )}
+                          {trait?.effects && (
+                            <p className="text-info mb-0">
+                              <strong>Effects:</strong> {trait.effects}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Secondary Species Traits */}
+          {build.secondary_traits && build.secondary_traits.trim() !== '' && (
+            <div className="card bg-dark border-secondary mb-4">
+              <div className="card-header bg-secondary">
+                <h4 className="mb-0 text-white">
+                  <i className="bi bi-dna me-2"></i>
+                  Secondary Species Traits
+                </h4>
+              </div>
+              <div className="card-body">
+                {parseList(build.secondary_traits).map((traitId, idx) => {
                   const trait = getTraitData(traitId);
                   return (
                     <div key={idx} className="mb-3 pb-3 border-bottom border-secondary">

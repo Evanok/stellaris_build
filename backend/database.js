@@ -112,6 +112,13 @@ const setupDatabase = () => {
       }
     });
 
+    // Add secondary_traits column if it doesn't exist (for origins with secondary species)
+    db.run(`ALTER TABLE builds ADD COLUMN secondary_traits TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding secondary_traits column:', err.message);
+      }
+    });
+
     // Migrate users table for OAuth (for existing databases)
     db.run(`ALTER TABLE users ADD COLUMN email TEXT`, (err) => {
       if (err && !err.message.includes('duplicate column')) {
