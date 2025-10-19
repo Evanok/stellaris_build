@@ -41,21 +41,11 @@ server {
     ssl_prefer_server_ciphers on;
 
     # Serve ONLY the maintenance page
-    root /home/arthur/work/stellaris_build;
+    root /home/arthur/work/stellaris_build/frontend/public;
 
     location / {
-        # Always serve maintenance.html for ALL requests
-        return 503;
-    }
-
-    error_page 503 @maintenance;
-
-    location @maintenance {
-        rewrite ^(.*)$ /maintenance.html break;
-    }
-
-    location = /maintenance.html {
-        internal;
+        # Serve maintenance.html for all requests
+        try_files /maintenance.html /maintenance.html;
     }
 }
 EOF
