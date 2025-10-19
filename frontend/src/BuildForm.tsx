@@ -187,11 +187,10 @@ const MAX_CIVIC_SLOTS = 3;
 
 // Stellaris game versions
 const GAME_VERSIONS = [
-  { value: '4.14', label: '4.14 "Vela" (Latest)' },
-  { value: '4.13', label: '4.13 "Maelstrom"' },
-  { value: '4.12', label: '4.12 "Andromeda"' },
-  { value: '4.0', label: '4.0 "Cepheus"' },
-  { value: '3.8', label: '3.8 "Gemini" (Legacy)' },
+  { value: '4.1', label: '4.1 "Lyra" (Latest)' },
+  { value: '4.0', label: '4.0 "Phoenix"' },
+  { value: '3.14', label: '3.14 "Circinus"' },
+  { value: '3.13', label: '3.13 "Vela"' },
   { value: 'other', label: 'Other (specify in description)' },
 ];
 
@@ -199,7 +198,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   // Form fields state
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [game_version, setGameVersion] = useState('4.14');
+  const [game_version, setGameVersion] = useState('4.1');
   const [youtube_url, setYoutubeUrl] = useState('');
   const [difficulty, setDifficulty] = useState<string>('');
   const [dlcs, setDlcs] = useState('');
@@ -995,7 +994,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
       // Reset form
       setName('');
       setDescription('');
-      setGameVersion('4.14'); // Reset to latest version
+      setGameVersion('4.1'); // Reset to latest version
       setYoutubeUrl('');
       setDifficulty('');
       setDlcs('');
