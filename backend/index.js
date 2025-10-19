@@ -1,6 +1,7 @@
 require('dotenv').config({ path: __dirname + '/.env' });
 const express = require('express');
 const session = require('express-session');
+const SQLiteStore = require('connect-sqlite3')(session);
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
@@ -36,9 +37,13 @@ app.use(express.json());
 // Apply rate limiting to all API routes
 app.use('/api/', apiLimiter);
 
-// Session configuration
+// Session configuration with SQLite store
 app.use(
   session({
+    store: new SQLiteStore({
+      db: 'sessions.db',
+      dir: __dirname,
+    }),
     secret: process.env.SESSION_SECRET || 'stellaris-build-secret-change-in-production',
     resave: false,
     saveUninitialized: false,
