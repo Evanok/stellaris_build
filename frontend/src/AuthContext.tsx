@@ -25,6 +25,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const fetchUser = async () => {
     try {
+      // On localhost, simulate a logged-in dev user
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+      if (isLocalhost) {
+        setUser({
+          id: 1,
+          username: 'DevUser',
+          email: 'dev@localhost',
+          avatar: null,
+          provider: 'localhost',
+          provider_id: 'dev-1',
+          created_at: new Date().toISOString()
+        });
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch('/api/user');
       const data = await response.json();
       setUser(data.user);

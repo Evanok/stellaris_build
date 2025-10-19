@@ -44,7 +44,10 @@ setupDatabase();
 
 // Authentication middleware
 const isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  // Bypass authentication on localhost for development
+  const isLocalhost = req.hostname === 'localhost' || req.hostname === '127.0.0.1';
+
+  if (isLocalhost || req.isAuthenticated()) {
     return next();
   }
   res.status(401).json({ error: 'Unauthorized. Please log in.' });
@@ -220,8 +223,9 @@ app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
   const sanitizedData = sanitizeBuildData(req.body);
   const { name, description, game_version, youtube_url, difficulty, civics, traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags } = sanitizedData;
 
-  // Get author_id from authenticated user
-  const author_id = req.user.id;
+  // Get author_id from authenticated user (or use 1 for localhost dev)
+  const isLocalhost = req.hostname === 'localhost' || req.hostname === '127.0.0.1';
+  const author_id = isLocalhost ? 1 : req.user.id;
 
   // Check if a build with the same name already exists
   db.get(`SELECT id FROM builds WHERE name = ?`, [name], (err, row) => {
@@ -280,7 +284,8 @@ app.patch('/api/builds/:id', (req, res) => {
 // Soft delete a build by ID (requires authentication and ownership)
 app.delete('/api/builds/:id', isAuthenticated, (req, res) => {
   const { id } = req.params;
-  const userId = req.user.id;
+  const isLocalhost = req.hostname === 'localhost' || req.hostname === '127.0.0.1';
+  const userId = isLocalhost ? 1 : req.user.id;
 
   // First, check if the build exists and belongs to the user
   db.get('SELECT * FROM builds WHERE id = ? AND deleted = 0', [id], (err, build) => {
@@ -292,8 +297,8 @@ app.delete('/api/builds/:id', isAuthenticated, (req, res) => {
       return res.status(404).json({ error: 'Build not found or already deleted.' });
     }
 
-    // Check if user is the author
-    if (build.author_id !== userId) {
+    // Check if user is the author (bypass on localhost)
+    if (!isLocalhost && build.author_id !== userId) {
       return res.status(403).json({ error: 'You can only delete your own builds.' });
     }
 
