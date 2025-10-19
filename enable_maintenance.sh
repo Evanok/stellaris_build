@@ -40,15 +40,22 @@ server {
     ssl_ciphers HIGH:!aNULL:!MD5;
     ssl_prefer_server_ciphers on;
 
-    # Serve maintenance page
+    # Serve ONLY the maintenance page
     root /home/arthur/work/stellaris_build;
 
     location / {
-        try_files $uri /maintenance.html;
+        # Always serve maintenance.html for ALL requests
+        return 503;
+    }
+
+    error_page 503 @maintenance;
+
+    location @maintenance {
+        rewrite ^(.*)$ /maintenance.html break;
     }
 
     location = /maintenance.html {
-        # Serve the maintenance page directly
+        internal;
     }
 }
 EOF
