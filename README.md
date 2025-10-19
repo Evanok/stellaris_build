@@ -13,28 +13,41 @@ This project is currently in active development with the following features impl
 ### ✅ Implemented Features
 
 - **Build Creation Form**: Comprehensive form for creating empire builds with:
-  - Species type selection (Biological, Lithoid, Machine, Robot)
-  - Species traits with point/pick validation
-  - Origins with trait bonuses
-  - Starting ruler traits
+  - Primary species type selection (Biological, Lithoid, Machine, Robot)
+  - Species traits with point/pick validation and origin bonuses
+  - **Secondary species support** for specific origins (Necrophage, Syncretic Evolution, Clone Army, Overtuned)
+  - Origins with trait bonuses and conditional UI
+  - Starting ruler traits with origin/ethics filtering
   - Ethics with point limits and compatibility checks
   - Authorities with ethics requirements
-  - Civics with conditional filtering
+  - Civics with conditional filtering (potential/possible)
   - Recommended Ascension Perks (with ordering)
   - Recommended Tradition Trees (with ordering)
   - Game version tracking (4.1 Lyra, 4.0 Phoenix, 3.14 Circinus, 3.13 Vela)
   - Difficulty rating (Overpowered, Strong, Balanced, Challenging, Extreme Challenge)
-  - Optional YouTube video link
+  - Optional YouTube video link with embedded player
+  - **Source URL attribution** for builds from Reddit/forums
+  - **Import from .sav files** (automatically extract build data from Stellaris save files)
 
-- **Build Display**: View submitted builds with all details, difficulty badges, and embedded YouTube videos
+- **Build Display**: View submitted builds with all details, difficulty badges, embedded YouTube videos, and source attribution
 - **Build Management**: Soft delete functionality (builds are hidden, not permanently deleted)
 - **Search & Filtering**: Search builds by name, origin, ethics, tags, and difficulty level
 - **Pagination**: Browse builds with paginated results
-- **Authentication**: OAuth 2.0 (Google) + OpenID (Steam) with session management
-- **Development Mode**: Localhost authentication bypass for easier testing
+- **Authentication**:
+  - OAuth 2.0 (Google) + OpenID (Steam)
+  - **Local username/password accounts** with bcrypt hashing
+  - **Persistent sessions** using SQLite (survives server restarts)
+  - Session duration: 30 days
+  - **Password requirements**: 12+ chars, uppercase, lowercase, number, special character
+- **Google Analytics**: Visitor tracking and statistics (G-E67MKKS33Q)
+- **Security**:
+  - Manual rate limiting (100 requests/15min per IP, 5 builds/hour per user)
+  - Input validation and sanitization
+  - XSS protection
+  - Password complexity requirements (NIST/OWASP compliant)
 - **Data Extraction**: Automated extraction from Stellaris game files with full localization
 - **Maintenance Mode**: Styled maintenance page with enable/disable scripts
-- **Production Deployment**: Fully deployed with HTTPS, auto-restart, and SSL certificates
+- **Production Deployment**: Fully deployed with HTTPS, auto-restart, SSL certificates, and 100MB file upload support
 
 ### 🚧 Planned Features
 
