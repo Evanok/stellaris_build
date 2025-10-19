@@ -1445,7 +1445,6 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
                 <div className="card-body">
                   {filteredSecondaryTraits.map(trait => {
                     const isSelected = selectedSecondaryTraits.includes(trait.id);
-                    const canSelect = canSelectTrait(trait);
 
                     return (
                       <div
