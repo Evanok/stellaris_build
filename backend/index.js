@@ -19,11 +19,12 @@ const upload = multer({
     fileSize: 50 * 1024 * 1024, // 50MB max file size
   },
   fileFilter: (req, file, cb) => {
-    // Only accept .sav files
-    if (path.extname(file.originalname).toLowerCase() === '.sav') {
+    const ext = path.extname(file.originalname).toLowerCase();
+    // Accept .sav files for save game imports and .txt files for empire designs
+    if (ext === '.sav' || ext === '.txt') {
       cb(null, true);
     } else {
-      cb(new Error('Only .sav files are allowed'));
+      cb(new Error('Only .sav and .txt files are allowed'));
     }
   }
 });
@@ -517,15 +518,22 @@ app.post('/api/import-build', isAuthenticated, upload.single('savefile'), (req, 
 
 // List all empires from empire designs file
 app.post('/api/list-empires', isAuthenticated, upload.single('designsfile'), (req, res) => {
+  console.log('[list-empires] Request received');
+
   if (!req.file) {
+    console.log('[list-empires] ERROR: No file uploaded');
     return res.status(400).json({ error: 'No file uploaded' });
   }
 
   const designsFilePath = req.file.path;
   const scriptPath = path.join(__dirname, '../data-extractor/import_empire_from_designs.py');
 
+  console.log('[list-empires] File uploaded:', designsFilePath);
+  console.log('[list-empires] Script path:', scriptPath);
+
   // Run Python script to list empires
   const python = spawn('python3', [scriptPath, designsFilePath]);
+  console.log('[list-empires] Python script spawned');
 
   let stdout = '';
   let stderr = '';
@@ -539,12 +547,17 @@ app.post('/api/list-empires', isAuthenticated, upload.single('designsfile'), (re
   });
 
   python.on('close', (code) => {
+    console.log('[list-empires] Python script exited with code:', code);
+    console.log('[list-empires] stdout:', stdout);
+    console.log('[list-empires] stderr:', stderr);
+
     // Clean up uploaded file
     fs.unlink(designsFilePath, (err) => {
       if (err) console.error('Failed to delete uploaded file:', err);
     });
 
     if (code !== 0) {
+      console.error('[list-empires] ERROR: Python script failed');
       console.error('Python script error:', stderr);
       return res.status(500).json({
         error: 'Failed to parse empire designs file',
@@ -555,8 +568,10 @@ app.post('/api/list-empires', isAuthenticated, upload.single('designsfile'), (re
     try {
       // Parse the JSON array of empire names
       const empires = JSON.parse(stdout.trim());
+      console.log('[list-empires] SUCCESS: Parsed empires:', empires);
       res.json({ empires });
     } catch (error) {
+      console.error('[list-empires] ERROR: JSON parse failed');
       console.error('JSON parse error:', error);
       res.status(500).json({
         error: 'Failed to parse empire list',
