@@ -452,15 +452,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   }, []);
 
   // Validate authority when ethics change
-  useEffect(() => {
-    if (selectedAuthority) {
-      const authority = allAuthorities.find(a => a.id === selectedAuthority);
-      if (authority && !canSelectAuthority(authority)) {
-        // Authority is no longer valid, clear it
-        setSelectedAuthority('');
-      }
-    }
-  }, [selectedEthics, allAuthorities]);
+  // No longer auto-clearing authority based on ethics - let user choose freely
 
   // Get origin bonuses for current species type
   const getOriginTraitBonuses = () => {
@@ -522,62 +514,6 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   const currentEthicsPoints = calculateEthicsPoints();
   const exceedsEthicsPoints = currentEthicsPoints > MAX_ETHICS_POINTS;
 
-  // Helper function to check civic conditions (potential/possible arrays)
-  const checkCivicCondition = (condition: any): boolean => {
-    if (typeof condition !== 'string') return true;
-
-    // Handle NOT conditions
-    if (condition.startsWith('NOT ')) {
-      const restOfCondition = condition.substring(4).trim();
-
-      // Check if it's a NOT with an array: "NOT ['item1', 'item2']"
-      if (restOfCondition.startsWith('[')) {
-        try {
-          // Parse the array (remove brackets and quotes, split by comma)
-          const arrayMatch = restOfCondition.match(/\[(.*?)\]/);
-          if (arrayMatch) {
-            const items = arrayMatch[1].split(',').map(item =>
-              item.trim().replace(/['"]/g, '')
-            );
-            // For NOT with array, return true if NONE of the items match
-            return !items.some(item => {
-              if (item.startsWith('ethic_')) {
-                return selectedEthics.includes(item);
-              } else if (item.startsWith('auth_')) {
-                return selectedAuthority === item;
-              } else if (item.startsWith('civic_')) {
-                return selectedCivics.includes(item);
-              }
-              return false;
-            });
-          }
-        } catch (e) {
-          return true;
-        }
-      } else {
-        // Simple NOT condition: "NOT ethic_gestalt_consciousness"
-        if (restOfCondition.startsWith('ethic_')) {
-          return !selectedEthics.includes(restOfCondition);
-        } else if (restOfCondition.startsWith('auth_')) {
-          return selectedAuthority !== restOfCondition;
-        } else if (restOfCondition.startsWith('civic_')) {
-          return !selectedCivics.includes(restOfCondition);
-        }
-      }
-    } else {
-      // Positive condition (no NOT)
-      if (condition.startsWith('ethic_')) {
-        return selectedEthics.includes(condition);
-      } else if (condition.startsWith('auth_')) {
-        return selectedAuthority === condition;
-      } else if (condition.startsWith('civic_')) {
-        return selectedCivics.includes(condition);
-      }
-    }
-
-    return true;
-  };
-
   // Check if a civic can be selected based on current selections
   const canSelectCivic = (civic: Civic): boolean => {
     // Already selected
@@ -585,72 +521,24 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
       return true;
     }
 
-    // Check if at max slots
+    // Only check if at max slots - no complex compatibility rules
     if (selectedCivics.length >= MAX_CIVIC_SLOTS) {
       return false;
     }
 
-    // Check all "potential" conditions (these filter which civics show up)
-    if (civic.potential && civic.potential.length > 0) {
-      for (const condition of civic.potential) {
-        if (!checkCivicCondition(condition)) {
-          return false;
-        }
-      }
-    }
-
-    // Check all "possible" conditions (these are requirements)
-    if (civic.possible && civic.possible.length > 0) {
-      for (const condition of civic.possible) {
-        if (!checkCivicCondition(condition)) {
-          return false;
-        }
-      }
-    }
-
     return true;
   };
 
-  // Filter civics based on potential/possible conditions
-  const availableCivics = allCivics.filter(civic => {
-    // Check potential conditions
-    if (civic.potential && civic.potential.length > 0) {
-      for (const condition of civic.potential) {
-        if (!checkCivicCondition(condition)) {
-          return false;
-        }
-      }
-    }
-    return true;
-  });
+  // All civics are available - no filtering based on compatibility
+  const availableCivics = allCivics;
 
-  // Check if an authority can be selected based on current ethics
+  // All authorities are always available - no ethics restrictions
   const canSelectAuthority = (authority: Authority): boolean => {
-    // Check if any required ethics are missing
-    if (authority.required_ethics.length > 0) {
-      const hasRequiredEthic = authority.required_ethics.some(requiredEthic =>
-        selectedEthics.includes(requiredEthic)
-      );
-      if (!hasRequiredEthic) {
-        return false;
-      }
-    }
-
-    // Check if any blocked ethics are present
-    if (authority.blocked_ethics.length > 0) {
-      const hasBlockedEthic = authority.blocked_ethics.some(blockedEthic =>
-        selectedEthics.includes(blockedEthic)
-      );
-      if (hasBlockedEthic) {
-        return false;
-      }
-    }
-
     return true;
   };
 
-  // Get available authorities based on current ethics selection
-  const availableAuthorities = allAuthorities.filter(auth => canSelectAuthority(auth));
+  // All authorities are available - no filtering based on ethics
+  const availableAuthorities = allAuthorities;
 
   // Check if an ethic can be selected
   const canSelectEthic = (ethic: Ethic): boolean => {
@@ -659,45 +547,9 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
       return true;
     }
 
-    // Check if selecting this ethic would exceed max points
+    // Only check if selecting this ethic would exceed max points
     if (currentEthicsPoints + ethic.cost > MAX_ETHICS_POINTS) {
       return false;
-    }
-
-    // Check for opposing ethics (same category, different category_value)
-    // Gestalt consciousness is special - it's exclusive (costs 3 points, fills all budget)
-    if (ethic.category === 'hive') {
-      // If trying to select gestalt, no other ethics can be selected
-      if (selectedEthics.length > 0) return false;
-    } else {
-      // If gestalt is already selected, can't select anything else
-      const hasGestalt = selectedEthics.some(ethicId => {
-        const e = allEthics.find(et => et.id === ethicId);
-        return e && e.category === 'hive';
-      });
-      if (hasGestalt) return false;
-
-      // Check for opposing ethics in the same category
-      for (const selectedEthicId of selectedEthics) {
-        const selectedEthic = allEthics.find(e => e.id === selectedEthicId);
-        if (selectedEthic && selectedEthic.category === ethic.category) {
-          // Same category - check if they're opposites
-          // Opposites have category_value difference >= 2
-          const valueDiff = Math.abs(selectedEthic.category_value - ethic.category_value);
-          if (valueDiff >= 2) {
-            return false; // These are opposites
-          }
-        }
-      }
-
-      // Check for fanatic/normal conflicts
-      // Can't have both fanatic and normal version of the same ethic
-      if (ethic.fanatic_variant && selectedEthics.includes(ethic.fanatic_variant)) {
-        return false;
-      }
-      if (ethic.regular_variant && selectedEthics.includes(ethic.regular_variant)) {
-        return false;
-      }
     }
 
     return true;
@@ -721,25 +573,11 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
       return false;
     }
 
-    // Check for opposite traits
-    const opposites = trait.opposites || [];
-    for (const opposite of opposites) {
-      if (selectedTraits.includes(opposite)) {
-        return false;
-      }
-    }
-
     return true;
   };
 
-  // Filter traits based on species type and search query
+  // Filter traits only by search query - no species archetype restrictions
   const filteredTraits = allTraits.filter(trait => {
-    // Filter by species archetype
-    const archetypes = (trait as any).allowed_archetypes || [];
-    if (archetypes.length > 0 && !archetypes.includes(speciesType)) {
-      return false;
-    }
-
     // Filter by search query
     if (traitSearchQuery) {
       const query = traitSearchQuery.toLowerCase();
@@ -753,15 +591,9 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     return true;
   });
 
-  // Filter secondary species traits based on secondary species type
+  // Filter secondary species traits only by search query
   const filteredSecondaryTraits = allTraits.filter(trait => {
-    // Filter by species archetype for secondary species
-    const archetypes = (trait as any).allowed_archetypes || [];
-    if (archetypes.length > 0 && !archetypes.includes(secondarySpeciesType)) {
-      return false;
-    }
-
-    // Use same search query as primary traits
+    // Filter by search query
     if (traitSearchQuery) {
       const query = traitSearchQuery.toLowerCase();
       return (
@@ -774,32 +606,8 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     return true;
   });
 
-  // Filter origins based on species type and search query
+  // Filter origins only by search query - no species archetype restrictions
   const filteredOrigins = allOrigins.filter(origin => {
-    // Check species archetype potential conditions
-    if (origin.potential && origin.potential.length > 0) {
-      for (const condition of origin.potential) {
-        if (typeof condition === 'string' && condition.includes('species_archetype:')) {
-          // Handle NOT species_archetype conditions
-          if (condition.startsWith('NOT species_archetype:')) {
-            const archetype = condition.replace('NOT species_archetype:', '');
-            // If current species type matches the NOT condition, exclude this origin
-            if (speciesType === archetype) {
-              return false;
-            }
-          }
-          // Handle positive species_archetype conditions
-          else if (condition.startsWith('species_archetype:')) {
-            const archetype = condition.replace('species_archetype:', '');
-            // If current species type doesn't match the positive condition, exclude this origin
-            if (speciesType !== archetype) {
-              return false;
-            }
-          }
-        }
-      }
-    }
-
     // Filter by search query
     if (originSearchQuery) {
       const query = originSearchQuery.toLowerCase();
