@@ -1,0 +1,14 @@
+.build-card-link {
+  text-decoration: none;
+  color: inherit; /* Pour que le texte de la carte ne devienne pas bleu */
+}
+
+.build-card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.build-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 15px rgba(233, 69, 96, 0.5); /* Lueur rouge correspondant au thème */
+}

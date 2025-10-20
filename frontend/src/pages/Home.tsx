@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import './Home.css';
 
 // Helper function to get difficulty badge styling
 const getDifficultyBadge = (difficulty: string | undefined) => {
@@ -196,166 +197,167 @@ export const Home: React.FC = () => {
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
               {currentBuilds.map(build => (
                 <div key={build.id} className="col">
-                  <div className="card bg-dark border-secondary h-100">
-                    <div className="card-body">
-                      {/* Icon Gallery Header */}
-                      <div className="d-flex justify-content-between align-items-start mb-3">
-                        <div className="d-flex gap-2">
-                          {/* Origin Icon */}
-                          {build.origin && (
-                            <div
-                              className="d-flex align-items-center justify-content-center rounded"
-                              style={{
-                                width: '40px',
-                                height: '40px',
-                                background: 'rgba(255, 255, 255, 0.1)',
-                                border: '2px solid rgba(255, 255, 255, 0.2)'
-                              }}
-                            >
-                              <img
-                                src={`/icons/origins/${build.origin}.png`}
-                                alt=""
-                                style={{ width: '32px', height: '32px', objectFit: 'contain' }}
-                                onError={(e) => {
-                                  const img = e.target as HTMLImageElement;
-                                  img.style.opacity = '0';
-                                  const container = img.parentElement as HTMLElement;
-                                  if (container) {
-                                    container.style.visibility = 'hidden';
-                                    container.style.width = '0';
-                                    container.style.minWidth = '0';
-                                    container.style.padding = '0';
-                                    container.style.margin = '0';
-                                    container.style.border = 'none';
-                                  }
+                  <Link to={`/build/${build.id}`} className="build-card-link">
+                    <div className="card bg-dark border-secondary h-100 build-card">
+                      <div className="card-body">
+                        {/* Icon Gallery Header */}
+                        <div className="d-flex justify-content-between align-items-start mb-3">
+                          <div className="d-flex gap-2">
+                            {/* Origin Icon */}
+                            {build.origin && (
+                              <div
+                                className="d-flex align-items-center justify-content-center rounded"
+                                style={{
+                                  width: '40px',
+                                  height: '40px',
+                                  background: 'rgba(255, 255, 255, 0.1)',
+                                  border: '2px solid rgba(255, 255, 255, 0.2)'
                                 }}
-                              />
-                            </div>
-                          )}
-                          {/* First Ethic Icon */}
-                          {build.ethics && build.ethics.split(',')[0] && (
-                            <div
-                              className="d-flex align-items-center justify-content-center rounded"
-                              style={{
-                                width: '40px',
-                                height: '40px',
-                                background: 'rgba(255, 193, 7, 0.1)',
-                                border: '2px solid rgba(255, 193, 7, 0.3)'
-                              }}
-                            >
-                              <img
-                                src={`/icons/ethics/${build.ethics.split(',')[0].trim()}.png`}
-                                alt=""
-                                style={{ width: '32px', height: '32px', objectFit: 'contain' }}
-                                onError={(e) => {
-                                  const img = e.target as HTMLImageElement;
-                                  img.style.opacity = '0';
-                                  const container = img.parentElement as HTMLElement;
-                                  if (container) {
-                                    container.style.visibility = 'hidden';
-                                    container.style.width = '0';
-                                    container.style.minWidth = '0';
-                                    container.style.padding = '0';
-                                    container.style.margin = '0';
-                                    container.style.border = 'none';
-                                  }
+                              >
+                                <img
+                                  src={`/icons/origins/${build.origin}.png`}
+                                  alt=""
+                                  style={{ width: '32px', height: '32px', objectFit: 'contain' }}
+                                  onError={(e) => {
+                                    const img = e.target as HTMLImageElement;
+                                    img.style.opacity = '0';
+                                    const container = img.parentElement as HTMLElement;
+                                    if (container) {
+                                      container.style.visibility = 'hidden';
+                                      container.style.width = '0';
+                                      container.style.minWidth = '0';
+                                      container.style.padding = '0';
+                                      container.style.margin = '0';
+                                      container.style.border = 'none';
+                                    }
+                                  }}
+                                />
+                              </div>
+                            )}
+                            {/* First Ethic Icon */}
+                            {build.ethics && build.ethics.split(',')[0] && (
+                              <div
+                                className="d-flex align-items-center justify-content-center rounded"
+                                style={{
+                                  width: '40px',
+                                  height: '40px',
+                                  background: 'rgba(255, 193, 7, 0.1)',
+                                  border: '2px solid rgba(255, 193, 7, 0.3)'
                                 }}
-                              />
-                            </div>
-                          )}
-                          {/* Authority Icon */}
-                          {build.authority && (
-                            <div
-                              className="d-flex align-items-center justify-content-center rounded"
-                              style={{
-                                width: '40px',
-                                height: '40px',
-                                background: 'rgba(40, 167, 69, 0.1)',
-                                border: '2px solid rgba(40, 167, 69, 0.3)'
-                              }}
-                            >
-                              <img
-                                src={`/icons/authorities/${build.authority}.png`}
-                                alt=""
-                                style={{ width: '32px', height: '32px', objectFit: 'contain' }}
-                                onError={(e) => {
-                                  const img = e.target as HTMLImageElement;
-                                  img.style.opacity = '0';
-                                  const container = img.parentElement as HTMLElement;
-                                  if (container) {
-                                    container.style.visibility = 'hidden';
-                                    container.style.width = '0';
-                                    container.style.minWidth = '0';
-                                    container.style.padding = '0';
-                                    container.style.margin = '0';
-                                    container.style.border = 'none';
-                                  }
+                              >
+                                <img
+                                  src={`/icons/ethics/${build.ethics.split(',')[0].trim()}.png`}
+                                  alt=""
+                                  style={{ width: '32px', height: '32px', objectFit: 'contain' }}
+                                  onError={(e) => {
+                                    const img = e.target as HTMLImageElement;
+                                    img.style.opacity = '0';
+                                    const container = img.parentElement as HTMLElement;
+                                    if (container) {
+                                      container.style.visibility = 'hidden';
+                                      container.style.width = '0';
+                                      container.style.minWidth = '0';
+                                      container.style.padding = '0';
+                                      container.style.margin = '0';
+                                      container.style.border = 'none';
+                                    }
+                                  }}
+                                />
+                              </div>
+                            )}
+                            {/* Authority Icon */}
+                            {build.authority && (
+                              <div
+                                className="d-flex align-items-center justify-content-center rounded"
+                                style={{
+                                  width: '40px',
+                                  height: '40px',
+                                  background: 'rgba(40, 167, 69, 0.1)',
+                                  border: '2px solid rgba(40, 167, 69, 0.3)'
                                 }}
-                              />
-                            </div>
-                          )}
+                              >
+                                <img
+                                  src={`/icons/authorities/${build.authority}.png`}
+                                  alt=""
+                                  style={{ width: '32px', height: '32px', objectFit: 'contain' }}
+                                  onError={(e) => {
+                                    const img = e.target as HTMLImageElement;
+                                    img.style.opacity = '0';
+                                    const container = img.parentElement as HTMLElement;
+                                    if (container) {
+                                      container.style.visibility = 'hidden';
+                                      container.style.width = '0';
+                                      container.style.minWidth = '0';
+                                      container.style.padding = '0';
+                                      container.style.margin = '0';
+                                      container.style.border = 'none';
+                                    }
+                                  }}
+                                />
+                              </div>
+                            )}
+                          </div>
+                          <div>
+                            <span className="badge bg-primary me-1">{build.game_version || 'Unknown'}</span>
+                            {getDifficultyBadge(build.difficulty)}
+                          </div>
                         </div>
-                        <div>
-                          <span className="badge bg-primary me-1">{build.game_version || 'Unknown'}</span>
-                          {getDifficultyBadge(build.difficulty)}
-                        </div>
-                      </div>
 
-                      <h5 className="card-title text-white mb-3">
-                        <Link to={`/build/${build.id}`} className="text-decoration-none text-white">
+                        <h5 className="card-title text-white mb-3">
                           {build.name}
-                        </Link>
-                      </h5>
+                        </h5>
 
-                      {/* Description */}
-                      <p className="card-text text-light small mb-3">
-                        {build.description
-                          ? build.description.substring(0, 100) + (build.description.length > 100 ? '...' : '')
-                          : 'No description provided.'}
-                      </p>
+                        {/* Description */}
+                        <p className="card-text text-light small mb-3">
+                          {build.description
+                            ? build.description.substring(0, 100) + (build.description.length > 100 ? '...' : '')
+                            : 'No description provided.'}
+                        </p>
 
-                      {/* Key Features */}
-                      <div className="mb-2">
-                        {build.origin && (
-                          <div className="mb-1">
-                            <small className="text-muted">Origin:</small>
-                            <small className="text-info ms-2">{build.origin}</small>
-                          </div>
-                        )}
-                        {build.ethics && (
-                          <div className="mb-1">
-                            <small className="text-muted">Ethics:</small>
-                            <small className="text-warning ms-2">
-                              {build.ethics.split(',').slice(0, 2).join(', ')}
-                              {build.ethics.split(',').length > 2 && '...'}
-                            </small>
-                          </div>
-                        )}
-                        {build.authority && (
-                          <div className="mb-1">
-                            <small className="text-muted">Authority:</small>
-                            <small className="text-success ms-2">{build.authority}</small>
+                        {/* Key Features */}
+                        <div className="mb-2">
+                          {build.origin && (
+                            <div className="mb-1">
+                              <small className="text-muted">Origin:</small>
+                              <small className="text-info ms-2">{build.origin}</small>
+                            </div>
+                          )}
+                          {build.ethics && (
+                            <div className="mb-1">
+                              <small className="text-muted">Ethics:</small>
+                              <small className="text-warning ms-2">
+                                {build.ethics.split(',').slice(0, 2).join(', ')}
+                                {build.ethics.split(',').length > 2 && '...'}
+                              </small>
+                            </div>
+                          )}
+                          {build.authority && (
+                            <div className="mb-1">
+                              <small className="text-muted">Authority:</small>
+                              <small className="text-success ms-2">{build.authority}</small>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Tags */}
+                        {build.tags && (
+                          <div className="mt-2">
+                            {build.tags.split(',').slice(0, 3).map((tag, idx) => (
+                              <span key={idx} className="badge bg-secondary me-1">
+                                {tag.trim()}
+                              </span>
+                            ))}
                           </div>
                         )}
                       </div>
-
-                      {/* Tags */}
-                      {build.tags && (
-                        <div className="mt-2">
-                          {build.tags.split(',').slice(0, 3).map((tag, idx) => (
-                            <span key={idx} className="badge bg-secondary me-1">
-                              {tag.trim()}
-                            </span>
-                          ))}
-                        </div>
-                      )}
+                      <div className="card-footer bg-dark border-secondary d-flex justify-content-between align-items-center">
+                        <small className="text-muted">
+                          Created: {new Date(build.created_at).toLocaleDateString()}
+                        </small>
+                        <span className="btn btn-sm btn-primary">View Build</span>
+                      </div>
                     </div>
-                    <div className="card-footer bg-dark border-secondary">
-                      <small className="text-muted">
-                        Created: {new Date(build.created_at).toLocaleDateString()}
-                      </small>
-                    </div>
-                  </div>
+                  </Link>
                 </div>
               ))}
             </div>
