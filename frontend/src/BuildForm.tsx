@@ -4,6 +4,7 @@ import { AuthModal } from './components/AuthModal';
 
 interface BuildFormProps {
   onBuildCreated: (newBuild: any) => void;
+  initialData?: any; // Optional pre-filled data from imports
 }
 
 // Icon component for game elements
@@ -204,7 +205,7 @@ const ORIGINS_WITH_SECONDARY_SPECIES = [
   'origin_overtuned',
 ];
 
-export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
+export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialData }) => {
   // Form fields state
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -259,11 +260,6 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   // UI state
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-
-  // Import from .sav file state
-  const [importing, setImporting] = useState(false);
-  const [importOutput, setImportOutput] = useState<string>('');
-  const [showImportOutput, setShowImportOutput] = useState(false);
 
   // Auth state
   const { user, refreshUser } = useAuth();
@@ -450,6 +446,40 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
       })
       .catch(() => setError('Could not load ruler traits data.'));
   }, []);
+
+  // Populate form with initialData (from imports)
+  useEffect(() => {
+    if (initialData) {
+      // Set basic fields
+      if (initialData.name) setName(initialData.name);
+      if (initialData.description) setDescription(initialData.description);
+      if (initialData.game_version) setGameVersion(initialData.game_version);
+
+      // Set empire selections
+      if (initialData.origin) setSelectedOrigin(initialData.origin);
+      if (initialData.authority) setSelectedAuthority(initialData.authority);
+
+      // Handle ethics (array of strings)
+      if (Array.isArray(initialData.ethics)) {
+        setSelectedEthics(initialData.ethics);
+      }
+
+      // Handle civics (array of strings)
+      if (Array.isArray(initialData.civics)) {
+        setSelectedCivics(initialData.civics);
+      }
+
+      // Handle traits (array of strings)
+      if (Array.isArray(initialData.traits)) {
+        setSelectedTraits(initialData.traits);
+      }
+
+      // Handle ruler trait (single string)
+      if (initialData.ruler_trait) {
+        setSelectedRulerTrait(initialData.ruler_trait);
+      }
+    }
+  }, [initialData]);
 
   // Validate authority when ethics change
   // No longer auto-clearing authority based on ethics - let user choose freely
@@ -790,76 +820,6 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
     return missing;
   };
 
-  const handleImportSav = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setImporting(true);
-    setError(null);
-    setImportOutput('');
-    setShowImportOutput(false);
-
-    const formData = new FormData();
-    formData.append('savefile', file);
-
-    try {
-      const response = await fetch('/api/import-build', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || 'Failed to import save file');
-        setImportOutput(data.output || '');
-        setShowImportOutput(true);
-        return;
-      }
-
-      // Success - populate form with extracted data
-      const build = data.buildData;
-
-      // Don't auto-fill name - user will want to choose their own descriptive name
-      // if (build.name) setName(build.name);
-
-      if (build.origin) setSelectedOrigin(build.origin);
-      if (build.authority) setSelectedAuthority(build.authority);
-      if (build.ethics && Array.isArray(build.ethics)) setSelectedEthics(build.ethics);
-      if (build.civics && Array.isArray(build.civics)) setSelectedCivics(build.civics);
-      if (build.traits && Array.isArray(build.traits)) {
-        // Filter out traits that don't exist in our database (mods)
-        const validTraits = build.traits.filter((traitId: string) =>
-          allTraits.some(t => t.id === traitId)
-        );
-        const invalidTraits = build.traits.filter((traitId: string) =>
-          !allTraits.some(t => t.id === traitId)
-        );
-
-        setSelectedTraits(validTraits);
-
-        // Show warning if some traits were filtered out
-        if (invalidTraits.length > 0) {
-          const warning = `⚠️ ${invalidTraits.length} trait(s) from mods were not imported: ${invalidTraits.join(', ')}. Please select vanilla equivalents manually.`;
-          setError(warning);
-        }
-      }
-      if (build.traditions && Array.isArray(build.traditions)) setSelectedTraditions(build.traditions);
-      if (build.ascension_perks && Array.isArray(build.ascension_perks)) setSelectedAscensionPerks(build.ascension_perks);
-
-      // Show output with success message
-      setImportOutput(data.output);
-      setShowImportOutput(true);
-
-    } catch (err) {
-      setError('Failed to upload file: ' + (err as Error).message);
-    } finally {
-      setImporting(false);
-      // Reset file input
-      e.target.value = '';
-    }
-  };
-
   // Save form data to localStorage
   const saveFormDataToLocalStorage = () => {
     const formData = {
@@ -1021,62 +981,6 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
         <h3 className="card-title">Create a New Build</h3>
         <form id="build-form" onSubmit={handleSubmit}>
           {error && <div className="alert alert-danger">{error}</div>}
-
-          {/* Import from .sav file section */}
-          <div className="card bg-dark border-info mb-4">
-            <div className="card-header bg-info text-dark">
-              <h5 className="mb-0">📁 Import from Save File (Optional)</h5>
-            </div>
-            <div className="card-body">
-              <p className="text-muted mb-3">
-                Upload your Stellaris save file (.sav) to automatically fill the form with your empire's build data.
-                You can then review and modify the imported data before submitting.
-              </p>
-
-              <div className="mb-3">
-                <input
-                  type="file"
-                  className="form-control bg-secondary text-white border-secondary"
-                  accept=".sav"
-                  onChange={handleImportSav}
-                  disabled={importing}
-                />
-              </div>
-
-              {importing && (
-                <div className="alert alert-info">
-                  <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                  Importing save file... This may take a moment.
-                </div>
-              )}
-
-              {showImportOutput && importOutput && (
-                <div className="mt-3">
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <h6 className="mb-0">Import Output:</h6>
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-outline-light"
-                      onClick={() => {
-                        navigator.clipboard.writeText(importOutput);
-                        alert('Output copied to clipboard!');
-                      }}
-                    >
-                      📋 Copy Output
-                    </button>
-                  </div>
-                  <pre className="bg-black text-light p-3" style={{ maxHeight: '300px', overflow: 'auto', fontSize: '0.85rem' }}>
-                    {importOutput}
-                  </pre>
-                  <small className="text-muted">
-                    If you encounter any issues, copy this output and report it to the developer.
-                  </small>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <hr className="border-secondary my-4" />
 
           {/* Manual entry section */}
           <div className="mb-3">

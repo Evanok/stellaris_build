@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BuildForm } from '../BuildForm';
 
-export const Create: React.FC = () => {
+const CreateManual: React.FC = () => {
   const navigate = useNavigate();
 
   const handleBuildCreated = () => {
@@ -19,7 +19,10 @@ export const Create: React.FC = () => {
               <li className="breadcrumb-item">
                 <a href="/" className="text-decoration-none">Home</a>
               </li>
-              <li className="breadcrumb-item active" aria-current="page">Create Build</li>
+              <li className="breadcrumb-item">
+                <a href="/create" className="text-decoration-none">Create Build</a>
+              </li>
+              <li className="breadcrumb-item active" aria-current="page">Manual</li>
             </ol>
           </nav>
         </div>
@@ -29,3 +32,5 @@ export const Create: React.FC = () => {
     </div>
   );
 };
+
+export default CreateManual;

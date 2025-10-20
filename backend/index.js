@@ -515,6 +515,117 @@ app.post('/api/import-build', isAuthenticated, upload.single('savefile'), (req, 
   });
 });
 
+// List all empires from empire designs file
+app.post('/api/list-empires', isAuthenticated, upload.single('designsfile'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  const designsFilePath = req.file.path;
+  const scriptPath = path.join(__dirname, '../data-extractor/import_empire_from_designs.py');
+
+  // Run Python script to list empires
+  const python = spawn('python3', [scriptPath, designsFilePath]);
+
+  let stdout = '';
+  let stderr = '';
+
+  python.stdout.on('data', (data) => {
+    stdout += data.toString();
+  });
+
+  python.stderr.on('data', (data) => {
+    stderr += data.toString();
+  });
+
+  python.on('close', (code) => {
+    // Clean up uploaded file
+    fs.unlink(designsFilePath, (err) => {
+      if (err) console.error('Failed to delete uploaded file:', err);
+    });
+
+    if (code !== 0) {
+      console.error('Python script error:', stderr);
+      return res.status(500).json({
+        error: 'Failed to parse empire designs file',
+        details: stderr
+      });
+    }
+
+    try {
+      // Parse the JSON array of empire names
+      const empires = JSON.parse(stdout.trim());
+      res.json({ empires });
+    } catch (error) {
+      console.error('JSON parse error:', error);
+      res.status(500).json({
+        error: 'Failed to parse empire list',
+        details: error.message,
+        output: stdout
+      });
+    }
+  });
+});
+
+// Extract specific empire from empire designs file
+app.post('/api/import-empire-designs', isAuthenticated, upload.single('designsfile'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  const empireName = req.body.empireName;
+  if (!empireName) {
+    // Clean up file first
+    fs.unlink(req.file.path, () => {});
+    return res.status(400).json({ error: 'Empire name is required' });
+  }
+
+  const designsFilePath = req.file.path;
+  const scriptPath = path.join(__dirname, '../data-extractor/import_empire_from_designs.py');
+
+  // Run Python script to extract specific empire
+  const python = spawn('python3', [scriptPath, designsFilePath, empireName]);
+
+  let stdout = '';
+  let stderr = '';
+
+  python.stdout.on('data', (data) => {
+    stdout += data.toString();
+  });
+
+  python.stderr.on('data', (data) => {
+    stderr += data.toString();
+  });
+
+  python.on('close', (code) => {
+    // Clean up uploaded file
+    fs.unlink(designsFilePath, (err) => {
+      if (err) console.error('Failed to delete uploaded file:', err);
+    });
+
+    if (code !== 0) {
+      console.error('Python script error:', stderr);
+      return res.status(500).json({
+        error: 'Failed to extract empire data',
+        details: stderr
+      });
+    }
+
+    try {
+      // Parse the empire data JSON
+      const buildData = JSON.parse(stdout.trim());
+      res.json(buildData);
+    } catch (error) {
+      console.error('JSON parse error:', error);
+      res.status(500).json({
+        error: 'Failed to parse empire data',
+        details: error.message,
+        output: stdout
+      });
+    }
+  });
+});
+
 // Serve React app for all other routes (must be after API routes)
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
