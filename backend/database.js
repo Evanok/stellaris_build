@@ -151,6 +151,35 @@ const setupDatabase = () => {
       }
     });
 
+    // Add is_admin column for admin users
+    db.run(`ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding is_admin column:', err.message);
+      } else {
+        // Set lambertarthur22@gmail.com as admin after column is added
+        db.run(`UPDATE users SET is_admin = 1 WHERE email = ?`, ['lambertarthur22@gmail.com'], (err) => {
+          if (err) {
+            console.error('Error setting admin user:', err.message);
+          } else {
+            console.log('Admin user configured (if exists).');
+          }
+        });
+      }
+    });
+
+    // Create page_views table for traffic tracking
+    db.run(`CREATE TABLE IF NOT EXISTS page_views (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      url TEXT NOT NULL,
+      referrer TEXT,
+      user_agent TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`, (err) => {
+      if (err) {
+        console.error('Error creating page_views table:', err.message);
+      }
+    });
+
     console.log('Database tables checked/created.');
   });
 };

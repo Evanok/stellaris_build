@@ -74,6 +74,41 @@ const isAuthenticated = (req, res, next) => {
   res.status(401).json({ error: 'Unauthorized. Please log in.' });
 };
 
+// Admin middleware
+const isAdmin = (req, res, next) => {
+  if (req.isAuthenticated() && req.user.is_admin === 1) {
+    return next();
+  }
+  res.status(403).json({ error: 'Forbidden. Admin access required.' });
+};
+
+// Page view tracking middleware for important pages
+const trackPageView = (req, res, next) => {
+  const trackedPaths = ['/', '/create', '/create/manual', '/create/import-save', '/create/import-designs'];
+  const url = req.path;
+
+  // Only track specific paths
+  if (trackedPaths.includes(url)) {
+    const referrer = req.get('Referer') || req.get('Referrer') || 'direct';
+    const userAgent = req.get('User-Agent') || 'unknown';
+
+    db.run(
+      'INSERT INTO page_views (url, referrer, user_agent) VALUES (?, ?, ?)',
+      [url, referrer, userAgent],
+      (err) => {
+        if (err) {
+          console.error('Error tracking page view:', err.message);
+        }
+      }
+    );
+  }
+
+  next();
+};
+
+// Apply page view tracking to all routes
+app.use(trackPageView);
+
 // ============ AUTH ROUTES ============
 
 // Google OAuth routes
@@ -639,6 +674,320 @@ app.post('/api/import-empire-designs', isAuthenticated, upload.single('designsfi
       });
     }
   });
+});
+
+// ============ PUBLIC STATS ROUTES ============
+
+// Get public statistics
+app.get('/api/stats', async (req, res) => {
+  try {
+    const stats = {};
+
+    // 1. Total builds
+    const totalBuilds = await new Promise((resolve, reject) => {
+      db.get('SELECT COUNT(*) as count FROM builds WHERE deleted = 0', (err, row) => {
+        if (err) reject(err);
+        else resolve(row.count);
+      });
+    });
+    stats.totalBuilds = totalBuilds;
+
+    // 2. Top 3 Civics (parse comma-separated values)
+    const allBuilds = await new Promise((resolve, reject) => {
+      db.all('SELECT civics FROM builds WHERE deleted = 0 AND civics IS NOT NULL', (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      });
+    });
+
+    const civicCounts = {};
+    allBuilds.forEach(build => {
+      if (build.civics) {
+        const civics = build.civics.split(',').map(c => c.trim()).filter(c => c);
+        civics.forEach(civic => {
+          civicCounts[civic] = (civicCounts[civic] || 0) + 1;
+        });
+      }
+    });
+
+    const topCivics = Object.entries(civicCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([name, count]) => ({
+        name,
+        count,
+        percentage: ((count / totalBuilds) * 100).toFixed(1)
+      }));
+    stats.topCivics = topCivics;
+
+    // 3. Top 3 Ethics
+    const ethicCounts = {};
+    allBuilds.forEach(build => {
+      if (build.ethics) {
+        const ethics = build.ethics.split(',').map(e => e.trim()).filter(e => e);
+        ethics.forEach(ethic => {
+          ethicCounts[ethic] = (ethicCounts[ethic] || 0) + 1;
+        });
+      }
+    });
+
+    const allBuildsEthics = await new Promise((resolve, reject) => {
+      db.all('SELECT ethics FROM builds WHERE deleted = 0 AND ethics IS NOT NULL', (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      });
+    });
+
+    const ethicCountsFinal = {};
+    allBuildsEthics.forEach(build => {
+      if (build.ethics) {
+        const ethics = build.ethics.split(',').map(e => e.trim()).filter(e => e);
+        ethics.forEach(ethic => {
+          ethicCountsFinal[ethic] = (ethicCountsFinal[ethic] || 0) + 1;
+        });
+      }
+    });
+
+    const topEthics = Object.entries(ethicCountsFinal)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([name, count]) => ({
+        name,
+        count,
+        percentage: ((count / totalBuilds) * 100).toFixed(1)
+      }));
+    stats.topEthics = topEthics;
+
+    // 4. Top 3 Origins
+    const originCounts = await new Promise((resolve, reject) => {
+      db.all(
+        `SELECT origin, COUNT(*) as count
+         FROM builds
+         WHERE deleted = 0 AND origin IS NOT NULL
+         GROUP BY origin
+         ORDER BY count DESC
+         LIMIT 3`,
+        (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows.map(row => ({
+            name: row.origin,
+            count: row.count,
+            percentage: ((row.count / totalBuilds) * 100).toFixed(1)
+          })));
+        }
+      );
+    });
+    stats.topOrigins = originCounts;
+
+    // 5. Top 3 Authorities
+    const authorityCounts = await new Promise((resolve, reject) => {
+      db.all(
+        `SELECT authority, COUNT(*) as count
+         FROM builds
+         WHERE deleted = 0 AND authority IS NOT NULL
+         GROUP BY authority
+         ORDER BY count DESC
+         LIMIT 3`,
+        (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows.map(row => ({
+            name: row.authority,
+            count: row.count,
+            percentage: ((row.count / totalBuilds) * 100).toFixed(1)
+          })));
+        }
+      );
+    });
+    stats.topAuthorities = authorityCounts;
+
+    // 6. Top 3 Ascension Perks
+    const allBuildsPerks = await new Promise((resolve, reject) => {
+      db.all('SELECT ascension_perks FROM builds WHERE deleted = 0 AND ascension_perks IS NOT NULL', (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      });
+    });
+
+    const perkCounts = {};
+    allBuildsPerks.forEach(build => {
+      if (build.ascension_perks) {
+        const perks = build.ascension_perks.split(',').map(p => p.trim()).filter(p => p);
+        perks.forEach(perk => {
+          perkCounts[perk] = (perkCounts[perk] || 0) + 1;
+        });
+      }
+    });
+
+    const topPerks = Object.entries(perkCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([name, count]) => ({
+        name,
+        count,
+        percentage: ((count / totalBuilds) * 100).toFixed(1)
+      }));
+    stats.topAscensionPerks = topPerks;
+
+    // 7. Top 3 Traditions
+    const allBuildsTraditions = await new Promise((resolve, reject) => {
+      db.all('SELECT traditions FROM builds WHERE deleted = 0 AND traditions IS NOT NULL', (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      });
+    });
+
+    const traditionCounts = {};
+    allBuildsTraditions.forEach(build => {
+      if (build.traditions) {
+        const traditions = build.traditions.split(',').map(t => t.trim()).filter(t => t);
+        traditions.forEach(tradition => {
+          traditionCounts[tradition] = (traditionCounts[tradition] || 0) + 1;
+        });
+      }
+    });
+
+    const topTraditions = Object.entries(traditionCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([name, count]) => ({
+        name,
+        count,
+        percentage: ((count / totalBuilds) * 100).toFixed(1)
+      }));
+    stats.topTraditions = topTraditions;
+
+    // 8. Top 5 Contributors
+    const topContributors = await new Promise((resolve, reject) => {
+      db.all(
+        `SELECT u.username, u.avatar, COUNT(b.id) as buildCount
+         FROM users u
+         INNER JOIN builds b ON u.id = b.author_id
+         WHERE b.deleted = 0
+         GROUP BY u.id
+         ORDER BY buildCount DESC
+         LIMIT 5`,
+        (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows);
+        }
+      );
+    });
+    stats.topContributors = topContributors;
+
+    res.json(stats);
+  } catch (error) {
+    console.error('Error fetching public stats:', error);
+    res.status(500).json({ error: 'Failed to fetch statistics' });
+  }
+});
+
+// ============ ADMIN STATS ROUTES ============
+
+// Get admin statistics
+app.get('/api/admin/stats', isAdmin, async (req, res) => {
+  try {
+    const stats = {};
+
+    // 1. Total users
+    const totalUsers = await new Promise((resolve, reject) => {
+      db.get('SELECT COUNT(*) as count FROM users', (err, row) => {
+        if (err) reject(err);
+        else resolve(row.count);
+      });
+    });
+    stats.totalUsers = totalUsers;
+
+    // 2. New users this month
+    const newUsersThisMonth = await new Promise((resolve, reject) => {
+      db.get(
+        `SELECT COUNT(*) as count FROM users
+         WHERE created_at >= date('now', 'start of month')`,
+        (err, row) => {
+          if (err) reject(err);
+          else resolve(row.count);
+        }
+      );
+    });
+    stats.newUsersThisMonth = newUsersThisMonth;
+
+    // 3. Total builds (active + deleted)
+    const totalBuilds = await new Promise((resolve, reject) => {
+      db.get('SELECT COUNT(*) as count FROM builds', (err, row) => {
+        if (err) reject(err);
+        else resolve(row.count);
+      });
+    });
+    stats.totalBuilds = totalBuilds;
+
+    // 4. Deleted builds
+    const deletedBuilds = await new Promise((resolve, reject) => {
+      db.get('SELECT COUNT(*) as count FROM builds WHERE deleted = 1', (err, row) => {
+        if (err) reject(err);
+        else resolve(row.count);
+      });
+    });
+    stats.deletedBuilds = deletedBuilds;
+
+    // 5. Builds created per week (last 12 weeks)
+    const buildsPerWeek = await new Promise((resolve, reject) => {
+      db.all(
+        `SELECT
+          strftime('%Y-W%W', created_at) as week,
+          COUNT(*) as count
+         FROM builds
+         WHERE created_at >= date('now', '-12 weeks')
+         GROUP BY week
+         ORDER BY week`,
+        (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows);
+        }
+      );
+    });
+    stats.buildsPerWeek = buildsPerWeek;
+
+    // 6. Inscriptions per week (last 12 weeks)
+    const signupsPerWeek = await new Promise((resolve, reject) => {
+      db.all(
+        `SELECT
+          strftime('%Y-W%W', created_at) as week,
+          COUNT(*) as count
+         FROM users
+         WHERE created_at >= date('now', '-12 weeks')
+         GROUP BY week
+         ORDER BY week`,
+        (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows);
+        }
+      );
+    });
+    stats.signupsPerWeek = signupsPerWeek;
+
+    // 7. Top referrers (last 30 days)
+    const topReferrers = await new Promise((resolve, reject) => {
+      db.all(
+        `SELECT
+          referrer,
+          COUNT(*) as count
+         FROM page_views
+         WHERE created_at >= date('now', '-30 days')
+         GROUP BY referrer
+         ORDER BY count DESC
+         LIMIT 10`,
+        (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows);
+        }
+      );
+    });
+    stats.topReferrers = topReferrers;
+
+    res.json(stats);
+  } catch (error) {
+    console.error('Error fetching admin stats:', error);
+    res.status(500).json({ error: 'Failed to fetch admin statistics' });
+  }
 });
 
 // Serve React app for all other routes (must be after API routes)
