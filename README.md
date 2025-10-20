@@ -401,6 +401,13 @@ When contributing:
 - [ ] Build import/export
 - [ ] Automatic compatibility checking for game updates
 
+### Phase 5: UX/UI Improvements & Polish
+- [ ] **Make builds more obviously clickable on home page** - Add visual cues (hover effects, cursor pointer, "View Details" button) to indicate builds are clickable for detailed view
+- [ ] **Global bug report button** - Add a persistent bug report button accessible from any page, allowing users to submit bug reports
+- [ ] **Design improvements** - Continue refining the overall design and user experience
+- [ ] **Home page banner image** - Add an attractive banner/hero image on the main page
+- [ ] **Complete empire designs import system** - Finish implementing the full workflow for importing empire builds from game files (user_empire_designs_v3.4.txt)
+
 ---
 
 ## License
