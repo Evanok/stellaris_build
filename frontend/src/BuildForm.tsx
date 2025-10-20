@@ -532,11 +532,6 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated }) => {
   // All civics are available - no filtering based on compatibility
   const availableCivics = allCivics;
 
-  // All authorities are always available - no ethics restrictions
-  const canSelectAuthority = (authority: Authority): boolean => {
-    return true;
-  };
-
   // All authorities are available - no filtering based on ethics
   const availableAuthorities = allAuthorities;
 
