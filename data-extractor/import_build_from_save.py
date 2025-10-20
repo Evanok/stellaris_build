@@ -388,10 +388,20 @@ def main():
                 traits = json.load(f)
             with open(os.path.join(backend_data_path, 'civics.json')) as f:
                 civics = json.load(f)
+            with open(os.path.join(backend_data_path, 'ascension_perks.json')) as f:
+                ascension_perks_data = json.load(f)
+            with open(os.path.join(backend_data_path, 'traditions.json')) as f:
+                traditions_data = json.load(f)
 
             origin_ids = [o['id'] for o in origins]
             trait_ids = [t['id'] for t in traits]
             civic_ids = [c['id'] for c in civics]
+
+            # ascension_perks.json has structure: {"all": [...]}
+            perk_ids = [p['id'] for p in ascension_perks_data.get('all', [])]
+
+            # traditions.json has structure: {"tr_adaptability": {...}, "tr_supremacy": {...}}
+            tradition_ids = list(traditions_data.keys())
 
             # Check origin
             if build_data.get('origin') not in origin_ids:
@@ -414,7 +424,22 @@ def main():
                 print(f"   → These civics are likely from mods (not in vanilla Stellaris)")
                 print(f"   → They won't be recognized when importing to the website")
 
-            if not unknown_traits and not unknown_civics and build_data.get('origin') in origin_ids:
+            # Check ascension perks
+            unknown_perks = [p for p in build_data.get('ascension_perks', []) if p not in perk_ids]
+            if unknown_perks:
+                print(f"⚠️  Unknown ascension perks detected: {', '.join(unknown_perks)}")
+                print(f"   → These perks are likely from mods (not in vanilla Stellaris)")
+                print(f"   → They won't be recognized when importing to the website")
+
+            # Check traditions
+            unknown_traditions = [t for t in build_data.get('traditions', []) if t not in tradition_ids]
+            if unknown_traditions:
+                print(f"⚠️  Unknown traditions detected: {', '.join(unknown_traditions)}")
+                print(f"   → These traditions are likely from mods (not in vanilla Stellaris)")
+                print(f"   → They won't be recognized when importing to the website")
+
+            if (not unknown_traits and not unknown_civics and not unknown_perks and
+                not unknown_traditions and build_data.get('origin') in origin_ids):
                 print("✅ All extracted data is valid and present in website database!")
         else:
             print("⚠️  Backend data not found, skipping validation")

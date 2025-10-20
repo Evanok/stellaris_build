@@ -483,6 +483,16 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
       if (initialData.ruler_trait) {
         setSelectedRulerTrait(initialData.ruler_trait);
       }
+
+      // Handle ascension perks (array of strings)
+      if (Array.isArray(initialData.ascension_perks)) {
+        setSelectedAscensionPerks(initialData.ascension_perks);
+      }
+
+      // Handle traditions (array of strings)
+      if (Array.isArray(initialData.traditions)) {
+        setSelectedTraditions(initialData.traditions);
+      }
     }
   }, [initialData]);
 
