@@ -160,12 +160,8 @@ def main():
         if empire_names is None:
             sys.exit(1)
 
-        print("Available empires in file:")
-        for i, name in enumerate(empire_names, 1):
-            print(f"  {i}. {name}")
-        print(f"\nTotal: {len(empire_names)} empires")
-        print(f"\nTo extract a specific empire, run:")
-        print(f'  python3 {sys.argv[0]} "{file_path}" "EMPIRE_NAME"')
+        # Output as JSON array for API consumption
+        print(json.dumps(empire_names))
         sys.exit(0)
 
     # Extract specific empire
