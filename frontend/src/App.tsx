@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { GoogleAnalytics } from './components/GoogleAnalytics';
+import { FeedbackButton } from './components/FeedbackButton';
 import { Home } from './pages/Home';
 import CreateChoice from './pages/CreateChoice';
 import CreateManual from './pages/CreateManual';
@@ -11,11 +12,13 @@ import { BuildDetail } from './pages/BuildDetail';
 import Login from './pages/Login';
 import Stats from './pages/Stats';
 import AdminStats from './pages/AdminStats';
+import AdminFeedback from './pages/AdminFeedback';
 
 function App() {
   return (
     <Router>
       <GoogleAnalytics />
+      <FeedbackButton />
       <div className="d-flex flex-column min-vh-100 bg-dark">
         <Navbar />
         <main className="flex-grow-1">
@@ -29,6 +32,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/admin/stats" element={<AdminStats />} />
+            <Route path="/admin/feedback" element={<AdminFeedback />} />
           </Routes>
         </main>
         <Footer />

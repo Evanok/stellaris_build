@@ -995,6 +995,102 @@ app.get('/api/admin/stats', isAdmin, async (req, res) => {
   }
 });
 
+// Submit feedback or bug report (accessible to everyone, even not logged in)
+app.post('/api/feedback', upload.single('screenshot'), (req, res) => {
+  const { type, description, pageUrl } = req.body;
+
+  // Validation
+  if (!type || !['bug', 'feedback', 'suggestion'].includes(type)) {
+    return res.status(400).json({ error: 'Invalid feedback type. Must be bug, feedback, or suggestion.' });
+  }
+
+  if (!description || description.trim() === '') {
+    return res.status(400).json({ error: 'Description is required.' });
+  }
+
+  const userId = req.user ? req.user.id : null;
+  const userAgent = req.get('User-Agent') || null;
+  const screenshotPath = req.file ? req.file.path : null;
+
+  db.run(
+    `INSERT INTO feedback (type, description, screenshot_path, page_url, user_agent, user_id)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [type, description, screenshotPath, pageUrl, userAgent, userId],
+    function(err) {
+      if (err) {
+        console.error('Error saving feedback:', err);
+        return res.status(500).json({ error: 'Failed to save feedback' });
+      }
+
+      res.json({
+        success: true,
+        message: 'Thank you for your feedback!',
+        id: this.lastID
+      });
+    }
+  );
+});
+
+// Get all feedback (admin only)
+app.get('/api/admin/feedback', isAdmin, (req, res) => {
+  const { status } = req.query;
+
+  let query = `
+    SELECT
+      f.*,
+      u.username,
+      u.email,
+      u.avatar
+    FROM feedback f
+    LEFT JOIN users u ON f.user_id = u.id
+  `;
+
+  const params = [];
+
+  if (status && ['new', 'in_progress', 'resolved'].includes(status)) {
+    query += ' WHERE f.status = ?';
+    params.push(status);
+  }
+
+  query += ' ORDER BY f.created_at DESC';
+
+  db.all(query, params, (err, rows) => {
+    if (err) {
+      console.error('Error fetching feedback:', err);
+      return res.status(500).json({ error: 'Failed to fetch feedback' });
+    }
+
+    res.json(rows);
+  });
+});
+
+// Update feedback status (admin only)
+app.patch('/api/admin/feedback/:id', isAdmin, (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  if (!status || !['new', 'in_progress', 'resolved'].includes(status)) {
+    return res.status(400).json({ error: 'Invalid status. Must be new, in_progress, or resolved.' });
+  }
+
+  db.run(
+    'UPDATE feedback SET status = ? WHERE id = ?',
+    [status, id],
+    function(err) {
+      if (err) {
+        console.error('Error updating feedback:', err);
+        return res.status(500).json({ error: 'Failed to update feedback' });
+      }
+
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Feedback not found' });
+      }
+
+      res.json({ success: true, message: 'Feedback status updated' });
+    }
+  );
+});
+
 // Serve React app for all other routes (must be after API routes)
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));

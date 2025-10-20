@@ -183,6 +183,24 @@ const setupDatabase = () => {
       }
     });
 
+    // Create feedback table for user feedback and bug reports
+    db.run(`CREATE TABLE IF NOT EXISTS feedback (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      type TEXT NOT NULL CHECK(type IN ('bug', 'feedback', 'suggestion')),
+      description TEXT NOT NULL,
+      screenshot_path TEXT,
+      page_url TEXT,
+      user_agent TEXT,
+      user_id INTEGER,
+      status TEXT DEFAULT 'new' CHECK(status IN ('new', 'in_progress', 'resolved')),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users (id)
+    )`, (err) => {
+      if (err) {
+        console.error('Error creating feedback table:', err.message);
+      }
+    });
+
     console.log('Database tables checked/created.');
   });
 };
