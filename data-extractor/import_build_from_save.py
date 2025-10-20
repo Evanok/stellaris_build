@@ -229,6 +229,7 @@ def parse_gamestate_simple(gamestate_path):
         traits = []
         species_found = False
         current_species_start = None
+        founder_species_start = None  # Save the founder species location
 
         for i in range(species_db_start, min(species_db_start + 50000, len(lines))):
             line = lines[i].strip()
@@ -241,6 +242,7 @@ def parse_gamestate_simple(gamestate_path):
             if current_species_start and 'trait="trait_wilderness"' in lines[i]:
                 print(f"Found founder species with trait_wilderness near line {i}")
                 species_found = True
+                founder_species_start = current_species_start  # Save this location
 
                 # Now find the traits section for this species (search backward from current position)
                 for j in range(current_species_start, min(current_species_start + 200, len(lines))):
@@ -278,6 +280,40 @@ def parse_gamestate_simple(gamestate_path):
             print(f"⚠️  Found founder species but no traits extracted")
         else:
             print(f"⚠️  Could not find founder species in species_db")
+
+    # Detect species type from the founder species traits
+    # Check the traits we already extracted to determine species type
+    if species_db_start and species_found and founder_species_start:
+        species_type = 'BIOLOGICAL'  # Default
+
+        # Look in the specific founder species section where we found traits
+        # Search from founder_species_start to avoid false positives from other species
+        for i in range(founder_species_start, min(founder_species_start + 300, len(lines))):
+            line = lines[i].strip()
+
+            # Stop if we hit the next species entry
+            if re.match(r'\d+=\s*$', line) and i > founder_species_start + 10:
+                break
+
+            # Check for species type indicator traits
+            if 'trait="trait_lithoid"' in line:
+                species_type = 'LITHOID'
+                print(f"✓ Detected species type: LITHOID")
+                break
+            elif 'trait="trait_machine_unit"' in line:
+                species_type = 'MACHINE'
+                print(f"✓ Detected species type: MACHINE")
+                break
+            elif 'trait="trait_robot"' in line and 'trait="trait_machine_unit"' not in lines[max(0,i-5):i+5]:
+                species_type = 'ROBOT'
+                print(f"✓ Detected species type: ROBOT")
+                break
+            elif 'trait="trait_organic"' in line:
+                species_type = 'BIOLOGICAL'
+                print(f"✓ Detected species type: BIOLOGICAL")
+                break
+
+        build_data['speciesType'] = species_type
 
     return build_data
 
@@ -320,6 +356,7 @@ def main():
     print(f"{'='*70}\n")
 
     print(f"Empire Name:    {build_data.get('name', 'Not found')}")
+    print(f"Species Type:   {build_data.get('speciesType', 'BIOLOGICAL (default)')}")
     print(f"Origin:         {build_data.get('origin', 'Not found')}")
     print(f"Authority:      {build_data.get('authority', 'Not found')}")
     print(f"Ethics:         {', '.join(build_data.get('ethics', [])) or 'Not found'}")

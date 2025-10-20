@@ -474,6 +474,11 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
         setSelectedTraits(initialData.traits);
       }
 
+      // Handle species type (string: BIOLOGICAL, LITHOID, MACHINE, ROBOT)
+      if (initialData.speciesType) {
+        setSpeciesType(initialData.speciesType);
+      }
+
       // Handle ruler trait (single string)
       if (initialData.ruler_trait) {
         setSelectedRulerTrait(initialData.ruler_trait);

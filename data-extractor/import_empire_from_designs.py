@@ -124,8 +124,29 @@ def parse_empire_block(block, empire_name):
     if species_match:
         species_block = species_match.group(1)
         trait_matches = re.findall(r'trait\s*=\s*"([^"]+)"', species_block)
+
+        # Detect species type from system traits before filtering
+        species_type = 'BIOLOGICAL'  # Default
+        if 'trait_lithoid' in trait_matches:
+            species_type = 'LITHOID'
+        elif 'trait_machine_unit' in trait_matches:
+            species_type = 'MACHINE'
+        elif 'trait_robot' in trait_matches:
+            species_type = 'ROBOT'
+        # trait_organic means BIOLOGICAL (default)
+
+        data['speciesType'] = species_type
+
         # Filter out meta traits and portraits
-        traits = [t for t in trait_matches if t.startswith('trait_') and not t in ['trait_organic', 'trait_hive_mind', 'trait_machine_unit', 'trait_mechanical']]
+        # These are automatic/system traits that shouldn't be user-selectable
+        excluded_traits = {
+            'trait_organic', 'trait_hive_mind', 'trait_machine_unit', 'trait_mechanical',
+            'trait_lithoid', 'trait_robot', 'trait_wilderness', 'trait_machine',
+            'trait_clone_soldier_infertile', 'trait_self_modified', 'trait_cybernetic',
+            'trait_latent_psionic', 'trait_psionic', 'trait_nerve_stapled',
+            'trait_erudite', 'trait_enigmatic_intelligence'
+        }
+        traits = [t for t in trait_matches if t.startswith('trait_') and t not in excluded_traits]
         data['traits'] = traits
 
     # Extract ruler trait
