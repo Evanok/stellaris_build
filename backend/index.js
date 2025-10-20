@@ -1,4 +1,9 @@
 require('dotenv').config({ path: __dirname + '/.env' });
+
+// Validate environment variables before starting the app
+const { validateEnv } = require('./validateEnv');
+validateEnv();
+
 const express = require('express');
 const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
