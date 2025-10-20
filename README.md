@@ -28,6 +28,7 @@ This project is currently in active development with the following features impl
   - Optional YouTube video link with embedded player
   - **Source URL attribution** for builds from Reddit/forums
   - **Import from .sav files** (automatically extract build data from Stellaris save files)
+  - **Import from Empire Designs** (import all empires from `user_empire_designs.txt`)
 
 - **Build Display**: View submitted builds with all details, difficulty badges, embedded YouTube videos, and source attribution
 - **Build Management**: Soft delete functionality (builds are hidden, not permanently deleted)
@@ -39,6 +40,8 @@ This project is currently in active development with the following features impl
   - **Persistent sessions** using SQLite (survives server restarts)
   - Session duration: 30 days
   - **Password requirements**: 12+ chars, uppercase, lowercase, number, special character
+- **Statistics Page**: Admin and public statistics on build usage.
+- **Feedback System**: A global button for users to submit feedback and bug reports.
 - **Google Analytics**: Visitor tracking and statistics (G-E67MKKS33Q)
 - **Security**:
   - Manual rate limiting (100 requests/15min per IP, 5 builds/hour per user)
@@ -49,61 +52,7 @@ This project is currently in active development with the following features impl
 - **Maintenance Mode**: Styled maintenance page with enable/disable scripts
 - **Production Deployment**: Fully deployed with HTTPS, auto-restart, SSL certificates, and 100MB file upload support
 
-### 🚧 Planned Features
 
-#### Priority Features
-
-- **Comment System**: Discussion threads on each build page
-  - Nested comments/replies
-  - Upvote/downvote functionality
-  - Author notifications
-  - Moderation tools (report/delete)
-
-- **Build Import**: Extract builds from Stellaris save files
-  - Parse game save files automatically
-  - Auto-detect species, civics, origins, ethics
-  - Pre-fill build form with extracted data
-  - Handle missing/new content gracefully
-
-- **Improved Data Extraction**: Enhanced game data extraction
-  - Verify and add missing species
-  - Verify and add missing civics
-  - Verify and add missing origins
-  - Auto-detect new DLC content
-  - Cross-validation with latest game files
-
-- **Custom Usernames**: Personalized display names
-  - Allow users to choose/edit their username
-  - Username uniqueness validation
-  - Display username instead of OAuth email
-  - Editable user profiles
-
-- **Weekly Leaderboard**: Top contributors showcase
-  - Rank users by builds added (last 7 days)
-  - Display on homepage
-  - "Top Contributor" badge for #1
-  - Historical leaderboard archive
-
-- **Featured Build of the Week**: Weekly build spotlight
-  - Dedicated "Featured Builds" page
-  - Automatic selection (most liked/commented) or manual curation
-  - Weekly rotation
-  - Archive of past featured builds
-  - Special "Build of the Week" badge
-
-#### Secondary Features
-
-- User profiles with build history
-- Build editing (by author only)
-- Rating system (like/dislike)
-- Build export to Stellaris save files
-- Build comparison tool (compare 2-3 builds side-by-side)
-- Advanced search with combined filters
-- Custom build tags
-
-#### Bug Fixes
-
-- Fix maintenance mode script (502 error issue)
 
 ---
 
@@ -376,37 +325,28 @@ When contributing:
 
 ---
 
-## Future Roadmap
+## Roadmap
 
-### Phase 1: Core Features (Current)
-- ✅ Build creation form
-- ✅ Data extraction with localization
-- ✅ Basic build storage
+### 🔼 High Priority
+- [ ] **Comment System**: Discussion threads on each build page (Upvotes, replies, moderation).
+- [ ] **Rating System**: Like/dislike builds.
+- [ ] **Improved Build Import**: Enhance the `.sav` file and `user_empire_designs` import to handle more cases and new game content gracefully.
+- [ ] **Build Editing**: Allow authors to edit their submitted builds.
+- [ ] **UX/Design Improvements**: Continue refining the overall design, improve usability (e.g., making builds more clickable), and add a banner to the home page.
 
-### Phase 2: User Management
-- [ ] User registration and authentication
-- [ ] Personal profiles
-- [ ] User build library
+### ⏹️ Medium Priority
+- [ ] **Build Export**: Export builds to a format that can be used in-game.
 
-### Phase 3: Community Features
-- [ ] Rating system
-- [ ] Comments and discussions
-- [ ] Favorites/bookmarks
-- [ ] Build of the Month
-
-### Phase 4: Advanced Features
-- [ ] Build comparison tools
-- [ ] Advanced search and filtering
-- [ ] Synergy analysis
-- [ ] Build import/export
-- [ ] Automatic compatibility checking for game updates
-
-### Phase 5: UX/UI Improvements & Polish
-- [ ] **Make builds more obviously clickable on home page** - Add visual cues (hover effects, cursor pointer, "View Details" button) to indicate builds are clickable for detailed view
-- [ ] **Global bug report button** - Add a persistent bug report button accessible from any page, allowing users to submit bug reports
-- [ ] **Design improvements** - Continue refining the overall design and user experience
-- [ ] **Home page banner image** - Add an attractive banner/hero image on the main page
-- [ ] **Complete empire designs import system** - Finish implementing the full workflow for importing empire builds from game files (user_empire_designs_v3.4.txt)
+### 🔽 Low Priority
+- [ ] **User Profiles**: With build history and custom usernames.
+- [ ] **Favorites/Bookmarks**: Save builds for later.
+- [ ] **Weekly Leaderboard**: Showcase top contributors.
+- [ ] **Featured Build of the Week**: Spotlight a build weekly.
+- [ ] **Build Comparison Tool**: Compare 2-3 builds side-by-side.
+- [ ] **Advanced Search**: More detailed and combined filters.
+- [ ] **Custom Build Tags**: Allow users to add custom tags to builds.
+- [ ] **Synergy Analysis**: Automatically suggest traits/civics that work well together.
+- [ ] **Automatic Compatibility Checking**: For new game updates.
 
 ---
 
