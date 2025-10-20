@@ -997,5 +997,6 @@ app.use((req, res) => {
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
-  console.log(`Access the app at: http://51.159.55.29:${port}`);
+  const host = process.env.SERVER_HOST || 'localhost';
+  console.log(`Access the app at: http://${host}:${port}`);
 });

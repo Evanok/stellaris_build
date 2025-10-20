@@ -156,14 +156,17 @@ const setupDatabase = () => {
       if (err && !err.message.includes('duplicate column')) {
         console.error('Error adding is_admin column:', err.message);
       } else {
-        // Set lambertarthur22@gmail.com as admin after column is added
-        db.run(`UPDATE users SET is_admin = 1 WHERE email = ?`, ['lambertarthur22@gmail.com'], (err) => {
-          if (err) {
-            console.error('Error setting admin user:', err.message);
-          } else {
-            console.log('Admin user configured (if exists).');
-          }
-        });
+        // Set admin user from environment variable
+        const adminEmail = process.env.ADMIN_EMAIL;
+        if (adminEmail) {
+          db.run(`UPDATE users SET is_admin = 1 WHERE email = ?`, [adminEmail], (err) => {
+            if (err) {
+              console.error('Error setting admin user:', err.message);
+            } else {
+              console.log('Admin user configured (if exists).');
+            }
+          });
+        }
       }
     });
 
