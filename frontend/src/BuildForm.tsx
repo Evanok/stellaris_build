@@ -279,7 +279,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
             opposites: Array.isArray(trait.opposites) ? trait.opposites.filter((o: any) => typeof o === 'string') : [],
             effects: typeof trait.effects === 'string' ? trait.effects : '',
             description: typeof trait.description === 'string' ? trait.description : '',
-            cost: typeof trait.cost === 'number' ? trait.cost : 0,
+            cost: typeof trait.cost === 'number' ? trait.cost : (typeof trait.cost === 'object' && trait.cost !== null && typeof trait.cost.base === 'number' ? trait.cost.base : 0),
           }))
           // Only show traits that are selectable during empire creation (non-zero cost)
           .filter((trait: any) => typeof trait.cost === 'number' && trait.cost !== 0)
