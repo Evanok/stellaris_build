@@ -622,6 +622,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
     if (traitSearchQuery) {
       const query = traitSearchQuery.toLowerCase();
       return (
+        trait.name.toLowerCase().includes(query) ||
         trait.id.toLowerCase().includes(query) ||
         trait.effects.toLowerCase().includes(query) ||
         trait.tags.some(tag => tag.toLowerCase().includes(query))
@@ -637,6 +638,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
     if (traitSearchQuery) {
       const query = traitSearchQuery.toLowerCase();
       return (
+        trait.name.toLowerCase().includes(query) ||
         trait.id.toLowerCase().includes(query) ||
         trait.effects.toLowerCase().includes(query) ||
         trait.tags.some(tag => tag.toLowerCase().includes(query))
