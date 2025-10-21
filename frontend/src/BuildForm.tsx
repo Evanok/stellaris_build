@@ -1,70 +1,14 @@
-
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { AuthModal } from './components/AuthModal';
-
-// --- START NEW LAZY LOADING COMPONENTS ---
-
-interface LazyImageProps {
-  src: string;
-  alt?: string;
-  width: number;
-  height: number;
-  style?: React.CSSProperties;
-  rootRef?: React.RefObject<HTMLElement>;
-  onError?: () => void;
-}
-
-const LazyImage: React.FC<LazyImageProps> = ({ src, alt = '', width, height, style, rootRef, onError }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const placeholderRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { root: rootRef?.current || null }
-    );
-
-    if (placeholderRef.current) {
-      observer.observe(placeholderRef.current);
-    }
-
-    return () => {
-      if (placeholderRef.current) {
-        observer.disconnect();
-      }
-    };
-  }, [rootRef]);
-
-  return (
-    <div ref={placeholderRef} style={{ width, height, ...style, display: 'inline-block' }}>
-      {isVisible && (
-        <img
-          src={src}
-          alt={alt}
-          width={width}
-          height={height}
-          onError={onError}
-        />
-      )}
-    </div>
-  );
-};
-
-// --- END NEW LAZY LOADING COMPONENTS ---
 
 interface BuildFormProps {
   onBuildCreated: (newBuild: any) => void;
   initialData?: any; // Optional pre-filled data from imports
 }
 
-// Icon component for game elements - NOW USES LAZYIMAGE
-const GameIcon: React.FC<{ type: string; id: string; size?: number; rootRef?: React.RefObject<HTMLElement> }> = ({ type, id, size = 32, rootRef }) => {
+// Icon component for game elements
+const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type, id, size = 32 }) => {
   const [hasError, setHasError] = useState(false);
 
   if (hasError) {
@@ -72,17 +16,17 @@ const GameIcon: React.FC<{ type: string; id: string; size?: number; rootRef?: Re
   }
 
   return (
-    <LazyImage
+    <img
       src={`/icons/${type}/${id}.png`}
+      alt=""
       width={size}
       height={size}
       style={{ marginRight: '8px', verticalAlign: 'middle' }}
-      rootRef={rootRef}
       onError={() => setHasError(true)}
+      loading="lazy"
     />
   );
 };
-
 
 // Origin display card with large image
 const OriginCard: React.FC<{ originId: string; origin: Origin | undefined }> = ({ originId, origin }) => {
@@ -263,18 +207,6 @@ const ORIGINS_WITH_SECONDARY_SPECIES = [
 ];
 
 export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialData }) => {
-  // --- START REFS FOR SCROLLABLE CONTAINERS ---
-  const traitsContainerRef = useRef<HTMLDivElement>(null);
-  const secondaryTraitsContainerRef = useRef<HTMLDivElement>(null);
-  const originsContainerRef = useRef<HTMLDivElement>(null);
-  const rulerTraitsContainerRef = useRef<HTMLDivElement>(null);
-  const ethicsContainerRef = useRef<HTMLDivElement>(null);
-  const authoritiesContainerRef = useRef<HTMLDivElement>(null);
-  const civicsContainerRef = useRef<HTMLDivElement>(null);
-  const ascensionPerksContainerRef = useRef<HTMLDivElement>(null);
-  const traditionTreesContainerRef = useRef<HTMLDivElement>(null);
-  // --- END REFS FOR SCROLLABLE CONTAINERS ---
-
   // Form fields state
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
