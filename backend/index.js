@@ -66,6 +66,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Serve static files from the frontend build
+// Cache icons for 30 days (immutable assets)
+app.use('/icons', express.static(path.join(__dirname, '../frontend/dist/icons'), {
+  maxAge: '30d',
+  immutable: true
+}));
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 // Setup the database
