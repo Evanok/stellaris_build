@@ -85,6 +85,14 @@ def parse_gamestate_simple(gamestate_path):
     lines = content.split('\n')
     print(f"Loaded {len(lines):,} lines")
 
+    # Extract empire name from file header (line 3: name="Empire Name")
+    build_data = {}
+    if len(lines) > 3:
+        match = re.search(r'name="([^"]+)"', lines[2])  # Line 3 is index 2
+        if match:
+            build_data['name'] = match.group(1)
+            print(f"Found empire name in header: {build_data['name']}")
+
     # Find the player country section (country={ 0={ ... } })
     print("\nSearching for player country data...")
 
@@ -101,7 +109,6 @@ def parse_gamestate_simple(gamestate_path):
     print(f"Found country section at line {country_start}")
 
     # Find key sections within the country data
-    build_data = {}
 
     # Search for government section (contains civics, authority, origin)
     gov_start = None
@@ -152,17 +159,7 @@ def parse_gamestate_simple(gamestate_path):
                 build_data['origin'] = match.group(1)
                 break
 
-    # Find empire name
-    for i in range(country_start, min(country_start + 200, len(lines))):
-        if 'name=' in lines[i] and 'custom_name' not in lines[i-5:i]:
-            # Try to extract empire name (complex nested structure, just get first key)
-            for j in range(i, min(i + 20, len(lines))):
-                match = re.search(r'key="([^"]+)"', lines[j])
-                if match and match.group(1) not in ['%ADJ%', '1']:
-                    build_data['name'] = match.group(1)
-                    break
-            if 'name' in build_data:
-                break
+    # Empire name was already extracted from header (no need to parse complex structure)
 
     # Extract traditions (tradition trees)
     traditions_start = None
@@ -214,6 +211,18 @@ def parse_gamestate_simple(gamestate_path):
         if ascension_perks:
             build_data['ascension_perks'] = ascension_perks
 
+    # Extract founder_species_ref from the player's country (country 0)
+    founder_species_id = None
+    for i in range(country_start, min(country_start + 20000, len(lines))):
+        match = re.search(r'founder_species_ref=(\d+)', lines[i])
+        if match:
+            founder_species_id = match.group(1)
+            print(f"Found founder_species_ref={founder_species_id} at line {i}")
+            break
+
+    if not founder_species_id:
+        print("⚠️  Could not find founder_species_ref in player country")
+
     # Extract species traits from species_db
     # Find species_db section (near the beginning of file)
     species_db_start = None
@@ -223,29 +232,26 @@ def parse_gamestate_simple(gamestate_path):
             print(f"Found species_db section at line {species_db_start}")
             break
 
-    if species_db_start:
-        # Strategy: Find the species with trait_wilderness (origin-specific trait)
-        # This will be the player's founder species for wilderness origin
+    if species_db_start and founder_species_id:
+        # Strategy: Find the specific species by its ID (founder_species_ref from country 0)
         traits = []
         species_found = False
-        current_species_start = None
-        founder_species_start = None  # Save the founder species location
+        founder_species_start = None
+
+        # Look for the exact species entry matching founder_species_id
+        species_pattern = re.compile(rf'^\s*{founder_species_id}=\s*$')
 
         for i in range(species_db_start, min(species_db_start + 50000, len(lines))):
-            line = lines[i].strip()
+            line = lines[i]
 
-            # Detect start of a species entry (format: "2684354561=")
-            if re.match(r'\d+=\s*$', line):
-                current_species_start = i
-
-            # Look for trait_wilderness which identifies the founder species
-            if current_species_start and 'trait="trait_wilderness"' in lines[i]:
-                print(f"Found founder species with trait_wilderness near line {i}")
+            # Match the exact species ID
+            if species_pattern.match(line):
+                print(f"Found founder species (ID={founder_species_id}) at line {i}")
                 species_found = True
-                founder_species_start = current_species_start  # Save this location
+                founder_species_start = i
 
-                # Now find the traits section for this species (search backward from current position)
-                for j in range(current_species_start, min(current_species_start + 200, len(lines))):
+                # Now find the traits section for this species
+                for j in range(i, min(i + 200, len(lines))):
                     if lines[j].strip() == 'traits=':
                         print(f"Found traits section at line {j}")
                         # Extract all traits from this section
@@ -258,14 +264,18 @@ def parse_gamestate_simple(gamestate_path):
                                 # Filter out system/automatic traits
                                 # These are traits automatically added by the game
                                 excluded_traits = {
-                                    'trait_organic', 'trait_hive_mind', 'trait_machine',
+                                    'trait_organic', 'trait_hive_mind', 'trait_machine_unit',
                                     'trait_robot', 'trait_wilderness', 'trait_clone_soldier_infertile',
                                     'trait_self_modified', 'trait_lithoid', 'trait_mechanical',
                                     'trait_cybernetic', 'trait_latent_psionic', 'trait_psionic',
-                                    'trait_nerve_stapled', 'trait_erudite', 'trait_enigmatic_intelligence'
+                                    'trait_nerve_stapled', 'trait_erudite', 'trait_enigmatic_intelligence',
+                                    'trait_auto_mod_robotic', 'trait_auto_mod_biological'
                                 }
-                                # Exclude planet preference traits (trait_pc_*)
-                                if trait.startswith('trait_pc_'):
+                                # Exclude planet preference traits (trait_pc_* and trait_machine_pc_*)
+                                if trait.startswith('trait_pc_') or trait.startswith('trait_machine_pc_'):
+                                    continue
+                                # Exclude digital/modded traits added after game start (trait_robot_digital_*)
+                                if trait.startswith('trait_robot_digital_'):
                                     continue
                                 # Only include if not in excluded set
                                 if trait not in excluded_traits:
@@ -279,7 +289,7 @@ def parse_gamestate_simple(gamestate_path):
         elif species_found:
             print(f"⚠️  Found founder species but no traits extracted")
         else:
-            print(f"⚠️  Could not find founder species in species_db")
+            print(f"⚠️  Could not find founder species (ID={founder_species_id}) in species_db")
 
     # Detect species type from the founder species traits
     # Check the traits we already extracted to determine species type
