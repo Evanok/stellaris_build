@@ -218,6 +218,7 @@ export const Home: React.FC = () => {
                                   src={`/icons/origins/${build.origin}.png`}
                                   alt=""
                                   style={{ width: '32px', height: '32px', objectFit: 'contain' }}
+                                  loading="lazy"
                                   onError={(e) => {
                                     const img = e.target as HTMLImageElement;
                                     img.style.opacity = '0';
@@ -249,6 +250,7 @@ export const Home: React.FC = () => {
                                   src={`/icons/ethics/${build.ethics.split(',')[0].trim()}.png`}
                                   alt=""
                                   style={{ width: '32px', height: '32px', objectFit: 'contain' }}
+                                  loading="lazy"
                                   onError={(e) => {
                                     const img = e.target as HTMLImageElement;
                                     img.style.opacity = '0';
@@ -280,6 +282,7 @@ export const Home: React.FC = () => {
                                   src={`/icons/authorities/${build.authority}.png`}
                                   alt=""
                                   style={{ width: '32px', height: '32px', objectFit: 'contain' }}
+                                  loading="lazy"
                                   onError={(e) => {
                                     const img = e.target as HTMLImageElement;
                                     img.style.opacity = '0';

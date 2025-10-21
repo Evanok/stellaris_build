@@ -23,6 +23,7 @@ const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type,
       height={size}
       style={{ marginRight: '8px', verticalAlign: 'middle' }}
       onError={() => setHasError(true)}
+      loading="lazy"
     />
   );
 };
