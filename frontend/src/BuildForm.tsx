@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { AuthModal } from './components/AuthModal';
 
@@ -10,6 +10,30 @@ interface BuildFormProps {
 // Icon component for game elements
 const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type, id, size = 32 }) => {
   const [hasError, setHasError] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    if (!imgRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            observer.disconnect();
+          }
+        });
+      },
+      {
+        rootMargin: '50px', // Start loading 50px before entering viewport
+      }
+    );
+
+    observer.observe(imgRef.current);
+
+    return () => observer.disconnect();
+  }, []);
 
   if (hasError) {
     return null; // Don't show anything if icon fails to load
@@ -17,13 +41,17 @@ const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type,
 
   return (
     <img
-      src={`/icons/${type}/${id}.png`}
+      ref={imgRef}
+      src={isVisible ? `/icons/${type}/${id}.png` : undefined}
       alt=""
       width={size}
       height={size}
-      style={{ marginRight: '8px', verticalAlign: 'middle' }}
+      style={{
+        marginRight: '8px',
+        verticalAlign: 'middle',
+        backgroundColor: isVisible ? 'transparent' : '#333' // Placeholder while loading
+      }}
       onError={() => setHasError(true)}
-      loading="lazy"
     />
   );
 };
