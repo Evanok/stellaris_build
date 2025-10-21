@@ -4,11 +4,30 @@
 }
 
 .build-card {
+  /* Use will-change to hint browser for GPU acceleration */
+  will-change: transform;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   cursor: pointer;
+  /* Promote to own layer for smoother animations */
+  transform: translateZ(0);
 }
 
 .build-card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 15px rgba(233, 69, 96, 0.5); /* Lueur rouge correspondant au thème */
+  /* Reduced scale for less jarring effect and better performance */
+  transform: scale(1.02) translateZ(0);
+  /* Lighter box-shadow with smaller blur for better GPU performance */
+  box-shadow: 0 4px 12px rgba(233, 69, 96, 0.4);
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .build-card {
+    transition: none;
+  }
+
+  .build-card:hover {
+    transform: none;
+    /* Keep subtle visual feedback without animation */
+    box-shadow: 0 2px 8px rgba(233, 69, 96, 0.3);
+  }
 }
