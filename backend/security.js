@@ -61,7 +61,7 @@ const apiLimiter = (req, res, next) => {
   userData.count += 1;
 
   // Check if limit exceeded
-  if (userData.count > 100) {
+  if (userData.count > 500) {
     return res.status(429).json({
       error: 'Too many requests from this IP, please try again later.',
     });
