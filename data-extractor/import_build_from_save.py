@@ -268,8 +268,9 @@ def parse_gamestate_simple(gamestate_path):
                                     'trait_robot', 'trait_wilderness', 'trait_clone_soldier_infertile',
                                     'trait_self_modified', 'trait_lithoid', 'trait_mechanical',
                                     'trait_cybernetic', 'trait_latent_psionic', 'trait_psionic',
-                                    'trait_nerve_stapled', 'trait_erudite', 'trait_enigmatic_intelligence',
-                                    'trait_auto_mod_robotic', 'trait_auto_mod_biological'
+                                    'trait_nerve_stapled', 'trait_erudite', 'trait_enigmatic_intelligence'
+                                    # Note: trait_auto_mod_robotic (Adaptive Frames) and trait_auto_mod_biological (Vocational Genomics)
+                                    # are NOT excluded - they are selectable traits at empire creation
                                 }
                                 # Exclude planet preference traits (trait_pc_* and trait_machine_pc_*)
                                 if trait.startswith('trait_pc_') or trait.startswith('trait_machine_pc_'):
