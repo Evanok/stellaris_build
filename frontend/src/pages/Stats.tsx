@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Container, Card, Row, Col, Alert, Spinner, ListGroup } from 'react-bootstrap';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 interface TopItem {
   name: string;
@@ -89,13 +89,13 @@ export default function Stats() {
               <Tooltip
                 contentStyle={{ backgroundColor: '#333', border: '1px solid #555' }}
                 labelStyle={{ color: '#fff' }}
-                formatter={(value: number, name: string, props: any) => [
+                formatter={(value: number, _name: string, props: any) => [
                   `${value} (${props.payload.percentage}%)`,
                   'Count'
                 ]}
               />
               <Bar dataKey="count" name="Usage">
-                {data.map((entry, index) => (
+                {data.map((_entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Bar>
