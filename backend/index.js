@@ -474,9 +474,11 @@ app.delete('/api/builds/:id', isAuthenticated, (req, res) => {
       return res.status(403).json({ error: 'You can only delete your own builds.' });
     }
 
-    // Proceed with deletion
-    const sql = `UPDATE builds SET deleted = 1 WHERE id = ?`;
-    db.run(sql, [id], function(err) {
+    // Proceed with deletion - also rename to avoid name conflicts
+    const timestamp = Date.now();
+    const newName = `[DELETED-${timestamp}] ${build.name}`;
+    const sql = `UPDATE builds SET deleted = 1, name = ? WHERE id = ?`;
+    db.run(sql, [newName, id], function(err) {
       if (err) {
         return res.status(500).json({ error: err.message });
       }
