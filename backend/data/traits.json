@@ -322,7 +322,7 @@
   },
   {
     "id": "trait_pc_nuked_preference",
-    "name": "Tomb World Preference",
+    "name": "Tomb World Preference (Biological)",
     "description": "Climate preference is determined by eons of evolution, design, or skillful genetic manipulation.",
     "cost": 0,
     "category": "unknown",
@@ -355,7 +355,7 @@
   },
   {
     "id": "trait_pc_gaia_preference",
-    "name": "Gaia World Preference",
+    "name": "Gaia World Preference (Biological)",
     "description": "Climate preference is determined by eons of evolution, design, or skillful genetic manipulation.",
     "cost": 0,
     "category": "unknown",
@@ -379,7 +379,7 @@
   },
   {
     "id": "trait_pc_ringworld_habitable_preference",
-    "name": "Ring World Preference",
+    "name": "Ring World Preference (Biological)",
     "description": "Climate preference is determined by eons of evolution, design, or skillful genetic manipulation.",
     "cost": 0,
     "category": "unknown",
@@ -403,7 +403,7 @@
   },
   {
     "id": "trait_pc_habitat_preference",
-    "name": "Habitat Preference",
+    "name": "Habitat Preference (Biological)",
     "description": "Climate preference is determined by eons of evolution, design, or skillful genetic manipulation.",
     "cost": 0,
     "category": "unknown",
@@ -427,7 +427,7 @@
   },
   {
     "id": "trait_pc_machine_preference",
-    "name": "Machine World Preference",
+    "name": "Machine World Preference (Biological)",
     "description": "Climate preference is determined by eons of evolution, design, or skillful genetic manipulation.",
     "cost": 0,
     "category": "unknown",
@@ -475,7 +475,7 @@
   },
   {
     "id": "trait_pc_relic_preference",
-    "name": "Relic World Preference",
+    "name": "Relic World Preference (Biological)",
     "description": "Climate preference is determined by eons of evolution, design, or skillful genetic manipulation.",
     "cost": 0,
     "category": "unknown",
@@ -499,7 +499,7 @@
   },
   {
     "id": "trait_pc_shattered_ring_habitable_preference",
-    "name": "Ring World Preference",
+    "name": "Ring World Preference (Biological)",
     "description": "Climate preference is determined by eons of evolution, design, or skillful genetic manipulation.",
     "cost": 0,
     "category": "unknown",
@@ -523,7 +523,7 @@
   },
   {
     "id": "trait_pc_gaia_preference_terraforming",
-    "name": "Gaia World Preference",
+    "name": "Gaia World Preference (Biological)",
     "description": "Climate preference is determined at the genetic level, and in this case, by accident.",
     "cost": 0,
     "category": "unknown",
@@ -664,7 +664,7 @@
   },
   {
     "id": "trait_machine_habitat_planet_preference",
-    "name": "Habitat Preference",
+    "name": "Habitat Preference (Machine)",
     "description": "Climate preference is determined by design.",
     "cost": 0,
     "category": "unknown",
@@ -713,7 +713,7 @@
   },
   {
     "id": "trait_machine_pc_gaia_preference",
-    "name": "Gaia World Preference",
+    "name": "Gaia World Preference (Robot)",
     "description": "Climate preference is determined by eons of evolution, design, or skillful genetic manipulation.",
     "cost": 0,
     "category": "unknown",
@@ -736,7 +736,7 @@
   },
   {
     "id": "trait_machine_pc_machine_preference",
-    "name": "Machine World Preference",
+    "name": "Machine World Preference (Robot)",
     "description": "Climate preference is determined by eons of evolution, design, or skillful genetic manipulation.",
     "cost": 0,
     "category": "unknown",
@@ -759,7 +759,7 @@
   },
   {
     "id": "trait_machine_pc_shattered_ring_habitable_preference",
-    "name": "Ring World Preference",
+    "name": "Ring World Preference (Robot)",
     "description": "Climate preference is determined by eons of evolution, design, or skillful genetic manipulation.",
     "cost": 0,
     "category": "unknown",
@@ -782,7 +782,7 @@
   },
   {
     "id": "trait_machine_pc_ringworld_habitable_preference",
-    "name": "Ring World Preference",
+    "name": "Ring World Preference (Robot)",
     "description": "Climate preference is determined by eons of evolution, design, or skillful genetic manipulation.",
     "cost": 0,
     "category": "unknown",
@@ -805,7 +805,7 @@
   },
   {
     "id": "trait_machine_pc_relic_preference",
-    "name": "Relic World Preference",
+    "name": "Relic World Preference (Robot)",
     "description": "Climate preference is determined by eons of evolution, design, or skillful genetic manipulation.",
     "cost": 0,
     "category": "unknown",
@@ -832,7 +832,7 @@
   },
   {
     "id": "trait_machine_pc_nuked_preference",
-    "name": "Tomb World Preference",
+    "name": "Tomb World Preference (Robot)",
     "description": "Climate preference is determined by eons of evolution, design, or skillful genetic manipulation.",
     "cost": 0,
     "category": "unknown",
@@ -923,7 +923,7 @@
       "pc_alpine_habitability": "@auto_base",
       "pc_nuked_habitability": "@auto_base"
     },
-    "effects": "['concept_automodding_habitability', Auto-Modding Habitability Preference Traits] automatically adjust to the Planet Class a Pops currently lives on.  Mutagenic Habitability picks modifiers from the Mutagenic Habitability Trait List.",
+    "effects": "Auto-Modding Habitability Preference Traits automatically adjust to the Planet Class a Pops currently lives on.  Mutagenic Habitability picks modifiers from the Mutagenic Habitability Trait List.",
     "custom_tooltip": "trait_auto_hab_preference_tt_desc",
     "slave_cost": {}
   },
@@ -2187,7 +2187,7 @@
       "positive"
     ],
     "modifier": {},
-    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Vocational Genomics picks modifiers from the Biological Auto-Mod Trait List",
+    "effects": "Auto-Modding Traits automatically adjust to better suit the job that a Pop is currently working.  Vocational Genomics picks modifiers from the Biological Auto-Mod Trait List",
     "custom_tooltip": "automodding_trait_biological_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -2489,7 +2489,7 @@
   },
   {
     "id": "trait_adaptive",
-    "name": "Adaptive",
+    "name": "Adaptive (Biological)",
     "description": "This species is highly adaptive when it comes to foreign environments.",
     "cost": 2,
     "category": "normal",
@@ -2560,7 +2560,7 @@
   },
   {
     "id": "trait_rapid_breeders",
-    "name": "Rapid Breeders",
+    "name": "Rapid Breeders (Biological)",
     "description": "This species reproduces at a very rapid rate, increasing population growth.",
     "cost": 2,
     "category": "normal",
@@ -2768,7 +2768,7 @@
   },
   {
     "id": "trait_quarrelsome",
-    "name": "Quarrelsome",
+    "name": "Quarrelsome (Biological)",
     "description": "While not inherently distrustful, members of this species are often socially combative.",
     "cost": -1,
     "category": "normal",
@@ -3161,7 +3161,7 @@
   },
   {
     "id": "trait_uplifted",
-    "name": "Uplifted",
+    "name": "Uplifted (Biological)",
     "description": "This species was uplifted from an existence of instinct and base emotion. Now burdened with sapience, they must learn to navigate free will.",
     "cost": 0,
     "category": "unknown",
@@ -3220,7 +3220,7 @@
   },
   {
     "id": "trait_deviants",
-    "name": "Deviants",
+    "name": "Deviants (Biological)",
     "description": "These people are rebellious in nature and constantly try to challenge the status-quo.",
     "cost": -1,
     "category": "normal",
@@ -3321,7 +3321,7 @@
   },
   {
     "id": "trait_fleeting",
-    "name": "Fleeting",
+    "name": "Fleeting (Biological)",
     "description": "Time is fleeting for this species. What they lack in longevity, they have to make up in other ways.",
     "cost": -1,
     "category": "normal",
@@ -3354,7 +3354,7 @@
   },
   {
     "id": "trait_fleeting_lithoid",
-    "name": "Fleeting",
+    "name": "Fleeting (Lithoid)",
     "description": "Time is fleeting for this species. What they lack in longevity, they have to make up in other ways.",
     "cost": -1,
     "category": "normal",
@@ -3389,7 +3389,7 @@
   },
   {
     "id": "trait_decadent",
-    "name": "Decadent",
+    "name": "Decadent (Biological)",
     "description": "This species believes that whenever there is hard work that needs doing, that work is always best done by somebody else.",
     "cost": -1,
     "category": "normal",
@@ -3486,7 +3486,7 @@
   },
   {
     "id": "trait_wasteful",
-    "name": "Wasteful",
+    "name": "Wasteful (Biological)",
     "description": "Members of this species seemingly have no concept of frugality and are prone to useless consumption.",
     "cost": -1,
     "category": "normal",
@@ -3557,7 +3557,7 @@
   },
   {
     "id": "trait_latent_psionic",
-    "name": "Latent Psionic",
+    "name": "Latent Psionic (Biological)",
     "description": "This species has latent psionic abilities, which are dormant in most of its members. Although quite rare, these powers will manifest in some leaders.",
     "cost": 0,
     "category": "unknown",
@@ -3588,7 +3588,7 @@
   },
   {
     "id": "trait_psionic",
-    "name": "Psionic",
+    "name": "Psionic (Biological)",
     "description": "[This.GetPsionicTraitDesc]",
     "cost": 0,
     "category": "unknown",
@@ -3677,7 +3677,7 @@
   },
   {
     "id": "trait_enigmatic_intelligence",
-    "name": "Uplifted",
+    "name": "Uplifted (Biological)",
     "description": "This species was uplifted by a benevolent extragalactic intellect and has left its pre-sapient origins behind.",
     "cost": 0,
     "category": "unknown",
@@ -4499,7 +4499,7 @@
       "automod"
     ],
     "modifier": {},
-    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Adaptive Frames picks modifiers from the Mechanical Auto-Mod Trait List",
+    "effects": "Auto-Modding Traits automatically adjust to better suit the job that a Pop is currently working.  Adaptive Frames picks modifiers from the Mechanical Auto-Mod Trait List",
     "custom_tooltip": "automodding_trait_robotic_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -5256,7 +5256,7 @@
   },
   {
     "id": "trait_robot_quarrelsome",
-    "name": "Quarrelsome",
+    "name": "Quarrelsome (Machine)",
     "description": "While not inherently distrustful, members of this species are often socially combative.",
     "cost": -1,
     "category": "robotic",
@@ -5290,7 +5290,7 @@
   },
   {
     "id": "trait_robot_deviants",
-    "name": "Deviants",
+    "name": "Deviants (Machine)",
     "description": "These people are rebellious in nature and constantly try to challenge the status-quo.",
     "cost": -1,
     "category": "robotic",
@@ -5321,7 +5321,7 @@
   },
   {
     "id": "trait_robot_decadent",
-    "name": "Decadent",
+    "name": "Decadent (Machine)",
     "description": "This species believes that whenever there is hard work that needs doing, that work is always best done by somebody else.",
     "cost": -1,
     "category": "robotic",
@@ -5353,7 +5353,7 @@
   },
   {
     "id": "trait_robot_wasteful",
-    "name": "Wasteful",
+    "name": "Wasteful (Machine)",
     "description": "Members of this species seemingly have no concept of frugality and are prone to useless consumption.",
     "cost": -1,
     "category": "robotic",
@@ -5969,7 +5969,7 @@
   },
   {
     "id": "trait_robot_digital_1",
-    "name": "Virtual",
+    "name": "Virtual (Robot)",
     "description": "Liberated from the confines of our primitive physical forms, we are primed to comprehend reality's essence.",
     "cost": 0,
     "category": "robotic",
@@ -6004,7 +6004,7 @@
   },
   {
     "id": "trait_robot_digital_2",
-    "name": "Virtual",
+    "name": "Virtual (Robot)",
     "description": "Liberated from the confines of our primitive physical forms, we are primed to comprehend reality's essence.",
     "cost": 0,
     "category": "robotic",
@@ -6487,7 +6487,7 @@
   },
   {
     "id": "trait_robot_latent_psionic",
-    "name": "Latent Psionic",
+    "name": "Latent Psionic (Robot)",
     "description": "This species has latent psionic processors, which are dormant in most of its units. Although quite rare, these powers can activate in some leaders.",
     "cost": 0,
     "category": "robotic",
@@ -6518,7 +6518,7 @@
   },
   {
     "id": "trait_robot_psionic",
-    "name": "Psionic",
+    "name": "Psionic (Robot)",
     "description": "All units of this species possess powerful psionic hardware. They can manipulate both the physical and immaterial realms by cognitive processing alone.",
     "cost": 0,
     "category": "robotic",
@@ -6614,7 +6614,7 @@
   },
   {
     "id": "trait_robot_notofthisworld",
-    "name": "Not of This World",
+    "name": "Not of This World (Robot)",
     "description": "These machines are not from this universe and are degrading slowly.",
     "cost": 0,
     "category": "unknown",
@@ -6643,7 +6643,7 @@
   },
   {
     "id": "trait_notofthisworld",
-    "name": "Not of This World",
+    "name": "Not of This World (Biological)",
     "description": "This species is not from this universe and is degrading slowly.",
     "cost": 0,
     "category": "unknown",
@@ -6696,7 +6696,7 @@
   },
   {
     "id": "trait_adaptive_lithoid",
-    "name": "Adaptive",
+    "name": "Adaptive (Lithoid)",
     "description": "This species is highly adaptive when it comes to foreign environments.",
     "cost": 2,
     "category": "unknown",
@@ -6734,7 +6734,7 @@
   },
   {
     "id": "trait_rapid_breeders_lithoid",
-    "name": "Rapid Breeders",
+    "name": "Rapid Breeders (Lithoid)",
     "description": "This species reproduces at a very rapid rate, increasing population growth.",
     "cost": 2,
     "category": "unknown",
@@ -7542,7 +7542,7 @@
     "modifier": {
       "leader_lifespan_add": -20
     },
-    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Fleeting Excellence picks modifiers from the Overtuned Auto-Mod Trait List | leader_lifespan_add: -20",
+    "effects": "Auto-Modding Traits automatically adjust to better suit the job that a Pop is currently working.  Fleeting Excellence picks modifiers from the Overtuned Auto-Mod Trait List | leader_lifespan_add: -20",
     "custom_tooltip": "automodding_trait_overtuned_tooltip",
     "slave_cost": {
       "energy": 1000
@@ -8024,1341 +8024,10 @@
       "cybernetic"
     ],
     "modifier": {},
-    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Universal Augmentations picks modifiers from the Cybernetic Auto-Mod Trait List  Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$",
+    "effects": "Auto-Modding Traits automatically adjust to better suit the job that a Pop is currently working.  Universal Augmentations picks modifiers from the Cybernetic Auto-Mod Trait List  Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$",
     "custom_tooltip": "automodding_trait_cyborg_tooltip",
     "slave_cost": {
       "energy": 1000
-    }
-  },
-  {
-    "id": "trait_cyborg_power_drills",
-    "name": "Power Drills",
-    "description": "Outfit a cyborg with a battery of power drills, and suddenly everything looks like a mineral deposit.",
-    "cost": {
-      "base": 1,
-      "modifier": {
-        "mult": 0,
-        "owner": {
-          "has_country_flag": "augmentation_bazaars_power_drills"
-        }
-      }
-    },
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "pop_output",
-      "mineral",
-      "cybernetic"
-    ],
-    "modifier": {
-      "miner_jobs_bonus_workforce_mult": 0.1
-    },
-    "effects": "miner_jobs_bonus_workforce_mult: +10.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": 750
-    }
-  },
-  {
-    "id": "trait_cyborg_harvesters",
-    "name": "Harvesters",
-    "description": "A suite of tools, from nutrient solution diagnostics and on-site balancing to per-stalk micro-threshing, enables cybernetic workers to increase produce yields.",
-    "cost": {
-      "base": 1,
-      "modifier": {
-        "mult": 0,
-        "owner": {
-          "has_country_flag": "augmentation_bazaars_harvesters"
-        }
-      }
-    },
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "pop_output",
-      "food",
-      "cybernetic"
-    ],
-    "modifier": {
-      "farmer_jobs_bonus_workforce_mult": 0.1
-    },
-    "effects": "farmer_jobs_bonus_workforce_mult: +10.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": 750
-    }
-  },
-  {
-    "id": "trait_cyborg_superconductive",
-    "name": "Superconductive",
-    "description": "The use of superconductive materials in units have cut energy transmission losses to zero percent.",
-    "cost": {
-      "base": 1,
-      "modifier": {
-        "mult": 0,
-        "owner": {
-          "has_country_flag": "augmentation_bazaars_superconductive"
-        }
-      }
-    },
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "pop_output",
-      "energy",
-      "cybernetic"
-    ],
-    "modifier": {
-      "technician_jobs_bonus_workforce_mult": 0.1
-    },
-    "effects": "technician_jobs_bonus_workforce_mult: +10.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": 750
-    }
-  },
-  {
-    "id": "trait_cyborg_efficient_processors",
-    "name": "Efficient Processors",
-    "description": "These highly efficient processors increase the both workload and endurance.",
-    "cost": 2,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "pop_output",
-      "cybernetic"
-    ],
-    "modifier": {
-      "pop_bonus_workforce_mult": 0.05
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | pop_bonus_workforce_mult: +5.0%",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 500
-    }
-  },
-  {
-    "id": "trait_cyborg_logic_engines",
-    "name": "Logic Engines",
-    "description": "Efficiently navigating the increasingly complex frontiers of science requires parallel processors to augment organic brains.",
-    "cost": 1,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "pop_output",
-      "research",
-      "cybernetic"
-    ],
-    "modifier": {
-      "researcher_jobs_bonus_workforce_mult": 0.1
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | researcher_jobs_bonus_workforce_mult: +10.0%",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 750
-    }
-  },
-  {
-    "id": "trait_cyborg_loyalty_circuits",
-    "name": "Loyalty Circuits",
-    "description": "Loyalty as an ideal is a distinctly organic concept. It is much more efficient to simply program compliance.",
-    "cost": 1,
-    "category": "cyborg",
-    "initial": true,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_apathy_loops"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "happiness",
-      "cybernetic",
-      "individual"
-    ],
-    "modifier": {
-      "pop_happiness": 0.1
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | pop_happiness: +0.1",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 500
-    }
-  },
-  {
-    "id": "trait_cyborg_double_jointed",
-    "name": "Double-Jointed",
-    "description": "Collapsible labor units with flexible joints enable them to fold neatly into stacks during transportation, then self-assemble on site.",
-    "cost": 1,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_bulky"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "housing",
-      "migration",
-      "cybernetic"
-    ],
-    "modifier": {
-      "pop_housing_usage_mult": -0.1,
-      "pop_resettlement_cost_mult": -0.35
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | pop_housing_usage_mult: -10.0%; pop_resettlement_cost_mult: -35.0%",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 1500
-    }
-  },
-  {
-    "id": "trait_cyborg_bulky",
-    "name": "Bulky",
-    "description": "These highly advanced mega-machines were not designed to traverse the universe in a box.",
-    "cost": -2,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_double_jointed"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "negative",
-      "housing",
-      "migration",
-      "cybernetic"
-    ],
-    "modifier": {
-      "pop_housing_usage_mult": 0.1,
-      "pop_resettlement_cost_mult": 0.35
-    },
-    "effects": "pop_housing_usage_mult: +10.0%; pop_resettlement_cost_mult: +35.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": -500
-    }
-  },
-  {
-    "id": "trait_cyborg_enhanced_memory",
-    "name": "Enhanced Memory",
-    "description": "A revolutionary technique fits autonomous units with memory cells using a revolutionary, new technique for magnetic induction, improving their performance significantly.",
-    "cost": 1,
-    "category": "cyborg",
-    "initial": true,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_limited_memory"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "leader",
-      "cybernetic"
-    ],
-    "modifier": {
-      "negative_leader_traits_species": -1,
-      "leaders_upkeep_mult": -0.25
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | negative_leader_traits_species: -1; leaders_upkeep_mult: -25.0%",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 750
-    }
-  },
-  {
-    "id": "trait_cyborg_durable",
-    "name": "Durable",
-    "description": "Protected by exoskeletons of chrome-plated titanium, these heavy-duty machines were designed to excel under harsh conditions and require less maintenance.",
-    "cost": 1,
-    "category": "cyborg",
-    "initial": true,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_high_maintenance"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "amenities",
-      "cybernetic"
-    ],
-    "modifier": {
-      "pop_amenities_usage_add": -0.5
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | pop_amenities_usage_add: -0.5",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 750
-    }
-  },
-  {
-    "id": "trait_cyborg_high_maintenance",
-    "name": "High Maintenance",
-    "description": "These machines were designed with a complete disregard for longevity and are prone to malfunction. They will require frequent maintenance.",
-    "cost": -2,
-    "category": "cyborg",
-    "initial": true,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_durable"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "negative",
-      "amenities",
-      "cybernetic"
-    ],
-    "modifier": {
-      "pop_amenities_usage_add": 0.5
-    },
-    "effects": "pop_amenities_usage_add: +0.5",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": -150
-    }
-  },
-  {
-    "id": "trait_cyborg_learning_algorithms",
-    "name": "Learning Algorithms",
-    "description": "Sophisticated, self-learning algorithms that stimulate the rapid evolution of a unit's neural clusters.",
-    "cost": 1,
-    "category": "cyborg",
-    "initial": true,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_neural_limiters"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "leader",
-      "cybernetic"
-    ],
-    "modifier": {
-      "species_leader_exp_gain": 0.1,
-      "negative_leader_traits_species": -1,
-      "leaders_upkeep_mult": -0.1
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | species_leader_exp_gain: +0.1; negative_leader_traits_species: -1; leaders_upkeep_mult: -10.0%",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 1500
-    }
-  },
-  {
-    "id": "trait_cyborg_power_intensive",
-    "name": "Power Intensive",
-    "description": "These cybernetic components require frequent recharging from an external power source.",
-    "cost": -1,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "negative",
-      "upkeep",
-      "cybernetic"
-    ],
-    "modifier": {},
-    "effects": "Increases Energy Credits Upkeep by +1",
-    "custom_tooltip": "TRAIT_POWER_INTENSIVE_EFFECT",
-    "slave_cost": {
-      "energy": -250
-    }
-  },
-  {
-    "id": "trait_cyborg_neural_limiters",
-    "name": "Neural Limiters",
-    "description": "By limiting the cognitive abilities of our workers we can encourage them to focus on more menial tasks.",
-    "cost": -2,
-    "category": "cyborg",
-    "initial": true,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_learning_algorithms"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "negative",
-      "leader",
-      "cybernetic"
-    ],
-    "modifier": {
-      "species_leader_exp_gain": -0.1,
-      "negative_leader_traits_species": 1,
-      "leaders_upkeep_mult": 0.1
-    },
-    "effects": "species_leader_exp_gain: -0.1; negative_leader_traits_species: +1; leaders_upkeep_mult: +10.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": -500
-    }
-  },
-  {
-    "id": "trait_cyborg_streamlined_protocols",
-    "name": "Streamlined Protocols",
-    "description": "Extensively batched AI processes allow these units to scale greatly with minimal loss of efficiency.",
-    "cost": 1,
-    "category": "cyborg",
-    "initial": true,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_high_bandwidth"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "empire_size",
-      "cybernetic"
-    ],
-    "modifier": {
-      "species_empire_size_mult": -0.1
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | species_empire_size_mult: -10.0%",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 750
-    }
-  },
-  {
-    "id": "trait_cyborg_high_bandwidth",
-    "name": "High Bandwidth",
-    "description": "Individual units send and receive a vast amount of largely duplicate data, causing exponential lag as the number of units attached to each central processing hub increases.",
-    "cost": -2,
-    "category": "cyborg",
-    "initial": true,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_streamlined_protocols"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "negative",
-      "empire_size",
-      "cybernetic"
-    ],
-    "modifier": {
-      "species_empire_size_mult": 0.1
-    },
-    "effects": "species_empire_size_mult: +10.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": -150
-    }
-  },
-  {
-    "id": "trait_cyborg_trading_algorithms",
-    "name": "Trading Algorithms",
-    "description": "Predictive algorithms allow for maximum optimization. Infinitesimal market fluctuations in currency rates, stock availability, and the emotional response of organic partners are accounted for.",
-    "cost": 1,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_scarcity_algorithms"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "pop_output",
-      "trade",
-      "cybernetic"
-    ],
-    "modifier": {
-      "trader_jobs_bonus_workforce_mult": 0.25
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | trader_jobs_bonus_workforce_mult: +25.0%",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 500
-    }
-  },
-  {
-    "id": "trait_cyborg_stainless_steel_smile",
-    "name": "Embellished Augments",
-    "description": "This species favors custom engravings, aftermarket components and paint schemes to maximize visual impact. Sometimes the only choice is to flash that chrome.",
-    "cost": 1,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_welded_countenance"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "pop_output",
-      "amenities",
-      "cybernetic"
-    ],
-    "modifier": {
-      "influential_jobs_bonus_workforce_mult": 0.2
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | influential_jobs_bonus_workforce_mult: +20.0%",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 750
-    }
-  },
-  {
-    "id": "trait_cyborg_welded_countenance",
-    "name": "Utilitarian Augments",
-    "description": "These cyborgs employ crude but functional parts with minimal consideration for aesthetics. Sometimes the job just has to get done.",
-    "cost": -2,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_stainless_steel_smile"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "leader",
-      "cybernetic"
-    ],
-    "modifier": {
-      "influential_jobs_bonus_workforce_mult": -0.2
-    },
-    "effects": "influential_jobs_bonus_workforce_mult: -20.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": -500
-    }
-  },
-  {
-    "id": "trait_cyborg_apathy_loops",
-    "name": "Abrasive Implants",
-    "description": "The implants on these cyborgs are rough and ill-fitting, resulting in subdermal irritation and regular malfunctions. Not bad on the body, but terrible on the mind.",
-    "cost": -1,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_loyalty_circuits"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "negative",
-      "happiness",
-      "cybernetic",
-      "individual"
-    ],
-    "modifier": {
-      "pop_happiness": -0.1
-    },
-    "effects": "pop_happiness: -0.1",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": -150
-    }
-  },
-  {
-    "id": "trait_cyborg_bionic_engineers",
-    "name": "Bionic Engineers",
-    "description": "Precision-crafted tools and implant modifications have been created specifically to assist in demanding engineering tasks.",
-    "cost": 1,
-    "category": "cyborg",
-    "initial": true,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_bionic_physicists",
-      "trait_cyborg_bionic_sociologists"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "pop_output",
-      "research",
-      "cybernetic"
-    ],
-    "modifier": {
-      "engineer_jobs_bonus_workforce_mult": 0.15
-    },
-    "effects": "engineer_jobs_bonus_workforce_mult: +15.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": 750
-    }
-  },
-  {
-    "id": "trait_cyborg_bionic_physicists",
-    "name": "Bionic Physicists",
-    "description": "Integrated multi-modal processing produces physics calculations on the fly without requiring a connection to an external computing unit.",
-    "cost": 1,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_bionic_engineers",
-      "trait_cyborg_bionic_sociologists"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "pop_output",
-      "research",
-      "cybernetic"
-    ],
-    "modifier": {
-      "physicist_jobs_bonus_workforce_mult": 0.15
-    },
-    "effects": "physicist_jobs_bonus_workforce_mult: +15.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": 750
-    }
-  },
-  {
-    "id": "trait_cyborg_bionic_sociologists",
-    "name": "Bionic Sociologists",
-    "description": "Empathy drivers and behavioral heuristics open a fast track to sociological research, handling complex analytics like a second brain.",
-    "cost": 1,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_bionic_physicists",
-      "trait_cyborg_bionic_engineers"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "pop_output",
-      "research",
-      "cybernetic"
-    ],
-    "modifier": {
-      "biologist_jobs_bonus_workforce_mult": 0.15
-    },
-    "effects": "biologist_jobs_bonus_workforce_mult: +15.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": 750
-    }
-  },
-  {
-    "id": "trait_cyborg_integrated_weaponry",
-    "name": "Integrated Weaponry",
-    "description": "Fusing armaments with cybernetic limbs offers instant firepower for the army and law enforcement officials alike.",
-    "cost": 1,
-    "category": "cyborg",
-    "initial": true,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_delicate_frames"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "army",
-      "cybernetic"
-    ],
-    "modifier": {
-      "army_damage_mult": 1.0,
-      "enforcer_jobs_bonus_workforce_mult": 0.2
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | army_damage_mult: +100.0%; enforcer_jobs_bonus_workforce_mult: +20.0%",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 1000
-    }
-  },
-  {
-    "id": "trait_cyborg_delicate_frames",
-    "name": "Delicate Frames",
-    "description": "Subpar components and installation have resulted in a fragile cyborg chassis. Basic operations are not compromised, but the users are advised to avoid situations with high likelihood of physical trauma.",
-    "cost": -1,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_integrated_weaponry"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "negative",
-      "army",
-      "pop_output",
-      "cybernetic"
-    ],
-    "modifier": {
-      "army_damage_mult": -0.5,
-      "worker_and_simple_drone_cat_bonus_workforce_mult": -0.05
-    },
-    "effects": "army_damage_mult: -50.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -5.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": -250
-    }
-  },
-  {
-    "id": "trait_cyborg_limited_memory",
-    "name": "Limited Memory",
-    "description": "Insufficient operational memory has bottle-necked the capacity for learning, leaving the user unable to process the entirety of their experiences.",
-    "cost": -2,
-    "category": "cyborg",
-    "initial": true,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_enhanced_memory"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "negative",
-      "leader",
-      "cybernetic"
-    ],
-    "modifier": {
-      "species_leader_exp_gain": -0.4
-    },
-    "effects": "species_leader_exp_gain: -0.4",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": -150
-    }
-  },
-  {
-    "id": "trait_cyborg_scarcity_algorithms",
-    "name": "Scarcity Algorithms",
-    "description": "Aggressively cost-aware coding hampers risk-taking and therefore denies opportunities for greater profits.",
-    "cost": -1,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_trading_algorithms",
-      "trait_thrifty"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "negative",
-      "pop_output",
-      "trade",
-      "cybernetic"
-    ],
-    "modifier": {
-      "trader_jobs_bonus_workforce_mult": -0.25
-    },
-    "effects": "trader_jobs_bonus_workforce_mult: -25.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": -150
-    }
-  },
-  {
-    "id": "trait_cyborg_climate_adjustment_dry",
-    "name": "Dry Climate Mods",
-    "description": "Bespoke modifications like fluid recycling and radiation shielding are perfect for enduring a dry climate, but less suitable in others.",
-    "cost": 1,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_climate_adjustment_wet",
-      "trait_cyborg_climate_adjustment_cold"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "habitability",
-      "cybernetic"
-    ],
-    "modifier": {
-      "pc_desert_habitability": 0.3,
-      "pc_arid_habitability": 0.3,
-      "pc_savannah_habitability": 0.3,
-      "pc_tropical_habitability": -0.1,
-      "pc_continental_habitability": -0.1,
-      "pc_tundra_habitability": -0.1,
-      "pc_arctic_habitability": -0.1,
-      "pc_ocean_habitability": -0.1,
-      "pc_alpine_habitability": -0.1
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | pc_desert_habitability: +0.3; pc_arid_habitability: +0.3; pc_savannah_habitability: +0.3; pc_tropical_habitability: -0.1; pc_continental_habitability: -0.1; pc_tundra_habitability: -0.1; pc_arctic_habitability: -0.1; pc_ocean_habitability: -0.1; pc_alpine_habitability: -0.1",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 500
-    }
-  },
-  {
-    "id": "trait_cyborg_climate_adjustment_wet",
-    "name": "Wet Climate Mods",
-    "description": "Heavy insulation and alien bioform protection suited for wet climates, but detrimental in others.",
-    "cost": 1,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_climate_adjustment_cold",
-      "trait_cyborg_climate_adjustment_dry"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "habitability",
-      "cybernetic"
-    ],
-    "modifier": {
-      "pc_tropical_habitability": 0.3,
-      "pc_continental_habitability": 0.3,
-      "pc_ocean_habitability": 0.3,
-      "pc_desert_habitability": -0.1,
-      "pc_arid_habitability": -0.1,
-      "pc_savannah_habitability": -0.1,
-      "pc_arctic_habitability": -0.1,
-      "pc_tundra_habitability": -0.1,
-      "pc_alpine_habitability": -0.1
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | pc_tropical_habitability: +0.3; pc_continental_habitability: +0.3; pc_ocean_habitability: +0.3; pc_desert_habitability: -0.1; pc_arid_habitability: -0.1; pc_savannah_habitability: -0.1; pc_arctic_habitability: -0.1; pc_tundra_habitability: -0.1; pc_alpine_habitability: -0.1",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 500
-    }
-  },
-  {
-    "id": "trait_cyborg_climate_adjustment_cold",
-    "name": "Cold Climate Mods",
-    "description": "Enhanced heating components and frost-resistant lubricants help in cold climates but are a hindrance in others.",
-    "cost": 1,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [
-      "trait_cyborg_climate_adjustment_wet",
-      "trait_cyborg_climate_adjustment_dry"
-    ],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "habitability",
-      "cybernetic"
-    ],
-    "modifier": {
-      "pc_alpine_habitability": 0.3,
-      "pc_tundra_habitability": 0.3,
-      "pc_arctic_habitability": 0.3,
-      "pc_desert_habitability": -0.1,
-      "pc_arid_habitability": -0.1,
-      "pc_savannah_habitability": -0.1,
-      "pc_ocean_habitability": -0.1,
-      "pc_continental_habitability": -0.1,
-      "pc_tropical_habitability": -0.1
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | pc_alpine_habitability: +0.3; pc_tundra_habitability: +0.3; pc_arctic_habitability: +0.3; pc_desert_habitability: -0.1; pc_arid_habitability: -0.1; pc_savannah_habitability: -0.1; pc_ocean_habitability: -0.1; pc_continental_habitability: -0.1; pc_tropical_habitability: -0.1",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 500
-    }
-  },
-  {
-    "id": "trait_cyborg_ancient_dreadnought",
-    "name": "Ancient Dreadnought",
-    "description": "Equipped with miniaturized energy modules, there is a marked enhancement in industrial productivity and an increase in frame-integrated weaponry damage.",
-    "cost": 2,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "army",
-      "pop_output",
-      "alloys",
-      "leviathan",
-      "cybernetic"
-    ],
-    "modifier": {
-      "army_damage_mult": 5,
-      "foundry_jobs_bonus_workforce_mult": 0.15
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | army_damage_mult: +500%; foundry_jobs_bonus_workforce_mult: +15.0%",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 1500
-    }
-  },
-  {
-    "id": "trait_cyborg_enigmatic_fortress",
-    "name": "Enigmatic Fortress",
-    "description": "Enigmatic self-repair routines can source materials directly from subspace, dramatically lowering the material expenses associated with repairs.",
-    "cost": 2,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "amenities",
-      "leviathan",
-      "cybernetic"
-    ],
-    "modifier": {
-      "pop_amenities_usage_mult": -0.5
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | pop_amenities_usage_mult: -50.0%",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 1500
-    }
-  },
-  {
-    "id": "trait_cyborg_infinity_sphere",
-    "name": "Infinity Sphere",
-    "description": "Hyperefficient, gravity-resistant processing circuits that minimize energy waste and substantially cut processing costs.",
-    "cost": 2,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "upkeep",
-      "research",
-      "cybernetic"
-    ],
-    "modifier": {
-      "planet_researchers_upkeep_mult": -0.5
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | planet_researchers_upkeep_mult: -50.0%",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 1500
-    }
-  },
-  {
-    "id": "trait_cyborg_scavenger_bot",
-    "name": "Scavenger Bot",
-    "description": "Advanced molecular scavenging can transform any substance into the required materials for constructing robotic frames.",
-    "cost": 2,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "pop_growth",
-      "leviathan",
-      "cybernetic"
-    ],
-    "modifier": {
-      "logistic_growth_mult": 1
-    },
-    "effects": "Increases Energy Credits Upkeep by +$@cyborg_energy_upkeep$ | logistic_growth_mult: +100%",
-    "custom_tooltip": "CYBORG_ENERGY_UPKEEP_EFFECT",
-    "slave_cost": {
-      "energy": 1500
-    }
-  },
-  {
-    "id": "trait_cyborg_creed_of_construction",
-    "name": "Augmentations of the Fellowship",
-    "description": "The Fellowship of the Hammer's uses divine augmentation to create everything the faithful need.",
-    "cost": 0,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "pop_output",
-      "alloys",
-      "consumer_goods",
-      "unity",
-      "cybernetic",
-      "special"
-    ],
-    "modifier": {
-      "foundry_jobs_bonus_workforce_mult": 0.2,
-      "artisan_jobs_bonus_workforce_mult": 0.2,
-      "bureaucrat_jobs_bonus_workforce_mult": 0.1
-    },
-    "effects": "foundry_jobs_bonus_workforce_mult: +20.0%; artisan_jobs_bonus_workforce_mult: +20.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": 500
-    }
-  },
-  {
-    "id": "trait_cyborg_creed_of_war",
-    "name": "Augmentations of the Templars",
-    "description": "The divine augmentations of the Templars of Steel make our holy warriors unstoppable in battle.",
-    "cost": 0,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "army",
-      "pop_output",
-      "unity",
-      "cybernetic",
-      "special"
-    ],
-    "modifier": {
-      "army_health": 0.25,
-      "army_defense_damage_mult": 0.25,
-      "bureaucrat_jobs_bonus_workforce_mult": 0.1
-    },
-    "effects": "army_health: +0.25; army_defense_damage_mult: +25.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": 500
-    }
-  },
-  {
-    "id": "trait_cyborg_creed_of_research",
-    "name": "Augmentations of the Choir",
-    "description": "The Choir of the Mind's semi-interlinked consciousness allows instant communication between researchers.",
-    "cost": 0,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "pop_output",
-      "research",
-      "unity",
-      "cybernetic",
-      "special"
-    ],
-    "modifier": {
-      "researcher_jobs_bonus_workforce_mult": 0.2,
-      "bureaucrat_jobs_bonus_workforce_mult": 0.1
-    },
-    "effects": "researcher_jobs_bonus_workforce_mult: +20.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": 500
-    }
-  },
-  {
-    "id": "trait_cyborg_creed_of_labor",
-    "name": "Augmentations of the Commune",
-    "description": "The Commune of Toil's divine augmentations surpass traditional tools in every respect.",
-    "cost": 0,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "happiness",
-      "pop_output",
-      "unity",
-      "cybernetic",
-      "special"
-    ],
-    "modifier": {
-      "pop_cat_worker_bonus_workforce_mult": 0.2,
-      "bureaucrat_jobs_bonus_workforce_mult": 0.1
-    },
-    "effects": "pop_cat_worker_bonus_workforce_mult: +20.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": 500
-    }
-  },
-  {
-    "id": "trait_cyborg_ritualistic_implants",
-    "name": "Ritualistic Implants",
-    "description": "These implants are proudly adorned by the faithful. Their dedication to the divine is an inspiration to all.",
-    "cost": 0,
-    "category": "cyborg",
-    "initial": false,
-    "randomized": false,
-    "modification_species_add": true,
-    "opposites": [],
-    "prerequisites": [],
-    "allowed_archetypes": [
-      "BIOLOGICAL",
-      "LITHOID"
-    ],
-    "tags": [
-      "organic",
-      "positive",
-      "army",
-      "pop_output",
-      "alloys",
-      "consumer_goods",
-      "research",
-      "unity",
-      "cybernetic",
-      "special"
-    ],
-    "modifier": {
-      "foundry_jobs_bonus_workforce_mult": 0.05,
-      "engineer_jobs_bonus_workforce_mult": 0.05,
-      "bureaucrat_jobs_bonus_workforce_mult": 0.1,
-      "pop_cat_worker_bonus_workforce_mult": 0.05,
-      "army_damage_mult": 0.05
-    },
-    "effects": "foundry_jobs_bonus_workforce_mult: +5.0%; engineer_jobs_bonus_workforce_mult: +5.0%; bureaucrat_jobs_bonus_workforce_mult: +10.0%; pop_cat_worker_bonus_workforce_mult: +5.0%; army_damage_mult: +5.0%",
-    "custom_tooltip": "",
-    "slave_cost": {
-      "energy": 500
     }
   },
   {
@@ -10212,7 +8881,7 @@
       "special"
     ],
     "modifier": {},
-    "effects": "Species with this Trait cannot be Genetically Modified ['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working. Malleable Genes picks modifiers from the Malleable Genes Auto-Mod Trait List",
+    "effects": "Species with this Trait cannot be Genetically Modified  Auto-Modding Traits automatically adjust to better suit the job that a Pop is currently working. Malleable Genes picks modifiers from the Malleable Genes Auto-Mod Trait List",
     "custom_tooltip": "trait_malleable_genes_cant_modify",
     "slave_cost": {
       "energy": 500
@@ -10462,7 +9131,7 @@
       "special"
     ],
     "modifier": {},
-    "effects": "['concept_automodding_traits', Auto-Modding Traits] automatically adjust to better suit the job that a Pop is currently working.  Adaptive Mutations picks modifiers from the Adaptive Mutations Auto-Mod Trait List",
+    "effects": "Auto-Modding Traits automatically adjust to better suit the job that a Pop is currently working.  Adaptive Mutations picks modifiers from the Adaptive Mutations Auto-Mod Trait List",
     "custom_tooltip": "automodding_trait_adaptive_mutations_tt",
     "slave_cost": {
       "energy": 500

@@ -7,6 +7,7 @@ Extracts species traits from Stellaris game files and outputs to JSON
 import json
 import os
 import sys
+from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List, Any
 from paradox_parser import parse_stellaris_file
@@ -284,14 +285,45 @@ def extract_all_traits(stellaris_path: str, output_file: str = "output/traits.js
             traits = extract_traits_from_file(filepath, localizations)
             all_traits.extend(traits)
 
+    # Filter out cyborg traits (not selectable at empire creation, only after ascension)
+    # This prevents duplicate trait names in the UI (e.g., "Bulky" appearing twice for robot and cyborg)
+    filtered_traits = [t for t in all_traits if '_cyborg_' not in t.get('id', '')]
+
+    removed_count = len(all_traits) - len(filtered_traits)
+    if removed_count > 0:
+        print(f"Filtered out {removed_count} cyborg traits (post-ascension only)")
+
+    # Add archetype suffix to trait names when there are duplicates
+    # Group traits by name to find duplicates
+    by_name = defaultdict(list)
+    for trait in filtered_traits:
+        by_name[trait.get('name', '')].append(trait)
+
+    # For duplicate names, add archetype suffix
+    duplicate_count = 0
+    for name, traits in by_name.items():
+        if len(traits) > 1:
+            duplicate_count += 1
+            for trait in traits:
+                archetypes = trait.get('allowed_archetypes', [])
+                if archetypes:
+                    # Use the first archetype as the suffix
+                    archetype = archetypes[0]
+                    # Capitalize and format: BIOLOGICAL -> Biological
+                    archetype_formatted = archetype.capitalize()
+                    trait['name'] = f"{name} ({archetype_formatted})"
+
+    if duplicate_count > 0:
+        print(f"Added archetype suffix to {duplicate_count} duplicate trait names")
+
     # Create output directory if it doesn't exist
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
     # Write to JSON
     with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(all_traits, f, indent=2, ensure_ascii=False)
+        json.dump(filtered_traits, f, indent=2, ensure_ascii=False)
 
-    print(f"\nTotal traits extracted: {len(all_traits)}")
+    print(f"\nTotal traits extracted: {len(filtered_traits)}")
     print(f"Output saved to: {output_file}")
 
 
