@@ -119,6 +119,20 @@ const setupDatabase = () => {
       }
     });
 
+    // Add species_class column if it doesn't exist (for species appearance selection)
+    db.run(`ALTER TABLE builds ADD COLUMN species_class TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding species_class column:', err.message);
+      }
+    });
+
+    // Add portrait column if it doesn't exist (for species portrait selection)
+    db.run(`ALTER TABLE builds ADD COLUMN portrait TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding portrait column:', err.message);
+      }
+    });
+
     // Migrate users table for OAuth (for existing databases)
     db.run(`ALTER TABLE users ADD COLUMN email TEXT`, (err) => {
       if (err && !err.message.includes('duplicate column')) {

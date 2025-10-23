@@ -370,6 +370,17 @@ app.get('/api/ruler-traits', (req, res) => {
   });
 });
 
+// Get all species classes with their portraits
+app.get('/api/species-classes', (req, res) => {
+  fs.readFile('./data/species_classes.json', 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json({ error: "Could not read species classes data." });
+      return;
+    }
+    res.json(JSON.parse(data));
+  });
+});
+
 // Get all builds (excluding soft-deleted ones)
 app.get('/api/builds', (req, res) => {
   const sql = "SELECT * FROM builds WHERE deleted = 0 ORDER BY created_at DESC";
@@ -412,7 +423,7 @@ app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
 
   // Sanitize input data to prevent XSS
   const sanitizedData = sanitizeBuildData(req.body);
-  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags } = sanitizedData;
+  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags } = sanitizedData;
 
   // Get author_id from authenticated user
   const author_id = req.user.id;
@@ -427,8 +438,8 @@ app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
     }
 
     // If no duplicate, proceed with insert
-    const sql = `INSERT INTO builds (name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags, author_id];
+    const sql = `INSERT INTO builds (name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, author_id];
 
     db.run(sql, params, function(err) {
       if (err) {

@@ -212,6 +212,16 @@ interface RulerTrait {
   icon?: string;
 }
 
+interface SpeciesClass {
+  id: string;
+  name: string;
+  description: string;
+  archetype: string;
+  graphical_culture: string;
+  portraits: string[];
+  portrait_count: number;
+}
+
 // Stellaris 4.X base rules (can be modified by origins)
 const BASE_MAX_TRAIT_POINTS = 2;
 const BASE_MAX_TRAIT_COUNT = 5;
@@ -287,6 +297,11 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
   // Ruler traits data from API
   const [allRulerTraits, setAllRulerTraits] = useState<RulerTrait[]>([]);
   const [selectedRulerTrait, setSelectedRulerTrait] = useState<string>('');
+
+  // Species class and portrait data from API
+  const [allSpeciesClasses, setAllSpeciesClasses] = useState<SpeciesClass[]>([]);
+  const [selectedSpeciesClass, setSelectedSpeciesClass] = useState<string>('');
+  const [selectedPortrait, setSelectedPortrait] = useState<string>('');
 
   // UI state
   const [error, setError] = useState<string | null>(null);
@@ -476,6 +491,21 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
         setAllRulerTraits(sanitizedTraits);
       })
       .catch(() => setError('Could not load ruler traits data.'));
+
+    // Load species classes
+    fetch('/api/species-classes')
+      .then(res => res.json())
+      .then(data => {
+        const sanitizedClasses = data
+          .map((sc: any) => ({
+            ...sc,
+            portraits: Array.isArray(sc.portraits) ? sc.portraits : [],
+          }))
+          .sort((a: any, b: any) => a.name.localeCompare(b.name));
+
+        setAllSpeciesClasses(sanitizedClasses);
+      })
+      .catch(() => setError('Could not load species classes data.'));
   }, []);
 
   // Populate form with initialData (from imports)
@@ -987,7 +1017,9 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
           authority: selectedAuthority,
           ascension_perks: selectedAscensionPerks.join(', '), // Convert array to comma-separated string
           traditions: selectedTraditions.join(', '), // Convert array to comma-separated string
-          ruler_trait: selectedRulerTrait
+          ruler_trait: selectedRulerTrait,
+          species_class: selectedSpeciesClass,
+          portrait: selectedPortrait
         }),
       });
 
@@ -1128,6 +1160,99 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
               ))}
             </div>
           </div>
+
+          {/* Species Class Selector */}
+          <div className="mb-3">
+            <label className="form-label">Species Appearance</label>
+            <select
+              className="form-select bg-secondary text-white border-secondary"
+              value={selectedSpeciesClass}
+              onChange={(e) => {
+                setSelectedSpeciesClass(e.target.value);
+                // Reset portrait when changing species class
+                setSelectedPortrait('');
+              }}
+            >
+              <option value="">-- Select Species Appearance --</option>
+              {allSpeciesClasses.map(sc => (
+                <option key={sc.id} value={sc.id}>
+                  {sc.name} ({sc.portrait_count} portraits)
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Portrait Selector */}
+          {selectedSpeciesClass && (
+            <div className="mb-3">
+              <label className="form-label">
+                Portrait ({allSpeciesClasses.find(sc => sc.id === selectedSpeciesClass)?.portraits.length || 0} available)
+              </label>
+              <div className="row g-2">
+                {allSpeciesClasses
+                  .find(sc => sc.id === selectedSpeciesClass)
+                  ?.portraits.map(portraitId => (
+                    <div key={portraitId} className="col-auto">
+                      <div
+                        className={`border rounded p-2 ${selectedPortrait === portraitId ? 'border-primary border-3 bg-primary bg-opacity-10' : 'border-secondary'}`}
+                        style={{
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                        }}
+                        onClick={() => setSelectedPortrait(portraitId)}
+                        title={portraitId}
+                        onMouseEnter={(e) => {
+                          if (selectedPortrait !== portraitId) {
+                            e.currentTarget.classList.add('border-info');
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.classList.remove('border-info');
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: '96px',
+                            height: '96px',
+                            backgroundColor: '#1a1a2e',
+                            borderRadius: '8px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '4px',
+                            padding: '8px',
+                          }}
+                        >
+                          <div style={{
+                            fontSize: '32px',
+                            filter: selectedPortrait === portraitId ? 'grayscale(0%) brightness(1.2)' : 'grayscale(50%)',
+                            transition: 'filter 0.2s',
+                          }}>
+                            👤
+                          </div>
+                          <div style={{
+                            fontSize: '9px',
+                            wordBreak: 'break-word',
+                            color: selectedPortrait === portraitId ? '#0dcaf0' : '#6c757d',
+                            fontWeight: selectedPortrait === portraitId ? 'bold' : 'normal',
+                            textAlign: 'center',
+                            width: '100%',
+                          }}>
+                            {portraitId}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+              {!selectedPortrait && (
+                <small className="text-muted d-block mt-1">
+                  Click on a portrait to select it
+                </small>
+              )}
+            </div>
+          )}
 
           {/* Species Traits */}
           <div className="mb-3">
