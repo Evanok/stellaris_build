@@ -10,6 +10,7 @@ import Login from './pages/Login';
 // Lazy load heavy pages (with recharts, large forms, etc.)
 const CreateChoice = lazy(() => import('./pages/CreateChoice'));
 const CreateManual = lazy(() => import('./pages/CreateManual'));
+const EditBuild = lazy(() => import('./pages/EditBuild'));
 const ImportSave = lazy(() => import('./pages/ImportSave'));
 const ImportEmpireDesigns = lazy(() => import('./pages/ImportEmpireDesigns'));
 const BuildDetail = lazy(() => import('./pages/BuildDetail').then(module => ({ default: module.BuildDetail })));
@@ -39,6 +40,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/create" element={<CreateChoice />} />
               <Route path="/create/manual" element={<CreateManual />} />
+              <Route path="/edit/:id" element={<EditBuild />} />
               <Route path="/create/import-save" element={<ImportSave />} />
               <Route path="/create/import-designs" element={<ImportEmpireDesigns />} />
               <Route path="/build/:id" element={<BuildDetail />} />

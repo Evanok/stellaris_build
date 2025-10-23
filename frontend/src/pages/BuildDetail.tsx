@@ -812,14 +812,23 @@ export const BuildDetail: React.FC = () => {
             Back to Builds
           </Link>
           {user && build.author_id === user.id && (
-            <button
-              onClick={handleDelete}
-              className="btn btn-danger btn-lg"
-              disabled={deleting}
-            >
-              <i className="bi bi-trash me-2"></i>
-              {deleting ? 'Deleting...' : 'Delete Build'}
-            </button>
+            <>
+              <Link
+                to={`/edit/${id}`}
+                className="btn btn-warning btn-lg me-3"
+              >
+                <i className="bi bi-pencil me-2"></i>
+                Edit Build
+              </Link>
+              <button
+                onClick={handleDelete}
+                className="btn btn-danger btn-lg"
+                disabled={deleting}
+              >
+                <i className="bi bi-trash me-2"></i>
+                {deleting ? 'Deleting...' : 'Delete Build'}
+              </button>
+            </>
           )}
           {deleteError && (
             <div className="alert alert-danger mt-3">

@@ -5,6 +5,7 @@ import { AuthModal } from './components/AuthModal';
 interface BuildFormProps {
   onBuildCreated: (newBuild: any) => void;
   initialData?: any; // Optional pre-filled data from imports
+  buildId?: string; // If provided, the form is in edit mode
 }
 
 // Icon component for game elements
@@ -234,7 +235,8 @@ const ORIGINS_WITH_SECONDARY_SPECIES = [
   'origin_overtuned',
 ];
 
-export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialData }) => {
+export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialData, buildId }) => {
+  const isEditMode = !!buildId;
   // Form fields state
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -960,8 +962,11 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
     setSubmitting(true);
 
     try {
-      const response = await fetch('/api/builds', {
-        method: 'POST',
+      const url = isEditMode ? `/api/builds/${buildId}` : '/api/builds';
+      const method = isEditMode ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -1024,7 +1029,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
   return (
     <div className="card bg-dark border-secondary mb-4">
       <div className="card-body">
-        <h3 className="card-title">Create a New Build</h3>
+        <h3 className="card-title">{isEditMode ? 'Edit Build' : 'Create a New Build'}</h3>
         <form id="build-form" onSubmit={handleSubmit}>
           {error && <div className="alert alert-danger">{error}</div>}
 
@@ -1907,7 +1912,7 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
           </div>
 
           <button type="submit" className="btn btn-primary" disabled={submitting || hasInvalidTraits || exceedsEthicsPoints || !isBuildComplete()}>
-            {submitting ? 'Submitting...' : 'Submit Build'}
+            {submitting ? (isEditMode ? 'Updating...' : 'Submitting...') : (isEditMode ? 'Update Build' : 'Submit Build')}
           </button>
           {hasInvalidTraits && (
             <small className="text-danger ms-2">Cannot submit: trait limits exceeded</small>

@@ -382,6 +382,23 @@ app.get('/api/builds', (req, res) => {
   });
 });
 
+// Get a single build by ID
+app.get('/api/builds/:id', (req, res) => {
+  const { id } = req.params;
+  const sql = "SELECT * FROM builds WHERE id = ? AND deleted = 0";
+  db.get(sql, [id], (err, row) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    if (!row) {
+      res.status(404).json({ error: 'Build not found' });
+      return;
+    }
+    res.json({ build: row });
+  });
+});
+
 // Create a new build (requires authentication + rate limiting)
 app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
   // Validate input data
@@ -481,6 +498,85 @@ app.delete('/api/builds/:id', isAuthenticated, (req, res) => {
         return res.status(500).json({ error: err.message });
       }
       res.json({ message: 'Build deleted successfully.', id: parseInt(id) });
+    });
+  });
+});
+
+// Update/Edit a build by ID (requires authentication and ownership)
+app.put('/api/builds/:id', isAuthenticated, createBuildLimiter, (req, res) => {
+  const { id } = req.params;
+  const userId = req.user.id;
+
+  // Validate input data
+  const validationErrors = validateBuildData(req.body);
+  if (validationErrors.length > 0) {
+    return res.status(400).json({
+      error: 'Validation failed',
+      details: validationErrors
+    });
+  }
+
+  // Sanitize input data to prevent XSS
+  const sanitizedData = sanitizeBuildData(req.body);
+  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags } = sanitizedData;
+
+  // First, check if the build exists and belongs to the user
+  db.get('SELECT * FROM builds WHERE id = ? AND deleted = 0', [id], (err, build) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    if (!build) {
+      return res.status(404).json({ error: 'Build not found or already deleted.' });
+    }
+
+    // Check if user is the author
+    if (build.author_id !== userId) {
+      return res.status(403).json({ error: 'You can only edit your own builds.' });
+    }
+
+    // Check if the new name conflicts with another build (but allow keeping the same name)
+    db.get(`SELECT id FROM builds WHERE name = ? AND id != ?`, [name, id], (err, row) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      if (row) {
+        return res.status(409).json({ error: 'A build with this name already exists. Please choose a different name.' });
+      }
+
+      // Proceed with update
+      const sql = `UPDATE builds SET
+        name = ?,
+        description = ?,
+        game_version = ?,
+        youtube_url = ?,
+        source_url = ?,
+        difficulty = ?,
+        civics = ?,
+        traits = ?,
+        secondary_traits = ?,
+        origin = ?,
+        ethics = ?,
+        authority = ?,
+        ascension_perks = ?,
+        traditions = ?,
+        ruler_trait = ?,
+        dlcs = ?,
+        tags = ?
+      WHERE id = ?`;
+
+      const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, dlcs, tags, id];
+
+      db.run(sql, params, function(err) {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+        res.json({
+          message: 'Build updated successfully.',
+          id: parseInt(id),
+          changes: this.changes
+        });
+      });
     });
   });
 });
