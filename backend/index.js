@@ -282,6 +282,66 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'Hello from the backend!' });
 });
 
+// TEST ENDPOINT: Login as test user (development only)
+app.post('/api/test/login', (req, res) => {
+  // Only allow in development
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(403).json({ error: 'Test endpoints are disabled in production' });
+  }
+
+  // Create or get test user
+  const testUser = {
+    username: 'test-user',
+    email: 'test@playwright.test',
+    provider: 'test',
+    provider_id: 'test-user-id',
+    avatar: null
+  };
+
+  db.get(
+    'SELECT * FROM users WHERE provider = ? AND provider_id = ?',
+    [testUser.provider, testUser.provider_id],
+    (err, existingUser) => {
+      if (err) {
+        return res.status(500).json({ error: 'Database error' });
+      }
+
+      if (existingUser) {
+        // User exists, log them in
+        req.login(existingUser, (loginErr) => {
+          if (loginErr) {
+            return res.status(500).json({ error: 'Login failed' });
+          }
+          res.json({ success: true, user: existingUser });
+        });
+      } else {
+        // Create new test user
+        db.run(
+          'INSERT INTO users (username, email, provider, provider_id, avatar) VALUES (?, ?, ?, ?, ?)',
+          [testUser.username, testUser.email, testUser.provider, testUser.provider_id, testUser.avatar],
+          function (insertErr) {
+            if (insertErr) {
+              return res.status(500).json({ error: 'Failed to create test user' });
+            }
+
+            const newUser = {
+              id: this.lastID,
+              ...testUser
+            };
+
+            req.login(newUser, (loginErr) => {
+              if (loginErr) {
+                return res.status(500).json({ error: 'Login failed' });
+              }
+              res.json({ success: true, user: newUser });
+            });
+          }
+        );
+      }
+    }
+  );
+});
+
 // Get all traits
 app.get('/api/traits', (req, res) => {
   fs.readFile('./data/traits.json', 'utf8', (err, data) => {
