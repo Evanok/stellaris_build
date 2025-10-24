@@ -342,6 +342,38 @@ app.post('/api/test/login', (req, res) => {
   );
 });
 
+// TEST ENDPOINT: Cleanup test builds (development only)
+app.post('/api/test/cleanup', (req, res) => {
+  // Only allow in development
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(403).json({ error: 'Test endpoints are disabled in production' });
+  }
+
+  // Delete all builds created by test user
+  db.get('SELECT id FROM users WHERE provider = ? AND provider_id = ?', ['test', 'test-user-id'], (err, testUser) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error finding test user' });
+    }
+
+    if (!testUser) {
+      return res.json({ success: true, message: 'No test user found, nothing to clean' });
+    }
+
+    // Delete all builds from test user
+    db.run('DELETE FROM builds WHERE author_id = ?', [testUser.id], function(deleteErr) {
+      if (deleteErr) {
+        return res.status(500).json({ error: 'Failed to delete test builds' });
+      }
+
+      res.json({
+        success: true,
+        deletedCount: this.changes,
+        message: `Deleted ${this.changes} test build(s)`
+      });
+    });
+  });
+});
+
 // Get all traits
 app.get('/api/traits', (req, res) => {
   fs.readFile('./data/traits.json', 'utf8', (err, data) => {
@@ -488,8 +520,8 @@ app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
   // Get author_id from authenticated user
   const author_id = req.user.id;
 
-  // Check if a build with the same name already exists
-  db.get(`SELECT id FROM builds WHERE name = ?`, [name], (err, row) => {
+  // Check if a build with the same name already exists (excluding deleted builds)
+  db.get(`SELECT id FROM builds WHERE name = ? AND deleted = 0`, [name], (err, row) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
@@ -609,7 +641,7 @@ app.put('/api/builds/:id', isAuthenticated, createBuildLimiter, (req, res) => {
     }
 
     // Check if the new name conflicts with another build (but allow keeping the same name)
-    db.get(`SELECT id FROM builds WHERE name = ? AND id != ?`, [name, id], (err, row) => {
+    db.get(`SELECT id FROM builds WHERE name = ? AND id != ? AND deleted = 0`, [name, id], (err, row) => {
       if (err) {
         return res.status(500).json({ error: err.message });
       }

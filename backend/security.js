@@ -78,6 +78,11 @@ const createBuildLimiter = (req, res, next) => {
     return next();
   }
 
+  // Skip rate limiting for test users
+  if (req.user.provider === 'test' && req.user.provider_id === 'test-user-id') {
+    return next();
+  }
+
   const key = req.user.id.toString();
   const now = Date.now();
   const oneHour = 60 * 60 * 1000;

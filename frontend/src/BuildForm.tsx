@@ -801,10 +801,8 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
       return;
     }
 
-    // If selecting, check if it's allowed
-    if (canSelectTrait(trait)) {
-      setSelectedTraits(prev => [...prev, traitId]);
-    }
+    // If selecting, always allow (validation will show errors if limits exceeded)
+    setSelectedTraits(prev => [...prev, traitId]);
   };
 
   const handleEthicsChange = (ethicId: string) => {
@@ -1274,14 +1272,14 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
 
             {/* Warning if limits exceeded */}
             {hasInvalidTraits && (
-              <div className="alert alert-danger mb-2">
+              <div id="trait-validation-error" className="alert alert-danger mb-2">
                 <strong>⚠️ Trait limits exceeded!</strong>
                 <div className="mt-1">
                   {exceedsTraitCount && (
-                    <div>You have {selectedTraits.length} traits but the limit is {MAX_TRAIT_COUNT}. Please deselect {selectedTraits.length - MAX_TRAIT_COUNT} trait{selectedTraits.length - MAX_TRAIT_COUNT > 1 ? 's' : ''}.</div>
+                    <div id="trait-count-error">You have {selectedTraits.length} traits but the limit is {MAX_TRAIT_COUNT}. Please deselect {selectedTraits.length - MAX_TRAIT_COUNT} trait{selectedTraits.length - MAX_TRAIT_COUNT > 1 ? 's' : ''}.</div>
                   )}
                   {exceedsTraitPoints && (
-                    <div>You have {currentTraitPoints} points but the limit is {MAX_TRAIT_POINTS}. Please adjust your trait selection.</div>
+                    <div id="trait-points-error">You have {currentTraitPoints} points but the limit is {MAX_TRAIT_POINTS}. Please adjust your trait selection.</div>
                   )}
                 </div>
               </div>
@@ -1326,14 +1324,12 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
                 {filteredTraits.length > 0 ? (
                   filteredTraits.map(trait => {
                     const isSelected = selectedTraits.includes(trait.id);
-                    const canSelect = canSelectTrait(trait);
-                    const isDisabled = !isSelected && !canSelect;
+                    // Don't disable traits - let user select freely and show validation errors
 
                     return (
                       <div
                         key={trait.id}
-                        className={`form-check mb-2 pb-2 border-bottom border-dark ${isDisabled ? 'opacity-50' : ''}`}
-                        style={{ opacity: isDisabled ? 0.5 : 1 }}
+                        className="form-check mb-2 pb-2 border-bottom border-dark"
                       >
                         <input
                           className="form-check-input"
@@ -1341,12 +1337,11 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
                           id={`trait-${trait.id}`}
                           checked={isSelected}
                           onChange={() => handleTraitChange(trait.id)}
-                          disabled={isDisabled}
                         />
                         <label
                           className="form-check-label"
                           htmlFor={`trait-${trait.id}`}
-                          style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
+                          style={{ cursor: 'pointer' }}
                           title={trait.description || 'No description available'}
                         >
                           <GameIcon type="traits" id={trait.id} size={32} />
@@ -1360,9 +1355,6 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
                                 <span key={idx} className="badge bg-secondary me-1">{tag}</span>
                               ))}
                             </span>
-                          )}
-                          {isDisabled && !isSelected && (
-                            <span className="badge bg-warning text-dark ms-2">Cannot select</span>
                           )}
                           <small className="d-block text-light mt-1">{trait.effects || 'No effects listed'}</small>
                         </label>
