@@ -418,3 +418,82 @@ Planned features (not yet implemented):
 - Community features (favorites, build of the month)
 - Build editing (only by author)
 - User-specific build management dashboard
+
+---
+
+## CURRENT WORK IN PROGRESS (2025-10-24)
+
+### Issue: Production Bug - React Error #31 on Build 12
+
+**Status:** Bug fix complete, testing in progress
+
+**Problem:**
+- Build 12 "The Guilded Vault Conglomerate V2" crashes with React error #31
+- Error: "Objects are not valid as a React child (found: object with keys {base, modifier})"
+- Cause: Trait `trait_auto_mod_robotic` has `cost` as object `{base: 3, modifier: {...}}` instead of number
+- React tried to render this object directly in BuildDetail.tsx line 414
+
+**Solution Implemented:**
+1. ✅ Added `getTraitCost()` helper function in `frontend/src/pages/BuildDetail.tsx`
+   - Safely extracts numeric cost from trait objects
+   - Handles both `number` and `{base: number, modifier: object}` formats
+   - Applied pattern already used in BuildForm.tsx
+
+2. ✅ Created comprehensive E2E test suite with Playwright
+   - Test authentication system via `/api/test/login` endpoint
+   - Test helper functions in `tests/helpers/auth.ts`
+   - 14 total tests in `tests/e2e/`:
+     - `builds.spec.ts`: 4 tests for build display
+     - `crud.spec.ts`: 10 tests for CRUD operations
+
+3. ✅ Fixed multiple test issues:
+   - Changed route from `/create` to `/create/manual` (new routing structure)
+   - Changed selectors from placeholder-based to ID-based:
+     - `#buildName` instead of `input[placeholder*="Empire"]`
+     - `#buildDescription` instead of `textarea[placeholder*="Describe"]`
+     - `#gameVersion` instead of `select:has-text("Game Version")`
+     - `#difficulty` instead of `select:has-text("Difficulty")`
+   - Fixed game version from '4.14' (non-existent) to '4.1' (correct)
+
+**Current Blocker:**
+- Test timeout waiting for `.list-group-item:has-text("Origin:")` after clicking "Biological" button
+- Origins section not loading/appearing after species type selection
+- Likely issue: Need to wait for data to load dynamically after clicking species type
+- Next step: Add proper wait for origins data to load (check BuildForm for loading states)
+
+**Remaining Tasks:**
+1. ⏳ Fix origins loading issue in tests
+   - Investigate BuildForm loading behavior after species type change
+   - Add appropriate wait conditions or increase timeout
+2. ⏳ Fix 404 errors for missing icon resources (2 resources on home page)
+3. ⏳ Get all 14 tests passing with 0 errors and 0 warnings
+4. ⏳ Deploy fix to production
+
+**Testing Commands:**
+```bash
+# Run all tests
+npm test
+
+# Run specific test (faster iteration)
+npx playwright test -g "should create a biological build successfully"
+
+# Run tests with UI
+npm run test:ui
+
+# View test report
+npm run test:report
+```
+
+**Files Modified:**
+- `frontend/src/pages/BuildDetail.tsx` - Added getTraitCost() helper
+- `backend/index.js` - Added /api/test/login endpoint
+- `tests/helpers/auth.ts` - Test authentication helpers
+- `tests/e2e/crud.spec.ts` - Comprehensive CRUD tests
+- `tests/e2e/builds.spec.ts` - Build display tests
+- `playwright.config.ts` - Playwright configuration
+
+**Notes for Next Session:**
+- The trait cost fix is solid and ready for production
+- Testing infrastructure is set up correctly
+- Just need to debug the origins loading timing issue
+- After tests pass, commit everything and deploy
