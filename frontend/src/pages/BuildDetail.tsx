@@ -94,6 +94,13 @@ interface RulerTrait {
   icon?: string;
 }
 
+// Helper to safely get numeric cost from trait (handles both number and {base, modifier} object)
+const getTraitCost = (cost: any): number => {
+  if (typeof cost === 'number') return cost;
+  if (typeof cost === 'object' && cost !== null && typeof cost.base === 'number') return cost.base;
+  return 0;
+};
+
 // Reusable icon component
 const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type, id, size = 48 }) => {
   const [hasError, setHasError] = useState(false);
@@ -410,8 +417,8 @@ export const BuildDetail: React.FC = () => {
                         <div className="flex-grow-1">
                           <h5 className="text-white mb-1">
                             {trait?.name || traitId}
-                            <span className={`badge ms-2 ${trait && trait.cost > 0 ? 'bg-success' : 'bg-danger'}`}>
-                              {trait?.cost || 0} points
+                            <span className={`badge ms-2 ${trait && getTraitCost(trait.cost) > 0 ? 'bg-success' : 'bg-danger'}`}>
+                              {getTraitCost(trait?.cost)} points
                             </span>
                           </h5>
                           {trait?.description && (
@@ -450,8 +457,8 @@ export const BuildDetail: React.FC = () => {
                         <div className="flex-grow-1">
                           <h5 className="text-white mb-1">
                             {trait?.name || traitId}
-                            <span className={`badge ms-2 ${trait && trait.cost > 0 ? 'bg-success' : 'bg-danger'}`}>
-                              {trait?.cost || 0} points
+                            <span className={`badge ms-2 ${trait && getTraitCost(trait.cost) > 0 ? 'bg-success' : 'bg-danger'}`}>
+                              {getTraitCost(trait?.cost)} points
                             </span>
                           </h5>
                           {trait?.description && (
