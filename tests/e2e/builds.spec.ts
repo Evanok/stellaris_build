@@ -20,7 +20,7 @@ test.describe('Build Display', () => {
     await page.goto('/');
 
     // Wait for builds to load
-    await page.waitForSelector('.card', { timeout: 10000 });
+    await page.waitForSelector('.card', { timeout: 5000 });
 
     // Check that we have builds displayed
     const builds = await page.locator('.card').count();
@@ -50,7 +50,7 @@ test.describe('Build Display', () => {
     await page.goto('/build/12');
 
     // Wait for build content to load
-    await page.waitForSelector('h1', { timeout: 10000 });
+    await page.waitForSelector('h1', { timeout: 5000 });
 
     // Verify the build name is displayed
     const buildName = await page.locator('h1').first().textContent();
@@ -81,7 +81,7 @@ test.describe('Build Display', () => {
 
     // Go to home page
     await page.goto('/');
-    await page.waitForSelector('.card', { timeout: 10000 });
+    await page.waitForSelector('.card', { timeout: 5000 });
 
     // Count builds displayed on page
     const displayedBuildsCount = await page.locator('.card').count();
@@ -125,7 +125,7 @@ test.describe('Build Display', () => {
       await page.goto(`/build/${build.id}`);
 
       // Wait for build content to load
-      await page.waitForSelector('h1', { timeout: 10000 });
+      await page.waitForSelector('h1', { timeout: 5000 });
 
       // Verify the build name is displayed
       const buildName = await page.locator('h1').first().textContent();

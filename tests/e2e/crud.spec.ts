@@ -9,7 +9,7 @@ import { loginAsTestUser, logout } from '../helpers/auth';
 // Helper to create a simple valid build
 async function createSimpleBuild(page: Page, buildName: string) {
   await page.goto('/create/manual');
-  await page.waitForSelector('#buildName', { timeout: 3000 });
+  await page.waitForSelector('#buildName', { timeout: 5000 });
 
   // Fill basic info
   await page.fill('#buildName', buildName);
@@ -21,23 +21,23 @@ async function createSimpleBuild(page: Page, buildName: string) {
   await page.click('button:has-text("Biological")');
 
   // Wait for origins to load and select first one
-  await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 3000 });
+  await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 5000 });
   await page.locator('input[type="radio"][id^="origin-"]').first().click();
 
   // Wait for ethics to load, scroll into view, and select first one
-  await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 3000 });
+  await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 5000 });
   const firstEthic = page.locator('input[type="checkbox"][id^="ethic-"]').first();
   await firstEthic.scrollIntoViewIfNeeded();
   await firstEthic.click();
 
   // Select authority
-  await page.waitForSelector('input[type="radio"][id^="authority-"]', { timeout: 3000 });
+  await page.waitForSelector('input[type="radio"][id^="authority-"]', { timeout: 5000 });
   const firstAuthority = page.locator('input[type="radio"][id^="authority-"]').first();
   await firstAuthority.scrollIntoViewIfNeeded();
   await firstAuthority.click();
 
   // Select 2 civics
-  await page.waitForSelector('input[type="checkbox"][id^="civic-"]', { timeout: 3000 });
+  await page.waitForSelector('input[type="checkbox"][id^="civic-"]', { timeout: 5000 });
   const civics = page.locator('input[type="checkbox"][id^="civic-"]');
   await civics.nth(0).scrollIntoViewIfNeeded();
   await civics.nth(0).click();
@@ -45,7 +45,7 @@ async function createSimpleBuild(page: Page, buildName: string) {
   await civics.nth(1).click();
 
   // Select a trait with valid cost (use Nonadaptive with cost -2 to ensure total ≤2)
-  await page.waitForSelector('input[type="checkbox"][id^="trait-"]', { timeout: 3000 });
+  await page.waitForSelector('input[type="checkbox"][id^="trait-"]', { timeout: 5000 });
   const validTrait = page.locator('input[type="checkbox"][id="trait-trait_nonadaptive"]');
   await validTrait.scrollIntoViewIfNeeded();
   await validTrait.click();
@@ -54,7 +54,7 @@ async function createSimpleBuild(page: Page, buildName: string) {
   const submitButton = page.locator('button:has-text("Submit Build")');
   await submitButton.scrollIntoViewIfNeeded();
   await submitButton.click();
-  await page.waitForURL('/', { timeout: 10000 });
+  await page.waitForURL('/', { timeout: 5000 });
 }
 
 test.describe('Build Creation - Valid Builds', () => {
@@ -66,7 +66,7 @@ test.describe('Build Creation - Valid Builds', () => {
 
     // Verify build appears
     const buildCard = page.locator('.card').filter({ hasText: buildName });
-    await expect(buildCard).toBeVisible({ timeout: 10000 });
+    await expect(buildCard).toBeVisible({ timeout: 5000 });
   });
 
   test('should create a machine build successfully', async ({ page }) => {
@@ -84,7 +84,7 @@ test.describe('Build Creation - Valid Builds', () => {
     await page.click('button:has-text("Machine")');
 
     // Wait and select origin, ethics (gestalt), authority
-    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
+    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 5000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
 
     // For machines, select gestalt consciousness
@@ -130,7 +130,7 @@ test.describe('Build Creation - Valid Builds', () => {
     // Select Lithoid species type
     await page.click('button:has-text("Lithoid")');
 
-    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
+    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 5000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
 
     await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 5000 });
@@ -170,7 +170,7 @@ test.describe('Build Creation - Validation', () => {
     await page.selectOption('#gameVersion', '4.1');
     await page.click('button:has-text("Biological")');
 
-    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
+    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 5000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
 
     await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 5000 });
@@ -220,7 +220,7 @@ test.describe('Build Creation - Validation', () => {
     await page.selectOption('#gameVersion', '4.1');
     await page.click('button:has-text("Biological")');
 
-    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
+    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 5000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
 
     await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 5000 });
@@ -266,7 +266,7 @@ test.describe('Build Creation - Validation', () => {
     await page.selectOption('#gameVersion', '4.1');
     await page.click('button:has-text("Biological")');
 
-    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
+    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 5000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
 
     // Try to select multiple fanatic ethics (should not be possible)
@@ -296,7 +296,7 @@ test.describe('Build Creation - Validation', () => {
     await page.selectOption('#gameVersion', '4.1');
     await page.click('button:has-text("Biological")');
 
-    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
+    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 5000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
 
     await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 5000 });
