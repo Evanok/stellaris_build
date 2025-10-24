@@ -273,6 +273,43 @@ npm run dev -w backend      # Start with nodemon (auto-reload)
 
 **Note:** Nodemon only watches `.js` files. If you update JSON data files, you'll need to manually restart the backend.
 
+### Testing
+
+The project uses **Playwright** for end-to-end testing.
+
+```bash
+# Run all tests (headless)
+npm test
+
+# Run tests with UI (interactive mode)
+npm run test:ui
+
+# Run tests in headed mode (see browser)
+npm run test:headed
+
+# View HTML test report
+npm run test:report
+```
+
+**Current Test Coverage:**
+
+✅ **Build Display Tests** (`tests/e2e/builds.spec.ts`):
+- Display builds list without errors
+- Display build 12 detail page without React errors (regression test for cost object bug)
+- Display all builds from database
+- Test all 11 builds individually for React errors
+
+⏸️ **CRUD Tests** (`tests/e2e/crud.spec.ts`) - Requires authentication:
+- Create a new build
+- Edit an existing build
+- Delete a build
+- Form validation tests
+
+**Test Strategy:**
+- All tests must pass with **0 errors** and **0 warnings**
+- Tests run automatically before production deployments
+- Each build detail page is tested individually to catch rendering issues early
+
 ---
 
 ## Database
