@@ -101,11 +101,13 @@ test.describe('Build Creation - Valid Builds', () => {
     await civics.nth(0).click();
     await civics.nth(1).click();
 
-    // Select a trait with valid cost (use dry planet preference with cost 0)
+    // Select traits with negative costs to ensure total ≤2
     await page.waitForSelector('input[type="checkbox"][id^="trait-"]', { timeout: 5000 });
-    const machineTrait = page.locator('input[type="checkbox"][id="trait-trait_dry_planet_preference"]');
-    await machineTrait.scrollIntoViewIfNeeded();
-    await machineTrait.click();
+
+    // Select Slow Learners (cost -1)
+    const trait1 = page.locator('input[type="checkbox"][id="trait-trait_slow_learners"]');
+    await trait1.scrollIntoViewIfNeeded();
+    await trait1.click();
 
     await page.click('button:has-text("Submit Build")');
     await page.waitForURL('/');
