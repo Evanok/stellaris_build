@@ -11,6 +11,13 @@ NC='\033[0m' # No Color
 
 echo -e "${GREEN}=== Stellaris Build - Production DB Sync ===${NC}\n"
 
+# Check if we're in the project root
+if [ ! -f "package.json" ] || [ ! -d "backend" ]; then
+    echo -e "${RED}✗ Error: This script must be run from the project root directory${NC}"
+    echo -e "${YELLOW}Usage: ./scripts/sync-prod-db.sh${NC}"
+    exit 1
+fi
+
 # Configuration
 PROD_USER="arthur"
 PROD_HOST="51.159.55.29"
