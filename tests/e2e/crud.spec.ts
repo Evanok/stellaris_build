@@ -8,14 +8,14 @@ import { loginAsTestUser, logout } from '../helpers/auth';
 
 // Helper to create a simple valid build
 async function createSimpleBuild(page: Page, buildName: string) {
-  await page.goto('/create');
-  await page.waitForSelector('input[placeholder*="Empire"]', { timeout: 10000 });
+  await page.goto('/create/manual');
+  await page.waitForSelector('#buildName', { timeout: 10000 });
 
   // Fill basic info
-  await page.fill('input[placeholder*="Empire"]', buildName);
-  await page.fill('textarea[placeholder*="Describe"]', `Test build: ${buildName}`);
-  await page.selectOption('select:has-text("Game Version")', '4.14');
-  await page.selectOption('select:has-text("Difficulty")', 'balanced');
+  await page.fill('#buildName', buildName);
+  await page.fill('#buildDescription', `Test build: ${buildName}`);
+  await page.selectOption('#gameVersion', '4.1');
+  await page.selectOption('#difficulty', 'balanced');
 
   // Select species type
   await page.click('button:has-text("Biological")');
@@ -59,12 +59,12 @@ test.describe('Build Creation - Valid Builds', () => {
     await loginAsTestUser(page);
     const buildName = `Machine Build ${Date.now()}`;
 
-    await page.goto('/create');
-    await page.waitForSelector('input[placeholder*="Empire"]');
+    await page.goto('/create/manual');
+    await page.waitForSelector('#buildName');
 
-    await page.fill('input[placeholder*="Empire"]', buildName);
-    await page.fill('textarea[placeholder*="Describe"]', 'Machine empire test');
-    await page.selectOption('select:has-text("Game Version")', '4.14');
+    await page.fill('#buildName', buildName);
+    await page.fill('#buildDescription', 'Machine empire test');
+    await page.selectOption('#gameVersion', '4.1');
 
     // Select Machine species type
     await page.click('button:has-text("Machine")');
@@ -98,12 +98,12 @@ test.describe('Build Creation - Valid Builds', () => {
     await loginAsTestUser(page);
     const buildName = `Lithoid Build ${Date.now()}`;
 
-    await page.goto('/create');
-    await page.waitForSelector('input[placeholder*="Empire"]');
+    await page.goto('/create/manual');
+    await page.waitForSelector('#buildName');
 
-    await page.fill('input[placeholder*="Empire"]', buildName);
-    await page.fill('textarea[placeholder*="Describe"]', 'Lithoid empire test');
-    await page.selectOption('select:has-text("Game Version")', '4.14');
+    await page.fill('#buildName', buildName);
+    await page.fill('#buildDescription', 'Lithoid empire test');
+    await page.selectOption('#gameVersion', '4.1');
 
     // Select Lithoid species type
     await page.click('button:has-text("Lithoid")');
@@ -131,11 +131,11 @@ test.describe('Build Creation - Validation', () => {
   test('should prevent creating build with too many trait points', async ({ page }) => {
     await loginAsTestUser(page);
 
-    await page.goto('/create');
-    await page.waitForSelector('input[placeholder*="Empire"]');
+    await page.goto('/create/manual');
+    await page.waitForSelector('#buildName');
 
-    await page.fill('input[placeholder*="Empire"]', 'Invalid Trait Points Build');
-    await page.selectOption('select:has-text("Game Version")', '4.14');
+    await page.fill('#buildName', 'Invalid Trait Points Build');
+    await page.selectOption('#gameVersion', '4.1');
     await page.click('button:has-text("Biological")');
 
     await page.waitForSelector('.list-group-item:has-text("Origin:")');
@@ -177,11 +177,11 @@ test.describe('Build Creation - Validation', () => {
   test('should prevent creating build with too many ethics points', async ({ page }) => {
     await loginAsTestUser(page);
 
-    await page.goto('/create');
-    await page.waitForSelector('input[placeholder*="Empire"]');
+    await page.goto('/create/manual');
+    await page.waitForSelector('#buildName');
 
-    await page.fill('input[placeholder*="Empire"]', 'Invalid Ethics Points Build');
-    await page.selectOption('select:has-text("Game Version")', '4.14');
+    await page.fill('#buildName', 'Invalid Ethics Points Build');
+    await page.selectOption('#gameVersion', '4.1');
     await page.click('button:has-text("Biological")');
 
     await page.waitForSelector('.list-group-item:has-text("Origin:")');
@@ -206,11 +206,11 @@ test.describe('Build Creation - Validation', () => {
   test('should require build name', async ({ page }) => {
     await loginAsTestUser(page);
 
-    await page.goto('/create');
-    await page.waitForSelector('input[placeholder*="Empire"]');
+    await page.goto('/create/manual');
+    await page.waitForSelector('#buildName');
 
     // Don't fill name, but fill everything else
-    await page.selectOption('select:has-text("Game Version")', '4.14');
+    await page.selectOption('#gameVersion', '4.1');
     await page.click('button:has-text("Biological")');
 
     await page.waitForSelector('.list-group-item:has-text("Origin:")');
@@ -247,7 +247,7 @@ test.describe('Build Permissions', () => {
     await page.waitForURL(/\/edit\/\d+/);
 
     // Modify the build
-    await page.fill('input[placeholder*="Empire"]', `${buildName} (Edited)`);
+    await page.fill('#buildName', `${buildName} (Edited)`);
     await page.click('button:has-text("Update Build")');
 
     // Should redirect to build detail
