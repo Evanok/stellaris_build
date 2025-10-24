@@ -423,58 +423,85 @@ Planned features (not yet implemented):
 
 ## CURRENT WORK IN PROGRESS (2025-10-24)
 
-### Issue: Production Bug - React Error #31 on Build 12
+### E2E Test Suite - Cleaning Up and Optimizing
 
-**Status:** Bug fix complete, testing in progress
+**Status:** Test suite improved, 9/15 tests passing (60% success rate)
 
-**Problem:**
-- Build 12 "The Guilded Vault Conglomerate V2" crashes with React error #31
-- Error: "Objects are not valid as a React child (found: object with keys {base, modifier})"
-- Cause: Trait `trait_auto_mod_robotic` has `cost` as object `{base: 3, modifier: {...}}` instead of number
-- React tried to render this object directly in BuildDetail.tsx line 414
+**Work Completed This Session:**
 
-**Solution Implemented:**
-1. ✅ Added `getTraitCost()` helper function in `frontend/src/pages/BuildDetail.tsx`
-   - Safely extracts numeric cost from trait objects
-   - Handles both `number` and `{base: number, modifier: object}` formats
-   - Applied pattern already used in BuildForm.tsx
+1. ✅ **Fixed Database Cleanup Between Tests**
+   - Added `global-setup.ts` and `global-teardown.ts` to clean test builds before/after test runs
+   - Backend endpoint `/api/test/cleanup` deletes builds with names starting with "Test Build"
+   - Prevents test pollution and duplicate name errors
 
-2. ✅ Created comprehensive E2E test suite with Playwright
-   - Test authentication system via `/api/test/login` endpoint
-   - Test helper functions in `tests/helpers/auth.ts`
-   - 14 total tests in `tests/e2e/`:
-     - `builds.spec.ts`: 4 tests for build display
-     - `crud.spec.ts`: 10 tests for CRUD operations
+2. ✅ **Fixed Duplicate Name Check for Deleted Builds**
+   - Backend now allows reusing names of soft-deleted builds (backend/index.js:524, 644)
+   - Query checks `deleted=0` when validating duplicate names
 
-3. ✅ Fixed multiple test issues:
-   - Changed route from `/create` to `/create/manual` (new routing structure)
-   - Changed selectors from placeholder-based to ID-based:
-     - `#buildName` instead of `input[placeholder*="Empire"]`
-     - `#buildDescription` instead of `textarea[placeholder*="Describe"]`
-     - `#gameVersion` instead of `select:has-text("Game Version")`
-     - `#difficulty` instead of `select:has-text("Difficulty")`
-   - Fixed game version from '4.14' (non-existent) to '4.1' (correct)
+3. ✅ **Disabled Rate Limiting for Test Users**
+   - Test users bypass rate limiting in `backend/security.js:81-84`
+   - Uses `provider='test'` and `provider_id='test-user-id'` to identify test users
 
-**Current Blocker:**
-- Test timeout waiting for `.list-group-item:has-text("Origin:")` after clicking "Biological" button
-- Origins section not loading/appearing after species type selection
-- Likely issue: Need to wait for data to load dynamically after clicking species type
-- Next step: Add proper wait for origins data to load (check BuildForm for loading states)
+4. ✅ **Improved Trait Validation UX in BuildForm**
+   - Removed logic that disabled trait checkboxes when limits exceeded
+   - Now shows error messages instead of disabling selection (frontend/src/BuildForm.tsx:794-806)
+   - Users can see all options and understand why certain combinations don't work
 
-**Remaining Tasks:**
-1. ⏳ Fix origins loading issue in tests
-   - Investigate BuildForm loading behavior after species type change
-   - Add appropriate wait conditions or increase timeout
-2. ⏳ Fix 404 errors for missing icon resources (2 resources on home page)
-3. ⏳ Get all 14 tests passing with 0 errors and 0 warnings
-4. ⏳ Deploy fix to production
+5. ✅ **Fixed Test Trait Selection to Respect Validation Rules**
+   - All test builds now use traits with cost ≤2 (MAX_TRAIT_POINTS = 2)
+   - Biological/Lithoid tests: Use "Nonadaptive" (cost -2)
+   - Machine test: Use "Slow Learners" (cost -1)
+   - Tests respect MAX_TRAIT_COUNT = 5 and isBuildComplete() requirements
+
+6. ✅ **Optimized Test Timeouts**
+   - Reduced global timeout from 30s to 5s in `playwright.config.ts`
+   - Replaced all individual timeout values from 2000ms to 5000ms
+   - Tests complete in ~10 seconds total (was 32+ seconds)
+
+**Current Test Results (5s timeout):**
+- ✅ **9 passed** / ❌ **5 failed** / ⏭️ **1 skipped**
+- **Execution time:** 10.4 seconds
+- **Success rate:** 60% (up from 20% with 2s timeout)
+
+**Failing Tests:**
+1. `builds.spec.ts:4` - "should display builds list without errors"
+   - **Issue:** 3x 404 errors for missing icon/image resources on home page
+   - **Not timeout-related** - actual missing resources
+
+2. `builds.spec.ts:94` - "should display all 11 builds without errors"
+   - **Issue:** Timeout waiting for h1 selector when iterating through all builds
+   - May need longer timeout or pagination optimization
+
+3. `crud.spec.ts:289` - "should require build name"
+   - **Issue:** Submit button stays disabled (validation preventing submission)
+   - Test expects to click disabled button - needs different assertion approach
+
+4. `crud.spec.ts:318` - "should allow creator to edit their own build"
+   - **Issue:** Update button disabled, timeout waiting for click
+   - Similar to #3 - validation issue or missing data
+
+5. `crud.spec.ts:396` - "should allow creating new build with same name after deletion"
+   - **Issue:** Timeout clicking authority selector
+   - May be race condition with form loading
+
+**Files Modified:**
+- `frontend/src/pages/BuildDetail.tsx` - Added getTraitCost() helper (previous session)
+- `frontend/src/BuildForm.tsx` - Removed trait selection restrictions (lines 794-806)
+- `backend/index.js` - Test login endpoint, duplicate name check, test cleanup endpoint
+- `backend/security.js` - Rate limiting bypass for test users (lines 81-84)
+- `tests/e2e/crud.spec.ts` - Fixed trait selection to use valid low-cost traits
+- `tests/e2e/builds.spec.ts` - Build display tests
+- `tests/helpers/auth.ts` - Test authentication helpers
+- `tests/global-setup.ts` - Pre-test cleanup
+- `tests/global-teardown.ts` - Post-test cleanup
+- `playwright.config.ts` - Timeout set to 5000ms
 
 **Testing Commands:**
 ```bash
 # Run all tests
 npm test
 
-# Run specific test (faster iteration)
+# Run specific test
 npx playwright test -g "should create a biological build successfully"
 
 # Run tests with UI
@@ -484,16 +511,19 @@ npm run test:ui
 npm run test:report
 ```
 
-**Files Modified:**
-- `frontend/src/pages/BuildDetail.tsx` - Added getTraitCost() helper
-- `backend/index.js` - Added /api/test/login endpoint
-- `tests/helpers/auth.ts` - Test authentication helpers
-- `tests/e2e/crud.spec.ts` - Comprehensive CRUD tests
-- `tests/e2e/builds.spec.ts` - Build display tests
-- `playwright.config.ts` - Playwright configuration
+**Next Steps (For Next Session):**
+1. 🔧 **Fix 404 errors** - Identify and add missing image/icon resources
+2. 🔧 **Fix validation tests** - Tests that expect to click disabled buttons need different assertions
+3. 🔧 **Fix "display all builds" timeout** - May need to increase timeout for this specific test or optimize build detail page loading
+4. 🔧 **Fix "edit own build" test** - Debug why update button is disabled
+5. 🔧 **Fix "recreate after delete" test** - Debug race condition with form loading
+6. 🎯 **Goal: Get all 15 tests passing**
+7. 🚀 **Deploy React fix to production** (getTraitCost helper is ready)
 
-**Notes for Next Session:**
-- The trait cost fix is solid and ready for production
-- Testing infrastructure is set up correctly
-- Just need to debug the origins loading timing issue
-- After tests pass, commit everything and deploy
+**Technical Notes:**
+- Test suite uses Playwright with Chromium
+- Tests run in parallel with 8 workers
+- Global timeout: 5000ms (5 seconds per test)
+- Individual waitForSelector timeouts: 5000ms
+- Database cleanup runs before and after full test suite
+- Test user authentication: `POST /api/test/login` creates test user session
