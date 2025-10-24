@@ -498,7 +498,19 @@ app.get('/api/builds/:id', (req, res) => {
       res.status(404).json({ error: 'Build not found' });
       return;
     }
-    res.json({ build: row });
+
+    // Parse CSV fields into arrays for frontend (needed for edit form)
+    const build = {
+      ...row,
+      traits: row.traits ? row.traits.split(',').filter(Boolean) : [],
+      secondary_traits: row.secondary_traits ? row.secondary_traits.split(',').filter(Boolean) : [],
+      ethics: row.ethics ? row.ethics.split(',').filter(Boolean) : [],
+      civics: row.civics ? row.civics.split(',').filter(Boolean) : [],
+      ascension_perks: row.ascension_perks ? row.ascension_perks.split(',').filter(Boolean) : [],
+      traditions: row.traditions ? row.traditions.split(',').filter(Boolean) : [],
+    };
+
+    res.json({ build });
   });
 });
 

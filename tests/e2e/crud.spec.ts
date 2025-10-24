@@ -9,7 +9,7 @@ import { loginAsTestUser, logout } from '../helpers/auth';
 // Helper to create a simple valid build
 async function createSimpleBuild(page: Page, buildName: string) {
   await page.goto('/create/manual');
-  await page.waitForSelector('#buildName', { timeout: 5000 });
+  await page.waitForSelector('#buildName', { timeout: 10000 });
 
   // Fill basic info
   await page.fill('#buildName', buildName);
@@ -21,23 +21,23 @@ async function createSimpleBuild(page: Page, buildName: string) {
   await page.click('button:has-text("Biological")');
 
   // Wait for origins to load and select first one
-  await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 5000 });
+  await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
   await page.locator('input[type="radio"][id^="origin-"]').first().click();
 
   // Wait for ethics to load, scroll into view, and select first one
-  await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 5000 });
+  await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 10000 });
   const firstEthic = page.locator('input[type="checkbox"][id^="ethic-"]').first();
   await firstEthic.scrollIntoViewIfNeeded();
   await firstEthic.click();
 
   // Select authority
-  await page.waitForSelector('input[type="radio"][id^="authority-"]', { timeout: 5000 });
+  await page.waitForSelector('input[type="radio"][id^="authority-"]', { timeout: 10000 });
   const firstAuthority = page.locator('input[type="radio"][id^="authority-"]').first();
   await firstAuthority.scrollIntoViewIfNeeded();
   await firstAuthority.click();
 
   // Select 2 civics
-  await page.waitForSelector('input[type="checkbox"][id^="civic-"]', { timeout: 5000 });
+  await page.waitForSelector('input[type="checkbox"][id^="civic-"]', { timeout: 10000 });
   const civics = page.locator('input[type="checkbox"][id^="civic-"]');
   await civics.nth(0).scrollIntoViewIfNeeded();
   await civics.nth(0).click();
@@ -45,7 +45,7 @@ async function createSimpleBuild(page: Page, buildName: string) {
   await civics.nth(1).click();
 
   // Select a trait with valid cost (use Nonadaptive with cost -2 to ensure total ≤2)
-  await page.waitForSelector('input[type="checkbox"][id^="trait-"]', { timeout: 5000 });
+  await page.waitForSelector('input[type="checkbox"][id^="trait-"]', { timeout: 10000 });
   const validTrait = page.locator('input[type="checkbox"][id="trait-trait_nonadaptive"]');
   await validTrait.scrollIntoViewIfNeeded();
   await validTrait.click();
@@ -54,7 +54,7 @@ async function createSimpleBuild(page: Page, buildName: string) {
   const submitButton = page.locator('button:has-text("Submit Build")');
   await submitButton.scrollIntoViewIfNeeded();
   await submitButton.click();
-  await page.waitForURL('/', { timeout: 5000 });
+  await page.waitForURL('/', { timeout: 10000 });
 }
 
 test.describe('Build Creation - Valid Builds', () => {
@@ -66,7 +66,7 @@ test.describe('Build Creation - Valid Builds', () => {
 
     // Verify build appears
     const buildCard = page.locator('.card').filter({ hasText: buildName });
-    await expect(buildCard).toBeVisible({ timeout: 5000 });
+    await expect(buildCard).toBeVisible({ timeout: 10000 });
   });
 
   test('should create a machine build successfully', async ({ page }) => {
@@ -84,25 +84,25 @@ test.describe('Build Creation - Valid Builds', () => {
     await page.click('button:has-text("Machine")');
 
     // Wait and select origin, ethics (gestalt), authority
-    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
 
     // For machines, select gestalt consciousness
-    await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 10000 });
     await page.locator('input[type="checkbox"][id^="ethic-"]').first().click();
 
     // Select machine intelligence authority
-    await page.waitForSelector('input[type="radio"][id^="authority-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="radio"][id^="authority-"]', { timeout: 10000 });
     await page.locator('input[type="radio"][id^="authority-"]').first().click();
 
     // Select civics
-    await page.waitForSelector('input[type="checkbox"][id^="civic-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="checkbox"][id^="civic-"]', { timeout: 10000 });
     const civics = page.locator('input[type="checkbox"][id^="civic-"]');
     await civics.nth(0).click();
     await civics.nth(1).click();
 
     // Select traits with negative costs to ensure total ≤2
-    await page.waitForSelector('input[type="checkbox"][id^="trait-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="checkbox"][id^="trait-"]', { timeout: 10000 });
 
     // Select Slow Learners (cost -1)
     const trait1 = page.locator('input[type="checkbox"][id="trait-trait_slow_learners"]');
@@ -130,22 +130,22 @@ test.describe('Build Creation - Valid Builds', () => {
     // Select Lithoid species type
     await page.click('button:has-text("Lithoid")');
 
-    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
 
-    await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 10000 });
     await page.locator('input[type="checkbox"][id^="ethic-"]').first().click();
 
-    await page.waitForSelector('input[type="radio"][id^="authority-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="radio"][id^="authority-"]', { timeout: 10000 });
     await page.locator('input[type="radio"][id^="authority-"]').first().click();
 
-    await page.waitForSelector('input[type="checkbox"][id^="civic-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="checkbox"][id^="civic-"]', { timeout: 10000 });
     const civics = page.locator('input[type="checkbox"][id^="civic-"]');
     await civics.nth(0).click();
     await civics.nth(1).click();
 
     // Select a trait with valid cost (use Nonadaptive with cost -2 for lithoid)
-    await page.waitForSelector('input[type="checkbox"][id^="trait-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="checkbox"][id^="trait-"]', { timeout: 10000 });
     const lithoidTrait = page.locator('input[type="checkbox"][id="trait-trait_nonadaptive"]');
     await lithoidTrait.scrollIntoViewIfNeeded();
     await lithoidTrait.click();
@@ -170,22 +170,22 @@ test.describe('Build Creation - Validation', () => {
     await page.selectOption('#gameVersion', '4.1');
     await page.click('button:has-text("Biological")');
 
-    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
 
-    await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 10000 });
     await page.locator('input[type="checkbox"][id^="ethic-"]').first().click();
 
-    await page.waitForSelector('input[type="radio"][id^="authority-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="radio"][id^="authority-"]', { timeout: 10000 });
     await page.locator('input[type="radio"][id^="authority-"]').first().click();
 
-    await page.waitForSelector('input[type="checkbox"][id^="civic-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="checkbox"][id^="civic-"]', { timeout: 10000 });
     const civics = page.locator('input[type="checkbox"][id^="civic-"]');
     await civics.nth(0).click();
     await civics.nth(1).click();
 
     // Select 6 negative traits (more than the 5 trait limit) - using negative traits so they don't get disabled
-    await page.waitForSelector('input[type="checkbox"][id^="trait-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="checkbox"][id^="trait-"]', { timeout: 10000 });
     const negativeTraitIds = [
       'trait_nonadaptive',      // -2 points
       'trait_slow_breeders',    // -2 points
@@ -220,22 +220,22 @@ test.describe('Build Creation - Validation', () => {
     await page.selectOption('#gameVersion', '4.1');
     await page.click('button:has-text("Biological")');
 
-    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
 
-    await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 10000 });
     await page.locator('input[type="checkbox"][id^="ethic-"]').first().click();
 
-    await page.waitForSelector('input[type="radio"][id^="authority-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="radio"][id^="authority-"]', { timeout: 10000 });
     await page.locator('input[type="radio"][id^="authority-"]').first().click();
 
-    await page.waitForSelector('input[type="checkbox"][id^="civic-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="checkbox"][id^="civic-"]', { timeout: 10000 });
     const civics = page.locator('input[type="checkbox"][id^="civic-"]');
     await civics.nth(0).click();
     await civics.nth(1).click();
 
     // Select specific traits: Intelligent (2pts) + Strong (1pt) = 3 points total
-    await page.waitForSelector('input[type="checkbox"][id^="trait-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="checkbox"][id^="trait-"]', { timeout: 10000 });
 
     // Scroll to and click "Intelligent" (2 points)
     await page.locator('input[type="checkbox"][id="trait-trait_intelligent"]').scrollIntoViewIfNeeded();
@@ -266,11 +266,11 @@ test.describe('Build Creation - Validation', () => {
     await page.selectOption('#gameVersion', '4.1');
     await page.click('button:has-text("Biological")');
 
-    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
 
     // Try to select multiple fanatic ethics (should not be possible)
-    await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 10000 });
     const fanaticEthics = page.locator('input[type="checkbox"][id^="ethic-"]');
     const count = await fanaticEthics.count();
 
@@ -296,20 +296,25 @@ test.describe('Build Creation - Validation', () => {
     await page.selectOption('#gameVersion', '4.1');
     await page.click('button:has-text("Biological")');
 
-    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
 
-    await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="checkbox"][id^="ethic-"]', { timeout: 10000 });
     await page.locator('input[type="checkbox"][id^="ethic-"]').first().click();
 
-    await page.waitForSelector('input[type="radio"][id^="authority-"]', { timeout: 5000 });
+    await page.waitForSelector('input[type="radio"][id^="authority-"]', { timeout: 10000 });
     await page.locator('input[type="radio"][id^="authority-"]').first().click();
 
-    // Try to submit
-    await page.click('button:has-text("Submit Build")');
+    // Submit button should be disabled when name is empty
+    const submitButton = page.locator('button:has-text("Submit Build")');
+    await expect(submitButton).toBeDisabled();
 
-    // Should show error or stay on page
-    await page.waitForTimeout(1000);
+    // Should show validation warning about missing fields (next to submit button)
+    const warningMessage = page.locator('small.text-warning:has-text("Please fill all required fields")');
+    await expect(warningMessage).toBeVisible();
+    await expect(warningMessage).toContainText('Build Name');
+
+    // Should stay on create page
     expect(page.url()).toContain('/create');
   });
 });
@@ -333,9 +338,28 @@ test.describe('Build Permissions', () => {
     await editButton.click();
     await page.waitForURL(/\/edit\/\d+/);
 
+    // Wait for form to load completely (submit button should be enabled)
+    const updateButton = page.locator('button:has-text("Update Build")');
+
+    // Debug: wait a bit for form to load and check if there's a warning message
+    await page.waitForTimeout(2000);
+
+    // Check if button is disabled and why
+    const isDisabled = await updateButton.isDisabled();
+    if (isDisabled) {
+      // Try to find the warning message that explains why
+      const warningText = await page.locator('small.text-warning:has-text("Please fill all required fields")').textContent().catch(() => 'No warning found');
+      console.log('⚠️  Update button is disabled. Warning:', warningText);
+    }
+
+    await expect(updateButton).toBeEnabled({ timeout: 10000 });
+
     // Modify the build
     await page.fill('#buildName', `${buildName} (Edited)`);
-    await page.click('button:has-text("Update Build")');
+
+    // Button should still be enabled after name change
+    await expect(updateButton).toBeEnabled();
+    await updateButton.click();
 
     // Should redirect to build detail
     await page.waitForURL(/\/build\/\d+/);

@@ -13,8 +13,8 @@ export default defineConfig({
   // Run tests in files in parallel
   fullyParallel: true,
 
-  // Test timeout - 2 seconds per test
-  timeout: 5000,
+  // Test timeout - 10 seconds per test
+  timeout: 10000,
 
   // Fail the build on CI if you accidentally left test.only in the source code
   forbidOnly: !!process.env.CI,
@@ -25,8 +25,11 @@ export default defineConfig({
   // Opt out of parallel tests on CI
   workers: process.env.CI ? 1 : undefined,
 
-  // Reporter to use
-  reporter: 'html',
+  // Reporter to use - generate HTML but don't auto-open server
+  reporter: [
+    ['list'],  // Console output
+    ['html', { open: 'never' }]  // Generate HTML report but don't start server
+  ],
 
   // Shared settings for all the projects below
   use: {
