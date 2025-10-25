@@ -107,6 +107,13 @@ test.describe('Game Assets - Image Availability', () => {
 
     // Filter out civics that require origins not available at empire creation
     const displayedCivics = civics.filter((civic: any) => {
+      // Hardcoded filter: civic_galactic_sovereign_megacorp is not selectable at empire creation
+      // despite having pickable_at_start: true. It's obtained during gameplay (Galactic Imperium).
+      // Note: alternate_version field is empty, so we can't filter it automatically.
+      if (civic.id === 'civic_galactic_sovereign_megacorp') {
+        return false;
+      }
+
       const potential = civic.potential || [];
 
       // Check if civic requires a specific origin
