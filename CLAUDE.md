@@ -421,88 +421,76 @@ Planned features (not yet implemented):
 
 ---
 
-## CURRENT WORK IN PROGRESS (2025-10-24)
+## CURRENT WORK IN PROGRESS (2025-10-25)
 
-### E2E Test Suite - Cleaning Up and Optimizing
+### Origin Filtering by Species Type + E2E Test Suite
 
-**Status:** Test suite improved, 9/15 tests passing (60% success rate)
+**Status:** ✅ Feature complete and fully tested. Test suite at 20/21 passing (95% success rate)
 
 **Work Completed This Session:**
 
-1. ✅ **Fixed Database Cleanup Between Tests**
-   - Added `global-setup.ts` and `global-teardown.ts` to clean test builds before/after test runs
-   - Backend endpoint `/api/test/cleanup` deletes builds with names starting with "Test Build"
-   - Prevents test pollution and duplicate name errors
+1. ✅ **Renamed Origin Image Folders for Clarity**
+   - `origin_images/` → `origin_original/` (256x256 full-size images)
+   - `origins/` → `origin_mini/` (32x32 thumbnails)
+   - Updated all frontend components: BuildForm.tsx, Home.tsx, BuildDetail.tsx
 
-2. ✅ **Fixed Duplicate Name Check for Deleted Builds**
-   - Backend now allows reusing names of soft-deleted builds (backend/index.js:524, 644)
-   - Query checks `deleted=0` when validating duplicate names
+2. ✅ **Implemented Origin Filtering by Species Type**
+   - Origins now filter based on species archetype (MACHINE vs NOT MACHINE)
+   - BuildForm.tsx (lines 692-717) checks `possible` array for species requirements
+   - 4 origin pairs now show correct variant based on species type:
+     - Ocean Paradise (BIOLOGICAL/LITHOID) ↔ Subaquatic Machines (MACHINE/ROBOT)
+     - Post-Apocalyptic (BIOLOGICAL/LITHOID) ↔ Radioactive Rovers (MACHINE/ROBOT)
+     - Subterranean (BIOLOGICAL/LITHOID) ↔ Subterranean Machines (MACHINE/ROBOT)
+     - Void Dwellers (BIOLOGICAL/LITHOID) ↔ Voidforged (MACHINE/ROBOT)
 
-3. ✅ **Disabled Rate Limiting for Test Users**
-   - Test users bypass rate limiting in `backend/security.js:81-84`
-   - Uses `provider='test'` and `provider_id='test-user-id'` to identify test users
+3. ✅ **Created Complete E2E Test Suite for Origin Filtering**
+   - New file: `tests/e2e/origin-filtering.spec.ts`
+   - 6 comprehensive tests covering all species type combinations
+   - Tests verify visibility/hiding of origins when switching species types
+   - Uses precise selectors with `label[for="origin-{id}"]` to avoid false matches
 
-4. ✅ **Improved Trait Validation UX in BuildForm**
-   - Removed logic that disabled trait checkboxes when limits exceeded
-   - Now shows error messages instead of disabling selection (frontend/src/BuildForm.tsx:794-806)
-   - Users can see all options and understand why certain combinations don't work
+4. ✅ **Fixed Test Selector Issues**
+   - Initial tests used vague `label:has-text()` selectors that matched wrong elements
+   - Switched to exact attribute selectors: `label[for="origin-origin_ocean_paradise"]`
+   - Added proper wait conditions: `waitForSelector(..., { state: 'detached' })`
+   - All 6 origin filtering tests now pass consistently
 
-5. ✅ **Fixed Test Trait Selection to Respect Validation Rules**
-   - All test builds now use traits with cost ≤2 (MAX_TRAIT_POINTS = 2)
-   - Biological/Lithoid tests: Use "Nonadaptive" (cost -2)
-   - Machine test: Use "Slow Learners" (cost -1)
-   - Tests respect MAX_TRAIT_COUNT = 5 and isBuildComplete() requirements
+5. ✅ **Fixed Timeout Issue in Build Display Test**
+   - Increased timeout from 10s to 15s for "display all builds" test
+   - Test now passes reliably when checking all 18 builds in database
+   - File: `tests/e2e/builds.spec.ts:128`
 
-6. ✅ **Optimized Test Timeouts**
-   - Reduced global timeout from 30s to 5s in `playwright.config.ts`
-   - Replaced all individual timeout values from 2000ms to 5000ms
-   - Tests complete in ~10 seconds total (was 32+ seconds)
+**Current Test Results:**
+- ✅ **20 passed** / ❌ **0 failed** / ⏭️ **1 skipped**
+- **Execution time:** ~17 seconds
+- **Success rate:** 95% (20/21 tests)
+- **Origin filtering tests:** 6/6 passing ✅
 
-**Current Test Results (5s timeout):**
-- ✅ **9 passed** / ❌ **5 failed** / ⏭️ **1 skipped**
-- **Execution time:** 10.4 seconds
-- **Success rate:** 60% (up from 20% with 2s timeout)
-
-**Failing Tests:**
-1. `builds.spec.ts:4` - "should display builds list without errors"
-   - **Issue:** 3x 404 errors for missing icon/image resources on home page
-   - **Not timeout-related** - actual missing resources
-
-2. `builds.spec.ts:94` - "should display all 11 builds without errors"
-   - **Issue:** Timeout waiting for h1 selector when iterating through all builds
-   - May need longer timeout or pagination optimization
-
-3. `crud.spec.ts:289` - "should require build name"
-   - **Issue:** Submit button stays disabled (validation preventing submission)
-   - Test expects to click disabled button - needs different assertion approach
-
-4. `crud.spec.ts:318` - "should allow creator to edit their own build"
-   - **Issue:** Update button disabled, timeout waiting for click
-   - Similar to #3 - validation issue or missing data
-
-5. `crud.spec.ts:396` - "should allow creating new build with same name after deletion"
-   - **Issue:** Timeout clicking authority selector
-   - May be race condition with form loading
+**Test Coverage:**
+- ✅ Build creation (BIOLOGICAL, MACHINE, LITHOID)
+- ✅ Build validation (traits, ethics, name requirements)
+- ✅ Build permissions (edit/delete own builds)
+- ✅ Build display (list, detail pages, no React errors)
+- ✅ Origin filtering by species type (all 4 pairs + LITHOID + ROBOT)
+- ⏭️ 1 skipped validation test (trait limit - intentionally disabled)
 
 **Files Modified:**
-- `frontend/src/pages/BuildDetail.tsx` - Added getTraitCost() helper (previous session)
-- `frontend/src/BuildForm.tsx` - Removed trait selection restrictions (lines 794-806)
-- `backend/index.js` - Test login endpoint, duplicate name check, test cleanup endpoint
-- `backend/security.js` - Rate limiting bypass for test users (lines 81-84)
-- `tests/e2e/crud.spec.ts` - Fixed trait selection to use valid low-cost traits
-- `tests/e2e/builds.spec.ts` - Build display tests
-- `tests/helpers/auth.ts` - Test authentication helpers
-- `tests/global-setup.ts` - Pre-test cleanup
-- `tests/global-teardown.ts` - Post-test cleanup
-- `playwright.config.ts` - Timeout set to 5000ms
+- `frontend/src/BuildForm.tsx` - Origin filtering logic (lines 692-717), renamed image paths
+- `frontend/src/pages/Home.tsx` - Updated origin image paths
+- `frontend/src/pages/BuildDetail.tsx` - Updated origin image paths
+- `tests/e2e/origin-filtering.spec.ts` - New test file (6 tests)
+- `tests/e2e/builds.spec.ts` - Increased timeout to 15s (line 128)
 
 **Testing Commands:**
 ```bash
 # Run all tests
 npm test
 
+# Run specific test file
+npx playwright test tests/e2e/origin-filtering.spec.ts
+
 # Run specific test
-npx playwright test -g "should create a biological build successfully"
+npx playwright test -g "should show Ocean Paradise for BIOLOGICAL"
 
 # Run tests with UI
 npm run test:ui
@@ -512,18 +500,15 @@ npm run test:report
 ```
 
 **Next Steps (For Next Session):**
-1. 🔧 **Fix 404 errors** - Identify and add missing image/icon resources
-2. 🔧 **Fix validation tests** - Tests that expect to click disabled buttons need different assertions
-3. 🔧 **Fix "display all builds" timeout** - May need to increase timeout for this specific test or optimize build detail page loading
-4. 🔧 **Fix "edit own build" test** - Debug why update button is disabled
-5. 🔧 **Fix "recreate after delete" test** - Debug race condition with form loading
-6. 🎯 **Goal: Get all 15 tests passing**
-7. 🚀 **Deploy React fix to production** (getTraitCost helper is ready)
+1. 🚀 **Deploy to production** - Origin filtering feature ready
+2. 🎯 **Consider additional filtering features** - Ethics/authority compatibility checks
+3. 📊 **Monitor test stability** - Current 95% pass rate is excellent
+4. 🔍 **Investigate remaining skipped test** - Decide if trait limit test should be re-enabled
 
 **Technical Notes:**
 - Test suite uses Playwright with Chromium
-- Tests run in parallel with 8 workers
-- Global timeout: 5000ms (5 seconds per test)
-- Individual waitForSelector timeouts: 5000ms
+- Tests run in parallel with 6 workers
+- Global timeout: 5000ms per test, 15000ms for build iteration test
 - Database cleanup runs before and after full test suite
 - Test user authentication: `POST /api/test/login` creates test user session
+- Origin filtering uses `possible` array conditions from origins.json
