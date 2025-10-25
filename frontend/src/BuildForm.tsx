@@ -690,8 +690,15 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     return true;
   };
 
-  // Filter traits only by search query - no species archetype restrictions
+  // Filter traits by species type and search query
   const filteredTraits = allTraits.filter(trait => {
+    // Filter machine-only traits (only for MACHINE/ROBOT species)
+    const isMachineSpecies = speciesType === 'MACHINE' || speciesType === 'ROBOT';
+    const hasMachineTag = Array.isArray(trait.tags) && trait.tags.includes('machine');
+    if (hasMachineTag && !isMachineSpecies) {
+      return false;
+    }
+
     // Filter by search query
     if (traitSearchQuery) {
       const query = traitSearchQuery.toLowerCase();
@@ -797,14 +804,12 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     const trait = allTraits.find(t => t.id === traitId);
     if (!trait) return;
 
-    // If deselecting, always allow
+    // Toggle selection
     if (selectedTraits.includes(traitId)) {
       setSelectedTraits(prev => prev.filter(t => t !== traitId));
-      return;
+    } else {
+      setSelectedTraits(prev => [...prev, traitId]);
     }
-
-    // If selecting, always allow (validation will show errors if limits exceeded)
-    setSelectedTraits(prev => [...prev, traitId]);
   };
 
   const handleEthicsChange = (ethicId: string) => {
@@ -1326,7 +1331,16 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                 {filteredTraits.length > 0 ? (
                   filteredTraits.map(trait => {
                     const isSelected = selectedTraits.includes(trait.id);
-                    // Don't disable traits - let user select freely and show validation errors
+
+                    // Check if this is a background trait and if another background trait is already selected
+                    const isBackgroundTrait = Array.isArray(trait.tags) && trait.tags.includes('background');
+                    const selectedBackgroundTrait = selectedTraits.find(id => {
+                      const t = allTraits.find(trait => trait.id === id);
+                      return t && Array.isArray(t.tags) && t.tags.includes('background');
+                    });
+
+                    // Disable if this is a background trait and another background trait is selected
+                    const isDisabled = isBackgroundTrait && selectedBackgroundTrait && selectedBackgroundTrait !== trait.id;
 
                     return (
                       <div
@@ -1338,12 +1352,16 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                           type="checkbox"
                           id={`trait-${trait.id}`}
                           checked={isSelected}
+                          disabled={isDisabled}
                           onChange={() => handleTraitChange(trait.id)}
                         />
                         <label
                           className="form-check-label"
                           htmlFor={`trait-${trait.id}`}
-                          style={{ cursor: 'pointer' }}
+                          style={{
+                            cursor: isDisabled ? 'not-allowed' : 'pointer',
+                            opacity: isDisabled ? 0.5 : 1
+                          }}
                           title={trait.description || 'No description available'}
                         >
                           <GameIcon type="traits" id={trait.id} size={32} />
