@@ -52,6 +52,13 @@ npm run preview -w frontend
 
 ### Production Deployment
 
+**Production Server:**
+- Domain: https://stellaris-build.com
+- IP: 51.159.55.29
+- User: arthur
+- SSH: `ssh arthur@51.159.55.29`
+- SCP: `scp file.txt arthur@51.159.55.29:~/path/`
+
 ```bash
 # On production server (stellaris-build.com)
 
