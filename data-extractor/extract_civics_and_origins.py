@@ -440,8 +440,18 @@ def extract_all_civics(stellaris_path: str, output_file: str = "output/civics.js
         if picture and picture in gfx_mapping:
             origin["image_file"] = gfx_mapping[picture]
         else:
-            # Fallback: use origin ID as filename
-            origin["image_file"] = origin["id"]
+            # Special case: GFX_origins_wilderness uses GFX_origin_wilderness mapping
+            # (the game has inconsistent naming)
+            if picture == "GFX_origins_wilderness":
+                alt_picture = "GFX_origin_wilderness"
+                if alt_picture in gfx_mapping:
+                    origin["image_file"] = gfx_mapping[alt_picture]
+                    print(f"  ⚠ Fixed wilderness GFX: {picture} → {alt_picture}")
+                else:
+                    origin["image_file"] = origin["id"]
+            else:
+                # Fallback: use origin ID as filename
+                origin["image_file"] = origin["id"]
 
     # Create output directory if it doesn't exist
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
