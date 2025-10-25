@@ -293,6 +293,36 @@ def extract_all_traits(stellaris_path: str, output_file: str = "output/traits.js
     if removed_count > 0:
         print(f"Filtered out {removed_count} cyborg traits (post-ascension only)")
 
+    # Filter out planet/climate preference traits (automatic based on homeworld)
+    before_preference = len(filtered_traits)
+    filtered_traits = [t for t in filtered_traits if '_preference' not in t.get('id', '')]
+    removed_count = before_preference - len(filtered_traits)
+    if removed_count > 0:
+        print(f"Filtered out {removed_count} planet/climate preference traits (automatic)")
+
+    # Filter out gestalt leader traits (should have been caught by leader_trait filter)
+    before_gestalt = len(filtered_traits)
+    filtered_traits = [t for t in filtered_traits if not t.get('id', '').startswith('gestalt_trait_')]
+    removed_count = before_gestalt - len(filtered_traits)
+    if removed_count > 0:
+        print(f"Filtered out {removed_count} gestalt leader traits")
+
+    # Filter out event/progression traits (cost 0) but keep background traits (machine history)
+    before_cost_filter = len(filtered_traits)
+    filtered_traits = [
+        t for t in filtered_traits
+        if (
+            # Keep if cost is non-zero
+            (isinstance(t.get('cost'), (int, float)) and t.get('cost') != 0) or
+            (isinstance(t.get('cost'), dict) and t.get('cost', {}).get('base', 0) != 0) or
+            # Or if it has 'background' tag (machine history choices)
+            (isinstance(t.get('tags'), list) and 'background' in t.get('tags', []))
+        )
+    ]
+    removed_count = before_cost_filter - len(filtered_traits)
+    if removed_count > 0:
+        print(f"Filtered out {removed_count} event/progression traits (cost 0, non-selectable)")
+
     # Add archetype suffix to trait names when there are duplicates
     # Group traits by name to find duplicates
     by_name = defaultdict(list)
