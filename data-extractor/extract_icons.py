@@ -165,7 +165,7 @@ def extract_icons_for_type(stellaris_path, output_path, icon_type, ids_list, tar
 
     ensure_dir(output_dir)
 
-    print(f"\n📁 Extracting {icon_type} icons...")
+    print(f"\n📁 Extracting {icon_type} icons (→ {target_size}x{target_size}px)...")
     print(f"   Source: {source_dir}")
     print(f"   Output: {output_dir}")
 
@@ -217,12 +217,24 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
         stellaris_path: Path to Stellaris installation
         data_path: Path to extracted JSON data (data-extractor/output/)
         output_path: Path to frontend public icons directory
-        target_size: Target size for output images (default 64x64)
+        target_size: Default target size (can be overridden per icon type)
     """
     print(f"🎨 Stellaris Icon Extractor")
     print(f"=" * 60)
-    print(f"Target size: {target_size}x{target_size} pixels")
-    print(f"Output format: PNG")
+    print(f"Output format: PNG (optimized sizes per icon type)")
+
+    # Optimal sizes for each icon type (based on actual display size in frontend)
+    # This reduces file size by ~75% for icons displayed at 32px
+    optimal_sizes = {
+        'traits': 32,           # Displayed at 32px in BuildForm
+        'civics': 32,           # Displayed at 32px in BuildForm
+        'ethics': 32,           # Displayed at 32px in BuildForm
+        'ascension_perks': 32,  # Displayed at 32px in BuildForm
+        'traditions': 32,       # Displayed at 32px in BuildForm
+        'authorities': 32,      # Displayed at 32px in BuildForm
+        'origin_original': 256, # Large origin illustrations (kept at high res)
+        'origin_mini': 32,      # Small origins for home page list
+    }
 
     stats = {
         'total_extracted': 0,
@@ -236,7 +248,8 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
             traits = json.load(f)
             trait_ids = [t['id'] for t in traits]
             extracted, missing = extract_icons_for_type(
-                stellaris_path, output_path, 'traits', trait_ids, target_size
+                stellaris_path, output_path, 'traits', trait_ids,
+                optimal_sizes.get('traits', target_size)
             )
             stats['total_extracted'] += extracted
             stats['total_missing'] += missing
@@ -248,7 +261,8 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
             civics = json.load(f)
             civic_ids = [c['id'] for c in civics]
             extracted, missing = extract_icons_for_type(
-                stellaris_path, output_path, 'civics', civic_ids, target_size
+                stellaris_path, output_path, 'civics', civic_ids,
+                optimal_sizes.get('civics', target_size)
             )
             stats['total_extracted'] += extracted
             stats['total_missing'] += missing
@@ -265,7 +279,8 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
             # These are the source of truth for all origin icons
             # Using image_file names to match actual DDS filenames in Stellaris
             extracted_large, missing_large = extract_icons_for_type(
-                stellaris_path, output_path, 'origin_original', origin_image_files, target_size=256
+                stellaris_path, output_path, 'origin_original', origin_image_files,
+                optimal_sizes.get('origin_original', 256)
             )
             stats['total_extracted'] += extracted_large
             stats['total_missing'] += missing_large
@@ -304,7 +319,8 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
             ethics = json.load(f)
             ethic_ids = [e['id'] for e in ethics]
             extracted, missing = extract_icons_for_type(
-                stellaris_path, output_path, 'ethics', ethic_ids, target_size
+                stellaris_path, output_path, 'ethics', ethic_ids,
+                optimal_sizes.get('ethics', target_size)
             )
             stats['total_extracted'] += extracted
             stats['total_missing'] += missing
@@ -316,7 +332,8 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
             authorities = json.load(f)
             auth_ids = [a['id'] for a in authorities]
             extracted, missing = extract_icons_for_type(
-                stellaris_path, output_path, 'authorities', auth_ids, target_size
+                stellaris_path, output_path, 'authorities', auth_ids,
+                optimal_sizes.get('authorities', target_size)
             )
             stats['total_extracted'] += extracted
             stats['total_missing'] += missing
@@ -330,7 +347,8 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
             perks = perks_data.get('all', perks_data) if isinstance(perks_data, dict) else perks_data
             perk_ids = [p['id'] for p in perks]
             extracted, missing = extract_icons_for_type(
-                stellaris_path, output_path, 'ascension_perks', perk_ids, target_size
+                stellaris_path, output_path, 'ascension_perks', perk_ids,
+                optimal_sizes.get('ascension_perks', target_size)
             )
             stats['total_extracted'] += extracted
             stats['total_missing'] += missing
@@ -381,7 +399,7 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
                     png_path = os.path.join(output_dir, png_filename)
 
                     if os.path.exists(dds_path):
-                        if convert_dds_to_png(dds_path, png_path, target_size):
+                        if convert_dds_to_png(dds_path, png_path, optimal_sizes.get('traditions', target_size)):
                             extracted += 1
                     else:
                         missing += 1
