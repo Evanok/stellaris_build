@@ -171,25 +171,10 @@ export const BuildDetail: React.FC = () => {
   useEffect(() => {
     if (!id) return;
 
-    // Load build data
-    fetch(`/api/builds`)
-      .then(res => res.json())
-      .then(data => {
-        const foundBuild = data.builds.find((b: Build) => b.id === parseInt(id));
-        if (foundBuild) {
-          setBuild(foundBuild);
-        } else {
-          setError('Build not found');
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        setError('Failed to load build');
-        setLoading(false);
-      });
-
-    // Load all game data in parallel
+    // Load build data AND all game data in parallel
+    // Don't show anything until EVERYTHING is loaded to avoid flashing IDs/wrong values
     Promise.all([
+      fetch(`/api/builds`).then(res => res.json()),
       fetch('/api/traits').then(res => res.json()),
       fetch('/api/origins').then(res => res.json()),
       fetch('/api/ethics').then(res => res.json()),
@@ -198,7 +183,8 @@ export const BuildDetail: React.FC = () => {
       fetch('/api/ascension-perks').then(res => res.json()),
       fetch('/api/traditions').then(res => res.json()),
       fetch('/api/ruler-traits').then(res => res.json()),
-    ]).then(([traits, origins, ethics, authorities, civics, perks, traditions, rulerTraits]) => {
+    ]).then(([buildsData, traits, origins, ethics, authorities, civics, perks, traditions, rulerTraits]) => {
+      // Set game data first
       setAllTraits(traits);
       setAllOrigins(Array.isArray(origins) ? origins : (origins.origins || []));
       setAllEthics(ethics);
@@ -218,10 +204,22 @@ export const BuildDetail: React.FC = () => {
         }
       }
       setAllTraditionTrees(trees);
-
       setAllRulerTraits(rulerTraits);
-    }).catch(err => {
-      console.error('Failed to load game data:', err);
+
+      // Now set the build
+      const foundBuild = buildsData.builds.find((b: Build) => b.id === parseInt(id));
+      if (foundBuild) {
+        setBuild(foundBuild);
+      } else {
+        setError('Build not found');
+      }
+
+      // Only now mark as loaded (everything is ready)
+      setLoading(false);
+    }).catch((err) => {
+      console.error('Failed to load data:', err);
+      setError('Failed to load build');
+      setLoading(false);
     });
   }, [id]);
 
