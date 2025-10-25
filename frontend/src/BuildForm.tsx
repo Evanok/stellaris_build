@@ -367,6 +367,9 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         // Filter and sanitize ascension perks
         const sanitizedPerks = perksArray
           .filter((perk: any) => perk.type === 'ascension_perk')
+          // Filter out perks with non-localized names (name === id)
+          // These are usually deprecated or incomplete perks without proper localization
+          .filter((perk: any) => perk.name !== perk.id)
           .map((perk: any) => ({
             ...perk,
             effects: typeof perk.effects === 'string' ? perk.effects : '',
@@ -374,7 +377,17 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
           }))
           .sort((a: any, b: any) => a.id.localeCompare(b.id));
 
-        setAllAscensionPerks(sanitizedPerks);
+        // Remove duplicate names (e.g., 3 Galactic Wonders variants - keep only first)
+        const seenNames = new Set<string>();
+        const uniquePerks = sanitizedPerks.filter((perk: any) => {
+          if (seenNames.has(perk.name)) {
+            return false;
+          }
+          seenNames.add(perk.name);
+          return true;
+        });
+
+        setAllAscensionPerks(uniquePerks);
       })
       .catch(() => setError('Could not load ascension perks data.'));
 

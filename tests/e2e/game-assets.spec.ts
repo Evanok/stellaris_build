@@ -146,11 +146,25 @@ test.describe('Game Assets - Image Availability', () => {
   test('all ascension perk images should exist', async ({ page }) => {
     const response = await page.request.get('http://localhost:3001/api/ascension-perks');
     const data = await response.json();
-    const perks = data.all || data; // Handle both array and {all: []} formats
+    const allPerks = data.all || data; // Handle both array and {all: []} formats
+
+    // Filter out perks with non-localized names (name === id)
+    // These are usually deprecated or incomplete perks without proper localization
+    let displayedPerks = allPerks.filter((perk: any) => perk.name !== perk.id);
+
+    // Remove duplicate names (e.g., 3 Galactic Wonders variants - keep only first)
+    const seenNames = new Set<string>();
+    displayedPerks = displayedPerks.filter((perk: any) => {
+      if (seenNames.has(perk.name)) {
+        return false;
+      }
+      seenNames.add(perk.name);
+      return true;
+    });
 
     const missing: string[] = [];
 
-    for (const perk of perks) {
+    for (const perk of displayedPerks) {
       const imageUrl = `http://localhost:3000/icons/ascension_perks/${perk.id}.png`;
       const imgResponse = await page.request.get(imageUrl);
 
@@ -159,7 +173,7 @@ test.describe('Game Assets - Image Availability', () => {
       }
     }
 
-    expect(missing, `Missing ascension perk images (${missing.length}): ${JSON.stringify(missing, null, 2)}`).toEqual([]);
+    expect(missing, `Missing ascension perk images (${missing.length}/${displayedPerks.length} displayed perks): ${JSON.stringify(missing, null, 2)}`).toEqual([]);
   });
 
   test('all tradition images should exist', async ({ page }) => {

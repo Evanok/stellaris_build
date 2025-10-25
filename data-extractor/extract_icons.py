@@ -131,6 +131,21 @@ def extract_icons_for_type(stellaris_path, output_path, icon_type, ids_list, tar
         'tradition_trees': 'gfx/interface/icons/traditions/tree_icons',
     }
 
+    # Mapping for items that share the same icon file (DLC variants, etc.)
+    # Maps item_id -> actual_dds_filename (without .dds extension)
+    icon_mappings = {
+        'ascension_perks': {
+            # Galactic Wonders DLC variants all use the same base icon
+            'ap_galactic_wonders_utopia': 'ap_galactic_wonders',
+            'ap_galactic_wonders_megacorp': 'ap_galactic_wonders',
+            'ap_galactic_wonders_utopia_and_megacorp': 'ap_galactic_wonders',
+            # Colossus Project uses different filename
+            'ap_colossus': 'ap_colossus_project',
+            # Machine Assimilator variant uses base organo-machine icon
+            'ap_organo_machine_interfacing_assimilator': 'ap_organo_machine_interfacing',
+        },
+    }
+
     if icon_type not in source_dirs:
         print(f"Unknown icon type: {icon_type}")
         return
@@ -152,8 +167,14 @@ def extract_icons_for_type(stellaris_path, output_path, icon_type, ids_list, tar
     missing = 0
 
     for item_id in ids_list:
-        # DDS filename is typically the ID + .dds
-        dds_filename = f"{item_id}.dds"
+        # Check if there's a custom mapping for this item
+        mappings = icon_mappings.get(icon_type, {})
+        if item_id in mappings:
+            dds_filename = f"{mappings[item_id]}.dds"
+        else:
+            # DDS filename is typically the ID + .dds
+            dds_filename = f"{item_id}.dds"
+
         dds_path = os.path.join(source_dir, dds_filename)
 
         # Special case: Origins use "origins_" (plural) prefix in file names
