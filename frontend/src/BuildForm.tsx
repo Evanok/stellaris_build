@@ -690,6 +690,20 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
   // Filter origins only by search query - no species archetype restrictions
   const filteredOrigins = allOrigins.filter(origin => {
+    // Filter by species type (MACHINE vs NOT MACHINE)
+    const possible = origin.possible || [];
+    const requiresMachine = possible.includes('species_archetype:MACHINE');
+    const requiresNotMachine = possible.includes('NOT species_archetype:MACHINE');
+
+    const isMachineSpecies = speciesType === 'MACHINE' || speciesType === 'ROBOT';
+
+    if (requiresMachine && !isMachineSpecies) {
+      return false; // Origin requires MACHINE but species is not machine
+    }
+    if (requiresNotMachine && isMachineSpecies) {
+      return false; // Origin requires NOT MACHINE but species is machine
+    }
+
     // Filter by search query
     if (originSearchQuery) {
       const query = originSearchQuery.toLowerCase();
