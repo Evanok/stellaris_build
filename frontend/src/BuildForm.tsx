@@ -611,10 +611,20 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     }, 0);
   };
 
+  // Count traits that count towards the limit (exclude cost 0 traits like background traits)
+  const countTraitsTowardsLimit = (): number => {
+    return selectedTraits.filter(traitId => {
+      const trait = allTraits.find(t => t.id === traitId);
+      // Only count traits with non-zero cost
+      return trait && typeof trait.cost === 'number' && trait.cost !== 0;
+    }).length;
+  };
+
   const currentTraitPoints = calculateTraitPoints();
+  const currentTraitCount = countTraitsTowardsLimit();
 
   // Check if current selection exceeds limits
-  const exceedsTraitCount = selectedTraits.length > MAX_TRAIT_COUNT;
+  const exceedsTraitCount = currentTraitCount > MAX_TRAIT_COUNT;
   const exceedsTraitPoints = currentTraitPoints > MAX_TRAIT_POINTS;
   const hasInvalidTraits = exceedsTraitCount || exceedsTraitPoints;
 
@@ -1262,7 +1272,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
           {/* Species Traits */}
           <div className="mb-3">
             <label className="form-label">
-              Species Traits ({selectedTraits.length}/{MAX_TRAIT_COUNT} traits, {currentTraitPoints}/{MAX_TRAIT_POINTS} points)
+              Species Traits ({currentTraitCount}/{MAX_TRAIT_COUNT} traits, {currentTraitPoints}/{MAX_TRAIT_POINTS} points)
             </label>
 
             {/* Origin Bonus Display */}
@@ -1283,7 +1293,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                 <strong>⚠️ Trait limits exceeded!</strong>
                 <div className="mt-1">
                   {exceedsTraitCount && (
-                    <div id="trait-count-error">You have {selectedTraits.length} traits but the limit is {MAX_TRAIT_COUNT}. Please deselect {selectedTraits.length - MAX_TRAIT_COUNT} trait{selectedTraits.length - MAX_TRAIT_COUNT > 1 ? 's' : ''}.</div>
+                    <div id="trait-count-error">You have {currentTraitCount} traits but the limit is {MAX_TRAIT_COUNT}. Please deselect {currentTraitCount - MAX_TRAIT_COUNT} trait{currentTraitCount - MAX_TRAIT_COUNT > 1 ? 's' : ''}.</div>
                   )}
                   {exceedsTraitPoints && (
                     <div id="trait-points-error">You have {currentTraitPoints} points but the limit is {MAX_TRAIT_POINTS}. Please adjust your trait selection.</div>
@@ -1302,7 +1312,10 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                   )}
                 </div>
                 <div>
-                  <strong>Traits:</strong> {selectedTraits.length} / {MAX_TRAIT_COUNT}
+                  <strong>Traits:</strong> {currentTraitCount} / {MAX_TRAIT_COUNT}
+                  {selectedTraits.length !== currentTraitCount && (
+                    <span className="text-muted ms-1">({selectedTraits.length} total)</span>
+                  )}
                 </div>
               </div>
               <div className="progress mt-2" style={{ height: '20px' }}>
