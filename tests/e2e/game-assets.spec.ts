@@ -97,12 +97,34 @@ test.describe('Game Assets - Image Availability', () => {
   });
 
   test('all civic images should exist', async ({ page }) => {
-    const response = await page.request.get('http://localhost:3001/api/civics');
-    const civics = await response.json();
+    const civicsResponse = await page.request.get('http://localhost:3001/api/civics');
+    const civics = await civicsResponse.json();
+
+    // Get list of available origins to filter civics
+    const originsResponse = await page.request.get('http://localhost:3001/api/origins');
+    const origins = await originsResponse.json();
+    const availableOriginIds = new Set(origins.map((o: any) => o.id));
+
+    // Filter out civics that require origins not available at empire creation
+    const displayedCivics = civics.filter((civic: any) => {
+      const potential = civic.potential || [];
+
+      // Check if civic requires a specific origin
+      for (const condition of potential) {
+        if (typeof condition === 'string' && condition.startsWith('origin:')) {
+          const requiredOrigin = condition.replace('origin:', '').trim();
+          // If the required origin doesn't exist in our list, filter out this civic
+          if (!availableOriginIds.has(requiredOrigin)) {
+            return false;
+          }
+        }
+      }
+      return true;
+    });
 
     const missing: string[] = [];
 
-    for (const civic of civics) {
+    for (const civic of displayedCivics) {
       const imageUrl = `http://localhost:3000/icons/civics/${civic.id}.png`;
       const imgResponse = await page.request.get(imageUrl);
 
@@ -111,7 +133,7 @@ test.describe('Game Assets - Image Availability', () => {
       }
     }
 
-    expect(missing, `Missing civic images (${missing.length}): ${JSON.stringify(missing, null, 2)}`).toEqual([]);
+    expect(missing, `Missing civic images (${missing.length}/${displayedCivics.length} displayed civics): ${JSON.stringify(missing, null, 2)}`).toEqual([]);
   });
 
   test('all ascension perk images should exist', async ({ page }) => {

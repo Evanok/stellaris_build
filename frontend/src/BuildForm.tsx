@@ -635,8 +635,23 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     return true;
   };
 
-  // All civics are available - no filtering based on compatibility
-  const availableCivics = allCivics;
+  // Filter civics that require origins not available at empire creation
+  const availableCivics = allCivics.filter(civic => {
+    const potential = civic.potential || [];
+
+    // Check if civic requires a specific origin
+    for (const condition of potential) {
+      if (typeof condition === 'string' && condition.startsWith('origin:')) {
+        const requiredOrigin = condition.replace('origin:', '').trim();
+        // Check if the required origin exists in our available origins list
+        const originExists = allOrigins.some(o => o.id === requiredOrigin);
+        if (!originExists) {
+          return false; // Filter out this civic
+        }
+      }
+    }
+    return true;
+  });
 
   // All authorities are available - no filtering based on ethics
   const availableAuthorities = allAuthorities;
