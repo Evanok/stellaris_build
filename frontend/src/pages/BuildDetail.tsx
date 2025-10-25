@@ -512,7 +512,7 @@ export const BuildDetail: React.FC = () => {
                       )}
 
                       <div className="d-flex align-items-start">
-                        <GameIcon type="origins" id={build.origin} size={64} />
+                        <GameIcon type="origin_mini" id={build.origin} size={64} />
                         <div className="flex-grow-1">
                           <h4 className="text-primary mb-2">{origin?.name || build.origin}</h4>
                           {origin?.description && (

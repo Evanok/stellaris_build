@@ -140,6 +140,15 @@ test.describe('Build Display', () => {
       const buildName = await page.locator('h1').first().textContent();
       expect(buildName).toBeTruthy();
 
+      // Debug: capture all image sources on the page
+      const imageSrcs = await page.locator('img').evaluateAll((imgs) =>
+        imgs.map(img => img.getAttribute('src'))
+      );
+      const originImages = imageSrcs.filter(src => src?.includes('origin'));
+      if (originImages.length > 0) {
+        console.log(`Build ${build.id} origin images:`, originImages);
+      }
+
       // Verify no errors occurred
       expect(networkErrors, `Build ${build.id} (${build.name}) should not have network errors. Found: ${JSON.stringify(networkErrors, null, 2)}`).toEqual([]);
       expect(consoleErrors, `Build ${build.id} (${build.name}) should not have console errors. Found: ${JSON.stringify(consoleErrors, null, 2)}`).toEqual([]);

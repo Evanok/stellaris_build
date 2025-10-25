@@ -83,7 +83,7 @@ const OriginCard: React.FC<{ originId: string; origin: Origin | undefined }> = (
         <div className={imageError ? 'col-md-12' : 'col-md-8'}>
           <div className="card-body">
             <div className="d-flex align-items-center mb-2">
-              <GameIcon type="origins" id={originId} size={48} />
+              <GameIcon type="origin_mini" id={originId} size={48} />
               <h5 className="card-title text-primary mb-0 ms-2">
                 {origin?.name || originId}
               </h5>
