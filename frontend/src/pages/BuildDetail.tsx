@@ -497,7 +497,7 @@ export const BuildDetail: React.FC = () => {
                       {!originImageError && (
                         <div className="mb-3 text-center" style={{ backgroundColor: '#1a1a1a', padding: '1rem', borderRadius: '8px' }}>
                           <img
-                            src={`/icons/origin_images/${build.origin}.png`}
+                            src={`/icons/origin_original/${build.origin}.png`}
                             alt={origin?.name || build.origin}
                             style={{
                               width: '100%',

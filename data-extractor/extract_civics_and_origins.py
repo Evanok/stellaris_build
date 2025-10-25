@@ -1,16 +1,54 @@
 #!/usr/bin/env python3
 """
-Stellaris Civics Extractor
-Extracts civics from Stellaris game files and outputs to JSON
+Stellaris Civics and Origins Extractor
+Extracts civics and origins from Stellaris game files and outputs to JSON
 """
 
 import json
 import os
 import sys
+import re
 from pathlib import Path
 from typing import Dict, List, Any
 from paradox_parser import parse_stellaris_file
 from localization_parser import load_all_localizations, get_localized_text, clean_localized_text
+
+
+def parse_origin_gfx_file(gfx_file_path: str) -> Dict[str, str]:
+    """
+    Parse origin_eventpictures.gfx to extract GFX → filename mapping
+
+    Args:
+        gfx_file_path: Path to origin_eventpictures.gfx
+
+    Returns:
+        Dict mapping GFX name to DDS filename (without extension)
+    """
+    mapping = {}
+
+    if not os.path.exists(gfx_file_path):
+        print(f"⚠ Warning: GFX file not found: {gfx_file_path}")
+        return mapping
+
+    try:
+        with open(gfx_file_path, 'r', encoding='utf-8-sig', errors='ignore') as f:
+            content = f.read()
+
+        # Match spriteType blocks with name and texturefile
+        # Pattern: name = "GFX_xxx" ... texturefile = "path/to/file.dds"
+        pattern = r'name\s*=\s*"(GFX_origin_\w+)"[^}]*?texturefile\s*=\s*"([^"]+)"'
+        matches = re.findall(pattern, content, re.DOTALL)
+
+        for gfx_name, texture_path in matches:
+            # Extract just the filename without path and extension
+            # "gfx/event_pictures/origins/origin_shoulders.dds" → "origin_shoulders"
+            filename = texture_path.split('/')[-1].replace('.dds', '')
+            mapping[gfx_name] = filename
+
+    except Exception as e:
+        print(f"⚠ Error parsing GFX file: {e}")
+
+    return mapping
 
 
 def extract_trigger_info(trigger_data: Any) -> List[str]:
@@ -186,6 +224,12 @@ def extract_civic_data(civic_key: str, civic_data: Dict[str, Any], localizations
         "tooltip": tooltip_text,
         "negative_tooltip": negative_tooltip_text
     }
+
+    # For origins, extract the GFX picture reference
+    if civic_data.get("is_origin", False):
+        picture = civic_data.get("picture", "")
+        if picture:
+            civic["picture"] = picture
 
     # Check if it has playable restrictions
     if "playable" in civic_data:
@@ -367,6 +411,21 @@ def extract_all_civics(stellaris_path: str, output_file: str = "output/civics.js
     # Separate civics and origins
     origins = [c for c in all_civics if c.get("is_origin")]
     civics_only = [c for c in all_civics if not c.get("is_origin")]
+
+    # Load GFX mapping for origins to get correct image filenames
+    print("Loading origin GFX mappings...")
+    gfx_file = os.path.join(stellaris_path, "interface", "origin_eventpictures.gfx")
+    gfx_mapping = parse_origin_gfx_file(gfx_file)
+    print(f"  Loaded {len(gfx_mapping)} GFX → filename mappings")
+
+    # Add image_file to origins based on GFX mapping
+    for origin in origins:
+        picture = origin.get("picture", "")
+        if picture and picture in gfx_mapping:
+            origin["image_file"] = gfx_mapping[picture]
+        else:
+            # Fallback: use origin ID as filename
+            origin["image_file"] = origin["id"]
 
     # Create output directory if it doesn't exist
     os.makedirs(os.path.dirname(output_file), exist_ok=True)

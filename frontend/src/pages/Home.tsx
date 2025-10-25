@@ -215,7 +215,7 @@ export const Home: React.FC = () => {
                                 }}
                               >
                                 <img
-                                  src={`/icons/origins/${build.origin}.png`}
+                                  src={`/icons/origin_mini/${build.origin}.png`}
                                   alt=""
                                   style={{ width: '32px', height: '32px', objectFit: 'contain' }}
                                   loading="lazy"

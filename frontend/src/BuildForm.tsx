@@ -67,7 +67,7 @@ const OriginCard: React.FC<{ originId: string; origin: Origin | undefined }> = (
         {!imageError && (
           <div className="col-md-4" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backgroundColor: '#1a1a1a' }}>
             <img
-              src={`/icons/origin_images/${originId}.png`}
+              src={`/icons/origin_original/${originId}.png`}
               alt={origin?.name || originId}
               style={{
                 width: '100%',
@@ -1463,7 +1463,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                           title={origin.description || 'No description available'}
                         >
                           <img
-                            src={`/icons/origin_images/${origin.id}.png`}
+                            src={`/icons/origin_original/${origin.id}.png`}
                             alt=""
                             width={48}
                             height={48}

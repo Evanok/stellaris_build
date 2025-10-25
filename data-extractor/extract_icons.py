@@ -7,6 +7,7 @@ Extracts and converts game icons from DDS to PNG format
 import os
 import sys
 import json
+import shutil
 from pathlib import Path
 try:
     from wand.image import Image as WandImage
@@ -19,6 +20,46 @@ except ImportError:
 def ensure_dir(directory):
     """Create directory if it doesn't exist"""
     Path(directory).mkdir(parents=True, exist_ok=True)
+
+def copy_and_resize_icons(source_dir, dest_dir, target_size=32):
+    """
+    Copy all PNG icons from source_dir to dest_dir and resize them
+
+    Args:
+        source_dir: Source directory with PNG files
+        dest_dir: Destination directory for resized files
+        target_size: Target size in pixels (square image)
+
+    Returns:
+        Tuple of (copied_count, error_count)
+    """
+    ensure_dir(dest_dir)
+    copied = 0
+    errors = 0
+
+    source_path = Path(source_dir)
+    dest_path = Path(dest_dir)
+
+    if not source_path.exists():
+        print(f"⚠ Warning: Source directory {source_dir} does not exist")
+        return 0, 0
+
+    for png_file in source_path.glob("*.png"):
+        try:
+            output_file = dest_path / png_file.name
+
+            # Use PIL to resize
+            from PIL import Image as PILImage
+            with PILImage.open(png_file) as img:
+                resized = img.resize((target_size, target_size), PILImage.LANCZOS)
+                resized.save(output_file, 'PNG', optimize=True)
+
+            copied += 1
+        except Exception as e:
+            print(f"  ⚠ Error copying/resizing {png_file.name}: {e}")
+            errors += 1
+
+    return copied, errors
 
 def convert_dds_to_png(dds_path, png_path, target_size=64):
     """
@@ -81,8 +122,7 @@ def extract_icons_for_type(stellaris_path, output_path, icon_type, ids_list, tar
     # Map icon types to their source directories
     source_dirs = {
         'civics': 'gfx/interface/icons/governments/civics',
-        'origins': 'gfx/interface/icons/origins',
-        'origin_images': 'gfx/event_pictures/origins',  # Large origin illustrations
+        'origin_original': 'gfx/event_pictures/origins',  # Large origin illustrations (256x256)
         'traits': 'gfx/interface/icons/traits',
         'ethics': 'gfx/interface/icons/ethics',
         'authorities': 'gfx/interface/icons/governments/authorities',
@@ -191,20 +231,44 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
     if os.path.exists(origins_file):
         with open(origins_file, 'r', encoding='utf-8') as f:
             origins = json.load(f)
-            origin_ids = [o['id'] for o in origins]
-            extracted, missing = extract_icons_for_type(
-                stellaris_path, output_path, 'origins', origin_ids, target_size
-            )
-            stats['total_extracted'] += extracted
-            stats['total_missing'] += missing
+            # Use image_file field if available (from GFX mapping), fallback to ID
+            origin_image_files = [o.get('image_file', o['id']) for o in origins]
 
-            # Also extract large origin illustrations (event pictures)
-            # These are bigger and used for display, not target_size (keep original or larger)
+            # Extract large origin illustrations (event pictures) at 256x256
+            # These are the source of truth for all origin icons
+            # Using image_file names to match actual DDS filenames in Stellaris
             extracted_large, missing_large = extract_icons_for_type(
-                stellaris_path, output_path, 'origin_images', origin_ids, target_size=256
+                stellaris_path, output_path, 'origin_original', origin_image_files, target_size=256
             )
             stats['total_extracted'] += extracted_large
             stats['total_missing'] += missing_large
+
+            # Create copies with ID names for origins where image_file != id
+            # This allows frontend to reference by ID while using correct source files
+            print("  Creating ID-named copies for origins with different image_file...")
+            origin_original_dir = os.path.join(output_path, 'origin_original')
+            copy_count = 0
+            for origin in origins:
+                image_file = origin.get('image_file', origin['id'])
+                origin_id = origin['id']
+                if image_file != origin_id:
+                    source_file = os.path.join(origin_original_dir, f"{image_file}.png")
+                    dest_file = os.path.join(origin_original_dir, f"{origin_id}.png")
+                    if os.path.exists(source_file) and not os.path.exists(dest_file):
+                        import shutil
+                        shutil.copy2(source_file, dest_file)
+                        copy_count += 1
+            if copy_count > 0:
+                print(f"  ✓ Created {copy_count} ID-named copies")
+
+            # Create smaller versions (32x32) for the home page list view
+            # by copying and resizing from origin_original to origin_mini
+            print("  Creating mini origin icons (32x32) from origin_original...")
+            origin_mini_dir = os.path.join(output_path, 'origin_mini')
+            copied, errors = copy_and_resize_icons(origin_original_dir, origin_mini_dir, target_size=32)
+            print(f"  ✓ Created {copied} mini origin icons (32x32)")
+            if errors > 0:
+                print(f"  ⚠ {errors} errors creating mini icons")
 
     # Extract Ethics
     ethics_file = os.path.join(data_path, 'ethics.json')

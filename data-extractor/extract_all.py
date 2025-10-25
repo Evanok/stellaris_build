@@ -5,7 +5,7 @@ Extract all Stellaris data (traits, civics, origins, ethics, traditions, ascensi
 
 import sys
 from extract_traits import extract_all_traits
-from extract_civics import extract_all_civics
+from extract_civics_and_origins import extract_all_civics
 from extract_ethics import extract_all_ethics
 from extract_traditions import extract_all_traditions
 from extract_ascension_perks import extract_all_ascension_perks

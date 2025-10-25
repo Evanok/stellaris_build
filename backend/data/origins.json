@@ -8,6 +8,7 @@
     "pickable_at_start": true,
     "tooltip": "- Initial Pops: +400 - Homeworld:  - Generator Districts: +1  - Agriculture Districts: +1  - Planetary Modifiers: Prosperous Unification - Guaranteed Research Options: Planetary Unification",
     "negative_tooltip": "",
+    "picture": "GFX_evt_metropolis",
     "potential": [],
     "possible": [],
     "can_modify": true,
@@ -18,7 +19,8 @@
     "random_weight": 100,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_default"
   },
   {
     "id": "origin_shroud_forged",
@@ -29,6 +31,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld:  - Shroud-Touched Region: +4  - Start with 1000 Shroud-Forged Pops - Start with Situation: Forged by the Shroud - Additional Starting Technologies: Zro Distillation - Unique Building: Shroud Observation Tower - Available Planetary Decision: Pierce the Shroud",
     "negative_tooltip": "",
+    "picture": "GFX_origin_shroud_forged",
     "playable_conditions": "{'has_shroud_dlc': True}",
     "potential": [],
     "possible": [
@@ -46,7 +49,8 @@
     "random_weight": 0,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_shroud_forged"
   },
   {
     "id": "origin_mindwardens",
@@ -57,6 +61,7 @@
     "pickable_at_start": true,
     "tooltip": "- Additional Starting Technologies: Starhold - Home System: Start with a Starhold. - Homeworld: Ancient Ward - Gain access to the Psionic Containment Casus Belli against psionically ascended Empires. - Guaranteed Habitable Worlds do not appear. - Mindwarden Enclaves are not generated at the start of game.",
     "negative_tooltip": "",
+    "picture": "GFX_origin_mindwardens",
     "playable_conditions": "{'has_shroud_dlc': True}",
     "potential": [],
     "possible": [
@@ -75,7 +80,8 @@
     "random_weight": 1,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_mindwardens"
   },
   {
     "id": "origin_endbringers",
@@ -86,6 +92,7 @@
     "pickable_at_start": true,
     "tooltip": "",
     "negative_tooltip": "- Empire starts with the Paranoia modifier - Cannot form or join a Federation",
+    "picture": "GFX_origin_endbringers",
     "playable_conditions": "{'has_shroud_dlc': True}",
     "potential": [],
     "possible": [
@@ -103,7 +110,8 @@
     "random_weight": 1,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_endbringers"
   },
   {
     "id": "origin_evolutionary_predators",
@@ -114,6 +122,7 @@
     "pickable_at_start": true,
     "tooltip": "- Species Traits: Malleable Genes - Situation: Adaptive Evolution - Homeworld: Genetic Soup",
     "negative_tooltip": "",
+    "picture": "GFX_origin_evolutionary_predators",
     "playable_conditions": "{'has_biogenesis_dlc': True}",
     "potential": [],
     "possible": [
@@ -131,7 +140,8 @@
     "random_weight": 1,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_evolutionary_predators"
   },
   {
     "id": "origin_starlit_citadel",
@@ -142,6 +152,7 @@
     "pickable_at_start": true,
     "tooltip": "- Home System:   - Deep Space Citadel I at the edge of the gravity well   - Strange Portal leading to an unknown system  - Homeworld:   - Citadel Uplink   - Biological Ship Remains   - Invasion Site: +2  - Additional Starting Technologies: Deep Space Citadel",
     "negative_tooltip": "",
+    "picture": "GFX_origin_starlit_citadel",
     "playable_conditions": "{'has_biogenesis_dlc': True}",
     "potential": [],
     "possible": [],
@@ -156,7 +167,8 @@
     "random_weight": 1,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_starlit_citadel"
   },
   {
     "id": "origin_wilderness",
@@ -167,6 +179,7 @@
     "pickable_at_start": true,
     "tooltip": "- Species Trait: Wilderness - Replaces all standard Buildings, Districts, and District Specialization with bespoke ones - Replaces Colony Ship Colonization with Terraforming - Unlocks new Resource: Biomass  - Homeworld:  - Size: 18  - Scorched Plains",
     "negative_tooltip": "",
+    "picture": "GFX_origins_wilderness",
     "playable_conditions": "{'has_biogenesis_dlc': True}",
     "potential": [],
     "possible": [
@@ -184,7 +197,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_wilderness"
   },
   {
     "id": "origin_treasure_hunters",
@@ -195,6 +209,7 @@
     "pickable_at_start": true,
     "tooltip": "- Starts with an inactive Celestial Chart - Every recruited leader has a bonus Adventurous Spirit trait - Ruler Traits:  - Buccaneer  - Trailblazer  - Treasure Hoarder",
     "negative_tooltip": "",
+    "picture": "GFX_origin_treasure_hunters",
     "playable_conditions": "{'has_grand_archive_dlc': True}",
     "potential": [],
     "possible": [
@@ -208,7 +223,8 @@
     "random_weight": 1,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_treasure_hunters"
   },
   {
     "id": "origin_primal_calling",
@@ -219,6 +235,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld:  - Planetary Modifiers: Untamed Wilds - Home System: Space Fauna in a neighboring system - Available Buildings: Wildlife Ranch - Can choose a special Stance regarding Space Fauna upon First Contact - Additional Starting Technologies: Genome Mapping - Guaranteed Research Options: Xenology - Gain insight on Gravity Snares after First Contact with Space Fauna - Gain insight on Artificial Breeding after capturing Space Fauna - Gain insight on Controlled Mutations after cloning Space Fauna",
     "negative_tooltip": "",
+    "picture": "GFX_origin_primal_calling",
     "playable_conditions": "{'has_grand_archive_dlc': True}",
     "potential": [],
     "possible": [
@@ -240,7 +257,8 @@
     "random_weight": 0,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_primal_calling"
   },
   {
     "id": "origin_storm_chasers",
@@ -251,6 +269,7 @@
     "pickable_at_start": true,
     "tooltip": "- Leader Traits: Storm Rider - Planet Unity from Jobs per Storm Building: +$@storm_chasers_storm_building_unity_produces_mult|%0$  - Cosmic Storm Appearance Chance Within Borders: +100%  - Cosmic Storm Technology Research Option Chance: +175% - Access to the Weather Forecasting Mode - Additional Starting Technologies:  - Cosmic Weather Models",
     "negative_tooltip": "",
+    "picture": "GFX_origin_storm_chasers",
     "playable_conditions": "{'has_cosmic_storms_dlc': True}",
     "potential": [],
     "possible": [
@@ -264,7 +283,8 @@
     "random_weight": 1,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_storm_chasers"
   },
   {
     "id": "origin_cybernetic_creed",
@@ -275,6 +295,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld: Initial buildings replaced by Creed Infrastructure  - Cybernetic Creed factions formed shortly after game start - Spiritualist Trait: Ritualistic Implants - Guaranteed Research Options: Integrated Cybernetics - Cybernetic Creed Priesthood Jobs",
     "negative_tooltip": "",
+    "picture": "GFX_origin_cybernetic_creed",
     "playable_conditions": "{'has_machine_age_dlc': True}",
     "potential": [],
     "possible": [
@@ -290,7 +311,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_cybernetic_creed"
   },
   {
     "id": "origin_synthetic_fertility",
@@ -301,6 +323,7 @@
     "pickable_at_start": true,
     "tooltip": "- Initial Pops: +900  - Species Traits: Pathogenic Genes - Homeworld:   - Size: 20   - Abandoned Cities: +2   - Identity Repository   - Abandoned Gene Clinic  - Situation: Rapid Identity Preservation  - Additional Starting Technologies: AI Technologies  - Guaranteed Research Options: Artificial Workforce",
     "negative_tooltip": "- Pops: In decline",
+    "picture": "GFX_origin_synthetic_fertility",
     "playable_conditions": "{'has_machine_age_dlc': True}",
     "potential": [],
     "possible": [
@@ -318,7 +341,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_synthetic_fertility"
   },
   {
     "id": "origin_arc_welders",
@@ -329,6 +353,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld: Initial Mining Districts replaced with Generator Districts  - Home System: Arc Furnace: Equatorial Band constructed around a Molten World  - Additional Starting Technologies: Arc Furnace  - Guaranteed Research Options: Mega-Engineering upon constructing a second Arc Furnace",
     "negative_tooltip": "- Initial Pops: -300  - Homeworld: Size: 15",
+    "picture": "GFX_origin_arc_welders",
     "playable_conditions": "{'has_machine_age_dlc': True}",
     "potential": [],
     "possible": [
@@ -345,7 +370,8 @@
     "random_weight": 2,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_arc_welders"
   },
   {
     "id": "origin_riftworld",
@@ -356,6 +382,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld: Ancient Crater Archaeology Site - Colonized Planets in systems with [ 'concept_astral_rift',Astral Rifts]: Rift Affinity - Chance for Astral Rifts to appear in systems you control: +100%",
     "negative_tooltip": "",
+    "picture": "GFX_origin_riftworld",
     "playable_conditions": "{'has_astral_planes_dlc': True}",
     "potential": [],
     "possible": [],
@@ -370,7 +397,8 @@
     "random_weight": 2,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_riftworld"
   },
   {
     "id": "origin_legendary_leader",
@@ -381,6 +409,7 @@
     "pickable_at_start": true,
     "tooltip": "- Species Traits: Perfected Genes  - Ruler Traits: Luminary",
     "negative_tooltip": "",
+    "picture": "GFX_origin_legendary_leader",
     "playable_conditions": "{'host_has_dlc': 'Galactic Paragons'}",
     "potential": [],
     "possible": [
@@ -397,7 +426,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_legendary_leader"
   },
   {
     "id": "origin_legendary_leader_death",
@@ -408,6 +438,7 @@
     "pickable_at_start": true,
     "tooltip": "- Species Traits: Perfected Genes  - Ruler Traits: Luminary",
     "negative_tooltip": "",
+    "picture": "GFX_origin_legendary_leader",
     "potential": [],
     "possible": [],
     "can_modify": true,
@@ -420,7 +451,8 @@
     "random_weight": 0,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_legendary_leader"
   },
   {
     "id": "origin_legendary_leader_imperial",
@@ -431,6 +463,7 @@
     "pickable_at_start": true,
     "tooltip": "- Species Traits: Perfected Genes  - Ruler Traits: Luminary",
     "negative_tooltip": "",
+    "picture": "GFX_origin_legendary_leader",
     "potential": [],
     "possible": [],
     "can_modify": true,
@@ -443,7 +476,8 @@
     "random_weight": 0,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_legendary_leader"
   },
   {
     "id": "origin_legendary_leader_dictatorial",
@@ -454,6 +488,7 @@
     "pickable_at_start": true,
     "tooltip": "- Species Traits: Perfected Genes  - Ruler Traits: Luminary",
     "negative_tooltip": "",
+    "picture": "GFX_origin_legendary_leader",
     "potential": [],
     "possible": [],
     "can_modify": true,
@@ -466,7 +501,8 @@
     "random_weight": 0,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_legendary_leader"
   },
   {
     "id": "origin_payback",
@@ -477,6 +513,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld:   - Advanced Infrastructure  - Planetary Modifiers: Unified Purpose - Home System: The Aftermath of Battle Archaeology Site - One Advanced AI Empire and several Pre-FTL Civilizations regardless of the Galaxy Settings  - One Pre-FTL Civilization: Uplifted with the Broken Shackles origin",
     "negative_tooltip": "- Initial Pops: -1K  - Homeworld:   - Debris Field Planetary Modifier   - £blocker£ Ship Debris: +6   - Devastation: 33%  - Home System: Resource Deposits are unexploited  - Missing Starting Technologies:   - Scientific Method   - Planetary Government   - Corvettes",
+    "picture": "GFX_origin_payback",
     "playable_conditions": "{'has_first_contact_dlc': True}",
     "potential": [],
     "possible": [
@@ -493,7 +530,8 @@
     "random_weight": 0,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_payback"
   },
   {
     "id": "origin_broken_shackles",
@@ -504,6 +542,7 @@
     "pickable_at_start": true,
     "tooltip": "- Initial Pops: Species from Pre-FTL Civilizations across the galaxy  - Starting Planet:   - Free at Last Planetary Modifier   - Crashed Slaver Ship Planetary Feature   - Spaceship Wreckage  - Starting System: Crashed Slaver Ship Archaeology Site  - One Advanced AI Empire and several Pre-FTL Civilization regardless of the Galaxy Settings  - One Pre-FTL Civilization: Will be this empire's species and homeworld  - One Pre-FTL Civilization: Uplifted with the Payback origin",
     "negative_tooltip": "- Starting Planet:   - Is NOT this empire's homeworld   - Stellar Culture Shock Planetary Modifier   - Ship Debris: +5  - Starting System: Resource Deposits are unexploited  - Missing Starting Technologies:   - Scientific Method  - Planetary Government   - Corvettes  - Policies:   - Cannot select Slavery Allowed   - Cannot select Purging Allowed",
+    "picture": "GFX_origin_broken_shackles",
     "playable_conditions": "{'has_first_contact_dlc': True}",
     "potential": [],
     "possible": [
@@ -522,7 +561,8 @@
     "random_weight": 0,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_broken_shackles"
   },
   {
     "id": "origin_fear_of_the_dark",
@@ -533,6 +573,7 @@
     "pickable_at_start": true,
     "tooltip": "- Home System: Pre-FTL Civilization created by a Separatist Faction, formerly part of your Empire, granting events and benefits",
     "negative_tooltip": "- Initial Pops: -800",
+    "picture": "GFX_origin_fear_of_the_dark",
     "playable_conditions": "{'has_first_contact_dlc': True}",
     "potential": [],
     "possible": [
@@ -552,7 +593,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_fear_of_the_dark"
   },
   {
     "id": "origin_overtuned",
@@ -563,6 +605,7 @@
     "pickable_at_start": true,
     "tooltip": "- Species Traits: Access to Overtuned Traits - Overtuned Traits:  - Can be boosted by the Damn the Consequences Edict  - Can be added and removed through Genetic Modification - Additional Starting Technologies: Gene Tailoring",
     "negative_tooltip": "",
+    "picture": "GFX_origin_overtuned",
     "playable_conditions": "{'has_toxoids': True}",
     "potential": [],
     "possible": [
@@ -580,7 +623,8 @@
     "random_weight": 0,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_overtuned"
   },
   {
     "id": "origin_toxic_knights",
@@ -591,6 +635,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld:   - Toxic Planetary Features   - Unique Orbital Habitat:   - Order's Keep   - Order's Demesne   - Politician Jobs replaced by Knightly Order Jobs  - Situation: Quest for the Toxic God  - Policies: Knightly Duties  - Available Holdings: Order's Commanderies on Subject colonies",
     "negative_tooltip": "- Initial Pops: -300",
+    "picture": "GFX_origin_toxic_knights",
     "playable_conditions": "{'has_toxoids': True}",
     "potential": [],
     "possible": [
@@ -605,7 +650,8 @@
     "random_weight": 2,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_toxic_god"
   },
   {
     "id": "origin_progenitor_hive",
@@ -616,6 +662,7 @@
     "pickable_at_start": true,
     "tooltip": "- Spawning Pools replaced with Offspring Nest - Available Holdings: Offspring Nest - If Devouring Swarm Civic is NOT selected: Sectors can be released as Subjects - Assigned Leaders: Gain additional passive experience - Available Starbase Buildings: Offspring Outlook - Can construct Offspring Ships",
     "negative_tooltip": "- Fleets suffer from Insufficient Offspring Oversight",
+    "picture": "GFX_origin_progenitor_hive",
     "playable_conditions": "{'has_overlord_dlc': True}",
     "potential": [],
     "possible": [
@@ -635,7 +682,8 @@
     "random_weight": 2,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_progenitor_hive"
   },
   {
     "id": "origin_subterranean",
@@ -646,6 +694,7 @@
     "pickable_at_start": true,
     "tooltip": "- Species Traits: Cave Dweller - Mining Districts: Uncapped",
     "negative_tooltip": "",
+    "picture": "GFX_origin_subterranean",
     "playable_conditions": "{'has_overlord_dlc': True}",
     "potential": [
       "NOT species_archetype:MACHINE"
@@ -670,7 +719,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_subterranean"
   },
   {
     "id": "origin_subterranean_machines",
@@ -681,6 +731,7 @@
     "pickable_at_start": true,
     "tooltip": "- Species Traits: Molebots - Mining Districts: Uncapped",
     "negative_tooltip": "",
+    "picture": "GFX_origin_subterranean",
     "playable_conditions": "{'has_overlord_dlc': True}",
     "potential": [
       "species_archetype:MACHINE"
@@ -705,7 +756,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_subterranean"
   },
   {
     "id": "origin_star_slingshot",
@@ -716,6 +768,7 @@
     "pickable_at_start": true,
     "tooltip": "- Home System: Nearby ruined Quantum Catapult Twin Arrays with the Logs from the Quantum Architect Archaeology Site - Quantic Ambush Effects: Increased to +50% Ship Fire Rate",
     "negative_tooltip": "",
+    "picture": "GFX_origin_star_slingshot",
     "playable_conditions": "{'has_overlord_dlc': True}",
     "potential": [],
     "possible": [],
@@ -730,7 +783,8 @@
     "random_weight": 0,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_star_slingshot"
   },
   {
     "id": "origin_shroudwalker_apprentice",
@@ -741,6 +795,7 @@
     "pickable_at_start": true,
     "tooltip": "- Species Traits: Latent Psionic - Available Starbase Buildings: Shroud Beacon - Communications with the Shroudwalker Enclave - Guaranteed Research Options: Psionic Theory.",
     "negative_tooltip": "",
+    "picture": "GFX_origin_shroudwalker_apprentice",
     "playable_conditions": "{'has_overlord_dlc': True}",
     "potential": [],
     "possible": [
@@ -758,7 +813,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_shroudwalker_apprentice"
   },
   {
     "id": "origin_imperial_vassal",
@@ -769,6 +825,7 @@
     "pickable_at_start": true,
     "tooltip": "- Subject of an Advanced AI Empire - Can select a Specialist Subject type at the start of the game",
     "negative_tooltip": "",
+    "picture": "GFX_origin_imperial_vassal",
     "playable_conditions": "{'has_overlord_dlc': True}",
     "potential": [],
     "possible": [],
@@ -780,7 +837,8 @@
     "random_weight": 0,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_imperial_vassal"
   },
   {
     "id": "origin_here_be_dragons",
@@ -791,6 +849,7 @@
     "pickable_at_start": true,
     "tooltip": "- Home System: Inhabited by a protective Sky Dragon, that will become wrathful if displeased",
     "negative_tooltip": "",
+    "picture": "GFX_origin_here_be_dragons",
     "playable_conditions": "{'has_aquatics': True}",
     "potential": [],
     "possible": [
@@ -804,7 +863,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_here_be_dragons"
   },
   {
     "id": "origin_ocean_paradise",
@@ -815,6 +875,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld:  - Ocean World (size: 30)  - Planetary Modifiers: Ocean Paradise  - Planetary Features: Crystal Reef - Guaranteed Habitable Worlds: Replaced with Frozen Worlds",
     "negative_tooltip": "",
+    "picture": "GFX_origin_ocean_paradise",
     "playable_conditions": "{'has_aquatics': True}",
     "potential": [
       "NOT species_archetype:MACHINE"
@@ -832,7 +893,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_ocean_paradise"
   },
   {
     "id": "origin_ocean_machines",
@@ -843,6 +905,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld:  - Ocean World (size: 30)  - Planetary Modifiers: Ocean Paradise  - Planetary Features: Crystal Reef - Guaranteed Habitable Worlds: Replaced with Frozen Worlds",
     "negative_tooltip": "- Requires Machine Template System Technology for Species Modification",
+    "picture": "GFX_origin_ocean_paradise",
     "playable_conditions": "{'has_aquatics': True}",
     "potential": [
       "species_archetype:MACHINE"
@@ -860,7 +923,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_ocean_paradise"
   },
   {
     "id": "origin_necrophage",
@@ -871,6 +935,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld: Chamber of Elevation  - Species Traits: Necrophage  - Prepatent Pops: 1.2K  - Guaranteed Habitable Worlds: Replaced with Pre-FTL Civilizations",
     "negative_tooltip": "- Only Necrophage Pops can be Rulers or recruited as Leaders",
+    "picture": "GFX_origin_necrophage",
     "playable_conditions": "{'host_has_dlc': 'Necroids Species Pack'}",
     "potential": [],
     "possible": [
@@ -887,7 +952,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_necrophage"
   },
   {
     "id": "origin_remnants",
@@ -898,6 +964,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld:  - Relic World (Size: 22)  - Ruined Arcology: +6 individuals",
     "negative_tooltip": "",
+    "picture": "GFX_origin_remnants",
     "playable_conditions": "{'OR': {'has_ancrel': True, 'host_has_dlc': 'Federations'}}",
     "potential": [],
     "possible": [
@@ -911,7 +978,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_remnants"
   },
   {
     "id": "origin_shattered_ring",
@@ -922,6 +990,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld: Shattered Ring Segment - Guaranteed Habitable Worlds: Replaced with Colonizable Ring World Segments that have Blockers decreasing Habitability  - Species Traits: Ring World Preference",
     "negative_tooltip": "",
+    "picture": "GFX_origin_shattered_ring",
     "playable_conditions": "{'host_has_dlc': 'Federations'}",
     "potential": [],
     "possible": [
@@ -936,7 +1005,8 @@
     "random_weight": 2,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_shattered_ring"
   },
   {
     "id": "origin_void_dwellers",
@@ -947,6 +1017,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld: Orbital Habitat - Species Traits:  - Void Dweller  - Habitat Preference - Additional Starting Technologies: Orbital Habitats - Guaranteed Research Options: Habitat Expansion - Guaranteed Habitable Worlds: Resource-rich systems instead of Colonizable Planets  - Can construct advanced housing buildings on Habitats - Waives Technology requirements for Basic District Specialization on Habitats",
     "negative_tooltip": "",
+    "picture": "GFX_origin_void_dwellers",
     "playable_conditions": "{'host_has_dlc': 'Federations'}",
     "potential": [
       "NOT species_archetype:MACHINE"
@@ -971,7 +1042,8 @@
     "random_weight": 3,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_void_dwellers"
   },
   {
     "id": "origin_void_machines",
@@ -982,6 +1054,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld: Orbital Habitat - Species Traits:  - Zero-G Optimized  - Habitat Preference - Additional Starting Technologies: Orbital Habitats - Guaranteed Research Options: Habitat Expansion - Guaranteed Habitable Worlds: Resource-rich systems instead of Colonizable Planets  - Can construct advanced housing buildings on Habitats - Waives Technology requirements for Basic District Specialization on Habitats",
     "negative_tooltip": "- Requires Machine Template System Technology for Species Modification",
+    "picture": "GFX_origin_void_dwellers",
     "playable_conditions": "{'host_has_dlc': 'Federations'}",
     "potential": [
       "species_archetype:MACHINE"
@@ -1007,7 +1080,8 @@
     "random_weight": 3,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_void_dwellers"
   },
   {
     "id": "origin_scion",
@@ -1018,6 +1092,7 @@
     "pickable_at_start": true,
     "tooltip": "- Scion of a Fallen Empire Overlord - Home System: Connected to Overlord's capital via a Wormhole - Fallen Empire present in the galaxy regardless of Galaxy settings - Chance of receiving powerful gifts from Overlord",
     "negative_tooltip": "",
+    "picture": "GFX_origin_scion",
     "playable_conditions": "{'host_has_dlc': 'Federations'}",
     "potential": [],
     "possible": [
@@ -1033,7 +1108,8 @@
     "random_weight": 0,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_scion"
   },
   {
     "id": "origin_shoulders_of_giants",
@@ -1044,6 +1120,7 @@
     "pickable_at_start": true,
     "tooltip": "- Home System: Ex Gravitas Archaeology Site related to a mysterious benefactor",
     "negative_tooltip": "- Precursor Event Chains blocked until this mystery is solved",
+    "picture": "GFX_origin_shoulders",
     "playable_conditions": "{'host_has_dlc': 'Federations'}",
     "potential": [],
     "possible": [
@@ -1058,7 +1135,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_shoulders"
   },
   {
     "id": "origin_common_ground",
@@ -1069,6 +1147,7 @@
     "pickable_at_start": true,
     "tooltip": "- Leader of a non-Hegemony Federation - Guaranteed Habitable Worlds: Replaced with Federation members - Additional Starting Technologies: Federation Code",
     "negative_tooltip": "",
+    "picture": "GFX_origin_common_ground",
     "playable_conditions": "{'host_has_dlc': 'Federations'}",
     "potential": [],
     "possible": [
@@ -1082,7 +1161,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_common_ground"
   },
   {
     "id": "origin_hegemon",
@@ -1093,6 +1173,7 @@
     "pickable_at_start": true,
     "tooltip": "- Leader of a Hegemony Federation - Guaranteed Habitable Worlds: Replaced with Federation members - Additional Starting Technologies: Federation Code",
     "negative_tooltip": "",
+    "picture": "GFX_origin_hegemon",
     "playable_conditions": "{'host_has_dlc': 'Federations'}",
     "potential": [],
     "possible": [
@@ -1107,7 +1188,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_hegemon"
   },
   {
     "id": "origin_doomsday",
@@ -1118,6 +1200,7 @@
     "pickable_at_start": true,
     "tooltip": "",
     "negative_tooltip": "- Homeworld: Doomsday Planetary Modifier  - Guaranteed Habitable Worlds: Are NOT spawned",
+    "picture": "GFX_origin_doomsday",
     "playable_conditions": "{'host_has_dlc': 'Federations'}",
     "potential": [],
     "possible": [],
@@ -1129,7 +1212,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_doomsday"
   },
   {
     "id": "origin_lithoid",
@@ -1140,6 +1224,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld:  - Massive Crater  - £blocker£ Buried Lithoids: +4 - Available Colony Ships: Lithoid Meteorites - Planets Colonized with Lithoid Meteorites:  - Buried Lithoids: +2  - Planetary Modifiers: Lithoid Crater - Available Holdings: Experimental Crater on (Subject) colonies",
     "negative_tooltip": "",
+    "picture": "GFX_origin_calamitous",
     "playable_conditions": "{'host_has_dlc': 'Lithoids Species Pack'}",
     "potential": [],
     "possible": [
@@ -1153,7 +1238,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_calamitous"
   },
   {
     "id": "origin_life_seeded",
@@ -1164,6 +1250,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld: Gaia World (Size: 30) with Rare Planetary Features - Species Traits: Gaia World Preference",
     "negative_tooltip": "- Guaranteed Habitable Worlds: Are NOT spawned",
+    "picture": "GFX_origin_life_seeded",
     "playable_conditions": "{'host_has_dlc': 'Apocalypse'}",
     "potential": [],
     "possible": [],
@@ -1175,7 +1262,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_life_seeded"
   },
   {
     "id": "origin_post_apocalyptic",
@@ -1186,6 +1274,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld: Tomb World - Species Traits: Survivor",
     "negative_tooltip": "",
+    "picture": "GFX_origin_post_apocalyptic",
     "playable_conditions": "{'host_has_dlc': 'Apocalypse'}",
     "potential": [
       "NOT species_archetype:MACHINE"
@@ -1205,7 +1294,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_post_apocalyptic"
   },
   {
     "id": "origin_post_apocalyptic_machines",
@@ -1216,6 +1306,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld: Tomb World - Species Traits: Radiation Shields",
     "negative_tooltip": "",
+    "picture": "GFX_origin_post_apocalyptic",
     "playable_conditions": "{'host_has_dlc': 'Apocalypse'}",
     "potential": [
       "species_archetype:MACHINE"
@@ -1233,7 +1324,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_post_apocalyptic"
   },
   {
     "id": "origin_clone_army",
@@ -1244,6 +1336,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld: Ancient Clone Vat: +2  - Species Traits: Clone Soldier - Additional Starting Technologies:   - Cloning   - Gene Banks",
     "negative_tooltip": "",
+    "picture": "GFX_origin_clone_army",
     "playable_conditions": "{'host_has_dlc': 'Humanoids Species Pack'}",
     "potential": [],
     "possible": [
@@ -1260,7 +1353,8 @@
     "random_weight": 2,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_clones"
   },
   {
     "id": "origin_machine",
@@ -1271,6 +1365,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld:  - Prototype Machine World  - Planetary Features: Consolidated Resources   - If combined with the Driven Assimilator Civic:  - Planetary Features: Organic Slurry - Waives Technology requirements for the Machine Worlds Ascension Perk",
     "negative_tooltip": "- Home System: Planets are Molten Worlds or Barren Worlds devoid of any resources",
+    "picture": "GFX_origin_resource_consolidation",
     "playable_conditions": "{'host_has_dlc': 'Synthetic Dawn Story Pack'}",
     "potential": [],
     "possible": [
@@ -1285,7 +1380,8 @@
     "random_weight": 2,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_resource_consolidation"
   },
   {
     "id": "origin_unplugged",
@@ -1296,6 +1392,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld:  - Planetary Modifiers: Battlefield Recoveries - Home System: Contains a Tomb World with an Archaeology Site related to a decimated Pre-FTL Civilization - Species Traits:  - Limited access to Cybernetic Traits  - Cyber Commandos  - Unplugged",
     "negative_tooltip": "",
+    "picture": "GFX_origin_unplugged",
     "playable_conditions": "{'has_synthetic_dawn': True}",
     "potential": [],
     "possible": [
@@ -1316,7 +1413,8 @@
     "random_weight": 1,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_unplugged"
   },
   {
     "id": "origin_mechanists",
@@ -1327,6 +1425,7 @@
     "pickable_at_start": true,
     "tooltip": "- Robot Pops: 800  - Mechanical Trait: Adaptive Frames - Homeworld: Robot Assembly Plant - Additional Starting Technologies:  - Powered Exoskeletons  - Artificial Workforce - Guaranteed Research Options: Machine Template System",
     "negative_tooltip": "",
+    "picture": "GFX_origin_mechanist",
     "playable_conditions": "{'host_has_dlc': 'Utopia'}",
     "potential": [],
     "possible": [
@@ -1347,7 +1446,8 @@
     "random_weight": 10,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_mechanists"
   },
   {
     "id": "origin_syncretic_evolution",
@@ -1358,6 +1458,7 @@
     "pickable_at_start": true,
     "tooltip": "- Organic Pops with Serviles Trait: 1.2K",
     "negative_tooltip": "",
+    "picture": "GFX_origin_syncretic_evolution",
     "playable_conditions": "{'host_has_dlc': 'Utopia'}",
     "potential": [],
     "possible": [
@@ -1372,7 +1473,8 @@
     "random_weight": 10,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_syncretic_evolution"
   },
   {
     "id": "origin_tree_of_life",
@@ -1383,6 +1485,7 @@
     "pickable_at_start": true,
     "tooltip": "- Homeworld: Tree of Life - Colonized Planets: Tree of Life Sapling Planetary Feature - Colonies without the Tree of Life Sapling: Transplant Tree of Life Planetary Decision - Available Holdings: Tree of Life Sprout on Subject colonies",
     "negative_tooltip": "- Colonies without the Tree of Life Sapling: No Tree of Life Planetary Modifier",
+    "picture": "GFX_origin_tree",
     "playable_conditions": "{'host_has_dlc': 'Utopia'}",
     "potential": [],
     "possible": [
@@ -1400,7 +1503,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_tree"
   },
   {
     "id": "origin_fruitful",
@@ -1411,6 +1515,7 @@
     "pickable_at_start": true,
     "tooltip": "- Space Fauna: Disperse Seed Pods throughout the galaxy  - Available Starbase Buildings: Starseed Gardens  - Available Bombardment Stances: ['concept_seed_bombing' ] - Home System: ['concept_tiyanki' ] in a neighboring system",
     "negative_tooltip": "",
+    "picture": "GFX_origin_fruitful",
     "playable_conditions": "{'has_plantoids': True}",
     "potential": [],
     "possible": [
@@ -1426,7 +1531,8 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_gardeners"
   },
   {
     "id": "origin_galactic_doorstep",
@@ -1437,6 +1543,7 @@
     "pickable_at_start": true,
     "tooltip": "- Home System: Dormant Gateway",
     "negative_tooltip": "",
+    "picture": "GFX_origin_galactic_doorstep",
     "playable_conditions": "{'always': True}",
     "potential": [],
     "possible": [],
@@ -1451,7 +1558,8 @@
     "random_weight": 1,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_galactic_doorstep"
   },
   {
     "id": "origin_lost_colony",
@@ -1462,6 +1570,7 @@
     "pickable_at_start": true,
     "tooltip": "- Starting Planet: Colonial Spirit Planetary Modifier - An Advanced AI Empire of the same species is present in the galaxy",
     "negative_tooltip": "- Starting planet is NOT this empire's homeworld.",
+    "picture": "GFX_origin_lost_colony",
     "playable_conditions": "{'always': True}",
     "potential": [],
     "possible": [],
@@ -1473,6 +1582,7 @@
     "random_weight": 5,
     "alternate_version": "",
     "can_build_ruler_ship": false,
-    "custom_tooltip": ""
+    "custom_tooltip": "",
+    "image_file": "origin_lost_colony"
   }
 ]
