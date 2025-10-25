@@ -696,12 +696,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     // Filter by search query
     if (traitSearchQuery) {
       const query = traitSearchQuery.toLowerCase();
-      return (
-        trait.name.toLowerCase().includes(query) ||
-        trait.id.toLowerCase().includes(query) ||
-        trait.effects.toLowerCase().includes(query) ||
-        trait.tags.some(tag => tag.toLowerCase().includes(query))
-      );
+      return trait.name.toLowerCase().includes(query);
     }
 
     return true;
@@ -712,12 +707,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     // Filter by search query
     if (traitSearchQuery) {
       const query = traitSearchQuery.toLowerCase();
-      return (
-        trait.name.toLowerCase().includes(query) ||
-        trait.id.toLowerCase().includes(query) ||
-        trait.effects.toLowerCase().includes(query) ||
-        trait.tags.some(tag => tag.toLowerCase().includes(query))
-      );
+      return trait.name.toLowerCase().includes(query);
     }
 
     return true;
@@ -742,11 +732,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     // Filter by search query
     if (originSearchQuery) {
       const query = originSearchQuery.toLowerCase();
-      return (
-        origin.id.toLowerCase().includes(query) ||
-        origin.description.toLowerCase().includes(query) ||
-        origin.effects.toLowerCase().includes(query)
-      );
+      return origin.name.toLowerCase().includes(query);
     }
     return true;
   });
@@ -755,10 +741,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const filteredAscensionPerks = allAscensionPerks.filter(perk => {
     if (ascensionPerkSearchQuery) {
       const query = ascensionPerkSearchQuery.toLowerCase();
-      return (
-        perk.id.toLowerCase().includes(query) ||
-        perk.effects.toLowerCase().includes(query)
-      );
+      return perk.name.toLowerCase().includes(query);
     }
     return true;
   });
@@ -767,11 +750,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const filteredEthics = allEthics.filter(ethic => {
     if (ethicsSearchQuery) {
       const query = ethicsSearchQuery.toLowerCase();
-      return (
-        ethic.id.toLowerCase().includes(query) ||
-        ethic.effects.toLowerCase().includes(query) ||
-        ethic.tags.some(tag => tag.toLowerCase().includes(query))
-      );
+      return ethic.name.toLowerCase().includes(query);
     }
     return true;
   });
@@ -780,11 +759,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const filteredCivics = availableCivics.filter(civic => {
     if (civicsSearchQuery) {
       const query = civicsSearchQuery.toLowerCase();
-      return (
-        civic.id.toLowerCase().includes(query) ||
-        civic.effects.toLowerCase().includes(query) ||
-        civic.description.toLowerCase().includes(query)
-      );
+      return civic.name.toLowerCase().includes(query);
     }
     return true;
   });
