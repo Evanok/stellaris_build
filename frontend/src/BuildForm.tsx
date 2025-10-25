@@ -327,9 +327,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
             description: typeof trait.description === 'string' ? trait.description : '',
             cost: typeof trait.cost === 'number' ? trait.cost : (typeof trait.cost === 'object' && trait.cost !== null && typeof trait.cost.base === 'number' ? trait.cost.base : 0),
           }))
-          // Only show traits that are selectable during empire creation (non-zero cost)
-          .filter((trait: any) => typeof trait.cost === 'number' && trait.cost !== 0)
-          // Sort by cost (positive traits first, then negative)
+          // Sort by cost (positive traits first, then negative, then background traits at zero)
+          // Note: Traits are pre-filtered during extraction (only selectable traits are in JSON)
           .sort((a: any, b: any) => b.cost - a.cost);
 
         setAllTraits(sanitizedTraits);
