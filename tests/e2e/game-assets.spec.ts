@@ -11,9 +11,17 @@ test.describe('Game Assets - Image Availability', () => {
     const response = await page.request.get('http://localhost:3001/api/traits');
     const allTraits = await response.json();
 
-    // Test all traits - no filtering by cost
-    // The extraction script already filters out leader traits and cyborg traits
-    const displayedTraits = allTraits;
+    // Apply same filter as frontend (BuildForm.tsx line 331)
+    // Only test traits that are actually displayed (cost !== 0)
+    // Handle both number cost and object cost { base, modifier }
+    const displayedTraits = allTraits.filter((trait: any) => {
+      if (typeof trait.cost === 'number') {
+        return trait.cost !== 0;
+      } else if (typeof trait.cost === 'object' && trait.cost !== null) {
+        return typeof trait.cost.base === 'number' && trait.cost.base !== 0;
+      }
+      return false;
+    });
 
     const missing: string[] = [];
 
