@@ -71,8 +71,14 @@ const apiLimiter = (req, res, next) => {
   next();
 };
 
-// Manual rate limiter middleware for build creation - 5 builds per hour
+// Manual rate limiter middleware for build creation - 20 builds per hour (unlimited on localhost)
 const createBuildLimiter = (req, res, next) => {
+  // Skip rate limiting on localhost for development
+  const isLocalhost = req.hostname === 'localhost' || req.hostname === '127.0.0.1';
+  if (isLocalhost) {
+    return next();
+  }
+
   // Use user ID if authenticated, otherwise skip rate limiting (protected by auth middleware anyway)
   if (!req.user) {
     return next();
@@ -112,9 +118,9 @@ const createBuildLimiter = (req, res, next) => {
   userData.count += 1;
 
   // Check if limit exceeded
-  if (userData.count > 5) {
+  if (userData.count > 20) {
     return res.status(429).json({
-      error: 'You can only create 5 builds per hour. Please wait before creating more.',
+      error: 'You can only create 20 builds per hour. Please wait before creating more.',
     });
   }
 

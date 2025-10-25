@@ -245,7 +245,7 @@ const ORIGINS_WITH_SECONDARY_SPECIES = [
   'origin_overtuned',
 ];
 
-export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialData, buildId }) => {
+const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialData, buildId }) => {
   const isEditMode = !!buildId;
   // Form fields state
   const [name, setName] = useState('');
@@ -650,27 +650,6 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
 
     // Only check if selecting this ethic would exceed max points
     if (currentEthicsPoints + ethic.cost > MAX_ETHICS_POINTS) {
-      return false;
-    }
-
-    return true;
-  };
-
-  // Check if a trait can be selected
-  const canSelectTrait = (trait: Trait): boolean => {
-    // Already selected
-    if (selectedTraits.includes(trait.id)) {
-      return true;
-    }
-
-    // Check max trait count
-    if (selectedTraits.length >= MAX_TRAIT_COUNT) {
-      return false;
-    }
-
-    // Check if selecting this trait would exceed max points
-    const traitCost = typeof trait.cost === 'number' ? trait.cost : 0;
-    if (currentTraitPoints + traitCost > MAX_TRAIT_POINTS) {
       return false;
     }
 
@@ -2052,3 +2031,11 @@ export const BuildForm: React.FC<BuildFormProps> = ({ onBuildCreated, initialDat
     </div>
   );
 };
+
+// Custom comparison function: only re-render if initialData or buildId changes
+const arePropsEqual = (prevProps: BuildFormProps, nextProps: BuildFormProps) => {
+  return prevProps.initialData === nextProps.initialData && prevProps.buildId === nextProps.buildId;
+};
+
+// Wrap with React.memo to prevent unnecessary re-renders
+export const BuildForm = React.memo(BuildFormComponent, arePropsEqual);
