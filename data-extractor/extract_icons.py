@@ -144,6 +144,12 @@ def extract_icons_for_type(stellaris_path, output_path, icon_type, ids_list, tar
             # Machine Assimilator variant uses base organo-machine icon
             'ap_organo_machine_interfacing_assimilator': 'ap_organo_machine_interfacing',
         },
+        'tradition_trees': {
+            # Gestalt/special variants that share icons with base traditions
+            'tr_logistics': 'tradition_icon_mercantile',  # Gestalt variant of Mercantile
+            'tr_cybernetics_assimilator': 'tradition_icon_cybernetics',  # Assimilator variant
+            'tr_psionics_shroud': 'tradition_icon_psionics',  # Shroud variant
+        },
     }
 
     if icon_type not in source_dirs:
@@ -347,14 +353,27 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
                 print(f"   Source: {source_dir}")
                 print(f"   Output: {output_dir}")
 
+                # Tradition tree icon mappings for variants that share the same icon
+                tradition_mappings = {
+                    'tr_logistics': 'tradition_icon_mercantile',  # Gestalt variant of Mercantile
+                    'tr_cybernetics_assimilator': 'tradition_icon_cybernetics',  # Assimilator variant
+                    'tr_psionics_shroud': 'tradition_icon_psionics',  # Shroud variant
+                }
+
                 extracted = 0
                 missing = 0
 
                 for tree_id in tree_ids:
-                    # Icons use "tradition_icon_" prefix instead of "tr_"
-                    # e.g., tr_expansion -> tradition_icon_expansion.dds
-                    icon_name = tree_id.replace('tr_', '')
-                    dds_filename = f"tradition_icon_{icon_name}.dds"
+                    # Check if there's a custom mapping for this tradition tree
+                    mappings = tradition_mappings
+                    if tree_id in mappings:
+                        dds_filename = f"{mappings[tree_id]}.dds"
+                    else:
+                        # Icons use "tradition_icon_" prefix instead of "tr_"
+                        # e.g., tr_expansion -> tradition_icon_expansion.dds
+                        icon_name = tree_id.replace('tr_', '')
+                        dds_filename = f"tradition_icon_{icon_name}.dds"
+
                     dds_path = os.path.join(source_dir, dds_filename)
 
                     # Save with tree_id as filename so frontend can find it
