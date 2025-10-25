@@ -92,6 +92,14 @@ test.describe('Build Display', () => {
   });
 
   test('should display all builds without errors', async ({ page }) => {
+    // Listen for network failures (404, 500, etc.)
+    const networkErrors: string[] = [];
+    page.on('response', response => {
+      if (response.status() >= 400) {
+        networkErrors.push(`${response.status()} ${response.statusText()} - ${response.url()}`);
+      }
+    });
+
     // Listen for console errors
     const consoleErrors: string[] = [];
     page.on('console', msg => {
@@ -118,6 +126,7 @@ test.describe('Build Display', () => {
       console.log(`Testing build ${build.id}: ${build.name}`);
 
       // Clear previous errors
+      networkErrors.length = 0;
       consoleErrors.length = 0;
       pageErrors.length = 0;
 
@@ -131,10 +140,10 @@ test.describe('Build Display', () => {
       const buildName = await page.locator('h1').first().textContent();
       expect(buildName).toBeTruthy();
 
-      // Verify no React rendering errors occurred
-      const reactErrors = consoleErrors.filter(e => e.includes('Minified React error') || e.includes('React'));
-      expect(reactErrors, `Build ${build.id} (${build.name}) should not have React errors`).toEqual([]);
-      expect(pageErrors, `Build ${build.id} (${build.name}) should not have page errors`).toEqual([]);
+      // Verify no errors occurred
+      expect(networkErrors, `Build ${build.id} (${build.name}) should not have network errors. Found: ${JSON.stringify(networkErrors, null, 2)}`).toEqual([]);
+      expect(consoleErrors, `Build ${build.id} (${build.name}) should not have console errors. Found: ${JSON.stringify(consoleErrors, null, 2)}`).toEqual([]);
+      expect(pageErrors, `Build ${build.id} (${build.name}) should not have page errors. Found: ${JSON.stringify(pageErrors.map(e => e.message), null, 2)}`).toEqual([]);
     }
   });
 });
