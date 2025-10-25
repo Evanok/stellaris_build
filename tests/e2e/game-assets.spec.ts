@@ -13,9 +13,15 @@ test.describe('Game Assets - Image Availability', () => {
 
     // Apply same filter as frontend (BuildForm.tsx line 331)
     // Only test traits that are actually displayed (cost !== 0)
-    const displayedTraits = allTraits.filter((trait: any) =>
-      typeof trait.cost === 'number' && trait.cost !== 0
-    );
+    // Handle both number cost and object cost { base, modifier }
+    const displayedTraits = allTraits.filter((trait: any) => {
+      if (typeof trait.cost === 'number') {
+        return trait.cost !== 0;
+      } else if (typeof trait.cost === 'object' && trait.cost !== null) {
+        return typeof trait.cost.base === 'number' && trait.cost.base !== 0;
+      }
+      return false;
+    });
 
     const missing: string[] = [];
 
