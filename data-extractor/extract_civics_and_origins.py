@@ -409,8 +409,24 @@ def extract_all_civics(stellaris_path: str, output_file: str = "output/civics.js
             all_civics.extend(civics)
 
     # Separate civics and origins
-    origins = [c for c in all_civics if c.get("is_origin")]
+    all_origins = [c for c in all_civics if c.get("is_origin")]
     civics_only = [c for c in all_civics if not c.get("is_origin")]
+
+    # Filter out duplicate legendary_leader variants (keep only the base one)
+    # The game shows only one variant based on authority chosen
+    excluded_legendary = [
+        'origin_legendary_leader_death',
+        'origin_legendary_leader_imperial',
+        'origin_legendary_leader_dictatorial'
+    ]
+
+    excluded_origins = [o for o in all_origins if o['id'] in excluded_legendary]
+    origins = [o for o in all_origins if o['id'] not in excluded_legendary]
+
+    if excluded_origins:
+        print(f"\n⚠ Excluded {len(excluded_origins)} legendary_leader variants:")
+        for origin in excluded_origins:
+            print(f"  - {origin['id']}: {origin['name']}")
 
     # Load GFX mapping for origins to get correct image filenames
     print("Loading origin GFX mappings...")
