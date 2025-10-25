@@ -91,7 +91,7 @@ test.describe('Build Display', () => {
     expect(displayedBuildsCount).toBeLessThanOrEqual(apiBuildsCount);
   });
 
-  test('should display all 11 builds without errors', async ({ page }) => {
+  test('should display all builds without errors', async ({ page }) => {
     // Listen for console errors
     const consoleErrors: string[] = [];
     page.on('console', msg => {
@@ -121,11 +121,11 @@ test.describe('Build Display', () => {
       consoleErrors.length = 0;
       pageErrors.length = 0;
 
-      // Go to build detail page
-      await page.goto(`/build/${build.id}`);
+      // Go to build detail page (5s timeout per individual build)
+      await page.goto(`/build/${build.id}`, { timeout: 5000 });
 
-      // Wait for build content to load
-      await page.waitForSelector('h1', { timeout: 15000 });
+      // Wait for build content to load (5s timeout per individual build)
+      await page.waitForSelector('h1', { timeout: 5000 });
 
       // Verify the build name is displayed
       const buildName = await page.locator('h1').first().textContent();

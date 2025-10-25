@@ -159,8 +159,7 @@ test.describe('Build Creation - Valid Builds', () => {
 });
 
 test.describe('Build Creation - Validation', () => {
-  // TODO: Fix this test - first origin likely gives bonus picks
-  test.skip('should prevent submitting build with more than 5 traits', async ({ page }) => {
+  test('should prevent submitting build with more than 5 traits', async ({ page }) => {
     await loginAsTestUser(page);
 
     await page.goto('/create/manual');
