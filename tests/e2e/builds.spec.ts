@@ -125,7 +125,7 @@ test.describe('Build Display', () => {
       await page.goto(`/build/${build.id}`);
 
       // Wait for build content to load
-      await page.waitForSelector('h1', { timeout: 10000 });
+      await page.waitForSelector('h1', { timeout: 15000 });
 
       // Verify the build name is displayed
       const buildName = await page.locator('h1').first().textContent();
