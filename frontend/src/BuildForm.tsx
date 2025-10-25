@@ -1340,7 +1340,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                     });
 
                     // Disable if this is a background trait and another background trait is selected
-                    const isDisabled = isBackgroundTrait && selectedBackgroundTrait && selectedBackgroundTrait !== trait.id;
+                    const isDisabled = !!(isBackgroundTrait && selectedBackgroundTrait && selectedBackgroundTrait !== trait.id);
 
                     return (
                       <div
