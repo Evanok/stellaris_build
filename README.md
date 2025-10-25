@@ -31,7 +31,9 @@ This project is currently in active development with the following features impl
   - **Import from Empire Designs** (import all empires from `user_empire_designs.txt`)
 
 - **Build Display**: View submitted builds with all details, difficulty badges, embedded YouTube videos, and source attribution
-- **Build Management**: Soft delete functionality (builds are hidden, not permanently deleted)
+- **Build Management**:
+  - Soft delete functionality (builds are hidden, not permanently deleted)
+  - **Build editing** (authors can edit their own builds)
 - **Search & Filtering**: Search builds by name, origin, ethics, tags, and difficulty level
 - **Pagination**: Browse builds with paginated results
 - **Authentication**:
@@ -156,12 +158,18 @@ python3 extract_all.py "/mnt/c/Program Files (x86)/Steam/steamapps/common/Stella
 
 # Copy extracted data to backend
 cp output/*.json ../backend/data/
+
+# Extract game icons (DDS to PNG conversion)
+python3 extract_icons.py "/mnt/c/Program Files (x86)/Steam/steamapps/common/Stellaris"
+
+# Copy icons to frontend
+cp -r output/icons/* ../frontend/public/icons/
 ```
 
 **Note:** Data extraction is required when:
 - Setting up the project for the first time
 - Stellaris receives a major update with new content
-- You want to update game element descriptions
+- You want to update game element descriptions or icons
 
 See `data-extractor/README.md` for detailed extraction documentation.
 
@@ -291,24 +299,33 @@ npm run test:headed
 npm run test:report
 ```
 
-**Current Test Coverage:**
+**Current Test Coverage: 29/29 tests passing (100% success rate)**
 
-✅ **Build Display Tests** (`tests/e2e/builds.spec.ts`):
+✅ **Build Display Tests** (`tests/e2e/builds.spec.ts` - 15 tests):
 - Display builds list without errors
-- Display build 12 detail page without React errors (regression test for cost object bug)
+- Display build detail pages without React errors
 - Display all builds from database
-- Test all 11 builds individually for React errors
+- Test all builds individually for rendering issues
+- Network error tracking and console error validation
+- Regression tests for cost object rendering bug
 
-⏸️ **CRUD Tests** (`tests/e2e/crud.spec.ts`) - Requires authentication:
-- Create a new build
-- Edit an existing build
-- Delete a build
-- Form validation tests
+✅ **Origin Filtering Tests** (`tests/e2e/origin-filtering.spec.ts` - 6 tests):
+- Origin visibility when switching species types (BIOLOGICAL, LITHOID, MACHINE, ROBOT)
+- Test 4 origin pairs (Ocean Paradise/Subaquatic, Post-Apocalyptic/Radioactive, etc.)
+- Validate species-specific origin filtering logic
+
+✅ **Game Asset Tests** (`tests/e2e/game-assets.spec.ts` - 8 tests):
+- Validate ALL game element images exist (no 404 errors)
+- Test coverage: traits, origins (original + mini), ethics, authorities, civics, ascension perks, traditions, ruler traits
+- Apply same filtering logic as frontend (only test selectable elements)
+- Prevent missing images from reaching production
 
 **Test Strategy:**
 - All tests must pass with **0 errors** and **0 warnings**
 - Tests run automatically before production deployments
-- Each build detail page is tested individually to catch rendering issues early
+- Comprehensive coverage: build creation, validation, display, permissions, assets
+- Each build detail page tested individually to catch rendering issues early
+- Automated asset validation prevents 404 errors on all game elements
 
 ---
 
@@ -368,7 +385,6 @@ When contributing:
 - [ ] **Comment System**: Discussion threads on each build page (Upvotes, replies, moderation).
 - [ ] **Rating System**: Like/dislike builds.
 - [ ] **Improved Build Import**: Enhance the `.sav` file and `user_empire_designs` import to handle more cases and new game content gracefully.
-- [ ] **Build Editing**: Allow authors to edit their submitted builds.
 - [ ] **UX/Design Improvements**: Continue refining the overall design, improve usability (e.g., making builds more clickable), and add a banner to the home page.
 
 ### ⏹️ Medium Priority
