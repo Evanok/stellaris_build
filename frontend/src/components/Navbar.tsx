@@ -6,7 +6,7 @@ export const Navbar: React.FC = () => {
   const { user, loading, logout } = useAuth();
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           <strong>Stellaris Build Sharing</strong>
