@@ -2,7 +2,7 @@
   {
     "id": "AQUATIC",
     "name": "Aquatic",
-    "description": "",
+    "description": "Species Class has no effect on your Empire, but Aquatic-class Species may consider other Aquatics to be less alien than other Species Classes.",
     "archetype": "BIOLOGICAL",
     "graphical_culture": "aquatic_01",
     "portraits": [
@@ -28,7 +28,7 @@
   {
     "id": "ART",
     "name": "Arthropoid",
-    "description": "",
+    "description": "Species Class has no effect on your Empire, but Arthropoid-class Species may consider other Arthropoids to be less alien than other Species Classes.",
     "archetype": "BIOLOGICAL",
     "graphical_culture": "arthropoid_01",
     "portraits": [
@@ -57,7 +57,7 @@
   {
     "id": "AVI",
     "name": "Avian",
-    "description": "",
+    "description": "Species Class has no effect on your Empire, but Avian-class Species may consider other Avians to be less alien than other Species Classes.",
     "archetype": "BIOLOGICAL",
     "graphical_culture": "avian_01",
     "portraits": [
@@ -83,9 +83,27 @@
     "portrait_count": 18
   },
   {
+    "id": "BIOGENESIS_01",
+    "name": "BioGenesis",
+    "description": "",
+    "archetype": "BIOLOGICAL",
+    "graphical_culture": "biogenesis_01",
+    "portraits": [],
+    "portrait_count": 0
+  },
+  {
+    "id": "CYBERNETIC",
+    "name": "Cybernetic",
+    "description": "Species Class has no effect on your Empire, but Cybernetic-class Species may consider other Cybernetics to be less alien than other Species Classes.",
+    "archetype": "BIOLOGICAL",
+    "graphical_culture": "cybernetics_01",
+    "portraits": [],
+    "portrait_count": 0
+  },
+  {
     "id": "FUN",
     "name": "Fungoid",
-    "description": "",
+    "description": "Species Class has no effect on your Empire, but Fungoid-class Species may consider other Fungoids to be less alien than other Species Classes.",
     "archetype": "BIOLOGICAL",
     "graphical_culture": "fungoid_01",
     "portraits": [
@@ -109,11 +127,11 @@
     "portrait_count": 16
   },
   {
-    "id": "IMPERIAL",
-    "name": "Human",
-    "description": "",
+    "id": "HUM",
+    "name": "Humanoid",
+    "description": "Species Class has no effect on your Empire, but Humanoid-class Species may consider other Humanoids to be less alien than other Species Classes.",
     "archetype": "BIOLOGICAL",
-    "graphical_culture": "nemesis_01",
+    "graphical_culture": "humanoid_01",
     "portraits": [
       "human_female_01",
       "human_female_02",
@@ -149,7 +167,7 @@
   {
     "id": "LITHOID",
     "name": "Lithoid",
-    "description": "",
+    "description": "Species Class has no effect on your Empire, but Lithoid-class Species may consider other Lithoids to be less alien than other Species Classes.",
     "archetype": "LITHOID",
     "graphical_culture": "lithoid_01",
     "portraits": [
@@ -175,9 +193,18 @@
     "portrait_count": 18
   },
   {
+    "id": "MACHINE",
+    "name": "Machine",
+    "description": "Species Class has no effect on your Empire, but Machine-class Species may consider other Machines to be less alien than other Species Classes.",
+    "archetype": "MACHINE",
+    "graphical_culture": "synthetics_01",
+    "portraits": [],
+    "portrait_count": 0
+  },
+  {
     "id": "MAM",
     "name": "Mammalian",
-    "description": "",
+    "description": "Species Class has no effect on your Empire, but Mammalian-class Species may consider other Mammalians to be less alien than other Species Classes.",
     "archetype": "BIOLOGICAL",
     "graphical_culture": "mammalian_01",
     "portraits": [
@@ -204,7 +231,7 @@
   {
     "id": "MOL",
     "name": "Molluscoid",
-    "description": "",
+    "description": "Species Class has no effect on your Empire, but Molluscoid-class Species may consider other Molluscoids to be less alien than other Species Classes.",
     "archetype": "BIOLOGICAL",
     "graphical_culture": "molluscoid_01",
     "portraits": [
@@ -231,7 +258,7 @@
   {
     "id": "NECROID",
     "name": "Necroid",
-    "description": "",
+    "description": "Species Class has no effect on your Empire, but Necroid-class Species may consider other Necroids to be less alien than other Species Classes.",
     "archetype": "BIOLOGICAL",
     "graphical_culture": "necroid_01",
     "portraits": [
@@ -257,7 +284,7 @@
   {
     "id": "PLANT",
     "name": "Plantoid",
-    "description": "",
+    "description": "Species Class has no effect on your Empire, but Plantoid-class Species may consider other Plantoids to be less alien than other Species Classes.",
     "archetype": "BIOLOGICAL",
     "graphical_culture": "plantoid_01",
     "portraits": [
@@ -282,9 +309,18 @@
     "portrait_count": 17
   },
   {
+    "id": "PSIONIC",
+    "name": "Psionic",
+    "description": "",
+    "archetype": "BIOLOGICAL",
+    "graphical_culture": "psionic_01",
+    "portraits": [],
+    "portrait_count": 0
+  },
+  {
     "id": "REP",
     "name": "Reptilian",
-    "description": "",
+    "description": "Species Class has no effect on your Empire, but Reptilian-class Species may consider other Reptilians to be less alien than other Species Classes.",
     "archetype": "BIOLOGICAL",
     "graphical_culture": "reptilian_01",
     "portraits": [
@@ -309,9 +345,18 @@
     "portrait_count": 17
   },
   {
+    "id": "ROBOT",
+    "name": "Synthetic",
+    "description": "Species Class has no effect on your Empire, but Robot-class Species may consider other Robots to be less alien than other Species Classes.",
+    "archetype": "ROBOT",
+    "graphical_culture": "ai_01",
+    "portraits": [],
+    "portrait_count": 0
+  },
+  {
     "id": "TOX",
     "name": "Toxoid",
-    "description": "",
+    "description": "Species Class has no effect on your Empire, but Toxoid-class Species may consider other Toxoids to be less alien than other Species Classes.",
     "archetype": "BIOLOGICAL",
     "graphical_culture": "toxoid_01",
     "portraits": [

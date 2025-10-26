@@ -256,8 +256,6 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const [difficulty, setDifficulty] = useState<string>('');
   const [dlcs, setDlcs] = useState('');
   const [tags, setTags] = useState('');
-  const [speciesType, setSpeciesType] = useState<string>('BIOLOGICAL');
-  const [secondarySpeciesType, setSecondarySpeciesType] = useState<string>('BIOLOGICAL');
   const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
   const [selectedSecondaryTraits, setSelectedSecondaryTraits] = useState<string[]>([]);
   const [selectedOrigin, setSelectedOrigin] = useState<string>('');
@@ -559,16 +557,6 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setSelectedSecondaryTraits(initialData.secondary_traits.map((t: string) => t.trim()));
       }
 
-      // Handle species type (string: BIOLOGICAL, LITHOID, MACHINE, ROBOT)
-      if (initialData.speciesType) {
-        setSpeciesType(initialData.speciesType);
-      }
-
-      // Handle secondary species type
-      if (initialData.secondarySpeciesType) {
-        setSecondarySpeciesType(initialData.secondarySpeciesType);
-      }
-
       // Handle species class and portrait
       if (initialData.species_class) {
         setSelectedSpeciesClass(initialData.species_class);
@@ -597,6 +585,13 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   // Validate authority when ethics change
   // No longer auto-clearing authority based on ethics - let user choose freely
 
+  // Helper: Get archetype from selected species class
+  const getSpeciesArchetype = (speciesClassId: string): string => {
+    if (!speciesClassId) return 'BIOLOGICAL';
+    const speciesClass = allSpeciesClasses.find(sc => sc.id === speciesClassId);
+    return speciesClass?.archetype || 'BIOLOGICAL';
+  };
+
   // Get origin bonuses for current species type
   const getOriginTraitBonuses = () => {
     if (!selectedOrigin) {
@@ -609,11 +604,11 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     }
 
     const modifier = origin.modifier;
-    const speciesPrefix = speciesType; // BIOLOGICAL, LITHOID, MACHINE, ROBOT
+    const speciesArchetype = getSpeciesArchetype(selectedSpeciesClass); // BIOLOGICAL, LITHOID, MACHINE, ROBOT
 
     // Check for species-specific bonuses
-    const pointsKey = `${speciesPrefix}_species_trait_points_add`;
-    const picksKey = `${speciesPrefix}_species_trait_picks_add`;
+    const pointsKey = `${speciesArchetype}_species_trait_points_add`;
+    const picksKey = `${speciesArchetype}_species_trait_picks_add`;
 
     return {
       pointsBonus: modifier[pointsKey] || 0,
@@ -728,7 +723,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   // Filter traits by species type and search query
   const filteredTraits = allTraits.filter(trait => {
     // Filter machine-only traits (only for MACHINE/ROBOT species)
-    const isMachineSpecies = speciesType === 'MACHINE' || speciesType === 'ROBOT';
+    const speciesArchetype = getSpeciesArchetype(selectedSpeciesClass);
+    const isMachineSpecies = speciesArchetype === 'MACHINE' || speciesArchetype === 'ROBOT';
     const hasMachineTag = Array.isArray(trait.tags) && trait.tags.includes('machine');
     if (hasMachineTag && !isMachineSpecies) {
       return false;
@@ -761,7 +757,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     const requiresMachine = possible.includes('species_archetype:MACHINE');
     const requiresNotMachine = possible.includes('NOT species_archetype:MACHINE');
 
-    const isMachineSpecies = speciesType === 'MACHINE' || speciesType === 'ROBOT';
+    const speciesArchetype = getSpeciesArchetype(selectedSpeciesClass);
+    const isMachineSpecies = speciesArchetype === 'MACHINE' || speciesArchetype === 'ROBOT';
 
     if (requiresMachine && !isMachineSpecies) {
       return false; // Origin requires MACHINE but species is not machine
@@ -979,8 +976,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       difficulty,
       dlcs,
       tags,
-      speciesType,
-      secondarySpeciesType,
+      selectedSpeciesClass,
+      selectedSecondarySpeciesClass,
       selectedTraits,
       selectedSecondaryTraits,
       selectedOrigin,
@@ -1008,8 +1005,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setDifficulty(formData.difficulty || '');
         setDlcs(formData.dlcs || '');
         setTags(formData.tags || '');
-        setSpeciesType(formData.speciesType || 'BIOLOGICAL');
-        setSecondarySpeciesType(formData.secondarySpeciesType || 'BIOLOGICAL');
+        setSelectedSpeciesClass(formData.selectedSpeciesClass || '');
+        setSelectedSecondarySpeciesClass(formData.selectedSecondarySpeciesClass || '');
         setSelectedTraits(formData.selectedTraits || []);
         setSelectedSecondaryTraits(formData.selectedSecondaryTraits || []);
         setSelectedOrigin(formData.selectedOrigin || '');
@@ -1253,48 +1250,32 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
             </select>
           </div>
 
+          {/* Species Class Selector */}
           <div className="mb-3">
-            <label className="form-label">Primary Species Type</label>
-            <div className="btn-group w-100" role="group">
-              {['BIOLOGICAL', 'LITHOID', 'MACHINE', 'ROBOT'].map(type => (
-                <button
-                  key={type}
-                  type="button"
-                  className={`btn ${speciesType === type ? 'btn-primary' : 'btn-outline-primary'}`}
-                  onClick={() => {
-                    setSpeciesType(type);
-                    // Clear traits when changing species type to avoid invalid combinations
-                    setSelectedTraits([]);
-                  }}
-                >
-                  {type}
-                </button>
+            <label className="form-label">Species Class</label>
+            <select
+              className="form-select bg-secondary text-white border-secondary"
+              value={selectedSpeciesClass}
+              onChange={(e) => {
+                setSelectedSpeciesClass(e.target.value);
+                // Clear traits when changing species class to avoid invalid combinations
+                setSelectedTraits([]);
+                setSelectedSecondaryTraits([]);
+              }}
+            >
+              <option value="">-- Select Species Class --</option>
+              {allSpeciesClasses.map(sc => (
+                <option key={sc.id} value={sc.id}>
+                  {sc.name}
+                </option>
               ))}
-            </div>
+            </select>
+            {selectedSpeciesClass && (
+              <small className="text-muted">
+                Archetype: {allSpeciesClasses.find(sc => sc.id === selectedSpeciesClass)?.archetype || 'Unknown'}
+              </small>
+            )}
           </div>
-
-          {/* Species Class Selector - HIDDEN until images are available */}
-          {false && (
-            <div className="mb-3">
-              <label className="form-label">Species Appearance</label>
-              <select
-                className="form-select bg-secondary text-white border-secondary"
-                value={selectedSpeciesClass}
-                onChange={(e) => {
-                  setSelectedSpeciesClass(e.target.value);
-                  // Reset portrait when changing species class
-                  setSelectedPortrait('');
-                }}
-              >
-                <option value="">-- Select Species Appearance --</option>
-                {allSpeciesClasses.map(sc => (
-                  <option key={sc.id} value={sc.id}>
-                    {sc.name} ({sc.portrait_count} portraits)
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
 
           {/* Portrait Selector - HIDDEN until images are available */}
           {false && selectedSpeciesClass && (
@@ -1513,26 +1494,28 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                 </small>
               </label>
 
-              {/* Secondary Species Type Selector */}
-              <div className="mb-3">
-                <label className="form-label">Secondary Species Type</label>
-                <div className="btn-group w-100" role="group">
-                  {['BIOLOGICAL', 'LITHOID', 'MACHINE', 'ROBOT'].map(type => (
-                    <button
-                      key={type}
-                      type="button"
-                      className={`btn ${secondarySpeciesType === type ? 'btn-primary' : 'btn-outline-primary'}`}
-                      onClick={() => {
-                        setSecondarySpeciesType(type);
-                        // Clear secondary traits when changing species type to avoid invalid combinations
-                        setSelectedSecondaryTraits([]);
-                      }}
-                    >
-                      {type}
-                    </button>
-                  ))}
+              {/* Secondary Species Class Selector */}
+              {selectedSecondarySpeciesClass && (
+                <div className="mb-3">
+                  <label className="form-label">Secondary Species Class</label>
+                  <select
+                    className="form-select bg-secondary text-white border-secondary"
+                    value={selectedSecondarySpeciesClass}
+                    onChange={(e) => {
+                      setSelectedSecondarySpeciesClass(e.target.value);
+                      // Clear secondary traits when changing species class
+                      setSelectedSecondaryTraits([]);
+                    }}
+                  >
+                    <option value="">-- Select Secondary Species Class --</option>
+                    {allSpeciesClasses.map(sc => (
+                      <option key={sc.id} value={sc.id}>
+                        {sc.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-              </div>
+              )}
 
               <div className="card bg-secondary" style={{ maxHeight: '300px', overflowY: 'auto' }}>
                 <div className="card-body">

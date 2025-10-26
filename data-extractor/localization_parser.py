@@ -76,12 +76,13 @@ def load_all_localizations(stellaris_path: str, language: str = 'english') -> Di
 
     all_localizations = {}
 
-    # Process all .yml files in the directory
-    for filename in os.listdir(localization_dir):
-        if filename.endswith('.yml'):
-            filepath = os.path.join(localization_dir, filename)
-            file_localizations = parse_localization_file(filepath)
-            all_localizations.update(file_localizations)
+    # Process all .yml files in the directory and subdirectories
+    for root, dirs, files in os.walk(localization_dir):
+        for filename in files:
+            if filename.endswith('.yml'):
+                filepath = os.path.join(root, filename)
+                file_localizations = parse_localization_file(filepath)
+                all_localizations.update(file_localizations)
 
     print(f"Loaded {len(all_localizations)} localization entries for {language}")
     return all_localizations

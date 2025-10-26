@@ -22,7 +22,8 @@ SPECIES_CLASS_PORTRAIT_PREFIXES = {
     'FUN': 'fun',       # Fungoid
     'MOL': 'mol',       # Molluscoid
     'PLANT': 'pla',     # Plantoid
-    'IMPERIAL': 'human',     # Human
+    'HUM': 'human',     # Humanoid
+    'IMPERIAL': 'human',     # Imperial (DLC)
     'LITHOID': 'lith',     # Lithoid
     'NECROID': 'nec',       # Necroid
     'AQUATIC': 'aqu',       # Aquatic
@@ -125,9 +126,12 @@ def extract_species_class_data(class_id: str, class_data: Dict[str, Any],
     Returns:
         Cleaned species class data
     """
-    # Get localized name
-    name_key = f"SPEC_{class_id}"
+    # Get localized name (use just the class_id, not SPEC_ prefix)
+    name_key = class_id
     name = get_localized_text(name_key, localizations)
+
+    # Track if this is a manual override (to skip post-processing)
+    is_manual_override = False
 
     # If no localization found, generate from ID
     if name == name_key:
@@ -147,6 +151,25 @@ def extract_species_class_data(class_id: str, class_data: Dict[str, Any],
             'TOX': 'Toxoid',
         }
         name = name_mapping.get(class_id, class_id)
+
+    # Post-processing: Clean up special species names (only if not manual override)
+    if not is_manual_override:
+        # Remove trailing numbers (e.g., BIOGENESIS_01 -> Biogenesis)
+        if '_' in name and name.split('_')[-1].isdigit():
+            name = name.rsplit('_', 1)[0]
+
+        # Convert all-caps names to title case (e.g., MACHINE -> Machine, PSIONIC -> Psionic)
+        if name.isupper() and len(name) > 1:
+            name = name.capitalize()
+
+        # Replace underscores with spaces and title case (e.g., BIOGENESIS_01 -> Biogenesis)
+        name = name.replace('_', ' ').title()
+
+    # Manual overrides for specific species classes (applied AFTER post-processing)
+    if class_id == 'ROBOT':
+        name = 'Synthetic'  # More commonly known as Synthetic in the game
+    elif class_id == 'BIOGENESIS_01':
+        name = 'BioGenesis'  # Use origin name instead of species name
 
     # Get description if available
     desc_key = f"{name_key}_desc"
@@ -175,11 +198,10 @@ def extract_all_species_classes(stellaris_path: str, output_file: str = "output/
         stellaris_path: Path to Stellaris installation directory
         output_file: Output JSON file path
     """
-    species_classes_file = os.path.join(stellaris_path, "common", "species_classes",
-                                        "01_base_species_classes.txt")
+    species_classes_dir = os.path.join(stellaris_path, "common", "species_classes")
 
-    if not os.path.exists(species_classes_file):
-        print(f"Error: Species classes file not found at {species_classes_file}")
+    if not os.path.exists(species_classes_dir):
+        print(f"Error: Species classes directory not found at {species_classes_dir}")
         sys.exit(1)
 
     print("Loading localizations...")
@@ -188,25 +210,61 @@ def extract_all_species_classes(stellaris_path: str, output_file: str = "output/
     print("Extracting portraits...")
     portraits_by_class = extract_all_portraits(stellaris_path)
 
-    print(f"\nProcessing species classes from: {os.path.basename(species_classes_file)}")
+    # Get all .txt files in species_classes directory
+    species_classes_files = sorted([
+        f for f in os.listdir(species_classes_dir)
+        if f.endswith('.txt')
+    ])
+
+    print(f"\nProcessing species classes from {len(species_classes_files)} files:")
+    all_species_data = {}
+
+    # Read all files and merge data
+    for filename in species_classes_files:
+        filepath = os.path.join(species_classes_dir, filename)
+        print(f"  Reading {filename}...")
+        try:
+            data = parse_stellaris_file(filepath)
+            all_species_data.update(data)
+        except Exception as e:
+            print(f"    Error reading {filename}: {e}")
+
+    print(f"\nFound {len(all_species_data)} species class definitions")
 
     try:
-        data = parse_stellaris_file(species_classes_file)
         species_classes = []
 
-        for class_id, class_data in data.items():
-            if isinstance(class_data, dict) and not class_id.startswith('_'):
-                # Get portraits for this class
-                portraits = portraits_by_class.get(class_id, [])
+        # Define player-selectable species classes (including those without specific portraits)
+        # NPC-only classes should be excluded
+        npc_only_classes = [
+            'PRE_MAM', 'PRE_REP', 'PRE_AVI', 'PRE_ART', 'PRE_MOL', 'PRE_FUN', 'PRE_PLANT',
+            'PRE_LITHOID', 'PRE_AQUATIC', 'PRE_TOX',  # Primitives
+            'AI', 'SWARM', 'EXD',  # Event-spawned species
+            'SALVAGER', 'SHROUDWALKER', 'MINDWARDEN_ENCLAVE', 'PARAGON', 'MSI_SLAVER',  # Special NPC species
+            'WILDERNESS',  # Special origin species
+            'MINDWARDEN',  # Special event species
+            'SOLARPUNK',  # Not yet released/playable
+            'BIOGENESIS_02',  # Duplicate, keep only BIOGENESIS_01
+            'IMPERIAL',  # Requires Nemesis DLC, duplicate of HUM
+        ]
 
-                # Skip if no portraits found (might be NPC-only class)
-                if not portraits:
-                    print(f"  Skipping {class_id} - no portraits found")
+        for class_id, class_data in all_species_data.items():
+            if isinstance(class_data, dict) and not class_id.startswith('_'):
+                # Skip NPC-only classes
+                if class_id in npc_only_classes:
+                    print(f"  Skipping {class_id} - NPC-only species")
                     continue
+
+                # Get portraits for this class (may be empty for special species)
+                portraits = portraits_by_class.get(class_id, [])
 
                 species_class = extract_species_class_data(class_id, class_data, portraits, localizations)
                 species_classes.append(species_class)
-                print(f"  {class_id}: {species_class['name']} ({len(portraits)} portraits)")
+
+                if portraits:
+                    print(f"  {class_id}: {species_class['name']} ({len(portraits)} portraits)")
+                else:
+                    print(f"  {class_id}: {species_class['name']} (special species, uses other portraits)")
 
         # Sort by name for better readability
         species_classes.sort(key=lambda x: x['name'])
