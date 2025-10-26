@@ -1496,6 +1496,25 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
             />
             <div className="card bg-secondary" style={{ maxHeight: '400px', overflowY: 'auto' }}>
               <div className="card-body">
+                {/* None option */}
+                <div className={`form-check mb-2 pb-2 border-bottom border-dark ${!selectedOrigin ? 'bg-primary bg-opacity-25' : ''}`}>
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    id="origin-none"
+                    name="origin"
+                    checked={!selectedOrigin}
+                    onChange={() => setSelectedOrigin('')}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="origin-none"
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <strong className="text-muted">None (no origin selected)</strong>
+                  </label>
+                </div>
+
                 {filteredOrigins.length > 0 ? (
                   filteredOrigins.map(origin => {
                     const isSelected = selectedOrigin === origin.id;
@@ -1510,13 +1529,21 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                           id={`origin-${origin.id}`}
                           name="origin"
                           checked={isSelected}
-                          onChange={() => setSelectedOrigin(origin.id)}
+                          onChange={() => {
+                            // Toggle: if already selected, deselect it
+                            setSelectedOrigin(isSelected ? '' : origin.id);
+                          }}
                         />
                         <label
                           className="form-check-label"
                           htmlFor={`origin-${origin.id}`}
                           style={{ cursor: 'pointer' }}
                           title={origin.description || 'No description available'}
+                          onClick={(e) => {
+                            // Allow clicking on label to toggle selection
+                            e.preventDefault();
+                            setSelectedOrigin(isSelected ? '' : origin.id);
+                          }}
                         >
                           <img
                             src={`/icons/origin_original/${origin.id}.png`}
@@ -1560,6 +1587,25 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
             <div className="card bg-secondary" style={{ maxHeight: '400px', overflowY: 'auto' }}>
               <div className="card-body">
+                {/* None option */}
+                <div className={`form-check mb-2 pb-2 border-bottom border-dark ${!selectedRulerTrait ? 'bg-primary bg-opacity-25' : ''}`}>
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    id="ruler-trait-none"
+                    name="ruler_trait"
+                    checked={!selectedRulerTrait}
+                    onChange={() => setSelectedRulerTrait('')}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="ruler-trait-none"
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <strong className="text-muted">None (no starting ruler trait)</strong>
+                  </label>
+                </div>
+
                 {filteredRulerTraits.length > 0 ? (
                   filteredRulerTraits.map(trait => {
                     const isSelected = selectedRulerTrait === trait.id;
@@ -1574,13 +1620,21 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                           id={`ruler-trait-${trait.id}`}
                           name="ruler_trait"
                           checked={isSelected}
-                          onChange={() => setSelectedRulerTrait(trait.id)}
+                          onChange={() => {
+                            // Toggle: if already selected, deselect it
+                            setSelectedRulerTrait(isSelected ? '' : trait.id);
+                          }}
                         />
                         <label
                           className="form-check-label"
                           htmlFor={`ruler-trait-${trait.id}`}
                           style={{ cursor: 'pointer' }}
                           title={trait.description || 'No description available'}
+                          onClick={(e) => {
+                            // Allow clicking on label to toggle selection
+                            e.preventDefault();
+                            setSelectedRulerTrait(isSelected ? '' : trait.id);
+                          }}
                         >
                           {trait.icon && (
                             <img
@@ -1751,6 +1805,25 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
             <div className="card bg-secondary" style={{ maxHeight: '500px', overflowY: 'auto' }}>
               <div className="card-body">
+                {/* None option */}
+                <div className={`form-check mb-3 pb-3 border-bottom border-dark ${!selectedAuthority ? 'bg-primary bg-opacity-25' : ''}`}>
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    id="authority-none"
+                    name="authority"
+                    checked={!selectedAuthority}
+                    onChange={() => setSelectedAuthority('')}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="authority-none"
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <strong className="text-muted">None (no authority selected)</strong>
+                  </label>
+                </div>
+
                 {availableAuthorities.length > 0 ? (
                   availableAuthorities.map(authority => {
                     const isSelected = selectedAuthority === authority.id;
@@ -1765,12 +1838,20 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                           id={`authority-${authority.id}`}
                           name="authority"
                           checked={isSelected}
-                          onChange={() => setSelectedAuthority(authority.id)}
+                          onChange={() => {
+                            // Toggle: if already selected, deselect it
+                            setSelectedAuthority(isSelected ? '' : authority.id);
+                          }}
                         />
                         <label
                           className="form-check-label"
                           htmlFor={`authority-${authority.id}`}
                           style={{ cursor: 'pointer' }}
+                          onClick={(e) => {
+                            // Allow clicking on label to toggle selection
+                            e.preventDefault();
+                            setSelectedAuthority(isSelected ? '' : authority.id);
+                          }}
                         >
                           <GameIcon type="authorities" id={authority.id} size={32} />
                           <strong className="text-white">{authority.name}</strong>
