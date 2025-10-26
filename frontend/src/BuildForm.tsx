@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { AuthModal } from './components/AuthModal';
+import { decodeHtmlEntities } from './utils/htmlDecode';
 
 interface BuildFormProps {
   onBuildCreated: (newBuild: any) => void;
@@ -523,9 +524,9 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   // Populate form with initialData (from imports)
   useEffect(() => {
     if (initialData) {
-      // Set basic fields
-      if (initialData.name) setName(initialData.name);
-      if (initialData.description) setDescription(initialData.description);
+      // Set basic fields - decode HTML entities for proper display in form inputs
+      if (initialData.name) setName(decodeHtmlEntities(initialData.name));
+      if (initialData.description) setDescription(decodeHtmlEntities(initialData.description));
       if (initialData.game_version) setGameVersion(initialData.game_version);
       if (initialData.youtube_url) setYoutubeUrl(initialData.youtube_url);
       if (initialData.source_url) setSourceUrl(initialData.source_url);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import { decodeHtmlEntities } from '../utils/htmlDecode';
 import './Home.css';
 
 // Helper function to get difficulty badge styling
@@ -310,14 +311,14 @@ export const Home: React.FC = () => {
                         </div>
 
                         <h5 className="card-title text-white mb-3">
-                          <ReactMarkdown>{build.name}</ReactMarkdown>
+                          <ReactMarkdown>{decodeHtmlEntities(build.name)}</ReactMarkdown>
                         </h5>
 
                         {/* Description */}
                         <div className="card-text text-light small mb-3">
                           {build.description ? (
                             <ReactMarkdown>
-                              {build.description.substring(0, 100) + (build.description.length > 100 ? '...' : '')}
+                              {decodeHtmlEntities(build.description).substring(0, 100) + (build.description.length > 100 ? '...' : '')}
                             </ReactMarkdown>
                           ) : (
                             <p className="mb-0">No description provided.</p>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { useAuth } from '../AuthContext';
+import { decodeHtmlEntities } from '../utils/htmlDecode';
 
 interface Build {
   id: number;
@@ -319,7 +320,9 @@ export const BuildDetail: React.FC = () => {
               <li className="breadcrumb-item">
                 <Link to="/" className="text-decoration-none">Home</Link>
               </li>
-              <li className="breadcrumb-item active" aria-current="page">{build.name}</li>
+              <li className="breadcrumb-item active" aria-current="page">
+                <ReactMarkdown>{decodeHtmlEntities(build.name)}</ReactMarkdown>
+              </li>
             </ol>
           </nav>
         </div>
@@ -330,10 +333,12 @@ export const BuildDetail: React.FC = () => {
         <div className="card-body">
           <div className="row">
             <div className="col-md-8">
-              <h1 className="text-white mb-3">{build.name}</h1>
+              <h1 className="text-white mb-3">
+                <ReactMarkdown>{decodeHtmlEntities(build.name)}</ReactMarkdown>
+              </h1>
               {build.description && (
                 <div className="text-light fs-5">
-                  <ReactMarkdown>{build.description}</ReactMarkdown>
+                  <ReactMarkdown>{decodeHtmlEntities(build.description)}</ReactMarkdown>
                 </div>
               )}
             </div>
