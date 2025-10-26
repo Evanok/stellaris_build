@@ -923,6 +923,28 @@ app.get('/api/stats', async (req, res) => {
   try {
     const stats = {};
 
+    // Load game data for name mapping
+    const civicsData = require('./data/civics.json');
+    const ethicsData = require('./data/ethics.json');
+    const originsData = require('./data/origins.json');
+    const authoritiesData = require('./data/authorities.json');
+    const perksDataRaw = require('./data/ascension_perks.json');
+    const traditionsData = require('./data/traditions.json');
+
+    // Extract perks array from object structure
+    const perksData = Array.isArray(perksDataRaw) ? perksDataRaw : (perksDataRaw.all || []);
+
+    // Helper functions to get names from IDs
+    const getCivicName = (id) => civicsData.find(c => c.id === id)?.name || id;
+    const getEthicName = (id) => ethicsData.find(e => e.id === id)?.name || id;
+    const getOriginName = (id) => originsData.find(o => o.id === id)?.name || id;
+    const getAuthorityName = (id) => authoritiesData.find(a => a.id === id)?.name || id;
+    const getPerkName = (id) => perksData.find(p => p.id === id)?.name || id;
+    const getTraditionName = (id) => {
+      // Tradition trees are stored as object with tree name as key
+      return traditionsData[id]?.adopt?.name || id;
+    };
+
     // 1. Total builds
     const totalBuilds = await new Promise((resolve, reject) => {
       db.get('SELECT COUNT(*) as count FROM builds WHERE deleted = 0', (err, row) => {
@@ -953,8 +975,8 @@ app.get('/api/stats', async (req, res) => {
     const topCivics = Object.entries(civicCounts)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3)
-      .map(([name, count]) => ({
-        name,
+      .map(([id, count]) => ({
+        name: getCivicName(id),
         count,
         percentage: ((count / totalBuilds) * 100).toFixed(1)
       }));
@@ -991,8 +1013,8 @@ app.get('/api/stats', async (req, res) => {
     const topEthics = Object.entries(ethicCountsFinal)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3)
-      .map(([name, count]) => ({
-        name,
+      .map(([id, count]) => ({
+        name: getEthicName(id),
         count,
         percentage: ((count / totalBuilds) * 100).toFixed(1)
       }));
@@ -1010,7 +1032,7 @@ app.get('/api/stats', async (req, res) => {
         (err, rows) => {
           if (err) reject(err);
           else resolve(rows.map(row => ({
-            name: row.origin,
+            name: getOriginName(row.origin),
             count: row.count,
             percentage: ((row.count / totalBuilds) * 100).toFixed(1)
           })));
@@ -1031,7 +1053,7 @@ app.get('/api/stats', async (req, res) => {
         (err, rows) => {
           if (err) reject(err);
           else resolve(rows.map(row => ({
-            name: row.authority,
+            name: getAuthorityName(row.authority),
             count: row.count,
             percentage: ((row.count / totalBuilds) * 100).toFixed(1)
           })));
@@ -1061,8 +1083,8 @@ app.get('/api/stats', async (req, res) => {
     const topPerks = Object.entries(perkCounts)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3)
-      .map(([name, count]) => ({
-        name,
+      .map(([id, count]) => ({
+        name: getPerkName(id),
         count,
         percentage: ((count / totalBuilds) * 100).toFixed(1)
       }));
@@ -1089,8 +1111,8 @@ app.get('/api/stats', async (req, res) => {
     const topTraditions = Object.entries(traditionCounts)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3)
-      .map(([name, count]) => ({
-        name,
+      .map(([id, count]) => ({
+        name: getTraditionName(id),
         count,
         percentage: ((count / totalBuilds) * 100).toFixed(1)
       }));
