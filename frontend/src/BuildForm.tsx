@@ -895,7 +895,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     return (
       name.trim() !== '' &&
       selectedTraits.length > 0 &&
-      selectedOrigin !== '' &&
+      // selectedOrigin is now optional (some builds may not specify an origin)
       selectedEthics.length > 0 &&
       selectedAuthority !== '' &&
       selectedCivics.length > 0
@@ -906,7 +906,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     const missing: string[] = [];
     if (name.trim() === '') missing.push('Build Name');
     if (selectedTraits.length === 0) missing.push('Species Traits');
-    if (selectedOrigin === '') missing.push('Origin');
+    // Origin is optional, not included in missing fields
     if (selectedEthics.length === 0) missing.push('Ethics');
     if (selectedAuthority === '') missing.push('Authority');
     if (selectedCivics.length === 0) missing.push('Civics');
@@ -1496,7 +1496,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
             />
             <div className="card bg-secondary" style={{ maxHeight: '400px', overflowY: 'auto' }}>
               <div className="card-body">
-                {/* None option */}
+                {/* None option - Origin is optional */}
                 <div className={`form-check mb-2 pb-2 border-bottom border-dark ${!selectedOrigin ? 'bg-primary bg-opacity-25' : ''}`}>
                   <input
                     className="form-check-input"
@@ -1511,7 +1511,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                     htmlFor="origin-none"
                     style={{ cursor: 'pointer' }}
                   >
-                    <strong className="text-muted">None (no origin selected)</strong>
+                    <strong className="text-muted">None (standard origin)</strong>
                   </label>
                 </div>
 
@@ -1805,25 +1805,6 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
             <div className="card bg-secondary" style={{ maxHeight: '500px', overflowY: 'auto' }}>
               <div className="card-body">
-                {/* None option */}
-                <div className={`form-check mb-3 pb-3 border-bottom border-dark ${!selectedAuthority ? 'bg-primary bg-opacity-25' : ''}`}>
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    id="authority-none"
-                    name="authority"
-                    checked={!selectedAuthority}
-                    onChange={() => setSelectedAuthority('')}
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="authority-none"
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <strong className="text-muted">None (no authority selected)</strong>
-                  </label>
-                </div>
-
                 {availableAuthorities.length > 0 ? (
                   availableAuthorities.map(authority => {
                     const isSelected = selectedAuthority === authority.id;
