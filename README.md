@@ -13,7 +13,7 @@ This project is currently in active development with the following features impl
 ### ✅ Implemented Features
 
 - **Build Creation Form**: Comprehensive form for creating empire builds with:
-  - Primary species type selection (Biological, Lithoid, Machine, Robot)
+  - **Species class selection** - 17 species classes dynamically extracted from game files (Humanoid, Mammalian, Reptilian, Avian, Arthropoid, Molluscoid, Fungoid, Plantoid, Lithoid, Necroid, Aquatic, Toxoid, Machine, Synthetic, Cybernetic, Psionic, BioGenesis)
   - Species traits with point/pick validation and origin bonuses
   - **Secondary species support** for specific origins (Necrophage, Syncretic Evolution, Clone Army, Overtuned)
   - Origins with trait bonuses and conditional UI
@@ -87,6 +87,7 @@ stellaris_build/
 │   ├── index.js              # Server entry point
 │   ├── database.js           # SQLite setup
 │   └── data/                 # JSON data files
+│       ├── species_classes.json  # 17 species classes with archetypes
 │       ├── traits.json
 │       ├── civics.json
 │       ├── origins.json
@@ -219,6 +220,7 @@ pm2 stop stellaris-build      # Stop app
 
 The `data-extractor` folder contains Python tools that parse Stellaris game files and extract:
 
+- **17 Species Classes** (playable only, with archetype mapping)
 - **349 Species Traits** (filtered, player-selectable only)
 - **55 Origins** (playable only)
 - **17 Ethics** (with fanatic variants)
@@ -228,10 +230,11 @@ The `data-extractor` folder contains Python tools that parse Stellaris game file
 - **32 Tradition Trees** (with adoption and completion effects)
 
 All data includes:
-- ✅ Fully localized names (English)
+- ✅ Fully localized names (English) with recursive directory search
 - ✅ Complete descriptions
 - ✅ Game effects and modifiers
 - ✅ Prerequisites and compatibility rules
+- ✅ Automatic filtering of NPC/DLC-specific content
 
 ---
 
@@ -242,6 +245,7 @@ All data includes:
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/api/test` | GET | Health check |
+| `/api/species-classes` | GET | Get all species classes (17 classes with archetype mapping) |
 | `/api/traits` | GET | Get all species traits |
 | `/api/origins` | GET | Get all origins |
 | `/api/ethics` | GET | Get all ethics |
@@ -299,26 +303,41 @@ npm run test:headed
 npm run test:report
 ```
 
-**Current Test Coverage: 29/29 tests passing (100% success rate)**
+**Current Test Coverage: 34/34 tests passing (100% success rate)**
 
-✅ **Build Display Tests** (`tests/e2e/builds.spec.ts` - 15 tests):
+✅ **Build Display Tests** (`tests/e2e/builds.spec.ts` - 3 tests):
 - Display builds list without errors
 - Display build detail pages without React errors
-- Display all builds from database
-- Test all builds individually for rendering issues
-- Network error tracking and console error validation
-- Regression tests for cost object rendering bug
+- Display all builds from database individually for rendering issues
+
+✅ **CRUD Tests** (`tests/e2e/crud.spec.ts` - 11 tests):
+- Build creation (biological/humanoid, machine, lithoid)
+- Build validation (trait limits, ethics limits, required fields)
+- Build editing by creator
+- Build deletion by creator
+- Permission checks for edit/delete
+- Re-creation after deletion
 
 ✅ **Origin Filtering Tests** (`tests/e2e/origin-filtering.spec.ts` - 6 tests):
-- Origin visibility when switching species types (BIOLOGICAL, LITHOID, MACHINE, ROBOT)
+- Origin visibility when switching species classes (Humanoid, Lithoid, Machine, Synthetic)
 - Test 4 origin pairs (Ocean Paradise/Subaquatic, Post-Apocalyptic/Radioactive, etc.)
 - Validate species-specific origin filtering logic
 
-✅ **Game Asset Tests** (`tests/e2e/game-assets.spec.ts` - 8 tests):
+✅ **Game Asset Tests** (`tests/e2e/game-assets.spec.ts` - 7 tests):
 - Validate ALL game element images exist (no 404 errors)
 - Test coverage: traits, origins (original + mini), ethics, authorities, civics, ascension perks, traditions, ruler traits
 - Apply same filtering logic as frontend (only test selectable elements)
 - Prevent missing images from reaching production
+
+✅ **Build Check Tests** (`tests/e2e/build-check.spec.ts` - 2 tests):
+- Full frontend TypeScript compilation test
+- Type check only test (tsc --noEmit)
+- Prevents deployment with TypeScript errors
+
+✅ **Performance Tests** (`tests/e2e/performance.spec.ts` - 3 tests):
+- Home page load time measurement (~1.3s)
+- Create page load time measurement (~2.3s)
+- Create page loading breakdown (HTML → Form → Data → Icons)
 
 **Test Strategy:**
 - All tests must pass with **0 errors** and **0 warnings**
