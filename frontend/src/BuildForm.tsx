@@ -977,7 +977,6 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       dlcs,
       tags,
       selectedSpeciesClass,
-      selectedSecondarySpeciesClass,
       selectedTraits,
       selectedSecondaryTraits,
       selectedOrigin,
@@ -1006,7 +1005,6 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setDlcs(formData.dlcs || '');
         setTags(formData.tags || '');
         setSelectedSpeciesClass(formData.selectedSpeciesClass || '');
-        setSelectedSecondarySpeciesClass(formData.selectedSecondarySpeciesClass || '');
         setSelectedTraits(formData.selectedTraits || []);
         setSelectedSecondaryTraits(formData.selectedSecondaryTraits || []);
         setSelectedOrigin(formData.selectedOrigin || '');
@@ -1494,28 +1492,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                 </small>
               </label>
 
-              {/* Secondary Species Class Selector */}
-              {selectedSecondarySpeciesClass && (
-                <div className="mb-3">
-                  <label className="form-label">Secondary Species Class</label>
-                  <select
-                    className="form-select bg-secondary text-white border-secondary"
-                    value={selectedSecondarySpeciesClass}
-                    onChange={(e) => {
-                      setSelectedSecondarySpeciesClass(e.target.value);
-                      // Clear secondary traits when changing species class
-                      setSelectedSecondaryTraits([]);
-                    }}
-                  >
-                    <option value="">-- Select Secondary Species Class --</option>
-                    {allSpeciesClasses.map(sc => (
-                      <option key={sc.id} value={sc.id}>
-                        {sc.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+              {/* Secondary Species Class Selector - for origins with secondary species */}
+              {/* TODO: Implement secondary species class selector for compatible origins */}
 
               <div className="card bg-secondary" style={{ maxHeight: '300px', overflowY: 'auto' }}>
                 <div className="card-body">
