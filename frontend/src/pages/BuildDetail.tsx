@@ -23,6 +23,8 @@ interface Build {
   dlcs: string;
   tags: string;
   author_id: number;
+  author_username?: string;
+  author_avatar?: string;
   created_at: string;
   updated_at: string;
 }
@@ -328,6 +330,11 @@ export const BuildDetail: React.FC = () => {
                 <span className="badge bg-primary fs-6 me-2">{build.game_version}</span>
                 {getDifficultyBadge(build.difficulty)}
               </div>
+              {build.author_username && (
+                <div className="text-info mb-2">
+                  <small>By {build.author_username}</small>
+                </div>
+              )}
               <div className="text-muted">
                 <small>Created: {new Date(build.created_at).toLocaleString()}</small>
               </div>

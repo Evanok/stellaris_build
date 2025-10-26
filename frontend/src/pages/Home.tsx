@@ -40,6 +40,8 @@ interface Build {
   ruler_trait: string;
   tags: string;
   created_at: string;
+  author_username?: string;
+  author_avatar?: string;
 }
 
 export const Home: React.FC = () => {
@@ -354,9 +356,16 @@ export const Home: React.FC = () => {
                         )}
                       </div>
                       <div className="card-footer bg-dark border-secondary d-flex justify-content-between align-items-center">
-                        <small className="text-muted">
-                          Created: {new Date(build.created_at).toLocaleDateString()}
-                        </small>
+                        <div className="d-flex flex-column">
+                          {build.author_username && (
+                            <small className="text-info mb-1">
+                              By {build.author_username}
+                            </small>
+                          )}
+                          <small className="text-muted">
+                            {new Date(build.created_at).toLocaleDateString()}
+                          </small>
+                        </div>
                         <span className="btn btn-sm btn-primary">View Build</span>
                       </div>
                     </div>

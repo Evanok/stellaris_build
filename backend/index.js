@@ -475,7 +475,16 @@ app.get('/api/species-classes', (req, res) => {
 
 // Get all builds (excluding soft-deleted ones)
 app.get('/api/builds', (req, res) => {
-  const sql = "SELECT * FROM builds WHERE deleted = 0 ORDER BY created_at DESC";
+  const sql = `
+    SELECT
+      builds.*,
+      users.username as author_username,
+      users.avatar as author_avatar
+    FROM builds
+    LEFT JOIN users ON builds.author_id = users.id
+    WHERE builds.deleted = 0
+    ORDER BY builds.created_at DESC
+  `;
   db.all(sql, [], (err, rows) => {
     if (err) {
       res.status(500).json({ error: err.message });
@@ -488,7 +497,15 @@ app.get('/api/builds', (req, res) => {
 // Get a single build by ID
 app.get('/api/builds/:id', (req, res) => {
   const { id } = req.params;
-  const sql = "SELECT * FROM builds WHERE id = ? AND deleted = 0";
+  const sql = `
+    SELECT
+      builds.*,
+      users.username as author_username,
+      users.avatar as author_avatar
+    FROM builds
+    LEFT JOIN users ON builds.author_id = users.id
+    WHERE builds.id = ? AND builds.deleted = 0
+  `;
   db.get(sql, [id], (err, row) => {
     if (err) {
       res.status(500).json({ error: err.message });
