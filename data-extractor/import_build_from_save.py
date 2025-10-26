@@ -235,6 +235,7 @@ def parse_gamestate_simple(gamestate_path):
     if species_db_start and founder_species_id:
         # Strategy: Find the specific species by its ID (founder_species_ref from country 0)
         traits = []
+        species_class = None
         species_found = False
         founder_species_start = None
 
@@ -250,8 +251,15 @@ def parse_gamestate_simple(gamestate_path):
                 species_found = True
                 founder_species_start = i
 
-                # Now find the traits section for this species
+                # Now extract species_class and traits for this species
                 for j in range(i, min(i + 200, len(lines))):
+                    # Extract species class
+                    class_match = re.search(r'class="([^"]+)"', lines[j])
+                    if class_match and not species_class:
+                        species_class = class_match.group(1)
+                        print(f"Found species class: {species_class}")
+
+                    # Extract traits
                     if lines[j].strip() == 'traits=':
                         print(f"Found traits section at line {j}")
                         # Extract all traits from this section
@@ -291,6 +299,13 @@ def parse_gamestate_simple(gamestate_path):
             print(f"⚠️  Found founder species but no traits extracted")
         else:
             print(f"⚠️  Could not find founder species (ID={founder_species_id}) in species_db")
+
+        # Add species_class to build_data if found
+        if species_class:
+            build_data['species_class'] = species_class
+            print(f"✓ Added species_class to build_data: {species_class}")
+        elif species_found:
+            print(f"⚠️  Found founder species but no species class extracted")
 
     # Detect species type from the founder species traits
     # Check the traits we already extracted to determine species type

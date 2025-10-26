@@ -125,6 +125,11 @@ def parse_empire_block(block, empire_name):
         species_block = species_match.group(1)
         trait_matches = re.findall(r'trait\s*=\s*"([^"]+)"', species_block)
 
+        # Extract species_class from species block
+        class_match = re.search(r'class\s*=\s*"([^"]+)"', species_block)
+        if class_match:
+            data['species_class'] = class_match.group(1)
+
         # Detect species type from system traits before filtering
         species_type = 'BIOLOGICAL'  # Default
         if 'trait_lithoid' in trait_matches:
