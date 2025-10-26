@@ -17,7 +17,6 @@ const BuildDetail = lazy(() => import('./pages/BuildDetail').then(module => ({ d
 const Stats = lazy(() => import('./pages/Stats'));
 const AdminStats = lazy(() => import('./pages/AdminStats'));
 const AdminFeedback = lazy(() => import('./pages/AdminFeedback'));
-const LoadingScreensPreview = lazy(() => import('./pages/LoadingScreensPreview').then(module => ({ default: module.LoadingScreensPreview })));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -86,7 +85,6 @@ const AppContent = () => {
                   <Route path="/stats" element={<Stats />} />
                   <Route path="/admin/stats" element={<AdminStats />} />
                   <Route path="/admin/feedback" element={<AdminFeedback />} />
-                  <Route path="/loading-screens" element={<LoadingScreensPreview />} />
                 </Routes>
               </Suspense>
             </main>
