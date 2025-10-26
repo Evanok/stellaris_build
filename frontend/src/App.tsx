@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
-import { Footer } from './components/Footer';
+import Footer from './components/Footer';
 import { GoogleAnalytics } from './components/GoogleAnalytics';
 import { FeedbackButton } from './components/FeedbackButton';
 import { Home } from './pages/Home';
