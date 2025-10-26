@@ -306,6 +306,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   // UI state
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [youtubeUrlError, setYoutubeUrlError] = useState<string | null>(null);
+  const [sourceUrlError, setSourceUrlError] = useState<string | null>(null);
 
   // Auth state
   const { user, refreshUser } = useAuth();
@@ -890,6 +892,36 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     return index >= 0 ? index + 1 : null;
   };
 
+  // URL validation helper
+  const isValidUrl = (urlString: string): boolean => {
+    if (!urlString || urlString.trim() === '') {
+      return true; // Empty is valid (optional field)
+    }
+    try {
+      const url = new URL(urlString);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  };
+
+  // Validate URL and set error
+  const validateYoutubeUrl = (url: string) => {
+    if (url && !isValidUrl(url)) {
+      setYoutubeUrlError('Please enter a valid URL starting with http:// or https://');
+    } else {
+      setYoutubeUrlError(null);
+    }
+  };
+
+  const validateSourceUrl = (url: string) => {
+    if (url && !isValidUrl(url)) {
+      setSourceUrlError('Please enter a valid URL starting with http:// or https://');
+    } else {
+      setSourceUrlError(null);
+    }
+  };
+
   // Validation function to check if build is complete
   const isBuildComplete = (): boolean => {
     return (
@@ -989,6 +1021,26 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     e.preventDefault();
     setError(null);
 
+    // Validate URLs before submission
+    validateYoutubeUrl(youtube_url);
+    validateSourceUrl(source_url);
+
+    // Check if there are URL errors
+    if (youtubeUrlError || sourceUrlError) {
+      setError('Please fix the URL errors before submitting.');
+      // Scroll to top to show the error and the invalid field
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // Check if URLs are valid (validate again in case state hasn't updated)
+    if ((youtube_url && !isValidUrl(youtube_url)) || (source_url && !isValidUrl(source_url))) {
+      setError('Please enter valid URLs or leave the fields empty.');
+      // Scroll to top to show the error
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     // Check if user is authenticated
     if (!user) {
       // Save form data to localStorage before showing auth modal
@@ -1001,6 +1053,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     if (!isBuildComplete()) {
       const missing = getMissingFields();
       setError(`Please complete the following required fields: ${missing.join(', ')}`);
+      // Scroll to top to show the error
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
@@ -1068,6 +1122,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
     } catch (err: any) {
       setError(err.message);
+      // Scroll to top to show the error
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setSubmitting(false);
     }
@@ -1096,13 +1152,22 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
               <small className="text-muted d-block">Link to a YouTube video presenting this build</small>
             </label>
             <input
-              type="url"
-              className="form-control bg-secondary text-white border-secondary"
+              type="text"
+              className={`form-control bg-secondary text-white border-secondary ${youtubeUrlError ? 'is-invalid' : ''}`}
               id="youtubeUrl"
               value={youtube_url}
-              onChange={(e) => setYoutubeUrl(e.target.value)}
+              onChange={(e) => {
+                setYoutubeUrl(e.target.value);
+                validateYoutubeUrl(e.target.value);
+              }}
+              onBlur={(e) => validateYoutubeUrl(e.target.value)}
               placeholder="https://www.youtube.com/watch?v=..."
             />
+            {youtubeUrlError && (
+              <div className="text-danger small mt-1">
+                {youtubeUrlError}
+              </div>
+            )}
           </div>
 
           <div className="mb-3">
@@ -1111,13 +1176,22 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
               <small className="text-muted d-block">Original source of this build (Reddit post, forum thread, etc.)</small>
             </label>
             <input
-              type="url"
-              className="form-control bg-secondary text-white border-secondary"
+              type="text"
+              className={`form-control bg-secondary text-white border-secondary ${sourceUrlError ? 'is-invalid' : ''}`}
               id="sourceUrl"
               value={source_url}
-              onChange={(e) => setSourceUrl(e.target.value)}
+              onChange={(e) => {
+                setSourceUrl(e.target.value);
+                validateSourceUrl(e.target.value);
+              }}
+              onBlur={(e) => validateSourceUrl(e.target.value)}
               placeholder="https://www.reddit.com/r/Stellaris/..."
             />
+            {sourceUrlError && (
+              <div className="text-danger small mt-1">
+                {sourceUrlError}
+              </div>
+            )}
           </div>
 
           <div className="mb-3">
