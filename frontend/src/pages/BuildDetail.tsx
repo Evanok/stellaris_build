@@ -128,6 +128,7 @@ const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type,
       width={size}
       height={size}
       style={{ marginRight: '12px', borderRadius: '4px' }}
+      loading="lazy"
       onError={() => setHasError(true)}
     />
   );
@@ -593,6 +594,7 @@ export const BuildDetail: React.FC = () => {
                               borderRadius: '8px',
                               objectFit: 'cover'
                             }}
+                            loading="lazy"
                             onError={() => setOriginImageError(true)}
                           />
                         </div>

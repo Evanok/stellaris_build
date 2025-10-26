@@ -48,6 +48,7 @@ const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type,
       alt=""
       width={size}
       height={size}
+      loading="lazy"
       style={{
         marginRight: '8px',
         verticalAlign: 'middle',
@@ -77,6 +78,7 @@ const OriginCard: React.FC<{ originId: string; origin: Origin | undefined }> = (
                 objectFit: 'contain',
                 borderRadius: '4px'
               }}
+              loading="lazy"
               onError={() => setImageError(true)}
             />
           </div>
@@ -1609,6 +1611,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                             alt=""
                             width={48}
                             height={48}
+                            loading="lazy"
                             style={{ marginRight: '8px', verticalAlign: 'middle', borderRadius: '4px', objectFit: 'cover' }}
                           />
                           <strong className="text-white">{origin.name || origin.id}</strong>
@@ -1701,6 +1704,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                               alt=""
                               width={32}
                               height={32}
+                              loading="lazy"
                               style={{ marginRight: '8px', verticalAlign: 'middle' }}
                               onError={(e) => {
                                 (e.target as HTMLImageElement).style.display = 'none';
