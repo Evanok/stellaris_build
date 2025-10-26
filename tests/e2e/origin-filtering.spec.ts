@@ -16,7 +16,7 @@ test.describe('Origin Filtering by Species Type', () => {
     await expect(subaquaticMachines).toHaveCount(0);
 
     // Switch to MACHINE
-    await page.click('button:has-text("Machine")');
+    await page.locator('select.form-select').nth(2).selectOption({ label: 'Machine' });
 
     // Wait for React to re-render - wait for old origin to disappear
     await page.waitForSelector('label[for="origin-origin_ocean_paradise"]', { state: 'detached', timeout: 5000 });
@@ -33,7 +33,7 @@ test.describe('Origin Filtering by Species Type', () => {
     await expect(postApocalyptic).toBeVisible();
     await expect(radioactiveRovers).toHaveCount(0);
 
-    await page.click('button:has-text("Machine")');
+    await page.locator('select.form-select').nth(2).selectOption({ label: 'Machine' });
 
     await expect(radioactiveRovers).toBeVisible();
     await expect(postApocalyptic).toHaveCount(0);
@@ -46,7 +46,7 @@ test.describe('Origin Filtering by Species Type', () => {
     await expect(subterranean).toBeVisible();
     await expect(subterraneanMachines).toHaveCount(0);
 
-    await page.click('button:has-text("Machine")');
+    await page.locator('select.form-select').nth(2).selectOption({ label: 'Machine' });
 
     // Wait for React to re-render - wait for old origin to disappear
     await page.waitForSelector('label[for="origin-origin_subterranean"]', { state: 'detached', timeout: 5000 });
@@ -63,14 +63,14 @@ test.describe('Origin Filtering by Species Type', () => {
     await expect(voidDwellers).toBeVisible();
     await expect(voidforged).toHaveCount(0);
 
-    await page.click('button:has-text("Machine")');
+    await page.locator('select.form-select').nth(2).selectOption({ label: 'Machine' });
 
     await expect(voidforged).toBeVisible();
     await expect(voidDwellers).toHaveCount(0);
   });
 
   test('LITHOID should see same origins as BIOLOGICAL', async ({ page }) => {
-    await page.click('button:has-text("Lithoid")');
+    await page.locator('select.form-select').nth(2).selectOption({ label: 'Lithoid' });
 
     // Should see biological variants
     await expect(page.locator('label[for="origin-origin_ocean_paradise"]')).toBeVisible();
@@ -81,8 +81,8 @@ test.describe('Origin Filtering by Species Type', () => {
     await expect(page.locator('label[for="origin-origin_post_apocalyptic_machines"]')).toHaveCount(0);
   });
 
-  test('ROBOT should see same origins as MACHINE', async ({ page }) => {
-    await page.click('button:has-text("Robot")');
+  test('SYNTHETIC should see same origins as MACHINE', async ({ page }) => {
+    await page.locator('select.form-select').nth(2).selectOption({ label: 'Synthetic' });
 
     // Wait for React to re-render - wait for biological origins to disappear
     await page.waitForSelector('label[for="origin-origin_ocean_paradise"]', { state: 'detached', timeout: 5000 });

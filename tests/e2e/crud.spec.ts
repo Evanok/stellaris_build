@@ -17,8 +17,8 @@ async function createSimpleBuild(page: Page, buildName: string) {
   await page.selectOption('#gameVersion', '4.1');
   await page.selectOption('#difficulty', 'balanced');
 
-  // Select species type
-  await page.click('button:has-text("Biological")');
+  // Select species class (use nth(2) since gameVersion is nth(0), difficulty is nth(1))
+  await page.locator('select.form-select').nth(2).selectOption({ label: 'Humanoid' });
 
   // Wait for origins to load and select first one
   await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
@@ -80,8 +80,8 @@ test.describe('Build Creation - Valid Builds', () => {
     await page.fill('#buildDescription', 'Machine empire test');
     await page.selectOption('#gameVersion', '4.1');
 
-    // Select Machine species type
-    await page.click('button:has-text("Machine")');
+    // Select Machine species class
+    await page.locator('select.form-select').nth(2).selectOption({ label: 'Machine' });
 
     // Wait and select origin, ethics (gestalt), authority
     await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
@@ -127,8 +127,8 @@ test.describe('Build Creation - Valid Builds', () => {
     await page.fill('#buildDescription', 'Lithoid empire test');
     await page.selectOption('#gameVersion', '4.1');
 
-    // Select Lithoid species type
-    await page.click('button:has-text("Lithoid")');
+    // Select Lithoid species class
+    await page.locator('select.form-select').nth(2).selectOption({ label: 'Lithoid' });
 
     await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
@@ -167,7 +167,7 @@ test.describe('Build Creation - Validation', () => {
 
     await page.fill('#buildName', 'Too Many Traits Build');
     await page.selectOption('#gameVersion', '4.1');
-    await page.click('button:has-text("Biological")');
+    await page.locator('select.form-select').nth(2).selectOption({ label: 'Humanoid' });
 
     await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
@@ -217,7 +217,7 @@ test.describe('Build Creation - Validation', () => {
 
     await page.fill('#buildName', 'Too Many Points Build');
     await page.selectOption('#gameVersion', '4.1');
-    await page.click('button:has-text("Biological")');
+    await page.locator('select.form-select').nth(2).selectOption({ label: 'Humanoid' });
 
     await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
@@ -263,7 +263,7 @@ test.describe('Build Creation - Validation', () => {
 
     await page.fill('#buildName', 'Invalid Ethics Points Build');
     await page.selectOption('#gameVersion', '4.1');
-    await page.click('button:has-text("Biological")');
+    await page.locator('select.form-select').nth(2).selectOption({ label: 'Humanoid' });
 
     await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
@@ -293,7 +293,7 @@ test.describe('Build Creation - Validation', () => {
 
     // Don't fill name, but fill everything else
     await page.selectOption('#gameVersion', '4.1');
-    await page.click('button:has-text("Biological")');
+    await page.locator('select.form-select').nth(2).selectOption({ label: 'Humanoid' });
 
     await page.waitForSelector('input[type="radio"][id^="origin-"]', { timeout: 10000 });
     await page.locator('input[type="radio"][id^="origin-"]').first().click();
