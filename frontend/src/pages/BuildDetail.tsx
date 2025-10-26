@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../AuthContext';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
 
@@ -310,10 +311,63 @@ export const BuildDetail: React.FC = () => {
     );
   }
 
+  // Prepare meta tags (keep it simple to avoid render issues)
+  const buildTitle = build.name ? `${build.name} - Stellaris Build` : 'Stellaris Build';
+  const buildDescription = build.description
+    ? build.description.substring(0, 155)
+    : `Stellaris ${build.game_version || ''} empire build. View species traits, civics, ethics, and strategy.`;
+  const buildUrl = `https://stellaris-build.com/build/${build.id}`;
+
   return (
-    <div className="container mt-4">
-      {/* Header */}
-      <div className="row mb-4">
+    <>
+      <Helmet>
+        {/* Primary Meta Tags */}
+        <title>{buildTitle}</title>
+        <meta name="title" content={buildTitle} />
+        <meta name="description" content={buildDescription} />
+        <link rel="canonical" href={buildUrl} />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={buildUrl} />
+        <meta property="og:title" content={buildTitle} />
+        <meta property="og:description" content={buildDescription} />
+        <meta property="og:image" content="https://stellaris-build.com/og-image.jpg" />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={buildUrl} />
+        <meta property="twitter:title" content={buildTitle} />
+        <meta property="twitter:description" content={buildDescription} />
+        <meta property="twitter:image" content="https://stellaris-build.com/og-image.jpg" />
+
+        {/* Structured Data (JSON-LD) */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Guide",
+            "name": build.name || "Stellaris Build",
+            "description": buildDescription,
+            "about": {
+              "@type": "VideoGame",
+              "name": "Stellaris"
+            },
+            "author": {
+              "@type": "Person",
+              "name": "Arthur LAMBERT"
+            },
+            "datePublished": build.created_at || new Date().toISOString(),
+            "dateModified": build.updated_at || build.created_at || new Date().toISOString(),
+            "version": build.game_version || "4.1",
+            "keywords": build.tags || "",
+            "url": buildUrl
+          })}
+        </script>
+      </Helmet>
+
+      <div className="container mt-4">
+        {/* Header */}
+        <div className="row mb-4">
         <div className="col-12">
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
@@ -878,5 +932,6 @@ export const BuildDetail: React.FC = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };

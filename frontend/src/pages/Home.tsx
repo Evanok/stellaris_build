@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import { Helmet } from 'react-helmet-async';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
 import './Home.css';
 
@@ -117,8 +118,14 @@ export const Home: React.FC = () => {
   }
 
   return (
-    <div className="container-fluid p-0">
-      {/* Hero Banner */}
+    <>
+      <Helmet>
+        <title>Stellaris Build Sharing - Discover Community Empire Builds</title>
+        <meta name="description" content="Browse community-created Stellaris empire builds. Find optimized species traits, civics, ethics, origins, and strategies. Share your own builds with the community." />
+      </Helmet>
+
+      <div className="container-fluid p-0">
+        {/* Hero Banner */}
       <div
         className="position-relative mb-4"
         style={{
@@ -423,5 +430,6 @@ export const Home: React.FC = () => {
         )}
       </div>
     </div>
+    </>
   );
 };

@@ -495,6 +495,71 @@ app.get('/api/builds', (req, res) => {
 });
 
 // Get a single build by ID
+// Sitemap.xml generation (for SEO)
+app.get('/sitemap.xml', (req, res) => {
+  const sql = `
+    SELECT id, name, updated_at, created_at
+    FROM builds
+    WHERE deleted = 0
+    ORDER BY created_at DESC
+  `;
+
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      res.status(500).send('Error generating sitemap');
+      return;
+    }
+
+    const baseUrl = 'https://stellaris-build.com';
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+
+    // Homepage
+    xml += '  <url>\n';
+    xml += `    <loc>${baseUrl}/</loc>\n`;
+    xml += `    <lastmod>${currentDate}</lastmod>\n`;
+    xml += '    <changefreq>daily</changefreq>\n';
+    xml += '    <priority>1.0</priority>\n';
+    xml += '  </url>\n';
+
+    // Stats page
+    xml += '  <url>\n';
+    xml += `    <loc>${baseUrl}/stats</loc>\n`;
+    xml += `    <lastmod>${currentDate}</lastmod>\n`;
+    xml += '    <changefreq>daily</changefreq>\n';
+    xml += '    <priority>0.8</priority>\n';
+    xml += '  </url>\n';
+
+    // Create page
+    xml += '  <url>\n';
+    xml += `    <loc>${baseUrl}/create</loc>\n`;
+    xml += `    <lastmod>${currentDate}</lastmod>\n`;
+    xml += '    <changefreq>monthly</changefreq>\n';
+    xml += '    <priority>0.7</priority>\n';
+    xml += '  </url>\n';
+
+    // Individual build pages
+    rows.forEach(build => {
+      const lastmod = build.updated_at || build.created_at;
+      const date = new Date(lastmod).toISOString().split('T')[0];
+
+      xml += '  <url>\n';
+      xml += `    <loc>${baseUrl}/build/${build.id}</loc>\n`;
+      xml += `    <lastmod>${date}</lastmod>\n`;
+      xml += '    <changefreq>weekly</changefreq>\n';
+      xml += '    <priority>0.9</priority>\n';
+      xml += '  </url>\n';
+    });
+
+    xml += '</urlset>';
+
+    res.header('Content-Type', 'application/xml');
+    res.send(xml);
+  });
+});
+
 app.get('/api/builds/:id', (req, res) => {
   const { id } = req.params;
   const sql = `
