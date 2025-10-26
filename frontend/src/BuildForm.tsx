@@ -1176,29 +1176,31 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
             </div>
           </div>
 
-          {/* Species Class Selector */}
-          <div className="mb-3">
-            <label className="form-label">Species Appearance</label>
-            <select
-              className="form-select bg-secondary text-white border-secondary"
-              value={selectedSpeciesClass}
-              onChange={(e) => {
-                setSelectedSpeciesClass(e.target.value);
-                // Reset portrait when changing species class
-                setSelectedPortrait('');
-              }}
-            >
-              <option value="">-- Select Species Appearance --</option>
-              {allSpeciesClasses.map(sc => (
-                <option key={sc.id} value={sc.id}>
-                  {sc.name} ({sc.portrait_count} portraits)
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* Species Class Selector - HIDDEN until images are available */}
+          {false && (
+            <div className="mb-3">
+              <label className="form-label">Species Appearance</label>
+              <select
+                className="form-select bg-secondary text-white border-secondary"
+                value={selectedSpeciesClass}
+                onChange={(e) => {
+                  setSelectedSpeciesClass(e.target.value);
+                  // Reset portrait when changing species class
+                  setSelectedPortrait('');
+                }}
+              >
+                <option value="">-- Select Species Appearance --</option>
+                {allSpeciesClasses.map(sc => (
+                  <option key={sc.id} value={sc.id}>
+                    {sc.name} ({sc.portrait_count} portraits)
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
-          {/* Portrait Selector */}
-          {selectedSpeciesClass && (
+          {/* Portrait Selector - HIDDEN until images are available */}
+          {false && selectedSpeciesClass && (
             <div className="mb-3">
               <label className="form-label">
                 Portrait ({allSpeciesClasses.find(sc => sc.id === selectedSpeciesClass)?.portraits.length || 0} available)
