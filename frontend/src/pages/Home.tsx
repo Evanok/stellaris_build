@@ -310,7 +310,7 @@ export const Home: React.FC = () => {
                         </div>
 
                         <h5 className="card-title text-white mb-3">
-                          {build.name}
+                          <ReactMarkdown>{build.name}</ReactMarkdown>
                         </h5>
 
                         {/* Description */}
