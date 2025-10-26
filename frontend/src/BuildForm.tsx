@@ -529,24 +529,34 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       if (initialData.name) setName(initialData.name);
       if (initialData.description) setDescription(initialData.description);
       if (initialData.game_version) setGameVersion(initialData.game_version);
+      if (initialData.youtube_url) setYoutubeUrl(initialData.youtube_url);
+      if (initialData.source_url) setSourceUrl(initialData.source_url);
+      if (initialData.difficulty) setDifficulty(initialData.difficulty);
+      if (initialData.dlcs) setDlcs(initialData.dlcs);
+      if (initialData.tags) setTags(initialData.tags);
 
       // Set empire selections
       if (initialData.origin) setSelectedOrigin(initialData.origin);
       if (initialData.authority) setSelectedAuthority(initialData.authority);
 
-      // Handle ethics (array of strings)
+      // Handle ethics (array of strings) - trim whitespace
       if (Array.isArray(initialData.ethics)) {
-        setSelectedEthics(initialData.ethics);
+        setSelectedEthics(initialData.ethics.map((e: string) => e.trim()));
       }
 
-      // Handle civics (array of strings)
+      // Handle civics (array of strings) - trim whitespace
       if (Array.isArray(initialData.civics)) {
-        setSelectedCivics(initialData.civics);
+        setSelectedCivics(initialData.civics.map((c: string) => c.trim()));
       }
 
-      // Handle traits (array of strings)
+      // Handle traits (array of strings) - trim whitespace
       if (Array.isArray(initialData.traits)) {
-        setSelectedTraits(initialData.traits);
+        setSelectedTraits(initialData.traits.map((t: string) => t.trim()));
+      }
+
+      // Handle secondary traits (array of strings) - trim whitespace
+      if (Array.isArray(initialData.secondary_traits)) {
+        setSelectedSecondaryTraits(initialData.secondary_traits.map((t: string) => t.trim()));
       }
 
       // Handle species type (string: BIOLOGICAL, LITHOID, MACHINE, ROBOT)
@@ -554,19 +564,32 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setSpeciesType(initialData.speciesType);
       }
 
+      // Handle secondary species type
+      if (initialData.secondarySpeciesType) {
+        setSecondarySpeciesType(initialData.secondarySpeciesType);
+      }
+
+      // Handle species class and portrait
+      if (initialData.species_class) {
+        setSelectedSpeciesClass(initialData.species_class);
+      }
+      if (initialData.portrait) {
+        setSelectedPortrait(initialData.portrait);
+      }
+
       // Handle ruler trait (single string)
       if (initialData.ruler_trait) {
         setSelectedRulerTrait(initialData.ruler_trait);
       }
 
-      // Handle ascension perks (array of strings)
+      // Handle ascension perks (array of strings) - trim whitespace
       if (Array.isArray(initialData.ascension_perks)) {
-        setSelectedAscensionPerks(initialData.ascension_perks);
+        setSelectedAscensionPerks(initialData.ascension_perks.map((p: string) => p.trim()));
       }
 
-      // Handle traditions (array of strings)
+      // Handle traditions (array of strings) - trim whitespace
       if (Array.isArray(initialData.traditions)) {
-        setSelectedTraditions(initialData.traditions);
+        setSelectedTraditions(initialData.traditions.map((t: string) => t.trim()));
       }
     }
   }, [initialData]);
