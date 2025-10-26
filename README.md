@@ -53,6 +53,7 @@ This project is currently in active development with the following features impl
 - **Data Extraction**: Automated extraction from Stellaris game files with full localization
 - **Maintenance Mode**: Styled maintenance page with enable/disable scripts
 - **Production Deployment**: Fully deployed with HTTPS, auto-restart, SSL certificates, and 100MB file upload support
+- **Dynamic Backgrounds**: Random Stellaris loading screen backgrounds that change on page navigation (mobile-optimized)
 
 
 
@@ -100,7 +101,9 @@ stellaris_build/
 │   ├── paradox_parser.py     # Paradox file format parser
 │   ├── localization_parser.py # Extract localized names/descriptions
 │   ├── extract_*.py          # Individual extractors
-│   └── output/               # Extracted JSON files
+│   ├── extract_icons.py      # Extract and convert game icons
+│   ├── extract_loading_screens.py # Extract loading screen backgrounds
+│   └── output/               # Extracted JSON files and images
 └── package.json       # Root workspace config
 ```
 
@@ -165,6 +168,12 @@ python3 extract_icons.py "/mnt/c/Program Files (x86)/Steam/steamapps/common/Stel
 
 # Copy icons to frontend
 cp -r output/icons/* ../frontend/public/icons/
+
+# Extract loading screen backgrounds (DDS to JPG conversion)
+python3 extract_loading_screens.py "/mnt/c/Program Files (x86)/Steam/steamapps/common/Stellaris"
+
+# Copy loading screens to frontend
+cp output/loading_screens/*.jpg ../frontend/public/loading_screens/
 ```
 
 **Note:** Data extraction is required when:
@@ -228,6 +237,8 @@ The `data-extractor` folder contains Python tools that parse Stellaris game file
 - **207 Civics** (filtered, no NPC civics)
 - **44 Ascension Perks** (available to players)
 - **32 Tradition Trees** (with adoption and completion effects)
+- **Game Icons** (DDS → PNG conversion for all game elements)
+- **Loading Screen Backgrounds** (19 images, DDS → JPG conversion)
 
 All data includes:
 - ✅ Fully localized names (English) with recursive directory search
