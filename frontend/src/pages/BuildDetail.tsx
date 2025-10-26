@@ -11,6 +11,7 @@ interface Build {
   youtube_url?: string;
   source_url?: string;
   difficulty?: string;
+  species_class?: string;
   origin: string;
   authority: string;
   ethics: string;
@@ -96,6 +97,13 @@ interface RulerTrait {
   icon?: string;
 }
 
+interface SpeciesClass {
+  id: string;
+  name: string;
+  description: string;
+  archetype: string;
+}
+
 // Helper to safely get numeric cost from trait (handles both number and {base, modifier} object)
 const getTraitCost = (cost: any): number => {
   if (typeof cost === 'number') return cost;
@@ -154,6 +162,7 @@ export const BuildDetail: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Game data
+  const [allSpeciesClasses, setAllSpeciesClasses] = useState<SpeciesClass[]>([]);
   const [allTraits, setAllTraits] = useState<Trait[]>([]);
   const [allOrigins, setAllOrigins] = useState<Origin[]>([]);
   const [allEthics, setAllEthics] = useState<Ethic[]>([]);
@@ -177,6 +186,7 @@ export const BuildDetail: React.FC = () => {
     // Don't show anything until EVERYTHING is loaded to avoid flashing IDs/wrong values
     Promise.all([
       fetch(`/api/builds`).then(res => res.json()),
+      fetch('/api/species-classes').then(res => res.json()),
       fetch('/api/traits').then(res => res.json()),
       fetch('/api/origins').then(res => res.json()),
       fetch('/api/ethics').then(res => res.json()),
@@ -185,8 +195,9 @@ export const BuildDetail: React.FC = () => {
       fetch('/api/ascension-perks').then(res => res.json()),
       fetch('/api/traditions').then(res => res.json()),
       fetch('/api/ruler-traits').then(res => res.json()),
-    ]).then(([buildsData, traits, origins, ethics, authorities, civics, perks, traditions, rulerTraits]) => {
+    ]).then(([buildsData, speciesClasses, traits, origins, ethics, authorities, civics, perks, traditions, rulerTraits]) => {
       // Set game data first
+      setAllSpeciesClasses(speciesClasses);
       setAllTraits(traits);
       setAllOrigins(Array.isArray(origins) ? origins : (origins.origins || []));
       setAllEthics(ethics);
@@ -241,6 +252,7 @@ export const BuildDetail: React.FC = () => {
     return (match && match[2].length === 11) ? match[2] : null;
   };
 
+  const getSpeciesClassData = (classId: string) => allSpeciesClasses.find(sc => sc.id === classId);
   const getTraitData = (traitId: string) => allTraits.find(t => t.id === traitId);
   const getOriginData = (originId: string) => allOrigins.find(o => o.id === originId);
   const getEthicData = (ethicId: string) => allEthics.find(e => e.id === ethicId);
@@ -330,6 +342,17 @@ export const BuildDetail: React.FC = () => {
                 <span className="badge bg-primary fs-6 me-2">{build.game_version}</span>
                 {getDifficultyBadge(build.difficulty)}
               </div>
+              {build.species_class && (() => {
+                const speciesClass = getSpeciesClassData(build.species_class);
+                return (
+                  <div className="mb-2">
+                    <span className="badge bg-info fs-6">
+                      <i className="bi bi-person-badge me-1"></i>
+                      {speciesClass?.name || build.species_class}
+                    </span>
+                  </div>
+                );
+              })()}
               {build.author_username && (
                 <div className="text-info mb-2">
                   <small>By {build.author_username}</small>
