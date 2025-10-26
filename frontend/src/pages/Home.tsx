@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 import './Home.css';
 
 // Helper function to get difficulty badge styling
@@ -313,11 +314,15 @@ export const Home: React.FC = () => {
                         </h5>
 
                         {/* Description */}
-                        <p className="card-text text-light small mb-3">
-                          {build.description
-                            ? build.description.substring(0, 100) + (build.description.length > 100 ? '...' : '')
-                            : 'No description provided.'}
-                        </p>
+                        <div className="card-text text-light small mb-3">
+                          {build.description ? (
+                            <ReactMarkdown>
+                              {build.description.substring(0, 100) + (build.description.length > 100 ? '...' : '')}
+                            </ReactMarkdown>
+                          ) : (
+                            <p className="mb-0">No description provided.</p>
+                          )}
+                        </div>
 
                         {/* Key Features */}
                         <div className="mb-2">
