@@ -8,6 +8,14 @@ build/
 */dist/
 */build/
 
+# Auto-generated version file
+frontend/public/version.json
+
+# Test results
+test-results/
+backend/test-results/
+playwright-report/
+
 # Environment files
 .env
 .env.local
