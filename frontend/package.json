@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "predev": "node scripts/generate-version.cjs",
     "dev": "vite",
     "prebuild": "node scripts/generate-version.cjs",
     "build": "tsc && vite build",
