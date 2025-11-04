@@ -215,6 +215,23 @@ const setupDatabase = () => {
       }
     });
 
+    // Create ratings table for build ratings
+    db.run(`CREATE TABLE IF NOT EXISTS ratings (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      build_id INTEGER NOT NULL,
+      user_id INTEGER NOT NULL,
+      rating INTEGER NOT NULL CHECK(rating >= 0 AND rating <= 5),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (build_id) REFERENCES builds (id) ON DELETE CASCADE,
+      FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+      UNIQUE(build_id, user_id)
+    )`, (err) => {
+      if (err) {
+        console.error('Error creating ratings table:', err.message);
+      }
+    });
+
     console.log('Database tables checked/created.');
   });
 };

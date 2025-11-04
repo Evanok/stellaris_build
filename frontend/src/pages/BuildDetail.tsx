@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../AuthContext';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
+import RatingStars from '../components/RatingStars';
 
 interface Build {
   id: number;
@@ -182,6 +183,12 @@ export const BuildDetail: React.FC = () => {
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
+  // Rating state
+  const [averageRating, setAverageRating] = useState<number>(0);
+  const [ratingCount, setRatingCount] = useState<number>(0);
+  const [userRating, setUserRating] = useState<number | null>(null);
+  const [ratingLoading, setRatingLoading] = useState(false);
+
   useEffect(() => {
     if (!id) return;
 
@@ -238,6 +245,53 @@ export const BuildDetail: React.FC = () => {
       setLoading(false);
     });
   }, [id]);
+
+  // Load rating data
+  useEffect(() => {
+    if (!id) return;
+
+    fetch(`/api/builds/${id}/rating`)
+      .then(res => res.json())
+      .then(data => {
+        setAverageRating(data.average_rating || 0);
+        setRatingCount(data.rating_count || 0);
+        setUserRating(data.user_rating);
+      })
+      .catch(err => {
+        console.error('Failed to load rating:', err);
+      });
+  }, [id]);
+
+  // Submit rating
+  const handleRate = async (rating: number) => {
+    if (!user) {
+      alert('You must be logged in to rate builds');
+      return;
+    }
+
+    setRatingLoading(true);
+    try {
+      const response = await fetch(`/api/builds/${id}/rating`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rating })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit rating');
+      }
+
+      const data = await response.json();
+      setAverageRating(data.average_rating);
+      setRatingCount(data.rating_count);
+      setUserRating(data.user_rating);
+    } catch (err: any) {
+      console.error('Failed to submit rating:', err);
+      alert(err.message || 'Failed to submit rating');
+    } finally {
+      setRatingLoading(false);
+    }
+  };
 
   const parseList = (str: string | null | undefined): string[] => {
     if (!str) return [];
@@ -427,6 +481,58 @@ export const BuildDetail: React.FC = () => {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Rating System */}
+      <div className="card bg-dark border-secondary mb-4">
+        <div className="card-body">
+          <div className="row align-items-center">
+            <div className="col-md-6">
+              <h5 className="text-white mb-3">
+                <i className="bi bi-star-fill me-2 text-warning"></i>
+                Community Rating
+              </h5>
+              <RatingStars
+                rating={averageRating}
+                ratingCount={ratingCount}
+                interactive={false}
+                size="lg"
+              />
+            </div>
+            {user && (
+              <div className="col-md-6 border-start border-secondary">
+                <h6 className="text-white mb-3">
+                  {userRating !== null ? 'Your Rating' : 'Rate this Build'}
+                </h6>
+                {ratingLoading ? (
+                  <div className="spinner-border spinner-border-sm text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                ) : (
+                  <RatingStars
+                    rating={userRating || 0}
+                    interactive={true}
+                    onRate={handleRate}
+                    size="lg"
+                  />
+                )}
+                {userRating !== null && (
+                  <p className="text-muted mt-2 mb-0">
+                    <small>Click a star to update your rating</small>
+                  </p>
+                )}
+              </div>
+            )}
+            {!user && (
+              <div className="col-md-6 border-start border-secondary">
+                <p className="text-muted mb-0">
+                  <i className="bi bi-info-circle me-2"></i>
+                  <Link to="/login" className="text-decoration-none">Log in</Link> to rate this build
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

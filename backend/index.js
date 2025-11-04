@@ -479,10 +479,14 @@ app.get('/api/builds', (req, res) => {
     SELECT
       builds.*,
       users.username as author_username,
-      users.avatar as author_avatar
+      users.avatar as author_avatar,
+      COALESCE(AVG(ratings.rating), 0) as average_rating,
+      COUNT(ratings.id) as rating_count
     FROM builds
     LEFT JOIN users ON builds.author_id = users.id
+    LEFT JOIN ratings ON builds.id = ratings.build_id
     WHERE builds.deleted = 0
+    GROUP BY builds.id
     ORDER BY builds.created_at DESC
   `;
   db.all(sql, [], (err, rows) => {
@@ -593,6 +597,108 @@ app.get('/api/builds/:id', (req, res) => {
     };
 
     res.json({ build });
+  });
+});
+
+// Get rating information for a build (average + user's rating if authenticated)
+app.get('/api/builds/:id/rating', (req, res) => {
+  const { id } = req.params;
+  const userId = req.isAuthenticated() ? req.user.id : null;
+
+  // Get average rating and count
+  const avgSql = `
+    SELECT
+      COALESCE(AVG(rating), 0) as average_rating,
+      COUNT(*) as rating_count
+    FROM ratings
+    WHERE build_id = ?
+  `;
+
+  db.get(avgSql, [id], (err, avgRow) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    // If user is authenticated, get their rating
+    if (userId) {
+      const userSql = `SELECT rating FROM ratings WHERE build_id = ? AND user_id = ?`;
+      db.get(userSql, [id, userId], (err, userRow) => {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+
+        res.json({
+          average_rating: avgRow.average_rating,
+          rating_count: avgRow.rating_count,
+          user_rating: userRow ? userRow.rating : null
+        });
+      });
+    } else {
+      // User not authenticated, just return average
+      res.json({
+        average_rating: avgRow.average_rating,
+        rating_count: avgRow.rating_count,
+        user_rating: null
+      });
+    }
+  });
+});
+
+// Submit or update a rating for a build (requires authentication)
+app.post('/api/builds/:id/rating', isAuthenticated, (req, res) => {
+  const { id } = req.params;
+  const { rating } = req.body;
+  const userId = req.user.id;
+
+  // Validate rating
+  if (rating === undefined || rating === null || rating < 0 || rating > 5 || !Number.isInteger(rating)) {
+    return res.status(400).json({ error: 'Rating must be an integer between 0 and 5' });
+  }
+
+  // Check if build exists
+  db.get('SELECT id FROM builds WHERE id = ? AND deleted = 0', [id], (err, build) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    if (!build) {
+      return res.status(404).json({ error: 'Build not found' });
+    }
+
+    // Insert or update rating (UPSERT)
+    const sql = `
+      INSERT INTO ratings (build_id, user_id, rating, updated_at)
+      VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+      ON CONFLICT(build_id, user_id)
+      DO UPDATE SET rating = excluded.rating, updated_at = CURRENT_TIMESTAMP
+    `;
+
+    db.run(sql, [id, userId, rating], function(err) {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      // Get updated average rating
+      const avgSql = `
+        SELECT
+          COALESCE(AVG(rating), 0) as average_rating,
+          COUNT(*) as rating_count
+        FROM ratings
+        WHERE build_id = ?
+      `;
+
+      db.get(avgSql, [id], (err, avgRow) => {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+
+        res.json({
+          success: true,
+          average_rating: avgRow.average_rating,
+          rating_count: avgRow.rating_count,
+          user_rating: rating
+        });
+      });
+    });
   });
 });
 

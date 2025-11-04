@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { Helmet } from 'react-helmet-async';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
+import RatingStars from '../components/RatingStars';
 import './Home.css';
 
 // Helper function to get difficulty badge styling
@@ -45,6 +46,8 @@ interface Build {
   created_at: string;
   author_username?: string;
   author_avatar?: string;
+  average_rating?: number;
+  rating_count?: number;
 }
 
 export const Home: React.FC = () => {
@@ -54,6 +57,7 @@ export const Home: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState<string>('');
+  const [sortBy, setSortBy] = useState<string>('newest');
   const buildsPerPage = 12;
 
   useEffect(() => {
@@ -69,25 +73,42 @@ export const Home: React.FC = () => {
       });
   }, []);
 
-  // Filter builds based on search query and difficulty
-  const filteredBuilds = builds.filter(build => {
-    // Search filter
-    const matchesSearch = !searchQuery || (() => {
-      const query = searchQuery.toLowerCase();
-      return (
-        build.name.toLowerCase().includes(query) ||
-        build.description?.toLowerCase().includes(query) ||
-        build.tags?.toLowerCase().includes(query) ||
-        build.origin?.toLowerCase().includes(query) ||
-        build.ethics?.toLowerCase().includes(query)
-      );
-    })();
+  // Filter and sort builds
+  const filteredBuilds = builds
+    .filter(build => {
+      // Search filter
+      const matchesSearch = !searchQuery || (() => {
+        const query = searchQuery.toLowerCase();
+        return (
+          build.name.toLowerCase().includes(query) ||
+          build.description?.toLowerCase().includes(query) ||
+          build.tags?.toLowerCase().includes(query) ||
+          build.origin?.toLowerCase().includes(query) ||
+          build.ethics?.toLowerCase().includes(query)
+        );
+      })();
 
-    // Difficulty filter
-    const matchesDifficulty = !difficultyFilter || build.difficulty === difficultyFilter;
+      // Difficulty filter
+      const matchesDifficulty = !difficultyFilter || build.difficulty === difficultyFilter;
 
-    return matchesSearch && matchesDifficulty;
-  });
+      return matchesSearch && matchesDifficulty;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'rating':
+          // Sort by average rating (descending), then by rating count
+          const ratingDiff = (b.average_rating || 0) - (a.average_rating || 0);
+          if (ratingDiff !== 0) return ratingDiff;
+          return (b.rating_count || 0) - (a.rating_count || 0);
+        case 'oldest':
+          // Sort by creation date (ascending)
+          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        case 'newest':
+        default:
+          // Sort by creation date (descending)
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      }
+    });
 
   // Pagination
   const indexOfLastBuild = currentPage * buildsPerPage;
@@ -157,7 +178,7 @@ export const Home: React.FC = () => {
       <div className="container mt-4">
         {/* Search and Filters */}
         <div className="row mb-4">
-          <div className="col-md-8 mb-3 mb-md-0">
+          <div className="col-md-6 mb-3 mb-md-0">
             <input
               type="text"
               className="form-control form-control-lg bg-secondary text-white border-secondary"
@@ -169,7 +190,7 @@ export const Home: React.FC = () => {
               }}
             />
           </div>
-          <div className="col-md-4">
+          <div className="col-md-3 mb-3 mb-md-0">
             <select
               className="form-select form-select-lg bg-secondary text-white border-secondary"
               value={difficultyFilter}
@@ -184,6 +205,20 @@ export const Home: React.FC = () => {
               <option value="balanced">Balanced</option>
               <option value="challenging">Challenging</option>
               <option value="extreme">Extreme Challenge</option>
+            </select>
+          </div>
+          <div className="col-md-3">
+            <select
+              className="form-select form-select-lg bg-secondary text-white border-secondary"
+              value={sortBy}
+              onChange={(e) => {
+                setSortBy(e.target.value);
+                setCurrentPage(1);
+              }}
+            >
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="rating">Highest Rated</option>
             </select>
           </div>
         </div>
@@ -365,6 +400,18 @@ export const Home: React.FC = () => {
                                 {tag.trim()}
                               </span>
                             ))}
+                          </div>
+                        )}
+
+                        {/* Rating */}
+                        {build.average_rating !== undefined && build.rating_count !== undefined && (
+                          <div className="mt-3 pt-3 border-top border-secondary">
+                            <RatingStars
+                              rating={build.average_rating}
+                              ratingCount={build.rating_count}
+                              interactive={false}
+                              size="sm"
+                            />
                           </div>
                         )}
                       </div>
