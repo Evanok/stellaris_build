@@ -346,7 +346,6 @@
 	ignore_portrait_duplication=no
 	room="wilderness_room"
 	spawn_enabled=yes
-	ethic="ethic_spiritualist"
 	ethic="ethic_gestalt_consciousness"
 	civics=
 	{

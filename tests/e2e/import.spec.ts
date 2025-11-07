@@ -293,4 +293,50 @@ test.describe('Import Functionality - Empire Designs', () => {
     // await submitButton.click();
     // await page.waitForURL('/', { timeout: 10000 });
   });
+
+  test('should allow switching between empires using Back button', async ({ page }) => {
+    await page.goto('/create/import-designs');
+    await page.waitForSelector('#designsfile', { timeout: 10000 });
+
+    // Upload empire designs file
+    const empireTxtPath = path.join(__dirname, '../data/test_import_empires.txt');
+    await page.setInputFiles('#designsfile', empireTxtPath);
+
+    // Wait for empire list to appear
+    await page.waitForSelector('.list-group-item', { timeout: 15000 });
+
+    // Verify we have at least 2 empires
+    const empireButtons = page.locator('.list-group-item');
+    const count = await empireButtons.count();
+    expect(count).toBeGreaterThanOrEqual(2);
+
+    // Click on first empire
+    const firstEmpireName = await empireButtons.nth(0).textContent();
+    await empireButtons.nth(0).click();
+
+    // Wait for form to be populated with first empire data
+    await page.waitForSelector('#buildName', { timeout: 15000 });
+    const firstBuildName = await page.locator('#buildName').inputValue();
+    expect(firstBuildName).toBeTruthy();
+
+    // Click "Back to Empire Selection" button
+    const backButton = page.locator('button:has-text("Back to Empire Selection")');
+    await expect(backButton).toBeVisible();
+    await backButton.click();
+
+    // Wait for empire list to reappear
+    await page.waitForSelector('.list-group-item', { timeout: 15000 });
+
+    // Click on second empire
+    const secondEmpireName = await empireButtons.nth(1).textContent();
+    await empireButtons.nth(1).click();
+
+    // Wait for form to be populated with second empire data
+    await page.waitForSelector('#buildName', { timeout: 15000 });
+    const secondBuildName = await page.locator('#buildName').inputValue();
+    expect(secondBuildName).toBeTruthy();
+
+    // Verify the build names are different (different empires loaded)
+    expect(secondBuildName).not.toBe(firstBuildName);
+  });
 });
