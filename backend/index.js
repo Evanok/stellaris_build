@@ -473,6 +473,17 @@ app.get('/api/species-classes', (req, res) => {
   });
 });
 
+// Get all community resources (guides, tools, videos, etc.)
+app.get('/api/resources', (req, res) => {
+  fs.readFile('./data/resources.json', 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json({ error: "Could not read resources data." });
+      return;
+    }
+    res.json(JSON.parse(data));
+  });
+});
+
 // Get all builds (excluding soft-deleted ones)
 app.get('/api/builds', (req, res) => {
   const sql = `

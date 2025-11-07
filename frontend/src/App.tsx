@@ -17,6 +17,7 @@ const BuildDetail = lazy(() => import('./pages/BuildDetail').then(module => ({ d
 const Stats = lazy(() => import('./pages/Stats'));
 const AdminStats = lazy(() => import('./pages/AdminStats'));
 const AdminFeedback = lazy(() => import('./pages/AdminFeedback'));
+const Resources = lazy(() => import('./pages/Resources'));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -82,6 +83,7 @@ const AppContent = () => {
                   <Route path="/create/import-designs" element={<ImportEmpireDesigns />} />
                   <Route path="/build/:id" element={<BuildDetail />} />
                   <Route path="/login" element={<Login />} />
+                  <Route path="/resources" element={<Resources />} />
                   <Route path="/stats" element={<Stats />} />
                   <Route path="/admin/stats" element={<AdminStats />} />
                   <Route path="/admin/feedback" element={<AdminFeedback />} />

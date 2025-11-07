@@ -9,6 +9,7 @@ const ImportEmpireDesigns: React.FC = () => {
   const [empireList, setEmpireList] = useState<string[] | null>(null);
   const [selectedEmpire, setSelectedEmpire] = useState<string>('');
   const [buildData, setBuildData] = useState<any>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -19,6 +20,7 @@ const ImportEmpireDesigns: React.FC = () => {
     setEmpireList(null);
     setSelectedEmpire('');
     setBuildData(null);
+    setUploadedFile(file); // Store the file in state
 
     const formData = new FormData();
     formData.append('designsfile', file);
@@ -49,13 +51,14 @@ const ImportEmpireDesigns: React.FC = () => {
     setSelectedEmpire(empireName);
     setError(null);
 
-    // Send request to extract specific empire
-    const fileInput = document.getElementById('designsfile') as HTMLInputElement;
-    const file = fileInput?.files?.[0];
-    if (!file) return;
+    // Use the stored file instead of retrieving from DOM
+    if (!uploadedFile) {
+      setError('File not found. Please upload the file again.');
+      return;
+    }
 
     const formData = new FormData();
-    formData.append('designsfile', file);
+    formData.append('designsfile', uploadedFile);
     formData.append('empireName', empireName);
 
     try {
