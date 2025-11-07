@@ -1,0 +1,213 @@
+{
+  "categories": [
+    {
+      "id": "youtube",
+      "name": "YouTube Channels",
+      "description": "Top Stellaris content creators with guides, let's plays, and strategy videos",
+      "icon": "bi-youtube",
+      "resources": [
+        {
+          "title": "Montu Plays",
+          "url": "https://www.youtube.com/@MontuPlays",
+          "description": "Meta analysis, tier lists, and competitive builds. Best for min-maxers and players seeking overpowered strategies.",
+          "tags": ["meta", "builds", "guides", "tier-lists"],
+          "featured": true
+        },
+        {
+          "title": "Stefan Anon",
+          "url": "https://www.youtube.com/@StefanAnon",
+          "description": "Role-playing campaigns and narrative-driven gameplay. Perfect for immersive storytelling and lore enthusiasts.",
+          "tags": ["roleplay", "let's play", "story"],
+          "featured": true
+        },
+        {
+          "title": "ASpec",
+          "url": "https://www.youtube.com/@ASpecGaming",
+          "description": "Beginner-friendly guides, game mechanics explanations, and strategy tutorials for new players.",
+          "tags": ["guides", "beginner", "tutorial"],
+          "featured": true
+        },
+        {
+          "title": "Lathland",
+          "url": "https://www.youtube.com/@Lathland",
+          "description": "Entertaining let's plays with creative empire concepts and roleplay elements.",
+          "tags": ["let's play", "roleplay", "entertainment"],
+          "featured": false
+        },
+        {
+          "title": "The Grand Strategy Gamer",
+          "url": "https://www.youtube.com/@TheGrandStrategyGamer",
+          "description": "Detailed strategy guides and advanced gameplay techniques for experienced players.",
+          "tags": ["strategy", "advanced", "guides"],
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "guides",
+      "name": "Written Guides & Wikis",
+      "description": "Comprehensive written resources for game mechanics, strategies, and reference",
+      "icon": "bi-book",
+      "resources": [
+        {
+          "title": "Official Stellaris Wiki",
+          "url": "https://stellaris.paradoxwikis.com/",
+          "description": "Complete game mechanics reference with up-to-date patch information, maintained by the community.",
+          "tags": ["wiki", "reference", "mechanics"],
+          "featured": true
+        },
+        {
+          "title": "r/Stellaris Reddit Community",
+          "url": "https://www.reddit.com/r/Stellaris/",
+          "description": "Active community with daily discussions, build sharing, memes, and strategy debates. Check the wiki for curated guides.",
+          "tags": ["community", "reddit", "discussions"],
+          "featured": true
+        },
+        {
+          "title": "Steam Community Guides",
+          "url": "https://steamcommunity.com/app/281990/guides/",
+          "description": "Player-created guides covering everything from beginner tips to advanced min-maxing strategies.",
+          "tags": ["steam", "guides", "community"],
+          "featured": false
+        },
+        {
+          "title": "Stellaris Tech Tree",
+          "url": "https://turanar.github.io/stellaris-tech-tree/vanilla/",
+          "description": "Interactive technology tree visualization showing all techs, prerequisites, and weights.",
+          "tags": ["tech", "reference", "tool"],
+          "featured": true
+        }
+      ]
+    },
+    {
+      "id": "tools",
+      "name": "Online Tools & Calculators",
+      "description": "Community-built tools for optimization, planning, and game analysis",
+      "icon": "bi-tools",
+      "resources": [
+        {
+          "title": "Stellaris Dashboard",
+          "url": "https://stellaris-dashboard.com/",
+          "description": "Import your save files to visualize empire statistics, economy graphs, and galaxy maps. Requires Python installation.",
+          "tags": ["save-analysis", "visualization", "statistics"],
+          "featured": true
+        },
+        {
+          "title": "Fleet Power Calculator",
+          "url": "https://github.com/eliasdaler/stellaris_ship_designer",
+          "description": "Calculate optimal fleet compositions and ship designs for combat efficiency.",
+          "tags": ["fleet", "combat", "calculator"],
+          "featured": false
+        },
+        {
+          "title": "Stellaris Modding Tools",
+          "url": "https://stellaris.paradoxwikis.com/Modding",
+          "description": "Official modding documentation and tools for creating custom content.",
+          "tags": ["modding", "tools", "documentation"],
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "streamers",
+      "name": "Twitch Streamers",
+      "description": "Live Stellaris gameplay, community interaction, and real-time strategy discussions",
+      "icon": "bi-twitch",
+      "resources": [
+        {
+          "title": "Paradox Interactive",
+          "url": "https://www.twitch.tv/paradoxinteractive",
+          "description": "Official Paradox streams featuring developers, community events, and new DLC previews.",
+          "tags": ["official", "dev-streams", "events"],
+          "featured": true
+        },
+        {
+          "title": "Aavak",
+          "url": "https://www.twitch.tv/aavak",
+          "description": "Long-form roleplay campaigns with community interaction and creative empire concepts.",
+          "tags": ["roleplay", "community", "interactive"],
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "mods",
+      "name": "Essential Mods",
+      "description": "Popular mods that enhance gameplay, add content, or improve quality of life",
+      "icon": "bi-puzzle",
+      "resources": [
+        {
+          "title": "Stellaris Modding Hub",
+          "url": "https://steamcommunity.com/app/281990/workshop/",
+          "description": "Official Steam Workshop with thousands of mods. Filter by most subscribed or highest rated.",
+          "tags": ["workshop", "mods", "steam"],
+          "featured": true
+        },
+        {
+          "title": "UI Overhaul Dynamic",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1623423360",
+          "description": "Comprehensive UI improvements with better scaling, readability, and customization options.",
+          "tags": ["ui", "quality-of-life", "essential"],
+          "featured": true
+        },
+        {
+          "title": "Planetary Diversity",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=819148835",
+          "description": "Adds 50+ new planet types, events, and mechanics for more diverse galaxy exploration.",
+          "tags": ["content", "planets", "variety"],
+          "featured": true
+        },
+        {
+          "title": "Gigastructural Engineering",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1121692237",
+          "description": "Megastructures on steroids. Build titanic structures including Dyson Spheres, Ring Worlds, and more.",
+          "tags": ["megastructures", "endgame", "content"],
+          "featured": false
+        },
+        {
+          "title": "Star Wars: New Dawn",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1295015152",
+          "description": "Total conversion mod bringing the Star Wars universe to Stellaris with authentic ships, factions, and events.",
+          "tags": ["total-conversion", "star-wars", "content"],
+          "featured": false
+        }
+      ]
+    },
+    {
+      "id": "communities",
+      "name": "Communities & Forums",
+      "description": "Join discussions, find multiplayer games, and connect with other players",
+      "icon": "bi-people",
+      "resources": [
+        {
+          "title": "Official Stellaris Discord",
+          "url": "https://discord.gg/stellaris",
+          "description": "Official community Discord with channels for strategy, modding, multiplayer, and announcements.",
+          "tags": ["discord", "official", "community"],
+          "featured": true
+        },
+        {
+          "title": "Paradox Forums",
+          "url": "https://forum.paradoxplaza.com/forum/forums/stellaris.900/",
+          "description": "Official forums for bug reports, suggestions, developer interaction, and detailed strategy discussions.",
+          "tags": ["forum", "official", "support"],
+          "featured": true
+        },
+        {
+          "title": "r/StellarisMods",
+          "url": "https://www.reddit.com/r/StellarisMods/",
+          "description": "Subreddit dedicated to Stellaris modding with tutorials, showcases, and collaboration opportunities.",
+          "tags": ["reddit", "modding", "community"],
+          "featured": false
+        },
+        {
+          "title": "Stellaris Multiplayer Discord",
+          "url": "https://discord.gg/stellarismp",
+          "description": "Community-run Discord for organizing multiplayer games, finding players, and coordinating campaigns.",
+          "tags": ["discord", "multiplayer", "community"],
+          "featured": false
+        }
+      ]
+    }
+  ]
+}

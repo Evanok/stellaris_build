@@ -1,0 +1,67 @@
+/* Resources page styles */
+
+.resource-card-link {
+  text-decoration: none;
+  display: block;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.resource-card-link:hover {
+  transform: translateY(-4px);
+}
+
+.resource-card {
+  transition: all 0.2s ease;
+  border-width: 2px;
+}
+
+.resource-card-link:hover .resource-card {
+  box-shadow: 0 8px 24px rgba(74, 158, 255, 0.3);
+  border-color: #4a9eff !important;
+}
+
+.resource-card-link:hover .resource-card h5,
+.resource-card-link:hover .resource-card h6 {
+  color: #4a9eff !important;
+}
+
+/* Featured cards glow effect */
+.resource-card-link:hover .border-warning {
+  box-shadow: 0 8px 24px rgba(255, 193, 7, 0.4);
+}
+
+/* Tag hover effect */
+.resource-card .badge {
+  transition: all 0.2s ease;
+}
+
+.resource-card-link:hover .badge {
+  transform: scale(1.05);
+}
+
+/* External link icon */
+.bi-box-arrow-up-right {
+  transition: transform 0.2s ease;
+}
+
+.resource-card-link:hover .bi-box-arrow-up-right {
+  transform: translate(2px, -2px);
+}
+
+/* Category filter buttons */
+.btn-outline-secondary:hover {
+  background-color: #4a9eff;
+  border-color: #4a9eff;
+  color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .display-3 {
+    font-size: 2rem;
+  }
+
+  .lead {
+    font-size: 1rem;
+  }
+}
