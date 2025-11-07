@@ -36,20 +36,6 @@ npm run dev -w backend   # Starts Express server on port 3001
 npm run build -w frontend  # Runs TypeScript compiler + Vite build
 ```
 
-### Linting
-
-```bash
-# Lint frontend TypeScript/TSX files
-npm run lint -w frontend
-```
-
-### Preview Production Build
-
-```bash
-# Preview the production build locally
-npm run preview -w frontend
-```
-
 ### Production Deployment
 
 **Production Server:**
@@ -158,6 +144,7 @@ The project uses npm workspaces with three main parts:
 - `Create.tsx` - Build creation page with BuildForm (requires authentication)
 - `BuildDetail.tsx` - Individual build view with all details, embedded YouTube videos, and soft delete button
 - `Login.tsx` - OAuth login page with Google and Steam buttons
+- `Resources.tsx` - Curated community resources page with categorized links to guides, tools, YouTubers, mods, and communities
 
 **Authentication:**
 - `AuthContext.tsx` - React context providing authentication state and user info
@@ -216,6 +203,7 @@ The project uses npm workspaces with three main parts:
 - `GET /api/builds` - Returns all non-deleted builds ordered by created_at DESC
 - `POST /api/builds` - Creates new build (requires authentication, name, checks for duplicates)
 - `DELETE /api/builds/:id` - Soft deletes a build (sets deleted=1)
+- `GET /api/resources` - Returns curated community resources (YouTube channels, guides, tools, mods, communities)
 
 **Static Data Files (backend/data/):**
 All data is fully localized (English) with clean names and descriptions:
@@ -227,6 +215,7 @@ All data is fully localized (English) with clean names and descriptions:
 - `ascension_perks.json` - 44 perks (player-available only)
 - `traditions.json` - 32 tradition trees with adopt/finish/individual traditions
 - `ruler_traits.json` - Ruler/leader traits for starting leaders
+- `resources.json` - Curated community resources organized by category (YouTube, guides, tools, streamers, mods, communities)
 
 ### Data Extractor (data-extractor/)
 
@@ -428,494 +417,47 @@ Planned features (not yet implemented):
 
 ---
 
-## COMPLETED WORK (2025-10-25)
-
-### Performance Optimization + Machine Traits UX + Testing Infrastructure
-
-**Status:** ✅ All features complete and tested. Production ready.
-
-**Work Completed This Session:**
-
-1. ✅ **Icon Optimization for Performance**
-   - Modified `data-extractor/extract_icons.py` to output optimal icon sizes
-   - Icons displayed at 32px now extracted as 32x32 (previously 64x64)
-   - Results:
-     - traits: 2.8M → 1.8M (-36%)
-     - civics: 1.7M → 832K (-51%)
-     - ethics: 192K → 72K (-63%)
-     - ascension_perks: 544K → 184K (-66%)
-     - traditions: 368K → 132K (-64%)
-     - **Total savings: ~2.6MB** (~75% reduction for 32px icons)
-   - Origin images kept at high resolution (256x256 for `origin_original/`, 32x32 for `origin_mini/`)
-
-2. ✅ **Machine Trait Filtering and Background Trait UX**
-   - **Machine-tagged traits**: Only visible for MACHINE/ROBOT species types
-   - **Background traits**: 6 mutually exclusive traits (only 1 can be selected)
-   - **Disabled state UX**: When one background trait is selected, others become disabled (grayed out with 50% opacity) instead of being auto-replaced
-   - Implementation in `BuildForm.tsx` (lines 693-709, 1335-1343)
-
-3. ✅ **Performance Testing Infrastructure**
-   - Created `tests/e2e/performance.spec.ts` with 3 tests:
-     - Home page load time measurement (~1 second)
-     - Create page load time measurement (~1.7 seconds)
-     - Create page breakdown (HTML → Form → Data → Icons)
-   - Provides objective performance metrics for monitoring
-
-4. ✅ **TypeScript Build Validation Tests**
-   - Created `tests/e2e/build-check.spec.ts` with 2 tests:
-     - Full build test (`npm run build -w frontend`)
-     - Type check only test (`tsc --noEmit`)
-   - Catches TypeScript errors before deployment
-   - Prevents production build failures
-
-5. ✅ **BuildDetail Page Loading Bug Fix**
-   - **Problem**: Traits showed IDs and "0 points" during initial page load
-   - **Cause**: Build data loaded before game data (traits, ethics, etc.)
-   - **Solution**: Combined all fetches into one `Promise.all` in `BuildDetail.tsx` (lines 171-224)
-   - Only sets `loading=false` when ALL data is ready
-   - Prevents flash of incorrect values
-
-6. ✅ **Trait Counting Logic Update**
-   - **Rule**: Traits with cost 0 (background traits, auto-mutations) don't count toward 5-trait limit
-   - Added `countTraitsTowardsLimit()` function that excludes cost 0 traits
-   - Display shows: "Traits: 5 / 5 (6 total)" when background trait is selected
-   - Implementation in `BuildForm.tsx` (lines 614-624, 1315-1318)
-
-7. ✅ **Production Database Updates for Build 12**
-   - Created `backend/scripts/update_build_12.js`:
-     - Removed "V2" from name
-     - Updated description to full version
-     - Interactive confirmation with `--yes` flag support
-   - Created `backend/scripts/add_bulky_to_build_12.js`:
-     - Added `trait_robot_bulky` to traits list
-     - Checks for duplicates before adding
-     - Verification of update success
-   - Both scripts executed successfully in production
-
-**Files Modified:**
-- `data-extractor/extract_icons.py` - Added optimal_sizes dictionary (lines 228-253)
-- `frontend/src/BuildForm.tsx` - Machine trait filtering, background trait disabled state, trait counting logic
-- `frontend/src/pages/BuildDetail.tsx` - Fixed data loading race condition with Promise.all
-- `tests/e2e/performance.spec.ts` - NEW: Performance measurement tests
-- `tests/e2e/build-check.spec.ts` - NEW: TypeScript compilation validation
-- `backend/scripts/update_build_12.js` - NEW: Database update script
-- `backend/scripts/add_bulky_to_build_12.js` - NEW: Add trait script
-
-**TypeScript Fix (Critical):**
-- Fixed `error TS2322: Type 'boolean | "" | undefined' is not assignable to type 'boolean | undefined'`
-- Changed from: `const isDisabled = isBackgroundTrait && selectedBackgroundTrait && selectedBackgroundTrait !== trait.id;`
-- To: `const isDisabled = !!(isBackgroundTrait && selectedBackgroundTrait && selectedBackgroundTrait !== trait.id);`
-- Used `!!` to force boolean conversion (BuildForm.tsx:1343)
-
-**Testing:**
-```bash
-# Run all tests
-npm test
-
-# Run performance tests
-npx playwright test tests/e2e/performance.spec.ts
-
-# Run build validation
-npx playwright test tests/e2e/build-check.spec.ts
-
-# Database update scripts (production)
-node backend/scripts/update_build_12.js --yes
-node backend/scripts/add_bulky_to_build_12.js --yes
-```
-
-**Icon Extraction (Updated Workflow):**
-```bash
-cd data-extractor
-
-# Extract all icons with optimal sizes
-python3 extract_icons.py "/mnt/c/Program Files (x86)/Steam/steamapps/common/Stellaris"
-
-# Copy to frontend (icons are now 75% smaller)
-cp -r output/icons/* ../frontend/public/icons/
-```
-
-**Key Achievements:**
-- 🚀 Page load reduced by 2.6MB (~75% for 32px icons)
-- 🎮 Machine trait filtering working correctly
-- 🎯 Background trait UX improved (disabled state instead of auto-replace)
-- 📊 Performance testing infrastructure in place
-- ✅ TypeScript validation prevents deployment errors
-- 🐛 BuildDetail loading bug fixed (no more flashing IDs)
-- 🧮 Trait counting logic correct (cost 0 excluded from limit)
-- 🗄️ Production database successfully updated
-
-**Technical Notes:**
-- Icon optimization applied during extraction (no manual resizing needed)
-- Machine traits use `tags` array check: `trait.tags.includes('machine')`
-- Background traits also use `tags` array check: `trait.tags.includes('background')`
-- Disabled state uses `disabled` prop + `opacity: 0.5` for visual feedback
-- BuildDetail uses `Promise.all` pattern to load all data before rendering
-- TypeScript errors now caught by automated tests before deployment
-- Database update scripts use readline for interactive confirmation
-
----
-
-## COMPLETED WORK (2025-10-26 Part 2)
-
-### SEO Optimization + Image Lazy Loading + Google Search Console Setup
-
-**Status:** ✅ All features complete and tested. Production ready.
-
-**Work Completed This Session:**
-
-1. ✅ **Complete SEO Foundation Implementation**
-   - Added comprehensive meta tags to `index.html`:
-     - Title, description, keywords, canonical URL
-     - Open Graph tags (Facebook, LinkedIn)
-     - Twitter Card tags
-     - Author meta tag
-   - Created `robots.txt` file to allow search engine indexing
-   - Created dynamic `sitemap.xml` endpoint in backend (queries database for all builds)
-   - Installed and configured `react-helmet-async` for per-page meta tags
-   - Added Helmet to Home.tsx and BuildDetail.tsx with unique meta tags
-   - Added JSON-LD structured data to BuildDetail.tsx (Schema.org Guide for VideoGame)
-
-2. ✅ **Render Blocking Resource Optimization**
-   - Added `<link rel="preconnect">` for cdn.jsdelivr.net
-   - Added `<link rel="dns-prefetch">` for faster CDN resolution
-   - Used `media="print" onload="this.media='all'"` trick for Bootstrap Icons CSS
-   - Result: CSS loads asynchronously, page renders faster
-
-3. ✅ **Image Lazy Loading Implementation**
-   - Added `loading="lazy"` attribute to ALL images across the site:
-     - BuildDetail.tsx: GameIcon component + large origin image
-     - BuildForm.tsx: GameIcon component + origin preview + origin selector + ruler trait images
-     - Home.tsx: Already had lazy loading ✅
-   - **Performance Impact**:
-     - Initial load: ~50% fewer image requests (14 vs 28 images)
-     - Data transfer: ~400 KB initial vs ~800 KB before
-     - Images load on-demand as user scrolls
-
-4. ✅ **Google Search Console Verification**
-   - Added `googlecd04003f2c5c632e.html` verification file to `frontend/public/`
-   - File automatically copied to `frontend/dist/` during build
-   - Ready for Google Search Console ownership verification
-   - **Note**: File needs to be deployed to production server to verify
-
-**Files Modified:**
-- `frontend/index.html` - Meta tags + render blocking fixes
-- `frontend/public/robots.txt` - NEW: Search engine permissions
-- `backend/index.js` - NEW: `/sitemap.xml` dynamic endpoint
-- `frontend/src/main.tsx` - Added HelmetProvider wrapper
-- `frontend/src/pages/Home.tsx` - Added Helmet with static meta tags
-- `frontend/src/pages/BuildDetail.tsx` - Added Helmet + JSON-LD + lazy loading
-- `frontend/src/BuildForm.tsx` - Added lazy loading to all images
-- `frontend/public/googlecd04003f2c5c632e.html` - NEW: Google verification file
-
-**SEO Impact (Expected Timeline):**
-- **Week 1-2**: Google crawls sitemap.xml and indexes all pages
-- **Month 1-2**: Site appears in searches for "stellaris builds"
-- **Month 3+**: Improved ranking, rich snippets in search results
-
-**Performance Impact (Measured):**
-- Page load: 1.66 MB total, 37 requests (good for modern site)
-- Images: 794 KB, 28 image files (now lazy loaded)
-- Initial render: ~400 KB instead of ~800 KB (50% reduction)
-
-**Testing:**
-```bash
-# All tests passed
-npm test  # 31/31 ✅
-
-# Build successful
-npm run build -w frontend
-```
-
-**SEO Tools Used:**
-- Google PageSpeed Insights: https://pagespeed.web.dev/
-- SEO Site Checkup: https://seositecheckup.com/
-- Google Search Console: https://search.google.com/search-console/
-
-**Technical Notes:**
-- Sitemap includes 24+ builds with `lastmod` dates from database
-- JSON-LD structured data tells Google content is a "Guide" for "VideoGame" (Stellaris)
-- Lazy loading is native HTML5 (`loading="lazy"`), supported by all modern browsers
-- Meta descriptions limited to 155 characters (Google truncates at 160)
-- Open Graph image referenced but not created yet (optional next step)
-
-**Deployment Instructions for Production:**
-```bash
-# On production server (stellaris-build.com)
-cd ~/work/stellaris_build
-
-# Pull latest changes
-git pull
-
-# Rebuild frontend (includes verification file + lazy loading)
-npm run build -w frontend
-
-# Restart backend (includes sitemap.xml endpoint)
-pm2 restart stellaris-build
-
-# Verify verification file is accessible
-curl https://stellaris-build.com/googlecd04003f2c5c632e.html
-
-# Verify sitemap is accessible
-curl https://stellaris-build.com/sitemap.xml
-
-# Then verify ownership in Google Search Console
-```
-
-**Next Steps (Optional, Lower Priority):**
-- Update semantic HTML (add proper `<header>`, `<main>`, `<article>` tags)
-- Create Open Graph image (og-image.jpg) for social media sharing
-- Monitor Google Search Console for indexing progress
-
----
-
-## COMPLETED WORK (2025-10-26 Part 1)
-
-### Species Class Refactor - Dynamic Extraction from Game Files
-
-**Status:** ✅ All features complete and tested. Production ready.
-
-**Work Completed This Session:**
-
-1. ✅ **Replaced Hardcoded Species Types with Dynamic Extraction**
-   - **Before**: 4 hardcoded species type buttons (Biological, Lithoid, Machine, Robot)
-   - **After**: 17 species classes dynamically extracted from Stellaris game files
-   - UI changed from button group to dropdown select (more scalable)
-   - Added `species_classes.json` data file with archetype mapping
-   - Frontend now fetches species classes from `/api/species-classes` endpoint
-
-2. ✅ **Localization Extraction Fixes**
-   - **Problem**: Species class names weren't being found in localization files
-   - **Solution**: Modified `localization_parser.py` to recursively search subdirectories using `os.walk()`
-   - **Result**: Found species names in `localisation/english/name_lists/` subdirectory
-   - Loaded 103,567 localization entries (vs 69,919 previously)
-   - Changed localization key from `SPEC_{class_id}` to just `{class_id}`
-
-3. ✅ **Species Class Filtering**
-   - Filtered 26 NPC-only species classes:
-     - 10 primitive variants (PRE_MAM, PRE_REP, etc.)
-     - 3 event-spawned species (AI, SWARM, EXD)
-     - 6 special origin species (SALVAGER, SHROUDWALKER, etc.)
-     - 1 unreleased species (SOLARPUNK)
-     - 1 duplicate (BIOGENESIS_02)
-     - 1 DLC-specific duplicate (IMPERIAL - requires Nemesis DLC)
-   - **Result**: Exactly 17 playable species classes matching user's game
-
-4. ✅ **Manual Name Overrides**
-   - **ROBOT** → "Synthetic" (more commonly known name in-game)
-   - **BIOGENESIS_01** → "BioGenesis" (preserves capital G, uses origin name instead of species name "Spinovore")
-   - Overrides applied AFTER post-processing to prevent `.title()` modification
-
-5. ✅ **Test Migration to Dropdown Selectors**
-   - Updated all E2E tests from button clicks to dropdown selections
-   - Changed from: `page.click('button:has-text("Biological")')`
-   - Changed to: `page.locator('select.form-select').nth(2).selectOption({ label: 'Humanoid' })`
-   - Updated 16 test occurrences across `crud.spec.ts` and `origin-filtering.spec.ts`
-   - Renamed test: "ROBOT should see same origins as MACHINE" → "SYNTHETIC should see same origins as MACHINE"
-
-6. ✅ **TypeScript Cleanup**
-   - Removed `selectedSecondarySpeciesClass` references from BuildForm.tsx
-   - Removed from localStorage save/restore
-   - Replaced secondary species selector widget with TODO comment
-   - Fixed compilation errors preventing test execution
-
-**Final Species Class List (17 total):**
-```json
-[
-  "Aquatic", "Arthropoid", "Avian", "BioGenesis", "Cybernetic",
-  "Fungoid", "Humanoid", "Lithoid", "Machine", "Mammalian",
-  "Molluscoid", "Necroid", "Plantoid", "Psionic", "Reptilian",
-  "Synthetic", "Toxoid"
-]
-```
-
-**Archetype Mapping:**
-- **BIOLOGICAL** (13 classes): Aquatic, Arthropoid, Avian, BioGenesis, Cybernetic, Fungoid, Humanoid, Mammalian, Molluscoid, Necroid, Plantoid, Psionic, Reptilian, Toxoid
-- **LITHOID** (1 class): Lithoid
-- **MACHINE** (1 class): Machine
-- **ROBOT** (1 class): Synthetic
-- **NECROPHAGE** (1 class): Toxoid (with special handling)
-
-**Files Modified:**
-- `data-extractor/localization_parser.py` - Recursive directory search with `os.walk()`
-- `data-extractor/extract_species_classes.py` - Added filtering, manual overrides, archetype mapping
-- `backend/data/species_classes.json` - NEW: 17 species classes with archetypes
-- `backend/index.js` - NEW: `/api/species-classes` endpoint
-- `frontend/src/BuildForm.tsx` - Replaced button group with dropdown, removed secondary species class
-- `tests/e2e/crud.spec.ts` - Updated 9 species type selections
-- `tests/e2e/origin-filtering.spec.ts` - Updated 7 species type selections
-
-**Testing:**
-```bash
-# Run all tests
-npm test
-
-# All 34 tests passed (22.9 seconds):
-# ✅ TypeScript compilation: PASSED
-# ✅ TypeScript type check: PASSED
-# ✅ Build creation tests: PASSED (biological/humanoid, machine, lithoid)
-# ✅ Validation tests: PASSED (trait limits, ethics limits, required fields)
-# ✅ Permission tests: PASSED (edit/delete authorization)
-# ✅ Origin filtering tests: PASSED (all species class dropdown selectors)
-# ✅ Image asset tests: PASSED (all icons available)
-# ✅ Performance tests: PASSED (home ~1.3s, create ~2.3s)
-```
-
-**Extraction Workflow (Updated):**
-```bash
-cd data-extractor
-
-# Extract species classes from game files
-python3 extract_species_classes.py "/mnt/c/Program Files (x86)/Steam/steamapps/common/Stellaris"
-
-# Copy to backend
-cp output/species_classes.json ../backend/data/
-
-# Restart backend to load new data
-pm2 restart stellaris-build  # Production
-# OR
-npm run dev -w backend       # Development
-```
-
-**Key Achievements:**
-- 📊 17 species classes dynamically extracted vs 4 hardcoded
-- 🎮 Accurate species names matching in-game display
-- 🔧 Scalable architecture for future species additions
-- ✅ All 34 tests passing (100% success rate)
-- 🌍 Full localization support with recursive file search
-- 🚫 Proper filtering of NPC/DLC-specific species
-- 🎯 Manual overrides for user-preferred names
-
-**Technical Notes:**
-- Species class selector is 3rd `select.form-select` element (accessible via `.nth(2)`)
-- Archetype determines trait filtering (BIOLOGICAL/LITHOID vs MACHINE/ROBOT)
-- Species classes use game IDs (HUM, MAM, ROBOT) with localized display names
-- Localization loader searches all subdirectories for maximum coverage
-- Manual overrides prevent post-processing modifications (applied after `.title()`)
-- Tests use `selectOption({ label: '...' })` instead of exact value matching
-
----
-
-## COMPLETED WORK (2025-10-26)
-
-### Loading Screen Backgrounds - Dynamic Background Images
-
-**Status:** ✅ All features complete and tested. Production ready.
-
-**Work Completed This Session:**
-
-1. ✅ **Loading Screen Image Extraction**
-   - Created `extract_loading_screens.py` to extract loading screens from Stellaris
-   - Converts 19 `.dds` files (1920x1080) to web-friendly `.jpg` format
-   - ImageMagick conversion with 90% quality compression
-   - **Result**: 81.4M → 7.4M (91% file size reduction, ~400KB per image)
-   - Images stored in `frontend/public/loading_screens/`
-
-2. ✅ **Global Background Implementation**
-   - Implemented random background images at App.tsx level
-   - Background wraps entire application (all pages)
-   - Random background selected on initial page load
-   - Background changes on every page navigation (using `useLocation()` hook)
-   - Fixed parallax background with dark overlay (rgba 0.80 opacity)
-
-3. ✅ **Mobile Optimization**
-   - Added screen width detection: `window.innerWidth <= 768`
-   - Mobile devices get solid background (no image loading)
-   - Desktop/tablet devices get random loading screen backgrounds
-   - Prevents 400KB image downloads on mobile connections
-
-4. ✅ **UI Improvements**
-   - Removed navbar bottom margin (`mb-4`) to eliminate gap
-   - Seamless transition between navbar and hero banner
-   - Background visible behind semi-transparent content overlay
-   - Consistent background coverage across all routes
-
-5. ✅ **Cleanup**
-   - Removed `LoadingScreensPreview` component (no longer needed)
-   - Updated `.gitignore` for test results and version.json
-   - Removed preview route from App.tsx
-
-**Files Modified:**
-- `data-extractor/extract_loading_screens.py` - NEW: DDS to JPG conversion script
-- `frontend/src/App.tsx` - Refactored to AppContent component with background system
-- `frontend/src/components/Navbar.tsx` - Removed `mb-4` class
-- `frontend/public/loading_screens/` - NEW: 19 loading screen images (7.4M total)
-- `.gitignore` - Added test-results/, playwright-report/, version.json
-
-**Image Extraction Workflow:**
-```bash
-cd data-extractor
-
-# Extract loading screens from Stellaris installation
-python3 extract_loading_screens.py "/mnt/c/Program Files (x86)/Steam/steamapps/common/Stellaris"
-
-# Copy to frontend public directory
-cp output/loading_screens/*.jpg ../frontend/public/loading_screens/
-```
-
-**App.tsx Architecture:**
-```tsx
-// Helper function for random background selection
-const getRandomBackground = () => {
-  // Only load on desktop (screen width > 768px)
-  if (typeof window !== 'undefined' && window.innerWidth <= 768) {
-    return null;
-  }
-  const images = [
-    'load_12.jpg', 'load_13.jpg', 'load_14.jpg', 'load_15.jpg',
-    'load_16.jpg', 'load_17.jpg', 'load_18.jpg', 'Load_19.jpg'
-  ];
-  return images[Math.floor(Math.random() * images.length)];
-};
-
-// AppContent uses useLocation to detect route changes
-const AppContent = () => {
-  const location = useLocation();
-  const [backgroundImage, setBackgroundImage] = useState<string | null>(getRandomBackground);
-
-  // Change background on every page navigation
-  useEffect(() => {
-    setBackgroundImage(getRandomBackground());
-  }, [location.pathname]);
-
-  return (
-    <div style={{
-      backgroundImage: backgroundImage ? `url(/loading_screens/${backgroundImage})` : 'none',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'fixed',
-      minHeight: '100vh'
-    }}>
-      <div style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.80)',
-        minHeight: '100vh'
-      }}>
-        {/* App content */}
-      </div>
-    </div>
-  );
-};
-```
-
-**Key Achievements:**
-- 🎨 19 stunning Stellaris loading screens as backgrounds
-- 🔄 Dynamic background changes on page navigation
-- 📱 Mobile-optimized (no images on small screens)
-- ⚡ 91% file size reduction (DDS → JPG conversion)
-- 🎯 Average 400KB per image (acceptable performance impact)
-- 🖼️ Fixed parallax background with cover positioning
-- 🌑 Dark overlay (80% opacity) for text readability
-
-**Technical Notes:**
-- Background system implemented at App.tsx level (global coverage)
-- AppContent wrapper component allows use of `useLocation()` hook
-- Mobile detection happens at image selection time (not CSS media query)
-- Background images cached by browser after first load
-- ImageMagick required for DDS conversion (`convert` command)
-- 8 images currently used (load_12.jpg through Load_19.jpg)
-- Background attachment fixed creates parallax scrolling effect
-
-**Performance Impact:**
-- Initial load: +400KB average (one image)
-- Subsequent pages: Cached (no additional download)
-- Mobile: 0KB (images not loaded)
-- Desktop: Minimal impact with browser caching
+## Recent Completions
+
+### Icon Optimization & Performance (2025-10-25)
+- Optimized icon extraction (32px icons: 2.6MB savings, ~75% reduction)
+- Added machine trait filtering (MACHINE/ROBOT species only)
+- Implemented background trait disabled UX (instead of auto-replace)
+- Fixed BuildDetail loading race condition (Promise.all pattern)
+- Added trait counting logic (cost 0 traits excluded from 5-trait limit)
+- Created performance and TypeScript validation test suites
+- Key files: `extract_icons.py`, `BuildForm.tsx`, `BuildDetail.tsx`, `tests/e2e/performance.spec.ts`
+
+### SEO & Image Lazy Loading (2025-10-26)
+- Implemented comprehensive SEO (meta tags, Open Graph, Twitter Cards, JSON-LD structured data)
+- Created `robots.txt` and dynamic `/sitemap.xml` endpoint
+- Added `react-helmet-async` for per-page meta tags
+- Implemented lazy loading (`loading="lazy"`) across all images (50% fewer initial requests)
+- Added Google Search Console verification file
+- Optimized render blocking resources (preconnect, dns-prefetch)
+- Key files: `index.html`, `robots.txt`, `backend/index.js`, `BuildDetail.tsx`, `BuildForm.tsx`
+
+### Species Class Dynamic Extraction (2025-10-26)
+- Replaced 4 hardcoded species types with 17 dynamically extracted species classes
+- Fixed localization parser to recursively search subdirectories (103k+ entries)
+- Filtered 26 NPC-only species classes
+- Changed UI from button group to dropdown select
+- Updated all E2E tests for dropdown selectors
+- Added archetype mapping (BIOLOGICAL, LITHOID, MACHINE, ROBOT, NECROPHAGE)
+- Key files: `localization_parser.py`, `extract_species_classes.py`, `species_classes.json`, `BuildForm.tsx`
+
+### Loading Screen Backgrounds (2025-10-26)
+- Extracted 19 loading screens from Stellaris (DDS → JPG: 91% size reduction, ~400KB each)
+- Implemented random background system at App.tsx level
+- Background changes on page navigation (useLocation hook)
+- Mobile optimization (no images on screens ≤768px)
+- Fixed parallax background with 80% dark overlay
+- Key files: `extract_loading_screens.py`, `App.tsx`, `frontend/public/loading_screens/`
+
+### Community Resources Page (2025-11-05)
+- Created Resources page with 6 categories, 23+ curated resources
+- Implemented category filtering and featured resources system
+- Added responsive grid layout and SEO optimization
+- Created 14 E2E tests for full functionality coverage
+- Resources include YouTube channels, guides, tools, mods, communities
+- Key files: `Resources.tsx`, `Resources.css`, `resources.json`, `tests/e2e/resources.spec.ts`
