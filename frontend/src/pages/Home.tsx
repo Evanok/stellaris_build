@@ -176,6 +176,43 @@ export const Home: React.FC = () => {
       </div>
 
       <div className="container mt-4">
+        {/* Resources Call-to-Action */}
+        <div className="row mb-4">
+          <div className="col-12">
+            <Link to="/resources" className="text-decoration-none">
+              <div
+                className="alert alert-info border-0 shadow-sm d-flex align-items-center justify-content-between"
+                style={{
+                  background: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)',
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s, box-shadow 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 8px 16px rgba(0,0,0,0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '';
+                }}
+              >
+                <div className="d-flex align-items-center">
+                  <span className="fs-2 me-3">📚</span>
+                  <div>
+                    <h5 className="mb-1 text-white fw-bold">New to Stellaris? Check out our curated resources!</h5>
+                    <p className="mb-0 text-white opacity-90">
+                      Discover top YouTube channels, essential guides, tier lists, and must-have mods from the community
+                    </p>
+                  </div>
+                </div>
+                <span className="badge bg-light text-primary fs-6 px-3 py-2">
+                  Explore →
+                </span>
+              </div>
+            </Link>
+          </div>
+        </div>
+
         {/* Search and Filters */}
         <div className="row mb-4">
           <div className="col-md-6 mb-3 mb-md-0">
