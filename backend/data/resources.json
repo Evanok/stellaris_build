@@ -141,7 +141,190 @@
       "name": "Essential Mods",
       "description": "Popular mods that enhance gameplay, add content, or improve quality of life",
       "icon": "bi-puzzle",
-      "resources": []
+      "resources": [
+        {
+          "title": "((( NSC3 - Season 1 )))",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=683230077",
+          "description": "Adds new ship classes, stations, and expanded gameplay mechanics for naval warfare.",
+          "tags": ["mod", "workshop", "ships"],
+          "featured": false
+        },
+        {
+          "title": "More Events Mod",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=727000451",
+          "description": "Introduces a wide variety of new events to enrich your gameplay experience.",
+          "tags": ["mod", "workshop", "events"],
+          "featured": true
+        },
+        {
+          "title": "Guilli's Planet Modifiers and Features",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=865040033",
+          "description": "Adds numerous unique planetary modifiers and features for diverse worlds.",
+          "tags": ["mod", "workshop", "planets"],
+          "featured": true
+        },
+        {
+          "title": "Real Space 4.0",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=937289339",
+          "description": "Improves the scale and realism of star systems and galaxy visuals.",
+          "tags": ["mod", "workshop", "visual"],
+          "featured": true
+        },
+        {
+          "title": "Ethics and Civics Classic (Machine Spirit Update)",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1100284147",
+          "description": "Expands ethics and civics options for greater empire customization.",
+          "tags": ["mod", "workshop", "civics"],
+          "featured": true
+        },
+        {
+          "title": "Gigastructural Engineering & More (4.1)",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1121692237",
+          "description": "Build massive megastructures and gigastructures beyond vanilla limits.",
+          "tags": ["mod", "workshop", "megastructures"],
+          "featured": false
+        },
+        {
+          "title": "Dynamic Political Events",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1227620643",
+          "description": "Adds dynamic political events to make internal empire management more engaging.",
+          "tags": ["mod", "workshop", "politics"],
+          "featured": false
+        },
+        {
+          "title": "UI Overhaul Dynamic",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1623423360",
+          "description": "Complete UI overhaul with improved readability, scaling, and customization options.",
+          "tags": ["mod", "workshop", "ui"],
+          "featured": false
+        },
+        {
+          "title": "Even More Origins",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1998204784",
+          "description": "Introduces even more origins to start your game in unique ways.",
+          "tags": ["mod", "workshop", "origins"],
+          "featured": true
+        },
+        {
+          "title": "More Origins Mod",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2025131190",
+          "description": "Adds a selection of new origins to diversify early game starts.",
+          "tags": ["mod", "workshop", "origins"],
+          "featured": true
+        },
+        {
+          "title": "Extra Events 4.1 Continued",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2807778592",
+          "description": "Continues adding extra events for mid and late game variety.",
+          "tags": ["mod", "workshop", "events"],
+          "featured": true
+        },
+        {
+          "title": "Forgotten Empires 4.1",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3062038863",
+          "description": "Adds new fallen empires with unique mechanics and lore.",
+          "tags": ["mod", "workshop", "empires"],
+          "featured": false
+        },
+        {
+          "title": "Archaeology Story Pack 4.1",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3079374348",
+          "description": "Story pack focused on archaeology with new event chains and discoveries.",
+          "tags": ["mod", "workshop", "archaeology"],
+          "featured": false
+        },
+        {
+          "title": "UI Overhaul Dynamic - Extended Topbar for DLCs",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3090328185",
+          "description": "Extension for UI Overhaul Dynamic that enhances the topbar with DLC information.",
+          "tags": ["mod", "workshop", "ui"],
+          "featured": false
+        },
+        {
+          "title": "More Ascension Perks",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3099975582",
+          "description": "Adds many new ascension perks to further specialize your empire.",
+          "tags": ["mod", "workshop", "perks"],
+          "featured": false
+        },
+        {
+          "title": "31 Tradition Slots + 32 AP Slots",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3359568450",
+          "description": "Increases the number of tradition and ascension perk slots available.",
+          "tags": ["mod", "workshop", "slots"],
+          "featured": true
+        },
+        {
+          "title": "Species Traits Expansion: Galactic Diversity",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3484023963",
+          "description": "Significantly expands available species traits for greater galactic diversity.",
+          "tags": ["mod", "workshop", "traits"],
+          "featured": true
+        },
+        {
+          "title": "UI Overhaul Dynamic - Planet View Performance Mode",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3491116708",
+          "description": "Performance mode for UI Overhaul Dynamic's planet view.",
+          "tags": ["mod", "workshop", "ui"],
+          "featured": false
+        },
+        {
+          "title": "! Immersive Galaxy and Skybox",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2407436476",
+          "description": "Enhances immersion with new galaxy and skybox textures.",
+          "tags": ["mod", "workshop", "visual"],
+          "featured": false
+        },
+        {
+          "title": "French Traduction",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3513691177",
+          "description": "Provides French translation for the game and many popular mods.",
+          "tags": ["mod", "workshop", "localization"],
+          "featured": false
+        },
+        {
+          "title": "National Statistics Bureau with Outer Web GUI",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3515361444",
+          "description": "Adds a national statistics bureau with external web interface.",
+          "tags": ["mod", "workshop", "statistics"],
+          "featured": false
+        },
+        {
+          "title": "Fatal Foundations Story Pack [4.1]",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2627609414",
+          "description": "Story pack adding new narrative foundations and events.",
+          "tags": ["mod", "workshop", "story"],
+          "featured": false
+        },
+        {
+          "title": "More Leader Traits",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3195070547",
+          "description": "Increases the number of traits available for leaders.",
+          "tags": ["mod", "workshop", "leaders"],
+          "featured": false
+        },
+        {
+          "title": "More Astral Rifts",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3275068730",
+          "description": "Adds more astral rifts to explore and exploit.",
+          "tags": ["mod", "workshop", "astral"],
+          "featured": true
+        },
+        {
+          "title": "UI Overhaul Dynamic - Extended Topbar",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1780481482",
+          "description": "Extends the resource topbar to display more information.",
+          "tags": ["mod", "workshop", "ui"],
+          "featured": false
+        },
+        {
+          "title": "Longer Contracts",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3585198165",
+          "description": "Allows signing mercenary and other contracts for longer durations.",
+          "tags": ["mod", "workshop", "contracts"],
+          "featured": false
+        }
+      ]
     },
     {
       "id": "communities",
