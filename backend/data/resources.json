@@ -111,6 +111,13 @@
           "description": "Key strategies for gaining early game advantage and snowballing to victory.",
           "tags": ["early-game", "tips", "strategy", "guide"],
           "featured": true
+        },
+        {
+          "title": "Population Growth in 4.0: How it Works and How it Changed",
+          "url": "https://www.reddit.com/r/Stellaris/comments/1kifurt/population_growth_in_40_how_it_works_and_how_it/",
+          "description": "Comprehensive Reddit post explaining the population growth mechanics in Stellaris 4.0 and how they differ from previous versions.",
+          "tags": ["population", "growth", "mechanics", "4.0", "reddit"],
+          "featured": true
         }
       ]
     },
@@ -334,7 +341,7 @@
       "resources": [
         {
           "title": "Official Stellaris Discord",
-          "url": "https://discord.gg/stellaris",
+          "url": "https://discord.com/invite/stellarisofficial",
           "description": "Official community Discord with channels for strategy, modding, multiplayer, and announcements.",
           "tags": ["discord", "official", "community"],
           "featured": true
