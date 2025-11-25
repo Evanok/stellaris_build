@@ -276,6 +276,7 @@ def extract_all_traits(stellaris_path: str, output_file: str = "output/traits.js
         "15_extreme_frontiers_traits.txt",
         "15_strange_worlds_traits.txt",
         "15_unplugged_traits.txt",
+        "16_infernals_traits.txt",
         "17_shroud_species_traits.txt"
     ]
 
