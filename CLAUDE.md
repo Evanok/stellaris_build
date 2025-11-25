@@ -419,6 +419,17 @@ Planned features (not yet implemented):
 
 ## Recent Completions
 
+### Infernals Species Pack DLC Support (2025-11-25)
+- Updated game version to 4.2 "Corvus" (latest) in BuildForm
+- Extracted all DLC Infernals content: 2 new origins, 4 new civics, 5 new selectable traits, 1 new ascension perk
+- Added `16_infernals_traits.txt` to trait extraction script (was missing, causing 6 traits to be skipped)
+- Added new species class INF (Infernal) with 18 total species classes
+- Fixed PRE_INF (presapient) appearing as duplicate by adding to NPC filter list
+- Extracted 22 new icon files (origins, civics, traits, ascension perks) for DLC content
+- Note: Icon extraction now uses PIL instead of Wand (may cause encoding differences in existing files)
+- Updated species_classes.json, traits.json, civics.json, origins.json, ascension_perks.json
+- Key files: `extract_traits.py`, `extract_species_classes.py`, `BuildForm.tsx`, `backend/data/*.json`
+
 ### Icon Optimization & Performance (2025-10-25)
 - Optimized icon extraction (32px icons: 2.6MB savings, ~75% reduction)
 - Added machine trait filtering (MACHINE/ROBOT species only)
