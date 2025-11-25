@@ -60,7 +60,9 @@
     "initial": true,
     "randomized": true,
     "modification_species_add": true,
-    "opposites": [],
+    "opposites": [
+      "trait_infernal"
+    ],
     "prerequisites": [],
     "allowed_archetypes": [
       "BIOLOGICAL",
@@ -148,7 +150,9 @@
     "initial": false,
     "randomized": true,
     "modification_species_add": true,
-    "opposites": [],
+    "opposites": [
+      "trait_infernal"
+    ],
     "prerequisites": [],
     "allowed_archetypes": [
       "BIOLOGICAL",
@@ -514,6 +518,7 @@
     "randomized": true,
     "modification_species_add": true,
     "opposites": [
+      "trait_pyroclastic",
       "trait_slow_breeders",
       "trait_fertile",
       "trait_rapid_breeders_lithoid",
@@ -552,6 +557,7 @@
     "randomized": true,
     "modification_species_add": true,
     "opposites": [
+      "trait_pyroclastic",
       "trait_rapid_breeders",
       "trait_fertile",
       "trait_rapid_breeders_lithoid",
@@ -1700,7 +1706,7 @@
       "species"
     ],
     "modifier": {},
-    "effects": "Replaces 50% of Food (or Minerals) Upkeep with Energy Credits Upkeep",
+    "effects": "Replaces 50% of Food (or equivalent) Upkeep with Energy Credits Upkeep",
     "custom_tooltip": "TRAIT_PLANTOID_PHOTOTROPHIC_EFFECT",
     "slave_cost": {
       "energy": 1000
@@ -1730,13 +1736,14 @@
       "plantoid",
       "fungoid",
       "lithoid",
+      "infernal",
       "upkeep",
       "species"
     ],
     "modifier": {
       "pc_nuked_habitability": 0.1
     },
-    "effects": "Replaces 50% of Food (or Minerals) Upkeep with Energy Credits Upkeep  - This Energy Upkeep is removed for Pops living on Tomb Worlds.  - Pop Growth Speed on Tomb Worlds +10%  - Tomb World Habitability: +10% | pc_nuked_habitability: +0.1 | Triggered: pc_nuked_habitability: +0.05; logistic_growth_mult: +10.0%",
+    "effects": "Replaces 50% of Food (or equivalent) Upkeep with Energy Credits Upkeep  - This Energy Upkeep is removed for Pops living on Tomb Worlds.  - Pop Growth Speed on Tomb Worlds +10%  - Tomb World Habitability: +10% | pc_nuked_habitability: +0.1 | Triggered: pc_nuked_habitability: +0.05; logistic_growth_mult: +10.0%",
     "custom_tooltip": "TRAIT_PLANTOID_RADIOTROPHIC_EFFECT",
     "slave_cost": {
       "energy": 1500
@@ -1752,6 +1759,7 @@
     "randomized": true,
     "modification_species_add": true,
     "opposites": [
+      "trait_pyroclastic",
       "trait_slow_breeders",
       "trait_rapid_breeders",
       "trait_rapid_breeders_lithoid",
@@ -1839,7 +1847,8 @@
       "trait_shelled",
       "trait_uncanny_intuition",
       "trait_cranial_hypertrophy",
-      "trait_cranial_megatrophy"
+      "trait_cranial_megatrophy",
+      "trait_shell_slag"
     ],
     "prerequisites": [],
     "allowed_archetypes": [
@@ -1870,6 +1879,7 @@
     "randomized": true,
     "modification_species_add": true,
     "opposites": [
+      "trait_pyroclastic",
       "trait_slow_breeders",
       "trait_rapid_breeders",
       "trait_rapid_breeders_lithoid",
@@ -1910,6 +1920,7 @@
     "randomized": true,
     "modification_species_add": true,
     "opposites": [
+      "trait_pyroclastic",
       "trait_humanoid_psychological_infertility",
       "trait_rapid_breeders",
       "trait_fertile",
@@ -2685,8 +2696,8 @@
     "modifier": {
       "bureaucrat_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "bureaucrat_jobs_bonus_workforce_mult: +15.0%",
-    "custom_tooltip": "",
+    "effects": "Amenities from Jobs: +20% | bureaucrat_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "TRAIT_CHARISMATIC_EFFECT",
     "slave_cost": {
       "energy": 750
     }
@@ -4032,7 +4043,9 @@
     "initial": false,
     "randomized": false,
     "modification_species_add": true,
-    "opposites": [],
+    "opposites": [
+      "trait_infernal"
+    ],
     "prerequisites": [],
     "allowed_archetypes": [
       "BIOLOGICAL"
@@ -4343,6 +4356,42 @@
     }
   },
   {
+    "id": "trait_ductile",
+    "name": "Ductile",
+    "description": "This species has been engineered to grow reusable alloy compounds.",
+    "cost": {
+      "base": 2,
+      "modifier": {
+        "add": -1,
+        "advanced_traits_have_reduced_cost": true
+      }
+    },
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "alloys",
+      "livestock",
+      "genetic_ascension"
+    ],
+    "modifier": {
+      "pop_livestock_infernal_bonus_workforce_mult": 1
+    },
+    "effects": "pop_livestock_infernal_bonus_workforce_mult: +100%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1500
+    }
+  },
+  {
     "id": "trait_natural_machinist",
     "name": "Natural Machinist",
     "description": "This species has been engineered to have an incredible knack at working with machinery.",
@@ -4504,6 +4553,7 @@
     "randomized": false,
     "modification_species_add": true,
     "opposites": [
+      "trait_pyroclastic",
       "trait_slow_breeders",
       "trait_rapid_breeders",
       "trait_fertile",
@@ -4686,7 +4736,8 @@
       "special"
     ],
     "modifier": {
-      "leader_lifespan_add": -10
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
     },
     "effects": "Habitability: +20% | leader_lifespan_add: -10 | Triggered: pop_environment_tolerance: +0.2; pop_environment_tolerance: +0.4",
     "custom_tooltip": "spliced_adaptability_tooltip",
@@ -4719,7 +4770,8 @@
     ],
     "modifier": {
       "army_damage_mult": 0.4,
-      "leader_lifespan_add": -10
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
     },
     "effects": "Job Efficiency for Workers: +5%. | army_damage_mult: +40.0%; leader_lifespan_add: -10",
     "custom_tooltip": "juiced_power_tooltip",
@@ -4751,7 +4803,8 @@
       "special"
     ],
     "modifier": {
-      "leader_lifespan_add": -10
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
     },
     "effects": "Job Efficiency for Farming Jobs: +15% | leader_lifespan_add: -10",
     "custom_tooltip": "farm_hands_tooltip",
@@ -4783,7 +4836,8 @@
       "special"
     ],
     "modifier": {
-      "leader_lifespan_add": -10
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
     },
     "effects": "Job Efficiency for Mining Jobs: +15% | leader_lifespan_add: -10",
     "custom_tooltip": "crack_miner_tooltip",
@@ -4815,7 +4869,8 @@
       "special"
     ],
     "modifier": {
-      "leader_lifespan_add": -10
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
     },
     "effects": "Job Efficiency for Technician Jobs: +15% | leader_lifespan_add: -10",
     "custom_tooltip": "technical_skill_tooltip",
@@ -4847,7 +4902,8 @@
       "special"
     ],
     "modifier": {
-      "leader_lifespan_add": -10
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
     },
     "effects": "Job Efficiency for Trader Jobs: +25% | leader_lifespan_add: -10",
     "custom_tooltip": "trait_commercial_genius_tooltip",
@@ -4879,7 +4935,8 @@
       "special"
     ],
     "modifier": {
-      "leader_lifespan_add": -10
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
     },
     "effects": "Job Efficiency for Influential Jobs: +15% | leader_lifespan_add: -10",
     "custom_tooltip": "crafted_smiles_tooltip",
@@ -4911,7 +4968,8 @@
       "special"
     ],
     "modifier": {
-      "leader_lifespan_add": -10
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
     },
     "effects": "Pop Consumer Goods Upkeep: -10% | leader_lifespan_add: -10",
     "custom_tooltip": "low_maintenance_tooltip",
@@ -4945,7 +5003,8 @@
       "special"
     ],
     "modifier": {
-      "leader_lifespan_add": -10
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
     },
     "effects": "Job Efficiency for Researcher Jobs: +10% | leader_lifespan_add: -10",
     "custom_tooltip": "artificial_intelligence_tooltip",
@@ -4977,7 +5036,8 @@
       "special"
     ],
     "modifier": {
-      "leader_lifespan_add": -10
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
     },
     "effects": "Leader Experience Gain: +25% | leader_lifespan_add: -10",
     "custom_tooltip": "gene_mentorship_tooltip",
@@ -5009,7 +5069,8 @@
       "special"
     ],
     "modifier": {
-      "leader_lifespan_add": -10
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
     },
     "effects": "Job Efficiency for Bureaucrat Jobs: +10% | leader_lifespan_add: -10",
     "custom_tooltip": "expressed_tradition_tooltip",
@@ -5044,6 +5105,7 @@
     ],
     "modifier": {
       "leader_lifespan_add": -30,
+      "logistic_growth_mult": "@overtuned_increased_growth_penalty",
       "negative_leader_traits_species": -1,
       "leaders_upkeep_mult": -0.25
     },
@@ -5077,9 +5139,11 @@
       "special"
     ],
     "modifier": {
+      "planet_pops_organics_food_upkeep_mult": 0.15,
+      "planet_pops_organics_minerals_upkeep_mult": 0.15,
       "leader_lifespan_add": -30
     },
-    "effects": "Pop Growth Speed: +30%  - Pop Housing Usage: -10% | leader_lifespan_add: -30 | Triggered: logistic_growth_mult: +30.0%; logistic_growth_mult: +60.0%",
+    "effects": "Pop Growth Speed: +30%  - Pop Housing Usage: -10% | planet_pops_organics_food_upkeep_mult: +15.0%; planet_pops_organics_minerals_upkeep_mult: +15.0%; leader_lifespan_add: -30 | Triggered: logistic_growth_mult: +30.0%; logistic_growth_mult: +60.0%",
     "custom_tooltip": "preplanned_growth_tooltip",
     "slave_cost": {
       "energy": 2000
@@ -5109,6 +5173,7 @@
       "special"
     ],
     "modifier": {
+      "logistic_growth_mult": "@overtuned_increased_growth_penalty",
       "leader_lifespan_add": -30
     },
     "effects": "Habitability: +30%  - Job Efficiency: +5% | leader_lifespan_add: -30 | Triggered: pop_environment_tolerance: +0.3; pop_environment_tolerance: +0.6",
@@ -5200,6 +5265,7 @@
     "randomized": true,
     "modification_species_add": true,
     "opposites": [
+      "trait_pyroclastic",
       "trait_slow_breeders",
       "trait_fertile",
       "trait_rapid_breeders_lithoid",
@@ -5224,7 +5290,7 @@
       "species"
     ],
     "modifier": {},
-    "effects": "Pop Growth Speed: +15% while living on a planet with a local Food (or Minerals) Production Surplus | Triggered: logistic_growth_mult: +15.0%",
+    "effects": "Pop Growth Speed: +15% while living on a planet with a local Food (or equivalent) Production Surplus | Triggered: logistic_growth_mult: +15.0%",
     "custom_tooltip": "trait_egg_laying_effect",
     "slave_cost": {
       "energy": 500
@@ -5799,6 +5865,161 @@
     "modifier": {},
     "effects": "Species with this Trait cannot be Genetically Modified  Auto-Modding Traits automatically adjust to better suit the job that a Pop is currently working. Malleable Genes picks modifiers from the Malleable Genes Auto-Mod Trait List",
     "custom_tooltip": "trait_malleable_genes_cant_modify",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_unbreakable_resolve",
+    "name": "Unbreakable Resolve",
+    "description": "Bound by an intricate web of mirror neurons, these individuals possess an innate ability to synchronize their will. Duty is not a burden, but a shared purpose, and hardship is met with unwavering unity.",
+    "cost": 2,
+    "category": "normal",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "infernal",
+      "stability"
+    ],
+    "modifier": {},
+    "effects": "Every 100 Pops on the planet with this trait add +0.2 Stability (Max: +15)  - Does not include slaves or lower pop strata.",
+    "custom_tooltip": "trait_unbreakable_resolve_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_shell_slag",
+    "name": "Shell Slag",
+    "description": "An intricate symbiosis with Living Metal allows this species to grow not in the traditional sense, but through the accretion and self-assembly of bio-ferrous structures.",
+    "cost": 2,
+    "category": "normal",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_invasive",
+      "trait_drake_scaled"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "infernal",
+      "species",
+      "rare_resource",
+      "production"
+    ],
+    "modifier": {},
+    "effects": "Every 100 Pops with this trait working as a slave or better produces $@shell_slag_trait_resource_production|3$ Living Metal per month.",
+    "custom_tooltip": "trait_shell_slag_tooltip",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_robot_assembly_slag",
+    "name": "Assembly Slag",
+    "description": "An intricate integration of Living Metal allows this machine species to expand not through conventional construction, but via the accretion and self-assembly of auto-ferrous frameworks.",
+    "cost": 2,
+    "category": "robotic",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "rare_resource",
+      "production"
+    ],
+    "modifier": {},
+    "effects": "Every 100 Pops with this trait working as a slave or better produces $@shell_slag_trait_resource_production|3$ Living Metal per month.",
+    "custom_tooltip": "trait_shell_slag_tooltip",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_pyroclastic",
+    "name": "Pyroclastic Channeling",
+    "description": "Shaped by the relentless fury of volcanic worlds, this species does not fear pyroclastic forces - they channel and manipulate them, transforming devastation into a vital source of sustenance and power.",
+    "cost": 1,
+    "category": "normal",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_rapid_breeders",
+      "trait_incubator",
+      "trait_slow_breeders",
+      "trait_fertile",
+      "trait_rapid_breeders_lithoid",
+      "trait_plantoid_budding",
+      "trait_lithoid_budding",
+      "trait_vat_grown",
+      "trait_tiyanki",
+      "trait_humanoid_existential_iteroparity",
+      "trait_egg_laying"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL"
+    ],
+    "tags": [
+      "organic",
+      "infernal",
+      "positive",
+      "pop_growth",
+      "species"
+    ],
+    "modifier": {},
+    "effects": "Pop Growth Speed on Volcanic Worlds: +10% | Triggered: logistic_growth_mult: +10.0%",
+    "custom_tooltip": "trait_pyroclastic_tooltip",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_crucible_community",
+    "name": "Crucible Community",
+    "description": "Tempered by adversity and bound by shared struggle, this species has been forged into an unbreakable whole. Their collective will fuels governance, each member a vital link in the chain of unity.",
+    "cost": 1,
+    "category": "normal",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL"
+    ],
+    "tags": [
+      "organic",
+      "infernal",
+      "positive",
+      "edict_fund"
+    ],
+    "modifier": {},
+    "effects": "Every 100 Pops with this trait add +0.25 Edict Fund",
+    "custom_tooltip": "trait_crucible_community_tooltip",
     "slave_cost": {
       "energy": 500
     }

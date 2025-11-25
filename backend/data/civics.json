@@ -374,10 +374,10 @@
     ],
     "can_modify": true,
     "modifier": {
-      "pop_cat_slave_bonus_workforce_mult": 0.15,
+      "pop_slave_bonus_workforce_mult": 0.15,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "pop_cat_slave_bonus_workforce_mult: +15.0%",
+    "effects": "pop_slave_bonus_workforce_mult: +15.0%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -889,7 +889,7 @@
     ],
     "possible": [
       "NOT ['ethic_xenophile', 'ethic_fanatic_xenophile']",
-      "NOT civic_fanatic_purifiers"
+      "NOT ['civic_fanatic_purifiers', 'civic_scorched_earth']"
     ],
     "can_modify": false,
     "modifier": {
@@ -1003,7 +1003,7 @@
       "NOT auth_corporate"
     ],
     "possible": [
-      "NOT ['civic_fanatic_purifiers', 'civic_inwards_perfection']"
+      "NOT ['civic_fanatic_purifiers', 'civic_inwards_perfection', 'civic_scorched_earth']"
     ],
     "can_modify": true,
     "modifier": {
@@ -1036,7 +1036,6 @@
       "NOT auth_corporate"
     ],
     "possible": [
-      "NOT ['civic_fanatic_purifiers', 'civic_inwards_perfection', 'civic_death_cult_corporate']",
       "NOT ['ethic_spiritualist', 'ethic_fanatic_spiritualist']"
     ],
     "can_modify": true,
@@ -1178,9 +1177,7 @@
       "NOT ethic_gestalt_consciousness",
       "NOT auth_corporate"
     ],
-    "possible": [
-      "NOT ['civic_relentless_industrialists', 'civic_corporate_relentless_industrialists']"
-    ],
+    "possible": [],
     "can_modify": false,
     "modifier": {
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
@@ -1275,7 +1272,7 @@
     ],
     "possible": [
       "NOT ['ethic_xenophobe', 'ethic_fanatic_xenophobe']",
-      "NOT ['civic_fanatic_purifiers', 'civic_inwards_perfection']"
+      "NOT ['civic_fanatic_purifiers', 'civic_scorched_earth', 'civic_inwards_perfection']"
     ],
     "can_modify": true,
     "modifier": {
@@ -1338,8 +1335,7 @@
       "NOT auth_corporate"
     ],
     "possible": [
-      "NOT ['ethic_materialist', 'ethic_fanatic_materialist']",
-      "NOT ['civic_environmentalist', 'civic_agrarian_idyll', 'civic_idyllic_bloom', 'civic_memorialist', 'civic_corporate_relentless_industrialists']"
+      "NOT ['ethic_materialist', 'ethic_fanatic_materialist']"
     ],
     "can_modify": true,
     "modifier": {
@@ -1464,7 +1460,7 @@
     "possible": [
       "NOT ['ethic_militarist', 'ethic_fanatic_militarist', 'ethic_authoritarian', 'ethic_fanatic_authoritarian', 'ethic_spiritualist', 'ethic_fanatic_spiritualist']",
       "NOT ['ethic_pacifist', 'ethic_fanatic_pacifist']",
-      "NOT ['civic_fanatic_purifiers', 'civic_beacon_of_liberty']"
+      "NOT ['civic_fanatic_purifiers', 'civic_scorched_earth', 'civic_beacon_of_liberty']"
     ],
     "can_modify": true,
     "modifier": {
@@ -1653,7 +1649,7 @@
     ],
     "possible": [
       "NOT ['ethic_xenophile', 'ethic_fanatic_xenophile', 'ethic_fanatic_egalitarian']",
-      "NOT civic_fanatic_purifiers"
+      "NOT ['civic_fanatic_purifiers', 'civic_scorched_earth']"
     ],
     "can_modify": true,
     "modifier": {
@@ -1779,9 +1775,7 @@
       "NOT ethic_gestalt_consciousness"
     ],
     "possible": [
-      "NOT ['ethic_xenophobe', 'ethic_fanatic_xenophobe']",
-      "NOT ['civic_eager_explorers', 'civic_privatized_exploration', 'civic_hive_stargazers', 'civic_machine_exploration_protocol']",
-      "NOT civic_natural_design"
+      "NOT ['ethic_xenophobe', 'ethic_fanatic_xenophobe']"
     ],
     "can_modify": true,
     "modifier": {
@@ -2175,11 +2169,12 @@
     "playable_conditions": "{'has_shroud_dlc': True}",
     "potential": [
       "NOT ethic_gestalt_consciousness",
-      "NOT auth_corporate"
+      "NOT auth_corporate",
+      "NOT civic_entropy_drinkers_corporate"
     ],
     "possible": [
       "NOT ['ethic_egalitarian', 'ethic_fanatic_egalitarian']",
-      "NOT ['civic_memorialist', 'civic_natural_design']"
+      "NOT ['civic_memorialist', 'civic_natural_design', 'civic_entropy_drinkers_corporate']"
     ],
     "can_add": true,
     "can_remove": true,
@@ -2211,10 +2206,12 @@
     "playable_conditions": "{'has_shroud_dlc': True}",
     "potential": [
       "NOT ethic_gestalt_consciousness",
-      "NOT auth_corporate"
+      "NOT auth_corporate",
+      "NOT civic_corporate_superstitious_beliefs"
     ],
     "possible": [
-      "NOT ['ethic_spiritualist', 'ethic_fanatic_spiritualist']"
+      "NOT ['ethic_spiritualist', 'ethic_fanatic_spiritualist']",
+      "NOT civic_corporate_superstitious_beliefs"
     ],
     "can_add": true,
     "can_remove": true,
@@ -2239,10 +2236,12 @@
     "playable_conditions": "{'has_shroud_dlc': True}",
     "potential": [
       "NOT ethic_gestalt_consciousness",
-      "NOT auth_corporate"
+      "NOT auth_corporate",
+      "NOT civic_twisted_experimenters_corporate"
     ],
     "possible": [
       "NOT ['ethic_authoritarian', 'ethic_fanatic_authoritarian', 'ethic_xenophobe', 'ethic_fanatic_xenophobe']",
+      "NOT civic_twisted_experimenters_corporate",
       "NOT species_archetype:MACHINE"
     ],
     "can_modify": true,
@@ -2267,11 +2266,10 @@
     "playable_conditions": "{'has_shroud_dlc': True}",
     "potential": [
       "NOT ethic_gestalt_consciousness",
-      "NOT auth_corporate"
+      "NOT auth_corporate",
+      "NOT civic_secret_societies_corporate"
     ],
-    "possible": [
-      "NOT ['civic_parliamentary_system', 'civic_crowdsourcing', 'civic_fanatic_purifiers']"
-    ],
+    "possible": [],
     "can_add": true,
     "can_remove": true,
     "modifier": {
@@ -2300,11 +2298,12 @@
     "playable_conditions": "{'has_shroud_dlc': True}",
     "potential": [
       "NOT ethic_gestalt_consciousness",
-      "NOT auth_corporate"
+      "NOT auth_corporate",
+      "NOT civic_corporate_chosen"
     ],
     "possible": [
       "NOT ['ethic_spiritualist', 'ethic_fanatic_spiritualist']",
-      "NOT ['civic_imperial_cult', 'civic_augmentation_bazaars', 'civic_natural_design']"
+      "NOT ['civic_imperial_cult', 'civic_augmentation_bazaars', 'civic_natural_design', 'civic_corporate_chosen']"
     ],
     "can_add": true,
     "can_remove": true,
@@ -2331,10 +2330,11 @@
     "playable_conditions": "{'has_shroud_dlc': True}",
     "potential": [
       "NOT ethic_gestalt_consciousness",
-      "NOT auth_corporate"
+      "NOT auth_corporate",
+      "NOT civic_tankbound_corporate"
     ],
     "possible": [
-      "NOT ['civic_mining_guilds', 'civic_anglers', 'civic_agrarian_idyll', 'civic_citizen_service', 'civic_slaver_guilds']"
+      "NOT ['civic_mining_guilds', 'civic_anglers', 'civic_agrarian_idyll', 'civic_citizen_service', 'civic_slaver_guilds', 'civic_tankbound_corporate']"
     ],
     "can_add": true,
     "can_remove": true,
@@ -2345,7 +2345,9 @@
       "planet_districts_mining_energy_upkeep_add": "@civic_tankbound_district_upkeep",
       "planet_districts_generator_energy_upkeep_add": "@civic_tankbound_district_upkeep",
       "planet_districts_rw_generator_energy_upkeep_add": "@civic_tankbound_district_upkeep",
-      "planet_districts_rw_farming_energy_upkeep_add": "@civic_tankbound_district_upkeep"
+      "planet_districts_rw_farming_energy_upkeep_add": "@civic_tankbound_district_upkeep",
+      "planet_districts_hab_energy_energy_upkeep_add": "@civic_tankbound_district_upkeep",
+      "planet_districts_hab_mining_energy_upkeep_add": "@civic_tankbound_district_upkeep"
     },
     "effects": "Adds the Tankbound trait. Rural Districts have their Worker Jobs fully Automated.  Colonist Jobs are Specialists. Start with insight on Assembly Patterns Technology.  Urban Districts have additional Production Overseers jobs.  Modifiers:  - Upkeep from Jobs: $@civic_tankbound_job_upkeep|0=-%$  - Automated Workforce Efficiency: $@civic_tankbound_efficiency_mult|0=+%$  - Rural Districts Energy Upkeep: $@civic_tankbound_district_upkeep|0=-%$",
     "enforced_traits": [
@@ -2354,6 +2356,128 @@
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
     "alternate_version": "civic_tankbound_corporate",
+    "can_build_ruler_ship": false,
+    "custom_tooltip": ""
+  },
+  {
+    "id": "civic_scorched_earth",
+    "name": "Scorched World Heralds",
+    "description": "Heat permeates every facet of this society's culture, from traditions and rituals to technology itself. They see themselves as the galaxy's rightful fiery supremacists, viewing weaker species as mere obstacles on the path to an ideal universe, fit only for Thermophiles.",
+    "is_origin": false,
+    "playable": true,
+    "pickable_at_start": true,
+    "tooltip": "Cannot engage in Diplomacy with other species. Cannot access the Galactic Market. Grants the 'Cleansing Blaze' casus belli on other species. Gains Unity when bombarding with the Firestorm bombardment stance. Creates special blockers with the Seismic Carpet Bombing bombardment stance on the planet below.",
+    "negative_tooltip": "",
+    "playable_conditions": "{'has_infernals': True}",
+    "potential": [
+      "NOT ethic_gestalt_consciousness",
+      "NOT auth_corporate"
+    ],
+    "possible": [
+      "NOT ['ethic_xenophobe', 'ethic_fanatic_xenophobe']",
+      "NOT ['ethic_pacifist', 'ethic_fanatic_pacifist']"
+    ],
+    "can_modify": false,
+    "modifier": {
+      "ship_weapon_range_mult": 0.15,
+      "ship_armor_mult": 0.15,
+      "starbase_shipyard_build_speed_mult": 0.15,
+      "country_naval_cap_mult": 0.5,
+      "army_health": 0.4,
+      "category_materials_research_speed_mult": 0.5
+    },
+    "effects": "Cannot engage in Diplomacy with other species. Cannot access the Galactic Market. Grants the 'Cleansing Blaze' casus belli on other species. Gains Unity when bombarding with the Firestorm bombardment stance. Creates special blockers with the Seismic Carpet Bombing bombardment stance on the planet below. | ship_weapon_range_mult: +15.0%; ship_armor_mult: +15.0%; starbase_shipyard_build_speed_mult: +15.0%; country_naval_cap_mult: +50.0%; army_health: +0.4; category_materials_research_speed_mult: +50.0%",
+    "enforced_traits": [],
+    "ai_weight": 1,
+    "random_weight": 1000,
+    "alternate_version": "",
+    "can_build_ruler_ship": false,
+    "custom_tooltip": ""
+  },
+  {
+    "id": "civic_world_forgers",
+    "name": "Planet Forgers",
+    "description": "This society thrives in volcanic environments, and will even create them artificially when nature falls short.",
+    "is_origin": false,
+    "playable": true,
+    "pickable_at_start": true,
+    "tooltip": "- Unlocks starting planet: Volcanic World.  - Guaranteed Research Options: Volcanic Forge.  - Can construct Volcanic Forge building which adds Thermotechnic Mentors.  - Planets with a Volcanic Forge will gradually turn into a Volcanic World.  - Guaranteed Habitable Worlds will be Dry worlds.",
+    "negative_tooltip": "",
+    "playable_conditions": "{'has_infernals': True}",
+    "potential": [
+      "NOT ethic_gestalt_consciousness",
+      "NOT ['auth_corporate', 'auth_machine_intelligence']"
+    ],
+    "possible": [
+      "NOT civic_idyllic_bloom",
+      "NOT ['civic_relentless_industrialists', 'civic_corporate_relentless_industrialists']"
+    ],
+    "can_add": true,
+    "can_remove": true,
+    "modifier": {
+      "pc_volcanic_max_districts_add": 3,
+      "pc_volcanic_habitability": 0.2
+    },
+    "effects": "- Unlocks starting planet: Volcanic World.  - Guaranteed Research Options: Volcanic Forge.  - Can construct Volcanic Forge building which adds Thermotechnic Mentors.  - Planets with a Volcanic Forge will gradually turn into a Volcanic World.  - Guaranteed Habitable Worlds will be Dry worlds. | pc_volcanic_max_districts_add: +3; pc_volcanic_habitability: +0.2",
+    "enforced_traits": [],
+    "ai_weight": 1,
+    "random_weight": 1,
+    "alternate_version": "civic_corporate_world_forgers",
+    "can_build_ruler_ship": false,
+    "custom_tooltip": ""
+  },
+  {
+    "id": "civic_pyrolatry",
+    "name": "Fire Cult",
+    "description": "Forged by generations of extreme hardship, this society believes in survival through unity, and unity through survival. Only fire-born struggle can bind them tightly enough to endure a cold, uncaring galaxy.",
+    "is_origin": false,
+    "playable": true,
+    "pickable_at_start": true,
+    "tooltip": "- Unity Job output increases proportionally with lower Habitability (Up to 500%). - The Scourge of the Volcano faction forms shortly after game start. - Replaces Priests with Fire Dancers. - Replaces Politicians with Fire Oracles on planets with Habitability lower than 50%. - Allows the recruitment of Ember Legion armies on planets with Habitability lower than 20%. - Grants access to the Blazing Scourge planetary decisions which creates Blazing Scourge Blockers. - Synergizes with Civics: Superstitious Beliefs, Exalted Priesthood, Death Cult, Aristocratic Elite, and Merchant Guilds.",
+    "negative_tooltip": "",
+    "playable_conditions": "{'has_infernals': True}",
+    "potential": [
+      "NOT ethic_gestalt_consciousness",
+      "NOT auth_corporate"
+    ],
+    "possible": [
+      "NOT ['ethic_spiritualist', 'ethic_fanatic_spiritualist']"
+    ],
+    "can_modify": false,
+    "modifier": {},
+    "effects": "- Unity Job output increases proportionally with lower Habitability (Up to 500%). - The Scourge of the Volcano faction forms shortly after game start. - Replaces Priests with Fire Dancers. - Replaces Politicians with Fire Oracles on planets with Habitability lower than 50%. - Allows the recruitment of Ember Legion armies on planets with Habitability lower than 20%. - Grants access to the Blazing Scourge planetary decisions which creates Blazing Scourge Blockers. - Synergizes with Civics: Superstitious Beliefs, Exalted Priesthood, Death Cult, Aristocratic Elite, and Merchant Guilds.",
+    "enforced_traits": [],
+    "ai_weight": 1,
+    "random_weight": 1,
+    "alternate_version": "",
+    "can_build_ruler_ship": false,
+    "custom_tooltip": ""
+  },
+  {
+    "id": "civic_galvanic_symbiosis",
+    "name": "Galvanic Synthesis",
+    "description": "WARNING: Blocks access to Synthetic Ascension.  This society is able to synthesize regular alloys into Living Metal, and molds its strength and shape-changing properties directly into their technology.",
+    "is_origin": false,
+    "playable": true,
+    "pickable_at_start": true,
+    "tooltip": "- Starts with Living Metal already researched.  - Homeworld has a Living Metal Sediment. - Gain access to special Edicts:   - Centrifugal Siphoning   - Modular Growth Compounds  - Gives access to Living Metal components:   - Regenerative Armor   - Reshaping Projectile Accelerator - Has access to Planetary Decision: Distribute Living Metal.  - Can recruit the Mimetic Strike Force armies.  - Can build a Offworld Expedition Hub in systems with a Molten World for Offworld Prospector jobs.",
+    "negative_tooltip": "",
+    "playable_conditions": "{'has_infernals': True}",
+    "potential": [
+      "NOT ethic_gestalt_consciousness",
+      "NOT auth_corporate"
+    ],
+    "possible": [],
+    "can_add": true,
+    "can_remove": true,
+    "modifier": {
+      "planet_building_refund_mult": 1
+    },
+    "effects": "- Starts with Living Metal already researched.  - Homeworld has a Living Metal Sediment. - Gain access to special Edicts:   - Centrifugal Siphoning   - Modular Growth Compounds  - Gives access to Living Metal components:   - Regenerative Armor   - Reshaping Projectile Accelerator - Has access to Planetary Decision: Distribute Living Metal.  - Can recruit the Mimetic Strike Force armies.  - Can build a Offworld Expedition Hub in systems with a Molten World for Offworld Prospector jobs. | planet_building_refund_mult: +1",
+    "enforced_traits": [],
+    "ai_weight": 1,
+    "random_weight": "@civic_rare_random_weight",
+    "alternate_version": "civic_corporate_galvanic_symbiosis",
     "can_build_ruler_ship": false,
     "custom_tooltip": ""
   },
@@ -2468,7 +2592,9 @@
     "pickable_at_start": true,
     "tooltip": "",
     "negative_tooltip": "",
-    "potential": [],
+    "potential": [
+      "auth_imperial"
+    ],
     "possible": [],
     "can_modify": false,
     "modifier": {
@@ -3017,7 +3143,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "Change 1 Base Unity Leader Upkeep to 2 Food (or Minerals)",
+    "tooltip": "Change 1 Base Unity Leader Upkeep to 2 Food, Minerals or 1 Alloys",
     "negative_tooltip": "",
     "playable_conditions": "{'host_has_dlc': 'Galactic Paragons'}",
     "potential": [
@@ -3029,7 +3155,7 @@
       "leader_trait_selection_options_add": 1,
       "councilor_gestalt_regulatory_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "Change 1 Base Unity Leader Upkeep to 2 Food (or Minerals) | leader_trait_selection_options_add: +1",
+    "effects": "Change 1 Base Unity Leader Upkeep to 2 Food, Minerals or 1 Alloys | leader_trait_selection_options_add: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -3547,6 +3673,95 @@
     "alternate_version": "",
     "can_build_ruler_ship": false,
     "custom_tooltip": "civic_chosen_effects_additional"
+  },
+  {
+    "id": "civic_hive_scorched_earth",
+    "name": "Pyromanic Instinct",
+    "description": "Our Scorched Worlds are the pinnacle of planetary evolution. We will set the galaxy on fire and thrive in the flames!",
+    "is_origin": false,
+    "playable": true,
+    "pickable_at_start": true,
+    "tooltip": "Cannot engage in Diplomacy with other species. Cannot access the Galactic Market. Grants the 'Cleansing Blaze' casus belli on other species. Gains Unity when bombarding with the Firestorm bombardment stance. Creates special blockers with the Seismic Carpet Bombing bombardment stance on the planet below.",
+    "negative_tooltip": "",
+    "playable_conditions": "{'has_infernals': True}",
+    "potential": [
+      "auth_hive_mind"
+    ],
+    "possible": [],
+    "can_modify": false,
+    "modifier": {
+      "councilor_gestalt_regulatory_exp_gain": "@gestalt_civic_node_xp_rate",
+      "ship_weapon_range_mult": 0.15,
+      "ship_armor_mult": 0.15,
+      "starbase_shipyard_build_speed_mult": 0.15,
+      "country_naval_cap_mult": 0.5,
+      "army_health": 0.4,
+      "category_materials_research_speed_mult": 0.5
+    },
+    "effects": "Cannot engage in Diplomacy with other species. Cannot access the Galactic Market. Grants the 'Cleansing Blaze' casus belli on other species. Gains Unity when bombarding with the Firestorm bombardment stance. Creates special blockers with the Seismic Carpet Bombing bombardment stance on the planet below. | ship_weapon_range_mult: +15.0%; ship_armor_mult: +15.0%; starbase_shipyard_build_speed_mult: +15.0%; country_naval_cap_mult: +50.0%; army_health: +0.4; category_materials_research_speed_mult: +50.0%",
+    "enforced_traits": [],
+    "ai_weight": 1,
+    "random_weight": 1000,
+    "alternate_version": "",
+    "can_build_ruler_ship": false,
+    "custom_tooltip": ""
+  },
+  {
+    "id": "civic_hive_world_forgers",
+    "name": "Volcanic Nesting",
+    "description": "This society thrives in volcanic environments, and will even create them artificially when nature falls short.",
+    "is_origin": false,
+    "playable": true,
+    "pickable_at_start": true,
+    "tooltip": "- Unlocks starting planet: Volcanic World.  - Guaranteed Research Options: Volcanic Forge.  - Can construct Volcanic Forge building which adds Pyroclastic Drones.  - Planets with a Volcanic Forge will gradually turn into a Volcanic World.  - Guaranteed Habitable Worlds will be Dry worlds.",
+    "negative_tooltip": "",
+    "playable_conditions": "{'has_infernals': True}",
+    "potential": [
+      "auth_hive_mind"
+    ],
+    "possible": [
+      "NOT civic_hive_idyllic_bloom"
+    ],
+    "can_modify": false,
+    "modifier": {
+      "pc_volcanic_max_districts_add": 3,
+      "pc_volcanic_habitability": 0.2,
+      "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate"
+    },
+    "effects": "- Unlocks starting planet: Volcanic World.  - Guaranteed Research Options: Volcanic Forge.  - Can construct Volcanic Forge building which adds Pyroclastic Drones.  - Planets with a Volcanic Forge will gradually turn into a Volcanic World.  - Guaranteed Habitable Worlds will be Dry worlds. | pc_volcanic_max_districts_add: +3; pc_volcanic_habitability: +0.2",
+    "enforced_traits": [],
+    "ai_weight": 1,
+    "random_weight": 1,
+    "alternate_version": "",
+    "can_build_ruler_ship": false,
+    "custom_tooltip": ""
+  },
+  {
+    "id": "civic_hive_galvanic_symbiosis",
+    "name": "Galvanic Symbiosis",
+    "description": "WARNING: Blocks access to Synthetic Ascension.  This society is able to synthesize regular alloys into Living Metal, and molds its strength and shape-changing properties directly into their technology.",
+    "is_origin": false,
+    "playable": true,
+    "pickable_at_start": true,
+    "tooltip": "- Starts with Living Metal already researched.  - Homeworld has a Living Metal Sediment. - Gain access to special Edicts:   - Centrifugal Siphoning   - Modular Growth Compounds  - Gives access to Living Metal components:   - Regenerative Armor   - Reshaping Projectile Accelerator - Has access to Planetary Decision: Distribute Living Metal.  - Can recruit the Mimetic Strike Force armies.  - Can build a Offworld Expedition Hub in systems with a Molten World for Offworld Prospector Drone jobs.",
+    "negative_tooltip": "",
+    "playable_conditions": "{'has_infernals': True}",
+    "potential": [
+      "auth_hive_mind"
+    ],
+    "possible": [],
+    "can_modify": false,
+    "modifier": {
+      "planet_building_refund_mult": 1,
+      "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate"
+    },
+    "effects": "- Starts with Living Metal already researched.  - Homeworld has a Living Metal Sediment. - Gain access to special Edicts:   - Centrifugal Siphoning   - Modular Growth Compounds  - Gives access to Living Metal components:   - Regenerative Armor   - Reshaping Projectile Accelerator - Has access to Planetary Decision: Distribute Living Metal.  - Can recruit the Mimetic Strike Force armies.  - Can build a Offworld Expedition Hub in systems with a Molten World for Offworld Prospector Drone jobs. | planet_building_refund_mult: +1",
+    "enforced_traits": [],
+    "ai_weight": 1,
+    "random_weight": "@civic_rare_random_weight",
+    "alternate_version": "",
+    "can_build_ruler_ship": false,
+    "custom_tooltip": ""
   },
   {
     "id": "civic_machine_servitor",
@@ -4693,6 +4908,61 @@
     "custom_tooltip": "civic_chosen_effects_additional"
   },
   {
+    "id": "civic_machine_world_forgers",
+    "name": "Thermal Optimizers",
+    "description": "This society thrives in volcanic environments, and will even create them artificially when nature falls short.",
+    "is_origin": false,
+    "playable": true,
+    "pickable_at_start": true,
+    "tooltip": "- Unlocks starting planet: Volcanic World.  - Guaranteed Research Options: Volcanic Forge.  - Can construct Volcanic Forge building which adds Pyroclastic Drones.  - Planets with a Volcanic Forge will gradually turn into a Volcanic World.  - Guaranteed Habitable Worlds will be Dry worlds.",
+    "negative_tooltip": "",
+    "playable_conditions": "{'has_infernals': True}",
+    "potential": [
+      "auth_machine_intelligence"
+    ],
+    "possible": [],
+    "can_modify": false,
+    "modifier": {
+      "pc_volcanic_max_districts_add": 3,
+      "pc_volcanic_habitability": 0.1,
+      "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate"
+    },
+    "effects": "- Unlocks starting planet: Volcanic World.  - Guaranteed Research Options: Volcanic Forge.  - Can construct Volcanic Forge building which adds Pyroclastic Drones.  - Planets with a Volcanic Forge will gradually turn into a Volcanic World.  - Guaranteed Habitable Worlds will be Dry worlds. | pc_volcanic_max_districts_add: +3; pc_volcanic_habitability: +0.1",
+    "enforced_traits": [],
+    "ai_weight": 1,
+    "random_weight": "@civic_default_random_weight",
+    "alternate_version": "",
+    "can_build_ruler_ship": false,
+    "custom_tooltip": ""
+  },
+  {
+    "id": "civic_machine_galvanic_symbiosis",
+    "name": "Galvanic Retrofitting",
+    "description": "These units have self-repairing frames made of special alloys that combine the benefits of biology and artificial intelligence.",
+    "is_origin": false,
+    "playable": true,
+    "pickable_at_start": true,
+    "tooltip": "- Starts with Living Metal already researched.  - Homeworld has a Living Metal Sediment. - Gain access to special Edicts:   - Centrifugal Siphoning   - Modular Growth Compounds  - Gives access to Living Metal components:   - Regenerative Armor   - Reshaping Projectile Accelerator - Has access to Planetary Decision: Distribute Living Metal.  - Can recruit the Mimetic Strike Force armies.  - Can build a Offworld Expedition Hub in systems with a Molten World for Offworld Prospector Drone jobs.",
+    "negative_tooltip": "",
+    "playable_conditions": "{'has_infernals': True}",
+    "potential": [
+      "auth_machine_intelligence"
+    ],
+    "possible": [],
+    "can_modify": false,
+    "modifier": {
+      "planet_building_refund_mult": 1,
+      "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate"
+    },
+    "effects": "- Starts with Living Metal already researched.  - Homeworld has a Living Metal Sediment. - Gain access to special Edicts:   - Centrifugal Siphoning   - Modular Growth Compounds  - Gives access to Living Metal components:   - Regenerative Armor   - Reshaping Projectile Accelerator - Has access to Planetary Decision: Distribute Living Metal.  - Can recruit the Mimetic Strike Force armies.  - Can build a Offworld Expedition Hub in systems with a Molten World for Offworld Prospector Drone jobs. | planet_building_refund_mult: +1",
+    "enforced_traits": [],
+    "ai_weight": 1,
+    "random_weight": "@civic_default_random_weight",
+    "alternate_version": "",
+    "can_build_ruler_ship": false,
+    "custom_tooltip": ""
+  },
+  {
     "id": "civic_franchising",
     "name": "Franchising",
     "description": "This Megacorporation relies heavily on franchising. Subsidiaries share a greater cut of their profits with their corporate overlord, in exchange for a license to market their goods under established brands.",
@@ -4972,10 +5242,10 @@
     ],
     "can_modify": true,
     "modifier": {
-      "pop_cat_slave_bonus_workforce_mult": 0.15,
+      "pop_slave_bonus_workforce_mult": 0.15,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- The Private Security Company Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | pop_cat_slave_bonus_workforce_mult: +15.0%",
+    "effects": "- The Private Security Company Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | pop_slave_bonus_workforce_mult: +15.0%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -5246,8 +5516,7 @@
     "playable_conditions": "{'has_toxoids': True}",
     "potential": [],
     "possible": [
-      "NOT ['ethic_materialist', 'ethic_fanatic_materialist']",
-      "NOT ['civic_environmentalist', 'civic_agrarian_idyll', 'civic_idyllic_bloom', 'civic_memorialist', 'civic_relentless_industrialists']"
+      "NOT ['ethic_materialist', 'ethic_fanatic_materialist']"
     ],
     "can_modify": true,
     "modifier": {
@@ -5619,7 +5888,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- Species Traits: One random Basic Cybernetic Trait - Available Buildings: Augmentation Bazaar - Available Holdings: Offworld Implant Hub  - Executives are replaced with Augmentation Merchants",
+    "tooltip": "- Species Traits: Allows selection of Universal Augmentations Traits  - Available Buildings: Augmentation Bazaar - Available Holdings: Offworld Implant Hub  - Executives are replaced with Augmentation Merchants",
     "negative_tooltip": "",
     "playable_conditions": "{'has_machine_age_dlc': True}",
     "potential": [
@@ -5633,7 +5902,7 @@
     "modifier": {
       "planet_augmentors_trade_produces_add": 4
     },
-    "effects": "- Species Traits: One random Basic Cybernetic Trait - Available Buildings: Augmentation Bazaar - Available Holdings: Offworld Implant Hub  - Executives are replaced with Augmentation Merchants | planet_augmentors_trade_produces_add: +4",
+    "effects": "- Species Traits: Allows selection of Universal Augmentations Traits  - Available Buildings: Augmentation Bazaar - Available Holdings: Offworld Implant Hub  - Executives are replaced with Augmentation Merchants | planet_augmentors_trade_produces_add: +4",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 4,
@@ -5952,10 +6221,12 @@
     "tooltip": "Enables the following Edicts:  - Energy Drain  - Sanguine Council  - Convergence of Will Can construct: Synergy Headquarters. Leaders start with the Psychic trait. The Executive Retreat Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
     "negative_tooltip": "",
     "playable_conditions": "{'has_shroud_dlc': True}",
-    "potential": [],
+    "potential": [
+      "NOT civic_entropy_drinkers"
+    ],
     "possible": [
       "NOT ['ethic_egalitarian', 'ethic_fanatic_egalitarian']",
-      "NOT ['civic_memorialist', 'civic_natural_design']"
+      "NOT ['civic_memorialist', 'civic_natural_design', 'civic_entropy_drinkers']"
     ],
     "can_add": true,
     "can_remove": true,
@@ -5985,9 +6256,12 @@
     "tooltip": "Replaces:  - Priests with Fortune Tellers  - High Priests with Fortune Brokers Enables Galactic Dowsing Every 13 years, the Cycle changes. Fortune Events will periodically benefit or impair your empire.",
     "negative_tooltip": "",
     "playable_conditions": "{'has_shroud_dlc': True}",
-    "potential": [],
+    "potential": [
+      "NOT civic_superstitious_beliefs"
+    ],
     "possible": [
-      "NOT ['ethic_spiritualist', 'ethic_fanatic_spiritualist']"
+      "NOT ['ethic_spiritualist', 'ethic_fanatic_spiritualist']",
+      "NOT civic_superstitious_beliefs"
     ],
     "can_add": true,
     "can_remove": true,
@@ -6010,7 +6284,9 @@
     "tooltip": "Starts with Experimental Testing situation, which grants technology insight upon completion. Can construct and starts with: Experimentation Chambers. Can construct Experimentation Offices Corporate Building. All non-Machine slaves get access to the Orderlies Slave Job. Access to Slave Army: Abominations",
     "negative_tooltip": "",
     "playable_conditions": "{'has_shroud_dlc': True}",
-    "potential": [],
+    "potential": [
+      "NOT civic_twisted_experimenters"
+    ],
     "possible": [
       "NOT ['ethic_authoritarian', 'ethic_fanatic_authoritarian', 'ethic_xenophobe', 'ethic_fanatic_xenophobe']",
       "NOT civic_natural_design",
@@ -6036,10 +6312,10 @@
     "tooltip": "Clandestine Factions will emerge after contacting other empires. Starts with the ability to conduct Proxy Wars. [bureaucrat.GetIcon] [bureaucrat.GetNamePlural] will produce Unity per active and successful Proxy War. Starts in First Contact with two neighboring empires. Infiltration Level gained on empires after First Contact: +$@secret_society_infiltration_gain|0$ The Corporate Embassy Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
     "negative_tooltip": "",
     "playable_conditions": "{'has_shroud_dlc': True}",
-    "potential": [],
-    "possible": [
-      "NOT ['civic_parliamentary_system', 'civic_corporate_crowdsourcing']"
+    "potential": [
+      "NOT civic_secret_societies"
     ],
+    "possible": [],
     "can_add": true,
     "can_remove": true,
     "modifier": {
@@ -6066,7 +6342,9 @@
     "tooltip": "- Starts the game in contact with a Shroud Patron. - Additional Starting Technologies: Psionic Aura - The Psionic Offices Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
     "negative_tooltip": "",
     "playable_conditions": "{'has_shroud_dlc': True}",
-    "potential": [],
+    "potential": [
+      "NOT civic_chosen"
+    ],
     "possible": [
       "NOT ['ethic_spiritualist', 'ethic_fanatic_spiritualist']",
       "NOT civic_augmentation_bazaars"
@@ -6096,10 +6374,11 @@
     "playable_conditions": "{'has_shroud_dlc': True}",
     "potential": [
       "NOT ethic_gestalt_consciousness",
-      "auth_corporate"
+      "auth_corporate",
+      "NOT civic_tankbound"
     ],
     "possible": [
-      "NOT ['civic_corporate_anglers', 'civic_indentured_assets', 'civic_private_military_companies']"
+      "NOT ['civic_corporate_anglers', 'civic_indentured_assets', 'civic_private_military_companies', 'civic_tankbound']"
     ],
     "can_add": true,
     "can_remove": true,
@@ -6110,7 +6389,9 @@
       "planet_districts_mining_energy_upkeep_add": "@civic_tankbound_district_upkeep",
       "planet_districts_generator_energy_upkeep_add": "@civic_tankbound_district_upkeep",
       "planet_districts_rw_generator_energy_upkeep_add": "@civic_tankbound_district_upkeep",
-      "planet_districts_rw_farming_energy_upkeep_add": "@civic_tankbound_district_upkeep"
+      "planet_districts_rw_farming_energy_upkeep_add": "@civic_tankbound_district_upkeep",
+      "planet_districts_hab_energy_energy_upkeep_add": "@civic_tankbound_district_upkeep",
+      "planet_districts_hab_mining_energy_upkeep_add": "@civic_tankbound_district_upkeep"
     },
     "effects": "Adds the Tankbound trait. Rural Districts have their Worker Jobs fully Automated.  Colonist Jobs are Specialists. Start with insight on Assembly Patterns Technology.  Urban Districts have additional Production Overseers jobs. The Virtual Entertainment Studios Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.  Modifiers:  - Upkeep from Jobs: $@civic_tankbound_job_upkeep|0=-%$  - Automated Workforce Efficiency: $@civic_tankbound_efficiency_mult|0=+%$  - Rural Districts Energy Upkeep: $@civic_tankbound_district_upkeep|0=-%$",
     "enforced_traits": [
@@ -6119,6 +6400,65 @@
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
     "alternate_version": "civic_tankbound",
+    "can_build_ruler_ship": false,
+    "custom_tooltip": ""
+  },
+  {
+    "id": "civic_corporate_world_forgers",
+    "name": "Planetary Architects",
+    "description": "This society thrives in volcanic environments, and will even create them artificially when nature falls short.",
+    "is_origin": false,
+    "playable": true,
+    "pickable_at_start": true,
+    "tooltip": "- Unlocks starting planet: Volcanic World.  - Guaranteed Research Options: Volcanic Forge.  - Can construct Volcanic Forge building which adds Thermotechnic Mentors.  - Planets with a Volcanic Forge will gradually turn into a Volcanic World.  - Guaranteed Habitable Worlds will be Dry worlds.",
+    "negative_tooltip": "",
+    "playable_conditions": "{'has_infernals': True}",
+    "potential": [
+      "NOT ethic_gestalt_consciousness",
+      "auth_corporate"
+    ],
+    "possible": [
+      "NOT ['civic_relentless_industrialists', 'civic_corporate_relentless_industrialists']"
+    ],
+    "can_add": true,
+    "can_remove": true,
+    "modifier": {
+      "pc_volcanic_max_districts_add": 3,
+      "pc_volcanic_habitability": 0.2
+    },
+    "effects": "- Unlocks starting planet: Volcanic World.  - Guaranteed Research Options: Volcanic Forge.  - Can construct Volcanic Forge building which adds Thermotechnic Mentors.  - Planets with a Volcanic Forge will gradually turn into a Volcanic World.  - Guaranteed Habitable Worlds will be Dry worlds. | pc_volcanic_max_districts_add: +3; pc_volcanic_habitability: +0.2",
+    "enforced_traits": [],
+    "ai_weight": 1,
+    "random_weight": 1,
+    "alternate_version": "civic_world_forgers",
+    "can_build_ruler_ship": false,
+    "custom_tooltip": ""
+  },
+  {
+    "id": "civic_corporate_galvanic_symbiosis",
+    "name": "Biometallic Cartel",
+    "description": "WARNING: Blocks access to Synthetic Ascension.  This society is able to synthesize regular alloys into Living Metal, and molds its strength and shape-changing properties directly into their technology.",
+    "is_origin": false,
+    "playable": true,
+    "pickable_at_start": true,
+    "tooltip": "- Starts with Living Metal already researched.  - Homeworld has a Living Metal Sediment. - Gain access to special Edicts:   - Centrifugal Siphoning   - Modular Growth Compounds  - Gives access to Living Metal components:   - Regenerative Armor   - Reshaping Projectile Accelerator - Has access to Planetary Decision: Distribute Living Metal.  - Can recruit the Mimetic Strike Force armies.  - Can build a Offworld Expedition Hub in systems with a Molten World for Offworld Prospector jobs.  - Can build the Living Metal Enhancement Clinic Corporate Building.",
+    "negative_tooltip": "",
+    "playable_conditions": "{'has_infernals': True}",
+    "potential": [
+      "NOT ethic_gestalt_consciousness",
+      "auth_corporate"
+    ],
+    "possible": [],
+    "can_add": true,
+    "can_remove": true,
+    "modifier": {
+      "planet_building_refund_mult": 1
+    },
+    "effects": "- Starts with Living Metal already researched.  - Homeworld has a Living Metal Sediment. - Gain access to special Edicts:   - Centrifugal Siphoning   - Modular Growth Compounds  - Gives access to Living Metal components:   - Regenerative Armor   - Reshaping Projectile Accelerator - Has access to Planetary Decision: Distribute Living Metal.  - Can recruit the Mimetic Strike Force armies.  - Can build a Offworld Expedition Hub in systems with a Molten World for Offworld Prospector jobs.  - Can build the Living Metal Enhancement Clinic Corporate Building. | planet_building_refund_mult: +1",
+    "enforced_traits": [],
+    "ai_weight": 1,
+    "random_weight": "@civic_rare_random_weight",
+    "alternate_version": "civic_galvanic_symbiosis",
     "can_build_ruler_ship": false,
     "custom_tooltip": ""
   }

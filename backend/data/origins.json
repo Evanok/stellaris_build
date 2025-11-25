@@ -23,6 +23,61 @@
     "image_file": "origin_default"
   },
   {
+    "id": "origin_red_giant",
+    "name": "Red Giant",
+    "description": "This civilization is at a crossroads: the Red Giant at the heart of its system is warming up their planet, threatening to cook them alive. Can they adapt until the cause is found and fixed, or will they decide to embrace the heat, capitalizing on these strange and perhaps unnatural changes?",
+    "is_origin": true,
+    "playable": true,
+    "pickable_at_start": true,
+    "tooltip": "- Homeworld: Volcanic World (Size: 20)",
+    "negative_tooltip": "",
+    "picture": "GFX_origin_red_giant",
+    "playable_conditions": "{'host_has_dlc': 'Infernals Species Pack'}",
+    "potential": [],
+    "possible": [
+      "NOT civic_agrarian_idyll"
+    ],
+    "can_modify": true,
+    "modifier": {
+      "pc_volcanic_habitability": 0.2
+    },
+    "effects": "- Homeworld: Volcanic World (Size: 20) | pc_volcanic_habitability: +0.2",
+    "enforced_traits": [],
+    "ai_weight": 1,
+    "random_weight": 1,
+    "alternate_version": "",
+    "can_build_ruler_ship": false,
+    "custom_tooltip": "",
+    "image_file": "origin_red_giant"
+  },
+  {
+    "id": "origin_cosmic_dawn",
+    "name": "Cosmic Dawn",
+    "description": "This civilization did not rise; it was released. As the stasis pods unlocked, they awakened to a world aged beyond recognition. Yet all is not lost. Scattered beneath dust and ruin across the galaxy, their past endures, waiting to be rediscovered.",
+    "is_origin": true,
+    "playable": true,
+    "pickable_at_start": true,
+    "tooltip": "- Homeworld:   - Volcanic World (Size: 14)   - £blocker£ Ancient Stasis Pods: +5 - Start with Situation: Deep Excavation",
+    "negative_tooltip": "- Initial Pops: -600",
+    "picture": "GFX_origin_cosmic_dawn",
+    "playable_conditions": "{'host_has_dlc': 'Infernals Species Pack'}",
+    "potential": [],
+    "possible": [
+      "NOT auth_hive_mind",
+      "NOT civic_agrarian_idyll"
+    ],
+    "can_modify": true,
+    "modifier": {},
+    "effects": "- Homeworld:   - Volcanic World (Size: 14)   - £blocker£ Ancient Stasis Pods: +5 - Start with Situation: Deep Excavation",
+    "enforced_traits": [],
+    "ai_weight": 1,
+    "random_weight": 1,
+    "alternate_version": "",
+    "can_build_ruler_ship": false,
+    "custom_tooltip": "",
+    "image_file": "origin_cosmic_dawn"
+  },
+  {
     "id": "origin_shroud_forged",
     "name": "Shroud-Forged",
     "description": "The guidance of a Shroud entity comes with a cost. Independent automata have started to operate freely among this networked society. Cut off from the Machine Intelligence, the demands of these units are ever-increasing.",
@@ -183,7 +238,7 @@
     "playable_conditions": "{'has_biogenesis_dlc': True}",
     "potential": [],
     "possible": [
-      "NOT ['civic_hive_catalytic_processing', 'civic_hive_toxic_baths', 'civic_hive_memorialist', 'civic_hive_guided_sapience', 'civic_astrometeorology_hive', 'civic_environmental_architects_hive', 'civic_entropy_drinkers_hive_mind', 'civic_hive_superstitious_beliefs', 'civic_twisted_experimenters_hive_mind', 'civic_hive_chosen', 'civic_entropy_drinkers_hive_mind']"
+      "NOT ['civic_hive_catalytic_processing', 'civic_hive_toxic_baths', 'civic_hive_memorialist', 'civic_hive_guided_sapience', 'civic_astrometeorology_hive', 'civic_environmental_architects_hive', 'civic_entropy_drinkers_hive_mind', 'civic_hive_superstitious_beliefs', 'civic_twisted_experimenters_hive_mind', 'civic_hive_chosen', 'civic_hive_world_forgers', 'civic_hive_scorched_earth', 'civic_hive_galvanic_symbiosis']"
     ],
     "can_modify": true,
     "modifier": {
@@ -213,7 +268,7 @@
     "playable_conditions": "{'has_grand_archive_dlc': True}",
     "potential": [],
     "possible": [
-      "NOT ['civic_hive_devouring_swarm', 'civic_fanatic_purifiers', 'civic_machine_terminator']"
+      "NOT ['civic_hive_devouring_swarm', 'civic_fanatic_purifiers', 'civic_machine_terminator', 'civic_scorched_earth', 'civic_hive_scorched_earth']"
     ],
     "can_modify": true,
     "modifier": {},
@@ -273,7 +328,7 @@
     "playable_conditions": "{'has_cosmic_storms_dlc': True}",
     "potential": [],
     "possible": [
-      "NOT ['civic_hive_devouring_swarm', 'civic_fanatic_purifiers', 'civic_machine_terminator']"
+      "NOT ['civic_hive_devouring_swarm', 'civic_fanatic_purifiers', 'civic_machine_terminator', 'civic_scorched_earth', 'civic_hive_scorched_earth']"
     ],
     "can_modify": true,
     "modifier": {},
@@ -466,7 +521,7 @@
     "playable": true,
     "pickable_at_start": true,
     "tooltip": "- Initial Pops: Species from Pre-FTL Civilizations across the galaxy  - Starting Planet:   - Free at Last Planetary Modifier   - Crashed Slaver Ship Planetary Feature   - Spaceship Wreckage  - Starting System: Crashed Slaver Ship Archaeology Site  - One Advanced AI Empire and several Pre-FTL Civilization regardless of the Galaxy Settings  - One Pre-FTL Civilization: Will be this empire's species and homeworld  - One Pre-FTL Civilization: Uplifted with the Payback origin",
-    "negative_tooltip": "- Starting Planet:   - Is NOT this empire's homeworld   - Stellar Culture Shock Planetary Modifier   - Ship Debris: +5  - Starting System: Resource Deposits are unexploited  - Missing Starting Technologies:   - Scientific Method  - Planetary Government   - Corvettes  - Policies:   - Cannot select Slavery Allowed   - Cannot select Purging Allowed",
+    "negative_tooltip": "- Starting Planet:   - Is NOT this empire's homeworld   - Stellar Culture Shock Planetary Modifier   - Ship Debris: +5   - Unable to use City District Specializations until the Crashed Slaver Ship is explored - Starting System: Resource Deposits are unexploited  - Missing Starting Technologies:   - Scientific Method  - Planetary Government   - Corvettes  - Policies:   - Cannot select Slavery Allowed   - Cannot select Purging Allowed",
     "picture": "GFX_origin_broken_shackles",
     "playable_conditions": "{'has_first_contact_dlc': True}",
     "potential": [],
@@ -634,9 +689,10 @@
       "planet_structures_cost_mult": 0.1,
       "planet_structures_upkeep_mult": 0.1,
       "planet_building_build_speed_mult": -0.1,
-      "planet_storm_devastation_mult": -0.25
+      "planet_storm_devastation_mult": -0.25,
+      "planet_non_artificial_max_districts_add": 2
     },
-    "effects": "- Species Traits: Cave Dweller - Mining Districts: Uncapped | mining_district_housing_add: +200; planet_orbital_bombardment_damage: -0.75; planet_structures_cost_mult: +10.0%; planet_structures_upkeep_mult: +10.0%; planet_building_build_speed_mult: -10.0%; planet_storm_devastation_mult: -25.0%",
+    "effects": "- Species Traits: Cave Dweller - Mining Districts: Uncapped | mining_district_housing_add: +200; planet_orbital_bombardment_damage: -0.75; planet_structures_cost_mult: +10.0%; planet_structures_upkeep_mult: +10.0%; planet_building_build_speed_mult: -10.0%; planet_storm_devastation_mult: -25.0%; planet_non_artificial_max_districts_add: +2",
     "enforced_traits": [
       "trait_cave_dweller"
     ],
@@ -671,9 +727,10 @@
       "planet_structures_cost_mult": 0.1,
       "planet_structures_upkeep_mult": 0.1,
       "planet_building_build_speed_mult": -0.1,
-      "planet_storm_devastation_mult": -0.25
+      "planet_storm_devastation_mult": -0.25,
+      "planet_non_artificial_max_districts_add": 2
     },
-    "effects": "- Species Traits: Molebots - Mining Districts: Uncapped | mining_district_housing_add: +200; planet_orbital_bombardment_damage: -0.75; planet_structures_cost_mult: +10.0%; planet_structures_upkeep_mult: +10.0%; planet_building_build_speed_mult: -10.0%; planet_storm_devastation_mult: -25.0%",
+    "effects": "- Species Traits: Molebots - Mining Districts: Uncapped | mining_district_housing_add: +200; planet_orbital_bombardment_damage: -0.75; planet_structures_cost_mult: +10.0%; planet_structures_upkeep_mult: +10.0%; planet_building_build_speed_mult: -10.0%; planet_storm_devastation_mult: -25.0%; planet_non_artificial_max_districts_add: +2",
     "enforced_traits": [
       "trait_robot_cave_dweller"
     ],
@@ -731,9 +788,7 @@
     "can_modify": true,
     "modifier": {},
     "effects": "- Species Traits: Latent Psionic - Available Starbase Buildings: Shroud Beacon - Communications with the Shroudwalker Enclave - Guaranteed Research Options: Psionic Theory.",
-    "enforced_traits": [
-      "trait_latent_psionic"
-    ],
+    "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 5,
     "alternate_version": "",
@@ -778,7 +833,7 @@
     "playable_conditions": "{'has_aquatics': True}",
     "potential": [],
     "possible": [
-      "NOT ['civic_fanatic_purifiers', 'civic_hive_devouring_swarm', 'civic_machine_terminator']"
+      "NOT ['civic_fanatic_purifiers', 'civic_hive_devouring_swarm', 'civic_machine_terminator', 'civic_scorched_earth', 'civic_hive_scorched_earth']"
     ],
     "can_modify": true,
     "modifier": {},
@@ -806,7 +861,8 @@
       "NOT species_archetype:MACHINE"
     ],
     "possible": [
-      "NOT species_archetype:MACHINE"
+      "NOT species_archetype:MACHINE",
+      "NOT civic_pyrolatry"
     ],
     "can_modify": true,
     "modifier": {},
@@ -836,7 +892,8 @@
       "species_archetype:MACHINE"
     ],
     "possible": [
-      "species_archetype:MACHINE"
+      "species_archetype:MACHINE",
+      "NOT ['civic_pyrolatry', 'civic_machine_world_forgers']"
     ],
     "can_modify": true,
     "modifier": {},
@@ -1103,7 +1160,7 @@
     "potential": [],
     "possible": [
       "NOT civic_inwards_perfection",
-      "NOT ['civic_fanatic_purifiers', 'civic_hive_devouring_swarm', 'civic_machine_terminator']"
+      "NOT ['civic_fanatic_purifiers', 'civic_hive_devouring_swarm', 'civic_machine_terminator', 'civic_scorched_earth', 'civic_hive_scorched_earth']"
     ],
     "can_modify": true,
     "modifier": {},
@@ -1388,7 +1445,7 @@
     "potential": [],
     "possible": [
       "NOT ethic_gestalt_consciousness",
-      "NOT civic_fanatic_purifiers"
+      "NOT ['civic_fanatic_purifiers', 'civic_scorched_earth']"
     ],
     "can_modify": true,
     "modifier": {},

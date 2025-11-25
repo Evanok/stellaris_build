@@ -381,7 +381,8 @@
             "origin_synthetic_fertility",
             "origin_evolutionary_predators",
             "origin_endbringers"
-          ]
+          ],
+          "has_tradition": "tr_cybernetics_adopt"
         },
         "is_gestalt": false,
         "is_mechanical_empire": false,
@@ -396,6 +397,7 @@
           }
         },
         "is_chosen_empire": false,
+        "is_galvanic_empire": false,
         "is_entropy_drinkers_empire": false
       },
       "ai_weight": "@ascension_path_base_weight"
@@ -440,8 +442,11 @@
           },
           {
             "fail_text": "requires_not_ap_organo_machine_interfacing",
-            "NOT": {
-              "has_ascension_perk": "ap_organo_machine_interfacing_assimilator"
+            "NOR": {
+              "has_ascension_perk": [
+                "ap_organo_machine_interfacing",
+                "ap_organo_machine_interfacing_assimilator"
+              ]
             }
           },
           {
@@ -757,12 +762,8 @@
       "has_variants": true,
       "potential": {
         "NOR": {
-          "has_ascension_perk": [
-            "ap_defender_of_the_galaxy",
-            "ap_become_the_crisis",
-            "ap_cosmogenesis",
-            "ap_behemoths"
-          ],
+          "has_ascension_perk": "ap_defender_of_the_galaxy",
+          "is_player_crisis": true,
           "has_origin": "origin_endbringers"
         }
       },
@@ -854,12 +855,8 @@
       "potential": {
         "has_nemesis": true,
         "NOR": {
-          "has_ascension_perk": [
-            "ap_become_the_crisis",
-            "ap_cosmogenesis",
-            "ap_behemoths",
-            "ap_defender_of_the_galaxy"
-          ],
+          "is_player_crisis": true,
+          "has_ascension_perk": "ap_defender_of_the_galaxy",
           "has_origin": [
             "origin_slavers",
             "origin_endbringers"
@@ -903,12 +900,8 @@
       "potential": {
         "has_machine_age_dlc": true,
         "NOR": {
-          "has_ascension_perk": [
-            "ap_become_the_crisis",
-            "ap_cosmogenesis",
-            "ap_defender_of_the_galaxy",
-            "ap_behemoths"
-          ],
+          "is_player_crisis": true,
+          "has_ascension_perk": "ap_defender_of_the_galaxy",
           "has_origin": [
             "origin_slavers",
             "origin_endbringers"
@@ -964,16 +957,70 @@
       "potential": {
         "has_biogenesis_dlc": true,
         "NOR": {
-          "has_ascension_perk": [
-            "ap_become_the_crisis",
-            "ap_cosmogenesis",
-            "ap_behemoths",
-            "ap_defender_of_the_galaxy"
-          ],
+          "is_player_crisis": true,
+          "has_ascension_perk": "ap_defender_of_the_galaxy",
           "has_origin": [
             "origin_slavers",
             "origin_endbringers"
           ]
+        }
+      },
+      "ai_weight": 7.5
+    },
+    {
+      "id": "ap_galactic_hyperthermia",
+      "name": "Galactic Hyperthermia",
+      "description": "The universe began in fire, but has cooled down into a dark and hostile place. To thrive, we need to turn up the heat, even if others must perish.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "requires_ascension_perks_3",
+            "OR": {
+              "num_ascension_perks": 2,
+              "has_country_flag": "red_giant_discovered_crystallized_entropy"
+            }
+          },
+          {
+            "fail_text": "requires_independence",
+            "is_subject": false
+          },
+          {
+            "fail_text": "must_not_be_custodian",
+            "is_galactic_custodian": false
+          },
+          {
+            "fail_text": "must_not_be_emperor",
+            "is_galactic_emperor": false
+          }
+        ],
+        "NOR": {
+          "has_ethic": [
+            "ethic_xenophile",
+            "ethic_fanatic_xenophile",
+            "ethic_pacifist",
+            "ethic_fanatic_pacifist"
+          ],
+          "has_valid_civic": "civic_hive_familiar_face"
+        }
+      },
+      "prerequisites": [],
+      "effects": "",
+      "modifier": {},
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "has_infernals": true,
+        "NOR": {
+          "is_player_crisis": true,
+          "has_ascension_perk": "ap_defender_of_the_galaxy",
+          "has_origin": [
+            "origin_slavers",
+            "origin_endbringers"
+          ],
+          "is_machine_empire": true,
+          "is_wilderness_empire": true
         }
       },
       "ai_weight": 7.5
@@ -1024,14 +1071,13 @@
       "has_variants": false,
       "potential": {
         "host_has_dlc": "Overlord",
-        "NOT": [
-          {
-            "has_ascension_perk": "ap_lord_of_war"
-          },
-          {
-            "has_valid_civic": "civic_fanatic_purifiers"
-          }
-        ],
+        "NOR": {
+          "has_ascension_perk": "ap_lord_of_war",
+          "has_valid_civic": [
+            "civic_fanatic_purifiers",
+            "civic_scorched_earth"
+          ]
+        },
         "OR": {
           "is_regular_empire": true,
           "has_valid_civic": "civic_machine_tactical_algorithms"
@@ -1334,7 +1380,7 @@
           "has_ascension_perk": "ap_eternal_vigilance"
         }
       },
-      "ai_weight": 10
+      "ai_weight": 2
     },
     {
       "id": "ap_galactic_contender",
@@ -1437,12 +1483,7 @@
         "NOT": {
           "has_ascension_perk": "ap_consecrated_worlds"
         },
-        "OR": {
-          "has_ethic": [
-            "ethic_spiritualist",
-            "ethic_fanatic_spiritualist"
-          ]
-        }
+        "is_spiritualist": true
       },
       "ai_weight": 10
     },
@@ -1557,12 +1598,8 @@
       "has_variants": false,
       "potential": {
         "NOR": {
-          "has_valid_civic": [
-            "civic_fanatic_purifiers",
-            "civic_hive_devouring_swarm",
-            "civic_inwards_perfection",
-            "civic_machine_terminator"
-          ]
+          "is_homicidal": true,
+          "has_valid_civic": "civic_inwards_perfection"
         },
         "NOT": {
           "has_ascension_perk": "ap_shared_destiny"
@@ -1947,7 +1984,8 @@
       "potential": {
         "host_has_dlc": "Toxoids Species Pack",
         "NOT": {
-          "has_ascension_perk": "ap_detox"
+          "has_ascension_perk": "ap_detox",
+          "has_country_flag": "knights_detox"
         }
       },
       "ai_weight": 20
@@ -2072,7 +2110,8 @@
             "origin_synthetic_fertility",
             "origin_evolutionary_predators",
             "origin_endbringers"
-          ]
+          ],
+          "has_tradition": "tr_cybernetics_adopt"
         },
         "is_gestalt": false,
         "is_mechanical_empire": false,
@@ -2087,6 +2126,7 @@
           }
         },
         "is_chosen_empire": false,
+        "is_galvanic_empire": false,
         "is_entropy_drinkers_empire": false
       },
       "ai_weight": "@ascension_path_base_weight"
@@ -2522,8 +2562,11 @@
           },
           {
             "fail_text": "requires_not_ap_organo_machine_interfacing",
-            "NOT": {
-              "has_ascension_perk": "ap_organo_machine_interfacing_assimilator"
+            "NOR": {
+              "has_ascension_perk": [
+                "ap_organo_machine_interfacing",
+                "ap_organo_machine_interfacing_assimilator"
+              ]
             }
           },
           {
@@ -2772,12 +2815,8 @@
       "has_variants": true,
       "potential": {
         "NOR": {
-          "has_ascension_perk": [
-            "ap_defender_of_the_galaxy",
-            "ap_become_the_crisis",
-            "ap_cosmogenesis",
-            "ap_behemoths"
-          ],
+          "has_ascension_perk": "ap_defender_of_the_galaxy",
+          "is_player_crisis": true,
           "has_origin": "origin_endbringers"
         }
       },
@@ -2869,12 +2908,8 @@
       "potential": {
         "has_nemesis": true,
         "NOR": {
-          "has_ascension_perk": [
-            "ap_become_the_crisis",
-            "ap_cosmogenesis",
-            "ap_behemoths",
-            "ap_defender_of_the_galaxy"
-          ],
+          "is_player_crisis": true,
+          "has_ascension_perk": "ap_defender_of_the_galaxy",
           "has_origin": [
             "origin_slavers",
             "origin_endbringers"
@@ -2918,12 +2953,8 @@
       "potential": {
         "has_machine_age_dlc": true,
         "NOR": {
-          "has_ascension_perk": [
-            "ap_become_the_crisis",
-            "ap_cosmogenesis",
-            "ap_defender_of_the_galaxy",
-            "ap_behemoths"
-          ],
+          "is_player_crisis": true,
+          "has_ascension_perk": "ap_defender_of_the_galaxy",
           "has_origin": [
             "origin_slavers",
             "origin_endbringers"
@@ -2979,16 +3010,70 @@
       "potential": {
         "has_biogenesis_dlc": true,
         "NOR": {
-          "has_ascension_perk": [
-            "ap_become_the_crisis",
-            "ap_cosmogenesis",
-            "ap_behemoths",
-            "ap_defender_of_the_galaxy"
-          ],
+          "is_player_crisis": true,
+          "has_ascension_perk": "ap_defender_of_the_galaxy",
           "has_origin": [
             "origin_slavers",
             "origin_endbringers"
           ]
+        }
+      },
+      "ai_weight": 7.5
+    },
+    {
+      "id": "ap_galactic_hyperthermia",
+      "name": "Galactic Hyperthermia",
+      "description": "The universe began in fire, but has cooled down into a dark and hostile place. To thrive, we need to turn up the heat, even if others must perish.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "requires_ascension_perks_3",
+            "OR": {
+              "num_ascension_perks": 2,
+              "has_country_flag": "red_giant_discovered_crystallized_entropy"
+            }
+          },
+          {
+            "fail_text": "requires_independence",
+            "is_subject": false
+          },
+          {
+            "fail_text": "must_not_be_custodian",
+            "is_galactic_custodian": false
+          },
+          {
+            "fail_text": "must_not_be_emperor",
+            "is_galactic_emperor": false
+          }
+        ],
+        "NOR": {
+          "has_ethic": [
+            "ethic_xenophile",
+            "ethic_fanatic_xenophile",
+            "ethic_pacifist",
+            "ethic_fanatic_pacifist"
+          ],
+          "has_valid_civic": "civic_hive_familiar_face"
+        }
+      },
+      "prerequisites": [],
+      "effects": "",
+      "modifier": {},
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "has_infernals": true,
+        "NOR": {
+          "is_player_crisis": true,
+          "has_ascension_perk": "ap_defender_of_the_galaxy",
+          "has_origin": [
+            "origin_slavers",
+            "origin_endbringers"
+          ],
+          "is_machine_empire": true,
+          "is_wilderness_empire": true
         }
       },
       "ai_weight": 7.5
@@ -3039,14 +3124,13 @@
       "has_variants": false,
       "potential": {
         "host_has_dlc": "Overlord",
-        "NOT": [
-          {
-            "has_ascension_perk": "ap_lord_of_war"
-          },
-          {
-            "has_valid_civic": "civic_fanatic_purifiers"
-          }
-        ],
+        "NOR": {
+          "has_ascension_perk": "ap_lord_of_war",
+          "has_valid_civic": [
+            "civic_fanatic_purifiers",
+            "civic_scorched_earth"
+          ]
+        },
         "OR": {
           "is_regular_empire": true,
           "has_valid_civic": "civic_machine_tactical_algorithms"
@@ -3349,7 +3433,7 @@
           "has_ascension_perk": "ap_eternal_vigilance"
         }
       },
-      "ai_weight": 10
+      "ai_weight": 2
     },
     {
       "id": "ap_galactic_contender",
@@ -3452,12 +3536,7 @@
         "NOT": {
           "has_ascension_perk": "ap_consecrated_worlds"
         },
-        "OR": {
-          "has_ethic": [
-            "ethic_spiritualist",
-            "ethic_fanatic_spiritualist"
-          ]
-        }
+        "is_spiritualist": true
       },
       "ai_weight": 10
     },
@@ -3572,12 +3651,8 @@
       "has_variants": false,
       "potential": {
         "NOR": {
-          "has_valid_civic": [
-            "civic_fanatic_purifiers",
-            "civic_hive_devouring_swarm",
-            "civic_inwards_perfection",
-            "civic_machine_terminator"
-          ]
+          "is_homicidal": true,
+          "has_valid_civic": "civic_inwards_perfection"
         },
         "NOT": {
           "has_ascension_perk": "ap_shared_destiny"
@@ -3962,7 +4037,8 @@
       "potential": {
         "host_has_dlc": "Toxoids Species Pack",
         "NOT": {
-          "has_ascension_perk": "ap_detox"
+          "has_ascension_perk": "ap_detox",
+          "has_country_flag": "knights_detox"
         }
       },
       "ai_weight": 20
