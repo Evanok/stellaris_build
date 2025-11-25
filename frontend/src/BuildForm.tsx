@@ -233,7 +233,8 @@ const MAX_CIVIC_SLOTS = 3;
 
 // Stellaris game versions
 const GAME_VERSIONS = [
-  { value: '4.1', label: '4.1 "Lyra" (Latest)' },
+  { value: '4.2', label: '4.2 "Corvus" (Latest)' },
+  { value: '4.1', label: '4.1 "Lyra"' },
   { value: '4.0', label: '4.0 "Phoenix"' },
   { value: '3.14', label: '3.14 "Circinus"' },
   { value: '3.13', label: '3.13 "Vela"' },
@@ -253,7 +254,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   // Form fields state
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [game_version, setGameVersion] = useState('4.1');
+  const [game_version, setGameVersion] = useState('4.2');
   const [youtube_url, setYoutubeUrl] = useState('');
   const [source_url, setSourceUrl] = useState('');
   const [difficulty, setDifficulty] = useState<string>('');
@@ -1001,7 +1002,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         const formData = JSON.parse(savedData);
         setName(formData.name || '');
         setDescription(formData.description || '');
-        setGameVersion(formData.game_version || '4.1');
+        setGameVersion(formData.game_version || '4.2');
         setYoutubeUrl(formData.youtube_url || '');
         setSourceUrl(formData.source_url || '');
         setDifficulty(formData.difficulty || '');
@@ -1125,7 +1126,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       // Reset form
       setName('');
       setDescription('');
-      setGameVersion('4.1'); // Reset to latest version
+      setGameVersion('4.2'); // Reset to latest version
       setYoutubeUrl('');
       setSourceUrl('');
       setDifficulty('');
