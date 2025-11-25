@@ -238,7 +238,7 @@ def extract_all_species_classes(stellaris_path: str, output_file: str = "output/
         # NPC-only classes should be excluded
         npc_only_classes = [
             'PRE_MAM', 'PRE_REP', 'PRE_AVI', 'PRE_ART', 'PRE_MOL', 'PRE_FUN', 'PRE_PLANT',
-            'PRE_LITHOID', 'PRE_AQUATIC', 'PRE_TOX',  # Primitives
+            'PRE_LITHOID', 'PRE_AQUATIC', 'PRE_TOX', 'PRE_INF',  # Primitives
             'AI', 'SWARM', 'EXD',  # Event-spawned species
             'SALVAGER', 'SHROUDWALKER', 'MINDWARDEN_ENCLAVE', 'PARAGON', 'MSI_SLAVER',  # Special NPC species
             'WILDERNESS',  # Special origin species

@@ -165,6 +165,15 @@
     "portrait_count": 28
   },
   {
+    "id": "INF",
+    "name": "Infernal",
+    "description": "Species Class has no effect on your Empire, but Infernal-class Species may consider other Infernals to be less alien than other Species Classes.",
+    "archetype": "BIOLOGICAL",
+    "graphical_culture": "infernal_01",
+    "portraits": [],
+    "portrait_count": 0
+  },
+  {
     "id": "LITHOID",
     "name": "Lithoid",
     "description": "Species Class has no effect on your Empire, but Lithoid-class Species may consider other Lithoids to be less alien than other Species Classes.",
@@ -179,6 +188,7 @@
       "lith14",
       "lith15",
       "lith2",
+      "lith2_inf",
       "lith3",
       "lith4",
       "lith5",
@@ -190,7 +200,7 @@
       "lith_human_male",
       "lith_machine"
     ],
-    "portrait_count": 18
+    "portrait_count": 19
   },
   {
     "id": "MACHINE",
