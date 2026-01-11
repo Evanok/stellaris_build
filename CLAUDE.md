@@ -339,6 +339,33 @@ The BuildForm implements conditional filtering based on game rules:
 
 Use helper functions like `canSelectCivic()`, `canSelectAuthority()`, etc.
 
+### Updating What's New Section
+
+To add a new news item to the home page:
+
+1. Open `frontend/src/pages/Home.tsx`
+2. Find the `latestNews` array (around line 65)
+3. Add a new entry at the beginning of the array:
+
+```tsx
+const latestNews: NewsItem[] = [
+  {
+    date: '15 Feb 2026',  // Format: 'DD MMM YYYY'
+    title: 'Your New Feature Title',
+    description: 'Brief description (not displayed in condensed format)',
+    type: 'feature'  // 'feature' (🎉), 'update' (✨), or 'fix' (🔧)
+  },
+  // Previous news items...
+];
+```
+
+4. **Development**: Vite will hot-reload automatically
+5. **Production**:
+   - Rebuild frontend: `npm run build -w frontend`
+   - Restart: `pm2 restart stellaris-build`
+
+**Note**: Only the 2 most recent items are displayed. The banner shows: icon + date + NEW badge (if <7 days) + title.
+
 ## Data Quality Standards
 
 All extracted data must be:
@@ -378,14 +405,18 @@ After making changes to game data:
 - Passport.js handles OAuth flow and session management
 - `backend/auth.js` - Strategy configurations
 - `backend/index.js` - Auth routes and middleware
-- Sessions stored in memory (consider redis for production at scale)
+- Sessions stored in SQLite (via `better-sqlite3-session-store`)
 - `isAuthenticated` middleware protects routes requiring login
+- Custom display names: OAuth users can set unique display_name (3-30 chars, alphanumeric + underscore/dash)
+- Collision prevention: display_name uniqueness enforced across all users (both usernames and display_names)
 
 **Frontend:**
 - `AuthContext.tsx` - React context for auth state
 - `useAuth()` hook - Access user, loading, logout, refreshUser
 - Protected routes redirect to `/login` when user is null
-- Navbar displays user info and conditional "Create Build" link
+- Navbar displays user info (display_name or username) and conditional "Create Build" link
+- `DisplayNameModal.tsx` - Modal for OAuth users to set/change their custom display name
+- "Edit" button in navbar for OAuth users only (local users cannot change display_name)
 
 **User Flow:**
 1. User clicks "Sign In" in navbar → redirected to `/login`
@@ -418,6 +449,36 @@ Planned features (not yet implemented):
 ---
 
 ## Recent Completions
+
+### Custom Display Names for OAuth Users (2026-01-11)
+- Added display_name system for Google/Steam authenticated users
+- Database: New `display_name` column with unique index (allows NULL for users without custom name)
+- API endpoint: `PATCH /api/user/display-name` with validation (3-30 chars, alphanumeric + underscore/dash)
+- Collision prevention: display_name uniqueness checked against both usernames and other display_names
+- Frontend: DisplayNameModal component accessible from navbar for OAuth users only
+- Build queries updated: `COALESCE(display_name, username)` shows custom name if set, falls back to OAuth username
+- UI: "Edit" button in navbar for OAuth users, modal with real-time validation
+- Restriction: Local account users cannot set display_name (they use their username)
+- Key files: `backend/database.js`, `backend/index.js`, `frontend/src/components/DisplayNameModal.tsx`, `frontend/src/components/Navbar.tsx`
+
+### What's New Section on Home Page (2026-01-11)
+- Added "What's New" banner to communicate updates and new features
+- Design: Compact green gradient banner side-by-side with Resources CTA
+- Layout: Two-column responsive layout (col-lg-6 each) - stacks vertically on mobile
+- Content: Displays 2 most recent news items in condensed format (icon + date + title, no description)
+- News items hardcoded in Home.tsx with type ('feature', 'update', 'fix') for dynamic icons
+- Auto badge: "NEW" badge appears if news is less than 7 days old
+- Compact design: Reduced padding (0.75rem 1rem) to minimize vertical space
+- Current news: Custom Display Names (11 Jan 2026), Infernals DLC Support (25 Nov 2025)
+- Future updates: Edit `latestNews` array in Home.tsx and rebuild frontend
+- Key files: `frontend/src/components/WhatsNewBanner.tsx`, `frontend/src/pages/Home.tsx`
+
+### UI Optimization - Reduced Hero Banner Height (2026-01-11)
+- Reduced hero banner padding from 4rem to 2rem (50% height reduction)
+- Scaled down typography: display-3 → display-5, removed `lead` class
+- Compacted build counter widget with smaller padding and text
+- Result: Builds visible much faster on page load with less scrolling required
+- Key file: `frontend/src/pages/Home.tsx`
 
 ### Infernals Species Pack DLC Support (2025-11-25)
 - Updated game version to 4.2 "Corvus" (latest) in BuildForm
