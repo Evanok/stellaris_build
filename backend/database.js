@@ -184,6 +184,22 @@ const setupDatabase = () => {
       }
     });
 
+    // Add display_name column for custom usernames (OAuth users)
+    db.run(`ALTER TABLE users ADD COLUMN display_name TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding display_name column:', err.message);
+      } else {
+        // Create unique index on display_name (allows multiple NULLs)
+        db.run(`CREATE UNIQUE INDEX IF NOT EXISTS idx_users_display_name ON users(display_name) WHERE display_name IS NOT NULL`, (err) => {
+          if (err) {
+            console.error('Error creating display_name index:', err.message);
+          } else {
+            console.log('Display name column and unique index created successfully.');
+          }
+        });
+      }
+    });
+
     // Create page_views table for traffic tracking
     db.run(`CREATE TABLE IF NOT EXISTS page_views (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

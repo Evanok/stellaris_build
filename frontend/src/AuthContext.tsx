@@ -5,6 +5,7 @@ interface User {
   username: string;
   email: string | null;
   avatar: string | null;
+  display_name: string | null;
   provider: string;
   provider_id: string;
   created_at: string;

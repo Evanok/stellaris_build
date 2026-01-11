@@ -188,14 +188,14 @@ app.post('/auth/register', async (req, res) => {
     });
   }
 
-  // Check if username already exists (any provider)
-  db.get('SELECT * FROM users WHERE username = ?', [username], async (err, existingUser) => {
+  // Check if username already exists (as username OR as display_name)
+  db.get('SELECT * FROM users WHERE username = ? OR display_name = ?', [username, username], async (err, existingUser) => {
     if (err) {
       return res.status(500).json({ error: 'Database error.' });
     }
 
     if (existingUser) {
-      return res.status(409).json({ error: 'Username already taken.' });
+      return res.status(409).json({ error: 'This username is already taken.' });
     }
 
     // Hash password
@@ -274,6 +274,68 @@ app.get('/api/user', (req, res) => {
   } else {
     res.json({ user: null });
   }
+});
+
+// Update display name (OAuth users only)
+app.patch('/api/user/display-name', isAuthenticated, (req, res) => {
+  const { display_name } = req.body;
+  const userId = req.user.id;
+
+  // Only allow OAuth users to set display name
+  if (req.user.provider === 'local') {
+    return res.status(403).json({ error: 'Local users cannot change display name. Change your username instead.' });
+  }
+
+  // Validate display name format (3-30 chars, alphanumeric + underscore/dash)
+  if (!display_name || typeof display_name !== 'string') {
+    return res.status(400).json({ error: 'Display name is required' });
+  }
+
+  const trimmedName = display_name.trim();
+
+  if (trimmedName.length < 3 || trimmedName.length > 30) {
+    return res.status(400).json({ error: 'Display name must be between 3 and 30 characters' });
+  }
+
+  const validNamePattern = /^[a-zA-Z0-9_-]+$/;
+  if (!validNamePattern.test(trimmedName)) {
+    return res.status(400).json({ error: 'Display name can only contain letters, numbers, underscores, and dashes' });
+  }
+
+  // Check if display name is already taken (as display_name OR as username)
+  db.get(
+    'SELECT id FROM users WHERE (display_name = ? OR username = ?) AND id != ?',
+    [trimmedName, trimmedName, userId],
+    (err, existingUser) => {
+      if (err) {
+        return res.status(500).json({ error: 'Database error' });
+      }
+
+      if (existingUser) {
+        return res.status(409).json({ error: 'This display name is already taken' });
+      }
+
+      // Update display name
+      db.run(
+        'UPDATE users SET display_name = ? WHERE id = ?',
+        [trimmedName, userId],
+        function(err) {
+          if (err) {
+            return res.status(500).json({ error: 'Failed to update display name' });
+          }
+
+          // Fetch updated user
+          db.get('SELECT * FROM users WHERE id = ?', [userId], (err, updatedUser) => {
+            if (err) {
+              return res.status(500).json({ error: 'Failed to fetch updated user' });
+            }
+
+            res.json({ user: updatedUser });
+          });
+        }
+      );
+    }
+  );
 });
 
 // ============ API ROUTES ============
@@ -489,7 +551,7 @@ app.get('/api/builds', (req, res) => {
   const sql = `
     SELECT
       builds.*,
-      users.username as author_username,
+      COALESCE(users.display_name, users.username) as author_username,
       users.avatar as author_avatar,
       COALESCE(AVG(ratings.rating), 0) as average_rating,
       COUNT(ratings.id) as rating_count
@@ -580,7 +642,7 @@ app.get('/api/builds/:id', (req, res) => {
   const sql = `
     SELECT
       builds.*,
-      users.username as author_username,
+      COALESCE(users.display_name, users.username) as author_username,
       users.avatar as author_avatar
     FROM builds
     LEFT JOIN users ON builds.author_id = users.id

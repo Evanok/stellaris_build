@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { DisplayNameModal } from './DisplayNameModal';
 
 export const Navbar: React.FC = () => {
   const { user, loading, logout } = useAuth();
+  const [showDisplayNameModal, setShowDisplayNameModal] = useState(false);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -51,17 +53,27 @@ export const Navbar: React.FC = () => {
                 {user ? (
                   <>
                     <li className="nav-item d-flex align-items-center">
-                      <span className="navbar-text text-light me-3">
+                      <span className="navbar-text text-light me-2">
                         {user.avatar && (
                           <img
                             src={user.avatar}
-                            alt={user.username}
+                            alt={user.display_name || user.username}
                             className="rounded-circle me-2"
                             style={{ width: '32px', height: '32px' }}
                           />
                         )}
-                        {user.username}
+                        {user.display_name || user.username}
                       </span>
+                      {user.provider !== 'local' && (
+                        <button
+                          className="btn btn-sm btn-link text-info p-0 me-3"
+                          onClick={() => setShowDisplayNameModal(true)}
+                          title="Change display name"
+                          style={{ textDecoration: 'none', fontSize: '0.85rem' }}
+                        >
+                          <i className="bi bi-pencil-square"></i> Edit
+                        </button>
+                      )}
                     </li>
                     <li className="nav-item">
                       <button
@@ -84,6 +96,12 @@ export const Navbar: React.FC = () => {
           </ul>
         </div>
       </div>
+
+      {/* Display Name Modal */}
+      <DisplayNameModal
+        show={showDisplayNameModal}
+        onClose={() => setShowDisplayNameModal(false)}
+      />
     </nav>
   );
 };
