@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { Helmet } from 'react-helmet-async';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
 import RatingStars from '../components/RatingStars';
+import { WhatsNewBanner, NewsItem } from '../components/WhatsNewBanner';
 import './Home.css';
 
 // Helper function to get difficulty badge styling
@@ -59,6 +60,22 @@ export const Home: React.FC = () => {
   const [difficultyFilter, setDifficultyFilter] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('newest');
   const buildsPerPage = 12;
+
+  // What's New data
+  const latestNews: NewsItem[] = [
+    {
+      date: '11 Jan 2026',
+      title: 'Custom Display Names for OAuth Users',
+      description: 'Google and Steam users can now set a custom display name that will appear on all their builds instead of their provider username.',
+      type: 'feature'
+    },
+    {
+      date: '25 Nov 2025',
+      title: 'Infernals Species Pack DLC Support',
+      description: 'Full support for the Infernals DLC including new origins, civics, traits, and ascension perks from game version 4.2 "Corvus".',
+      type: 'update'
+    }
+  ];
 
   useEffect(() => {
     fetch('/api/builds')
@@ -151,24 +168,24 @@ export const Home: React.FC = () => {
         className="position-relative mb-4"
         style={{
           background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-          padding: '4rem 0',
+          padding: '2rem 0',
           borderBottom: '3px solid #e94560'
         }}
       >
         <div className="container">
           <div className="row align-items-center">
             <div className="col-md-8">
-              <h1 className="display-3 fw-bold text-white mb-3">
+              <h1 className="display-5 fw-bold text-white mb-2">
                 Stellaris Build Archive
               </h1>
-              <p className="lead text-light mb-0">
+              <p className="text-light mb-0">
                 Discover, share, and master powerful empire builds from the community
               </p>
             </div>
             <div className="col-md-4 text-end">
-              <div className="d-inline-block p-3 rounded" style={{ background: 'rgba(255, 255, 255, 0.1)' }}>
-                <h3 className="text-white mb-2">{builds.length}</h3>
-                <p className="text-light mb-0">Community Builds</p>
+              <div className="d-inline-block p-2 rounded" style={{ background: 'rgba(255, 255, 255, 0.1)' }}>
+                <h4 className="text-white mb-1">{builds.length}</h4>
+                <p className="text-light mb-0 small">Community Builds</p>
               </div>
             </div>
           </div>
@@ -176,16 +193,18 @@ export const Home: React.FC = () => {
       </div>
 
       <div className="container mt-4">
-        {/* Resources Call-to-Action */}
+        {/* Resources CTA and What's New - Side by Side */}
         <div className="row mb-4">
-          <div className="col-12">
+          {/* Resources Call-to-Action */}
+          <div className="col-lg-6 mb-3 mb-lg-0">
             <Link to="/resources" className="text-decoration-none">
               <div
-                className="alert alert-info border-0 shadow-sm d-flex align-items-center justify-content-between"
+                className="alert alert-info border-0 shadow-sm d-flex flex-column h-100"
                 style={{
                   background: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)',
                   cursor: 'pointer',
-                  transition: 'transform 0.2s, box-shadow 0.2s'
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  padding: '0.75rem 1rem'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-2px)';
@@ -197,19 +216,24 @@ export const Home: React.FC = () => {
                 }}
               >
                 <div className="d-flex align-items-center">
-                  <span className="fs-2 me-3">📚</span>
-                  <div>
-                    <h5 className="mb-1 text-white fw-bold">New to Stellaris? Check out our curated resources!</h5>
-                    <p className="mb-0 text-white opacity-90">
-                      Discover top YouTube channels, essential guides, tier lists, and must-have mods from the community
+                  <span className="fs-4 me-2">📚</span>
+                  <div className="flex-grow-1">
+                    <h6 className="mb-0 text-white fw-bold">Curated Resources</h6>
+                    <p className="mb-0 text-white opacity-90 small">
+                      YouTube channels, guides, tier lists, and mods
                     </p>
                   </div>
+                  <span className="badge bg-light text-primary">
+                    Explore →
+                  </span>
                 </div>
-                <span className="badge bg-light text-primary fs-6 px-3 py-2">
-                  Explore →
-                </span>
               </div>
             </Link>
+          </div>
+
+          {/* What's New Section */}
+          <div className="col-lg-6">
+            <WhatsNewBanner news={latestNews} />
           </div>
         </div>
 
