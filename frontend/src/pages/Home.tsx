@@ -297,8 +297,9 @@ export const Home: React.FC = () => {
               <option value="">All Versions</option>
               {(() => {
                 const seen = new Set<string>();
+                const parseVer = (v: string) => { const label = VERSION_NAMES[v] ?? v; const m = label.match(/(\d+)\.(\d+)/); return m ? parseInt(m[1]) * 100 + parseInt(m[2]) : 0; };
                 return Array.from(new Set(builds.map(b => b.game_version).filter(v => v && v !== 'other')))
-                  .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))
+                  .sort((a, b) => parseVer(b) - parseVer(a))
                   .filter(v => {
                     const label = VERSION_NAMES[v] ?? v;
                     if (seen.has(label)) return false;
