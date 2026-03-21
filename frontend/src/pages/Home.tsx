@@ -64,16 +64,16 @@ export const Home: React.FC = () => {
   // What's New data
   const latestNews: NewsItem[] = [
     {
+      date: '20 Mar 2026',
+      title: 'Stellaris 4.3 "Cetus" Support',
+      description: 'Build data updated for game version 4.3 "Cetus". Builds now load the correct game data for their version, preserving older builds accuracy.',
+      type: 'update'
+    },
+    {
       date: '11 Jan 2026',
       title: 'Custom Display Names for OAuth Users',
       description: 'Google and Steam users can now set a custom display name that will appear on all their builds instead of their provider username.',
       type: 'feature'
-    },
-    {
-      date: '25 Nov 2025',
-      title: 'Infernals Species Pack DLC Support',
-      description: 'Full support for the Infernals DLC including new origins, civics, traits, and ascension perks from game version 4.2 "Corvus".',
-      type: 'update'
     }
   ];
 

@@ -436,103 +436,81 @@ app.post('/api/test/cleanup', (req, res) => {
   });
 });
 
-// Get all traits
-app.get('/api/traits', (req, res) => {
-  fs.readFile('./data/traits.json', 'utf8', (err, data) => {
+// Versioned game data helpers
+const AVAILABLE_DATA_VERSIONS = ['4.2', '4.3'];
+const LATEST_DATA_VERSION = AVAILABLE_DATA_VERSIONS[AVAILABLE_DATA_VERSIONS.length - 1];
+
+function getDataVersion(requestedVersion) {
+  if (!requestedVersion) return '4.2';
+  const match = String(requestedVersion).match(/(\d+)\.(\d+)/);
+  if (!match) return '4.2';
+  const reqMajor = parseInt(match[1]);
+  const reqMinor = parseInt(match[2]);
+  let result = AVAILABLE_DATA_VERSIONS[0];
+  for (const v of AVAILABLE_DATA_VERSIONS) {
+    const [vMajor, vMinor] = v.split('.').map(Number);
+    if (reqMajor > vMajor || (reqMajor === vMajor && reqMinor >= vMinor)) {
+      result = v;
+    }
+  }
+  return result;
+}
+
+function readVersionedData(version, filename, res, errorMsg) {
+  const dataVersion = getDataVersion(version);
+  const filePath = path.join(__dirname, 'data', 'versions', dataVersion, filename);
+  fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
-      res.status(500).json({ error: "Could not read traits data." });
+      res.status(500).json({ error: errorMsg });
       return;
     }
     res.json(JSON.parse(data));
   });
+}
+
+// Get all traits
+app.get('/api/traits', (req, res) => {
+  readVersionedData(req.query.version, 'traits.json', res, 'Could not read traits data.');
 });
 
 // Get all ethics
 app.get('/api/ethics', (req, res) => {
-  fs.readFile('./data/ethics.json', 'utf8', (err, data) => {
-    if (err) {
-      res.status(500).json({ error: "Could not read ethics data." });
-      return;
-    }
-    res.json(JSON.parse(data));
-  });
+  readVersionedData(req.query.version, 'ethics.json', res, 'Could not read ethics data.');
 });
 
 // Get all civics
 app.get('/api/civics', (req, res) => {
-  fs.readFile('./data/civics.json', 'utf8', (err, data) => {
-    if (err) {
-      res.status(500).json({ error: "Could not read civics data." });
-      return;
-    }
-    res.json(JSON.parse(data));
-  });
+  readVersionedData(req.query.version, 'civics.json', res, 'Could not read civics data.');
 });
 
 // Get all origins
 app.get('/api/origins', (req, res) => {
-  fs.readFile('./data/origins.json', 'utf8', (err, data) => {
-    if (err) {
-      res.status(500).json({ error: "Could not read origins data." });
-      return;
-    }
-    res.json(JSON.parse(data));
-  });
+  readVersionedData(req.query.version, 'origins.json', res, 'Could not read origins data.');
 });
 
 // Get all traditions
 app.get('/api/traditions', (req, res) => {
-  fs.readFile('./data/traditions.json', 'utf8', (err, data) => {
-    if (err) {
-      res.status(500).json({ error: "Could not read traditions data." });
-      return;
-    }
-    res.json(JSON.parse(data));
-  });
+  readVersionedData(req.query.version, 'traditions.json', res, 'Could not read traditions data.');
 });
 
 // Get all authorities
 app.get('/api/authorities', (req, res) => {
-  fs.readFile('./data/authorities.json', 'utf8', (err, data) => {
-    if (err) {
-      res.status(500).json({ error: "Could not read authorities data." });
-      return;
-    }
-    res.json(JSON.parse(data));
-  });
+  readVersionedData(req.query.version, 'authorities.json', res, 'Could not read authorities data.');
 });
 
 // Get all ascension perks
 app.get('/api/ascension-perks', (req, res) => {
-  fs.readFile('./data/ascension_perks.json', 'utf8', (err, data) => {
-    if (err) {
-      res.status(500).json({ error: "Could not read ascension perks data." });
-      return;
-    }
-    res.json(JSON.parse(data));
-  });
+  readVersionedData(req.query.version, 'ascension_perks.json', res, 'Could not read ascension perks data.');
 });
 
 // Get all ruler traits
 app.get('/api/ruler-traits', (req, res) => {
-  fs.readFile('./data/ruler_traits.json', 'utf8', (err, data) => {
-    if (err) {
-      res.status(500).json({ error: "Could not read ruler traits data." });
-      return;
-    }
-    res.json(JSON.parse(data));
-  });
+  readVersionedData(req.query.version, 'ruler_traits.json', res, 'Could not read ruler traits data.');
 });
 
 // Get all species classes with their portraits
 app.get('/api/species-classes', (req, res) => {
-  fs.readFile('./data/species_classes.json', 'utf8', (err, data) => {
-    if (err) {
-      res.status(500).json({ error: "Could not read species classes data." });
-      return;
-    }
-    res.json(JSON.parse(data));
-  });
+  readVersionedData(req.query.version, 'species_classes.json', res, 'Could not read species classes data.');
 });
 
 // Get all community resources (guides, tools, videos, etc.)
@@ -1167,13 +1145,14 @@ app.get('/api/stats', async (req, res) => {
   try {
     const stats = {};
 
-    // Load game data for name mapping
-    const civicsData = require('./data/civics.json');
-    const ethicsData = require('./data/ethics.json');
-    const originsData = require('./data/origins.json');
-    const authoritiesData = require('./data/authorities.json');
-    const perksDataRaw = require('./data/ascension_perks.json');
-    const traditionsData = require('./data/traditions.json');
+    // Load game data for name mapping (always use latest version for stats)
+    const latestVersionPath = path.join(__dirname, 'data', 'versions', LATEST_DATA_VERSION);
+    const civicsData = JSON.parse(fs.readFileSync(path.join(latestVersionPath, 'civics.json'), 'utf8'));
+    const ethicsData = JSON.parse(fs.readFileSync(path.join(latestVersionPath, 'ethics.json'), 'utf8'));
+    const originsData = JSON.parse(fs.readFileSync(path.join(latestVersionPath, 'origins.json'), 'utf8'));
+    const authoritiesData = JSON.parse(fs.readFileSync(path.join(latestVersionPath, 'authorities.json'), 'utf8'));
+    const perksDataRaw = JSON.parse(fs.readFileSync(path.join(latestVersionPath, 'ascension_perks.json'), 'utf8'));
+    const traditionsData = JSON.parse(fs.readFileSync(path.join(latestVersionPath, 'traditions.json'), 'utf8'));
 
     // Extract perks array from object structure
     const perksData = Array.isArray(perksDataRaw) ? perksDataRaw : (perksDataRaw.all || []);
