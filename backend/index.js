@@ -637,14 +637,15 @@ app.get('/api/builds/:id', (req, res) => {
     }
 
     // Parse CSV fields into arrays for frontend (needed for edit form)
+    const splitTrim = (str) => str ? str.split(',').map(s => s.trim()).filter(Boolean) : [];
     const build = {
       ...row,
-      traits: row.traits ? row.traits.split(',').filter(Boolean) : [],
-      secondary_traits: row.secondary_traits ? row.secondary_traits.split(',').filter(Boolean) : [],
-      ethics: row.ethics ? row.ethics.split(',').filter(Boolean) : [],
-      civics: row.civics ? row.civics.split(',').filter(Boolean) : [],
-      ascension_perks: row.ascension_perks ? row.ascension_perks.split(',').filter(Boolean) : [],
-      traditions: row.traditions ? row.traditions.split(',').filter(Boolean) : [],
+      traits: splitTrim(row.traits),
+      secondary_traits: splitTrim(row.secondary_traits),
+      ethics: splitTrim(row.ethics),
+      civics: splitTrim(row.civics),
+      ascension_perks: splitTrim(row.ascension_perks),
+      traditions: splitTrim(row.traditions),
     };
 
     res.json({ build });

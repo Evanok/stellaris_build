@@ -291,8 +291,9 @@ export const BuildDetail: React.FC = () => {
     }
   };
 
-  const parseList = (str: string | null | undefined): string[] => {
+  const parseList = (str: string | string[] | null | undefined): string[] => {
     if (!str) return [];
+    if (Array.isArray(str)) return str.map(s => s.trim()).filter(s => s);
     return str.split(',').map(s => s.trim()).filter(s => s);
   };
 
@@ -631,7 +632,7 @@ export const BuildDetail: React.FC = () => {
           )}
 
           {/* Secondary Species Traits */}
-          {build.secondary_traits && build.secondary_traits.trim() !== '' && (
+          {build.secondary_traits && (Array.isArray(build.secondary_traits) ? build.secondary_traits.length > 0 : build.secondary_traits.trim() !== '') && (
             <div className="card bg-dark border-secondary mb-4">
               <div className="card-header bg-secondary">
                 <h4 className="mb-0 text-white">
