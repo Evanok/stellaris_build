@@ -233,7 +233,8 @@ const MAX_CIVIC_SLOTS = 3;
 
 // Stellaris game versions
 const GAME_VERSIONS = [
-  { value: '4.2', label: '4.2 "Corvus" (Latest)' },
+  { value: '4.3', label: '4.3 "Cetus" (Latest)' },
+  { value: '4.2', label: '4.2 "Corvus"' },
   { value: '4.1', label: '4.1 "Lyra"' },
   { value: '4.0', label: '4.0 "Phoenix"' },
   { value: '3.14', label: '3.14 "Circinus"' },
@@ -254,7 +255,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   // Form fields state
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [game_version, setGameVersion] = useState('4.2');
+  const [game_version, setGameVersion] = useState('4.3');
   const [youtube_url, setYoutubeUrl] = useState('');
   const [source_url, setSourceUrl] = useState('');
   const [difficulty, setDifficulty] = useState<string>('');
@@ -315,9 +316,16 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const { user, refreshUser } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
 
+  // Track whether the user manually changed the version (vs initial load or initialData population)
+  const userChangedVersion = useRef(false);
+
   useEffect(() => {
+    const qs = `?version=${encodeURIComponent(game_version)}`;
+    const isUserChange = userChangedVersion.current;
+    userChangedVersion.current = false;
+
     // Load traits
-    fetch('/api/traits')
+    fetch(`/api/traits${qs}`)
       .then(res => res.json())
       .then(data => {
         // Filter and sanitize traits to prevent rendering errors
@@ -336,193 +344,99 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
           .sort((a: any, b: any) => b.cost - a.cost);
 
         setAllTraits(sanitizedTraits);
+        if (isUserChange) {
+          const validTraitIds = new Set(sanitizedTraits.map((t: any) => t.id));
+          setSelectedTraits(prev => prev.filter((id: string) => validTraitIds.has(id)));
+          setSelectedSecondaryTraits(prev => prev.filter((id: string) => validTraitIds.has(id)));
+        }
       })
       .catch(() => setError('Could not load traits data.'));
 
-    // Load origins
-    fetch('/api/origins')
-      .then(res => res.json())
-      .then(data => {
-        // Extract origins array from response
-        const originsArray = Array.isArray(data) ? data : (data.origins || []);
+    // Load all version-specific game data in parallel so we can do cleanup after
+    Promise.all([
+      fetch(`/api/origins${qs}`).then(res => res.json()),
+      fetch(`/api/ascension-perks${qs}`).then(res => res.json()),
+      fetch(`/api/ethics${qs}`).then(res => res.json()),
+      fetch(`/api/authorities${qs}`).then(res => res.json()),
+      fetch(`/api/civics${qs}`).then(res => res.json()),
+      fetch(`/api/traditions${qs}`).then(res => res.json()),
+      fetch(`/api/ruler-traits${qs}`).then(res => res.json()),
+      fetch(`/api/species-classes${qs}`).then(res => res.json()),
+    ]).then(([originsRaw, perksRaw, ethicsRaw, authoritiesRaw, civicsRaw, traditionsRaw, rulerTraitsRaw, classesRaw]) => {
+      const originsArray = Array.isArray(originsRaw) ? originsRaw : (originsRaw.origins || []);
+      const sanitizedOrigins = originsArray
+        .filter((o: any) => o.pickable_at_start && o.is_origin)
+        .map((o: any) => ({ ...o, effects: typeof o.effects === 'string' ? o.effects : '', description: typeof o.description === 'string' ? o.description : '' }))
+        .sort((a: any, b: any) => a.id.localeCompare(b.id));
+      setAllOrigins(sanitizedOrigins);
 
-        // Filter and sanitize origins
-        const sanitizedOrigins = originsArray
-          .filter((origin: any) => origin.pickable_at_start && origin.is_origin)
-          .map((origin: any) => ({
-            ...origin,
-            effects: typeof origin.effects === 'string' ? origin.effects : '',
-            description: typeof origin.description === 'string' ? origin.description : '',
-          }))
-          .sort((a: any, b: any) => a.id.localeCompare(b.id));
+      const perksArray = Array.isArray(perksRaw) ? perksRaw : (perksRaw.all || []);
+      const sanitizedPerks = perksArray
+        .filter((p: any) => p.type === 'ascension_perk' && p.name !== p.id)
+        .map((p: any) => ({ ...p, effects: typeof p.effects === 'string' ? p.effects : '', description: typeof p.description === 'string' ? p.description : '' }))
+        .sort((a: any, b: any) => a.id.localeCompare(b.id));
+      const seenNames = new Set<string>();
+      const uniquePerks = sanitizedPerks.filter((p: any) => { if (seenNames.has(p.name)) return false; seenNames.add(p.name); return true; });
+      setAllAscensionPerks(uniquePerks);
 
-        setAllOrigins(sanitizedOrigins);
-      })
-      .catch(() => setError('Could not load origins data.'));
+      const sanitizedEthics = ethicsRaw
+        .map((e: any) => ({ ...e, effects: typeof e.effects === 'string' ? e.effects : '', description: typeof e.description === 'string' ? e.description : '', tags: Array.isArray(e.tags) ? e.tags : [], cost: typeof e.cost === 'number' ? e.cost : 1 }))
+        .sort((a: any, b: any) => b.cost !== a.cost ? b.cost - a.cost : a.id.localeCompare(b.id));
+      setAllEthics(sanitizedEthics);
 
-    // Load ascension perks
-    fetch('/api/ascension-perks')
-      .then(res => res.json())
-      .then(data => {
-        // Get the 'all' array from the data
-        const perksArray = Array.isArray(data) ? data : (data.all || []);
+      const sanitizedAuthorities = authoritiesRaw
+        .map((a: any) => ({ ...a, description: typeof a.description === 'string' ? a.description : '', effects: typeof a.effects === 'string' ? a.effects : '', tags: Array.isArray(a.tags) ? a.tags : [], required_ethics: Array.isArray(a.required_ethics) ? a.required_ethics : [], blocked_ethics: Array.isArray(a.blocked_ethics) ? a.blocked_ethics : [] }))
+        .sort((a: any, b: any) => a.id.localeCompare(b.id));
+      setAllAuthorities(sanitizedAuthorities);
 
-        // Filter and sanitize ascension perks
-        const sanitizedPerks = perksArray
-          .filter((perk: any) => perk.type === 'ascension_perk')
-          // Filter out perks with non-localized names (name === id)
-          // These are usually deprecated or incomplete perks without proper localization
-          .filter((perk: any) => perk.name !== perk.id)
-          .map((perk: any) => ({
-            ...perk,
-            effects: typeof perk.effects === 'string' ? perk.effects : '',
-            description: typeof perk.description === 'string' ? perk.description : '',
-          }))
-          .sort((a: any, b: any) => a.id.localeCompare(b.id));
+      const civicsArray = Array.isArray(civicsRaw) ? civicsRaw : (civicsRaw.civics || []);
+      const sanitizedCivics = civicsArray
+        .filter((c: any) => c.pickable_at_start && !c.is_origin)
+        .map((c: any) => ({ ...c, description: typeof c.description === 'string' ? c.description : '', effects: typeof c.effects === 'string' ? c.effects : '', potential: Array.isArray(c.potential) ? c.potential : [], possible: Array.isArray(c.possible) ? c.possible : [] }))
+        .sort((a: any, b: any) => a.id.localeCompare(b.id));
+      setAllCivics(sanitizedCivics);
 
-        // Remove duplicate names (e.g., 3 Galactic Wonders variants - keep only first)
-        const seenNames = new Set<string>();
-        const uniquePerks = sanitizedPerks.filter((perk: any) => {
-          if (seenNames.has(perk.name)) {
-            return false;
-          }
-          seenNames.add(perk.name);
-          return true;
-        });
-
-        setAllAscensionPerks(uniquePerks);
-      })
-      .catch(() => setError('Could not load ascension perks data.'));
-
-    // Load ethics
-    fetch('/api/ethics')
-      .then(res => res.json())
-      .then(data => {
-        // Filter and sanitize ethics
-        const sanitizedEthics = data
-          .map((ethic: any) => ({
-            ...ethic,
-            effects: typeof ethic.effects === 'string' ? ethic.effects : '',
-            description: typeof ethic.description === 'string' ? ethic.description : '',
-            tags: Array.isArray(ethic.tags) ? ethic.tags : [],
-            cost: typeof ethic.cost === 'number' ? ethic.cost : 1,
-          }))
-          .sort((a: any, b: any) => {
-            // Sort by cost (descending) then by id
-            if (b.cost !== a.cost) return b.cost - a.cost;
-            return a.id.localeCompare(b.id);
-          });
-
-        setAllEthics(sanitizedEthics);
-      })
-      .catch(() => setError('Could not load ethics data.'));
-
-    // Load authorities
-    fetch('/api/authorities')
-      .then(res => res.json())
-      .then(data => {
-        // Filter and sanitize authorities
-        const sanitizedAuthorities = data
-          .map((auth: any) => ({
-            ...auth,
-            description: typeof auth.description === 'string' ? auth.description : '',
-            effects: typeof auth.effects === 'string' ? auth.effects : '',
-            tags: Array.isArray(auth.tags) ? auth.tags : [],
-            required_ethics: Array.isArray(auth.required_ethics) ? auth.required_ethics : [],
-            blocked_ethics: Array.isArray(auth.blocked_ethics) ? auth.blocked_ethics : [],
-          }))
-          .sort((a: any, b: any) => a.id.localeCompare(b.id));
-
-        setAllAuthorities(sanitizedAuthorities);
-      })
-      .catch(() => setError('Could not load authorities data.'));
-
-    // Load civics
-    fetch('/api/civics')
-      .then(res => res.json())
-      .then(data => {
-        // Extract civics array from response
-        const civicsArray = Array.isArray(data) ? data : (data.civics || []);
-
-        // Filter and sanitize civics
-        const sanitizedCivics = civicsArray
-          .filter((civic: any) => civic.pickable_at_start && !civic.is_origin)
-          .map((civic: any) => ({
-            ...civic,
-            description: typeof civic.description === 'string' ? civic.description : '',
-            effects: typeof civic.effects === 'string' ? civic.effects : '',
-            potential: Array.isArray(civic.potential) ? civic.potential : [],
-            possible: Array.isArray(civic.possible) ? civic.possible : [],
-          }))
-          .sort((a: any, b: any) => a.id.localeCompare(b.id));
-
-        setAllCivics(sanitizedCivics);
-      })
-      .catch(() => setError('Could not load civics data.'));
-
-    // Load traditions
-    fetch('/api/traditions')
-      .then(res => res.json())
-      .then(data => {
-        // Extract tradition trees - only include trees with valid adopt data
-        const trees: TraditionTree[] = [];
-        for (const key in data) {
-          // Only include trees that have an adopt field (skip duplicates without adopt)
-          if (data[key].adopt && data[key].adopt.name) {
-            trees.push({
-              name: key,
-              adopt: data[key].adopt,
-              finish: data[key].finish,
-              traditions: data[key].traditions || []
-            });
-          }
+      const trees: TraditionTree[] = [];
+      for (const key in traditionsRaw) {
+        if (traditionsRaw[key].adopt && traditionsRaw[key].adopt.name) {
+          trees.push({ name: key, adopt: traditionsRaw[key].adopt, finish: traditionsRaw[key].finish, traditions: traditionsRaw[key].traditions || [] });
         }
+      }
+      trees.sort((a, b) => (a.adopt?.name || a.name).localeCompare(b.adopt?.name || b.name));
+      setAllTraditionTrees(trees);
 
-        // Sort alphabetically by adopt name
-        trees.sort((a, b) => {
-          const nameA = a.adopt?.name || a.name;
-          const nameB = b.adopt?.name || b.name;
-          return nameA.localeCompare(nameB);
-        });
-        setAllTraditionTrees(trees);
-      })
-      .catch(() => setError('Could not load traditions data.'));
+      const sanitizedRulerTraits = rulerTraitsRaw
+        .map((t: any) => ({ ...t, effects: typeof t.effects === 'string' ? t.effects : '', description: typeof t.description === 'string' ? t.description : '', leader_class: Array.isArray(t.leader_class) ? t.leader_class : [], forbidden_origins: Array.isArray(t.forbidden_origins) ? t.forbidden_origins : [], allowed_ethics: Array.isArray(t.allowed_ethics) ? t.allowed_ethics : [] }))
+        .sort((a: any, b: any) => a.id.localeCompare(b.id));
+      setAllRulerTraits(sanitizedRulerTraits);
 
-    // Load ruler traits
-    fetch('/api/ruler-traits')
-      .then(res => res.json())
-      .then(data => {
-        // Filter and sanitize ruler traits
-        const sanitizedTraits = data
-          .map((trait: any) => ({
-            ...trait,
-            effects: typeof trait.effects === 'string' ? trait.effects : '',
-            description: typeof trait.description === 'string' ? trait.description : '',
-            leader_class: Array.isArray(trait.leader_class) ? trait.leader_class : [],
-            forbidden_origins: Array.isArray(trait.forbidden_origins) ? trait.forbidden_origins : [],
-            allowed_ethics: Array.isArray(trait.allowed_ethics) ? trait.allowed_ethics : [],
-          }))
-          .sort((a: any, b: any) => a.id.localeCompare(b.id));
+      const sanitizedClasses = classesRaw
+        .map((sc: any) => ({ ...sc, portraits: Array.isArray(sc.portraits) ? sc.portraits : [] }))
+        .sort((a: any, b: any) => a.name.localeCompare(b.name));
+      setAllSpeciesClasses(sanitizedClasses);
 
-        setAllRulerTraits(sanitizedTraits);
-      })
-      .catch(() => setError('Could not load ruler traits data.'));
+      // If the user manually changed the version, deselect items that no longer exist
+      if (isUserChange) {
+        const validOriginIds = new Set(sanitizedOrigins.map((o: any) => o.id));
+        const validPerkIds = new Set(uniquePerks.map((p: any) => p.id));
+        const validEthicIds = new Set(sanitizedEthics.map((e: any) => e.id));
+        const validAuthorityIds = new Set(sanitizedAuthorities.map((a: any) => a.id));
+        const validCivicIds = new Set(sanitizedCivics.map((c: any) => c.id));
+        const validTreeNames = new Set(trees.map((t: any) => t.name));
+        const validRulerTraitIds = new Set(sanitizedRulerTraits.map((t: any) => t.id));
 
-    // Load species classes
-    fetch('/api/species-classes')
-      .then(res => res.json())
-      .then(data => {
-        const sanitizedClasses = data
-          .map((sc: any) => ({
-            ...sc,
-            portraits: Array.isArray(sc.portraits) ? sc.portraits : [],
-          }))
-          .sort((a: any, b: any) => a.name.localeCompare(b.name));
+        setSelectedOrigin(prev => (prev && validOriginIds.has(prev) ? prev : ''));
+        setSelectedEthics(prev => prev.filter((id: string) => validEthicIds.has(id)));
+        setSelectedAuthority(prev => (prev && validAuthorityIds.has(prev) ? prev : ''));
+        setSelectedCivics(prev => prev.filter((id: string) => validCivicIds.has(id)));
+        setSelectedAscensionPerks(prev => prev.filter((id: string) => validPerkIds.has(id)));
+        setSelectedTraditions(prev => prev.filter((id: string) => validTreeNames.has(id)));
+        setSelectedRulerTrait(prev => (prev && validRulerTraitIds.has(prev) ? prev : ''));
+      }
+    }).catch(() => setError('Could not load game data.'));
 
-        setAllSpeciesClasses(sanitizedClasses);
-      })
-      .catch(() => setError('Could not load species classes data.'));
-  }, []);
+    // Load species traits separately (same version param applied above in the traits fetch)
+  }, [game_version]);
 
   // Populate form with initialData (from imports)
   useEffect(() => {
@@ -1002,7 +916,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         const formData = JSON.parse(savedData);
         setName(formData.name || '');
         setDescription(formData.description || '');
-        setGameVersion(formData.game_version || '4.2');
+        setGameVersion(formData.game_version || '4.3');
         setYoutubeUrl(formData.youtube_url || '');
         setSourceUrl(formData.source_url || '');
         setDifficulty(formData.difficulty || '');
@@ -1126,7 +1040,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       // Reset form
       setName('');
       setDescription('');
-      setGameVersion('4.2'); // Reset to latest version
+      setGameVersion('4.3'); // Reset to latest version
       setYoutubeUrl('');
       setSourceUrl('');
       setDifficulty('');
@@ -1222,7 +1136,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
               className="form-select bg-secondary text-white border-secondary"
               id="gameVersion"
               value={game_version}
-              onChange={(e) => setGameVersion(e.target.value)}
+              onChange={(e) => { userChangedVersion.current = true; setGameVersion(e.target.value); }}
             >
               {GAME_VERSIONS.map(version => (
                 <option key={version.value} value={version.value}>

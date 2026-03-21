@@ -1,0 +1,227 @@
+[
+  {
+    "id": "leader_trait_principled",
+    "name": "Principled",
+    "description": "This leader has a strict code and follows our empire's morals, setting a good example for others.",
+    "cost": 1,
+    "starting_ruler_trait": true,
+    "leader_class": [
+      "official"
+    ],
+    "effects": "planet_stability_add: +2",
+    "councilor_modifier": {
+      "planet_stability_add": 2
+    },
+    "forbidden_origins": [
+      "origin_legendary_leader",
+      "origin_treasure_hunters"
+    ],
+    "allowed_ethics": [],
+    "opposites": []
+  },
+  {
+    "id": "leader_trait_fleet_organizer",
+    "name": "Fleet Organizer",
+    "description": "This leader is an expert at organization, having the necessary micromanagement skills to command very large starship formations.",
+    "cost": 1,
+    "starting_ruler_trait": true,
+    "leader_class": [
+      "commander"
+    ],
+    "effects": "country_naval_cap_mult: +5.0%",
+    "councilor_modifier": {
+      "country_naval_cap_mult": 0.05
+    },
+    "forbidden_origins": [
+      "origin_legendary_leader",
+      "origin_treasure_hunters"
+    ],
+    "allowed_ethics": [],
+    "opposites": [
+      "leader_trait_nervous",
+      "leader_trait_nervous_2"
+    ]
+  },
+  {
+    "id": "leader_trait_spycraft",
+    "name": "Spycraft",
+    "description": "Some commanders prefer to use more subtle methods by employing spies and informants rather than brute strength.",
+    "cost": 1,
+    "starting_ruler_trait": true,
+    "leader_class": [
+      "official"
+    ],
+    "effects": "spy_network_daily_value_mult: +15.0%; operations_cost_mult: -5.0%",
+    "councilor_modifier": {
+      "spy_network_daily_value_mult": 0.15,
+      "operations_cost_mult": -0.05
+    },
+    "forbidden_origins": [
+      "origin_legendary_leader",
+      "origin_treasure_hunters"
+    ],
+    "allowed_ethics": [],
+    "opposites": []
+  },
+  {
+    "id": "leader_trait_spark_of_genius",
+    "name": "Spark of Genius",
+    "description": "This leader is prone to sudden bursts of inspiration.",
+    "cost": 1,
+    "starting_ruler_trait": true,
+    "leader_class": [
+      "scientist"
+    ],
+    "effects": "all_technology_research_speed: +3.0%",
+    "councilor_modifier": {
+      "all_technology_research_speed": 0.03
+    },
+    "forbidden_origins": [
+      "origin_legendary_leader",
+      "origin_treasure_hunters"
+    ],
+    "allowed_ethics": [],
+    "opposites": [
+      "leader_trait_paranoid",
+      "leader_trait_paranoid_2"
+    ]
+  },
+  {
+    "id": "trait_ruler_industrialist",
+    "name": "Mining Rush",
+    "description": "This leader has a firm focus on increasing mineral output.",
+    "cost": 1,
+    "starting_ruler_trait": true,
+    "leader_class": [
+      "official",
+      "scientist"
+    ],
+    "effects": "planet_jobs_minerals_produces_mult: +2.5%",
+    "councilor_modifier": {
+      "planet_jobs_minerals_produces_mult": 0.025
+    },
+    "forbidden_origins": [
+      "origin_legendary_leader",
+      "origin_treasure_hunters"
+    ],
+    "allowed_ethics": [],
+    "opposites": []
+  },
+  {
+    "id": "trait_ruler_warlike",
+    "name": "Warlike",
+    "description": "This leader does not shy away from conflict.",
+    "cost": 1,
+    "starting_ruler_trait": true,
+    "leader_class": [
+      "commander"
+    ],
+    "effects": "ship_weapon_damage: +0.05; army_damage_mult: +5.0%",
+    "councilor_modifier": {
+      "ship_weapon_damage": 0.05,
+      "army_damage_mult": 0.05
+    },
+    "forbidden_origins": [
+      "origin_legendary_leader",
+      "origin_treasure_hunters"
+    ],
+    "allowed_ethics": [],
+    "opposites": []
+  },
+  {
+    "id": "trait_ruler_charismatic",
+    "name": "Charismatic",
+    "description": "This leader is exceptionally charismatic, enforcing their will with ease.",
+    "cost": 1,
+    "starting_ruler_trait": true,
+    "leader_class": [
+      "scientist",
+      "official",
+      "commander"
+    ],
+    "effects": "edicts_upkeep_mult: -7.5%; country_edict_fund_add: +15",
+    "councilor_modifier": {
+      "edicts_upkeep_mult": -0.075,
+      "country_edict_fund_add": 15
+    },
+    "forbidden_origins": [
+      "origin_legendary_leader",
+      "origin_treasure_hunters"
+    ],
+    "allowed_ethics": [],
+    "opposites": []
+  },
+  {
+    "id": "trait_ruler_feedback_loop",
+    "name": "Feedback Loop",
+    "description": "Efficient feedback loops and action-reaction analysis make this unit far better at predicting outcomes.",
+    "cost": 1,
+    "starting_ruler_trait": true,
+    "leader_class": [
+      "scientist",
+      "official",
+      "commander"
+    ],
+    "effects": "planet_stability_add: +1; planet_amenities_no_happiness_add: +100",
+    "councilor_modifier": {
+      "planet_stability_add": 1,
+      "planet_amenities_no_happiness_add": 100
+    },
+    "forbidden_origins": [
+      "origin_legendary_leader",
+      "origin_treasure_hunters"
+    ],
+    "allowed_ethics": [
+      "ethic_gestalt_consciousness"
+    ],
+    "opposites": [
+      "leader_trait_tyrannical",
+      "leader_trait_tyrannical_2"
+    ]
+  },
+  {
+    "id": "trait_ruler_logistic_understanding",
+    "name": "Logistic Understanding",
+    "description": "This leader is well aware of the importance of properly-structured supply chains.",
+    "cost": 1,
+    "starting_ruler_trait": true,
+    "leader_class": [
+      "commander",
+      "scientist",
+      "official"
+    ],
+    "effects": "ship_orbit_upkeep_mult: -5.0%; armies_upkeep_mult: -10.0%",
+    "councilor_modifier": {
+      "ship_orbit_upkeep_mult": -0.05,
+      "armies_upkeep_mult": -0.1
+    },
+    "forbidden_origins": [
+      "origin_legendary_leader",
+      "origin_treasure_hunters"
+    ],
+    "allowed_ethics": [],
+    "opposites": []
+  },
+  {
+    "id": "trait_ruler_eye_for_talent",
+    "name": "Eye for Talent",
+    "description": "This leader is considered to be unusually perceptive, spotting talent where others see only eccentricity or incompetence.",
+    "cost": 1,
+    "starting_ruler_trait": true,
+    "leader_class": [
+      "scientist",
+      "official",
+      "commander"
+    ],
+    "effects": "species_leader_exp_gain: +0.05",
+    "councilor_modifier": {
+      "species_leader_exp_gain": 0.05
+    },
+    "forbidden_origins": [
+      "origin_legendary_leader",
+      "origin_treasure_hunters"
+    ],
+    "allowed_ethics": [],
+    "opposites": []
+  }
+]

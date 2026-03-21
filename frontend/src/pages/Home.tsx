@@ -7,6 +7,18 @@ import RatingStars from '../components/RatingStars';
 import { WhatsNewBanner, NewsItem } from '../components/WhatsNewBanner';
 import './Home.css';
 
+const VERSION_NAMES: Record<string, string> = {
+  '4.3': '4.3 (Cetus)',
+  '4.2': '4.2 (Corvus)',
+  '4.1': '4.1 (Lyra)',
+  '4.1+ (Shadows of the Shroud DLC)': '4.1 (Lyra)',
+  '4.14': '4.1 (Lyra)',
+  '4.0': '4.0 (Phoenix)',
+  '4.0+': '4.0 (Phoenix)',
+  '3.14': '3.14 (Circinus)',
+  '3.13': '3.13 (Vela)',
+};
+
 // Helper function to get difficulty badge styling
 const getDifficultyBadge = (difficulty: string | undefined) => {
   if (!difficulty) return null;
@@ -58,22 +70,23 @@ export const Home: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState<string>('');
+  const [versionFilter, setVersionFilter] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('newest');
   const buildsPerPage = 12;
 
   // What's New data
   const latestNews: NewsItem[] = [
     {
+      date: '20 Mar 2026',
+      title: 'Stellaris 4.3 "Cetus" Support',
+      description: 'Build data updated for game version 4.3 "Cetus". Builds now load the correct game data for their version, preserving older builds accuracy.',
+      type: 'update'
+    },
+    {
       date: '11 Jan 2026',
       title: 'Custom Display Names for OAuth Users',
       description: 'Google and Steam users can now set a custom display name that will appear on all their builds instead of their provider username.',
       type: 'feature'
-    },
-    {
-      date: '25 Nov 2025',
-      title: 'Infernals Species Pack DLC Support',
-      description: 'Full support for the Infernals DLC including new origins, civics, traits, and ascension perks from game version 4.2 "Corvus".',
-      type: 'update'
     }
   ];
 
@@ -108,7 +121,11 @@ export const Home: React.FC = () => {
       // Difficulty filter
       const matchesDifficulty = !difficultyFilter || build.difficulty === difficultyFilter;
 
-      return matchesSearch && matchesDifficulty;
+      // Version filter — compare normalized labels so "4.1", "4.14", "4.1+ (...)" all match "4.1 (Lyra)"
+      const matchesVersion = !versionFilter ||
+        (VERSION_NAMES[build.game_version] ?? build.game_version) === (VERSION_NAMES[versionFilter] ?? versionFilter);
+
+      return matchesSearch && matchesDifficulty && matchesVersion;
     })
     .sort((a, b) => {
       switch (sortBy) {
@@ -251,7 +268,7 @@ export const Home: React.FC = () => {
               }}
             />
           </div>
-          <div className="col-md-3 mb-3 mb-md-0">
+          <div className="col-md-2 mb-3 mb-md-0">
             <select
               className="form-select form-select-lg bg-secondary text-white border-secondary"
               value={difficultyFilter}
@@ -268,7 +285,33 @@ export const Home: React.FC = () => {
               <option value="extreme">Extreme Challenge</option>
             </select>
           </div>
-          <div className="col-md-3">
+          <div className="col-md-2 mb-3 mb-md-0">
+            <select
+              className="form-select form-select-lg bg-secondary text-white border-secondary"
+              value={versionFilter}
+              onChange={(e) => {
+                setVersionFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+            >
+              <option value="">All Versions</option>
+              {(() => {
+                const seen = new Set<string>();
+                return Array.from(new Set(builds.map(b => b.game_version).filter(v => v && v !== 'other')))
+                  .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))
+                  .filter(v => {
+                    const label = VERSION_NAMES[v] ?? v;
+                    if (seen.has(label)) return false;
+                    seen.add(label);
+                    return true;
+                  })
+                  .map(v => (
+                    <option key={v} value={v}>{VERSION_NAMES[v] ?? v}</option>
+                  ));
+              })()}
+            </select>
+          </div>
+          <div className="col-md-2">
             <select
               className="form-select form-select-lg bg-secondary text-white border-secondary"
               value={sortBy}
@@ -289,7 +332,7 @@ export const Home: React.FC = () => {
           <div className="col-12">
             <p className="text-muted">
               Showing {currentBuilds.length} of {filteredBuilds.length} builds
-              {(searchQuery || difficultyFilter) && ` (filtered from ${builds.length} total)`}
+              {(searchQuery || difficultyFilter || versionFilter) && ` (filtered from ${builds.length} total)`}
             </p>
           </div>
         </div>
@@ -408,7 +451,7 @@ export const Home: React.FC = () => {
                             )}
                           </div>
                           <div>
-                            <span className="badge bg-primary me-1">{build.game_version || 'Unknown'}</span>
+                            <span className="badge bg-primary me-1">{VERSION_NAMES[build.game_version] ?? build.game_version ?? 'Unknown'}</span>
                             {getDifficultyBadge(build.difficulty)}
                           </div>
                         </div>

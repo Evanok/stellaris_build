@@ -1,0 +1,6157 @@
+[
+  {
+    "id": "trait_syncretic_proles",
+    "name": "Serviles",
+    "description": "This species evolved alongside a second, more advanced civilization. Never particularly intelligent to begin with, selective breeding for physical prowess and docility has reduced them to servile proles.",
+    "cost": 1,
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_intelligent",
+      "trait_erudite",
+      "trait_natural_engineers",
+      "trait_natural_physicists",
+      "trait_natural_sociologists",
+      "trait_machine_unit",
+      "trait_talented",
+      "trait_quick_learners",
+      "trait_slow_learners",
+      "trait_enduring",
+      "trait_venerable",
+      "trait_fleeting",
+      "trait_fleeting_lithoid",
+      "trait_humanoid_jinxed",
+      "trait_decadent",
+      "trait_elevated_synapses",
+      "trait_gene_mentorship",
+      "trait_artificial_intelligence"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "happiness",
+      "production",
+      "blocks_leaders",
+      "special"
+    ],
+    "modifier": {
+      "pop_happiness": 0.1,
+      "worker_and_simple_drone_cat_bonus_workforce_mult": 0.1
+    },
+    "effects": "Incompatible with Trait: Machine  Cannot generate Leaders Cannot be employed in Elite or Specialist Jobs | pop_happiness: +0.1; worker_and_simple_drone_cat_bonus_workforce_mult: +10.0%",
+    "custom_tooltip": "TRAIT_SYNCRETIC_PROLES_EFFECT",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_aquatic",
+    "name": "Aquatic",
+    "description": "This species is perfectly adapted to living in the depths of the ocean. However, on dry land, it is like a fish out of water.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "production",
+      "habitability",
+      "drawbacks",
+      "special"
+    ],
+    "modifier": {
+      "pc_ocean_habitability": 0.2
+    },
+    "effects": "Housing Usage on Ocean worlds and Flooded Habitats: -10%  - Job Efficiency for Workers & Menial Drones on Ocean worlds: +10%  - Housing Usage on non-Wet worlds: +30%  - Habitability on non-Wet worlds: -20%  The Hydrocentric Ascension Perk amplifies this trait's effects. | pc_ocean_habitability: +0.2 | Triggered: is_ideal: False; pop_environment_tolerance: -0.2; is_ideal: False; pop_environment_tolerance: -0.1; pop_environment_tolerance: +0.2",
+    "custom_tooltip": "trait_aquatic_tooltip",
+    "slave_cost": {}
+  },
+  {
+    "id": "trait_robot_aquatic",
+    "name": "Waterproof",
+    "description": "Initially designed for exploring the ocean's depths, these machines face severe limitations when operating on dry land.  Requires Ocean World homeworld.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "MACHINE",
+      "ROBOT"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "production",
+      "drawbacks",
+      "special"
+    ],
+    "modifier": {
+      "pc_ocean_habitability": 0.2
+    },
+    "effects": "Housing Usage on Ocean worlds and Flooded Habitats: -10%  - Job Efficiency for Workers & Menial Drones on Ocean worlds: +10%  - Housing Usage on non-Wet worlds: +30%  - Habitability on non-Wet worlds: -20%  The Hydrocentric Ascension Perk amplifies this trait's effects. | pc_ocean_habitability: +0.2 | Triggered: is_ideal: False; pop_environment_tolerance: -0.2; is_ideal: False; pop_environment_tolerance: -0.1; pop_environment_tolerance: +0.2",
+    "custom_tooltip": "trait_robot_aquatic_tooltip",
+    "slave_cost": {}
+  },
+  {
+    "id": "trait_auto_mod_biological",
+    "name": "Vocational Genomics",
+    "description": "Advanced genetic strings feature epigenetic triggers that adapt to occupational demands, dynamically optimizing gene expression for the host's work environment.",
+    "cost": 3,
+    "category": "normal",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_wilderness"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "automod",
+      "positive"
+    ],
+    "modifier": {},
+    "effects": "Auto-Modding Traits automatically adjust to better suit the job that a Pop is currently working.  Vocational Genomics picks modifiers from the Biological Auto-Mod Trait List",
+    "custom_tooltip": "automodding_trait_biological_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_agrarian",
+    "name": "Agrarian",
+    "description": "This species has a deep connection to the land, and make expert farmers and gardeners.",
+    "cost": 2,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "food"
+    ],
+    "modifier": {
+      "farmer_jobs_bonus_workforce_mult": 0.15
+    },
+    "effects": "farmer_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_ingenious",
+    "name": "Ingenious",
+    "description": "Members of this species are good at 'thinking outside the box' and know how to maximize the efficiency of their infrastructure and power grids.",
+    "cost": 2,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "energy"
+    ],
+    "modifier": {
+      "technician_jobs_bonus_workforce_mult": 0.15
+    },
+    "effects": "technician_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_industrious",
+    "name": "Industrious",
+    "description": "Members of this species are known for their diligent and hard-working nature, always going above and beyond.",
+    "cost": 2,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "mineral"
+    ],
+    "modifier": {
+      "miner_jobs_bonus_workforce_mult": 0.15
+    },
+    "effects": "miner_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_intelligent",
+    "name": "Intelligent",
+    "description": "This species is highly intelligent, and enjoys faster technological progress.",
+    "cost": 2,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_nerve_stapled",
+      "trait_erudite",
+      "trait_enigmatic_intelligence_poor"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "research"
+    ],
+    "modifier": {
+      "researcher_jobs_bonus_workforce_mult": 0.1
+    },
+    "effects": "researcher_jobs_bonus_workforce_mult: +10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_thrifty",
+    "name": "Thrifty",
+    "description": "This species is instinctively economical and is always looking to make a good profit, whatever corners need cutting.",
+    "cost": 2,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_cyborg_scarcity_algorithms"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "trade"
+    ],
+    "modifier": {
+      "trader_jobs_bonus_workforce_mult": 0.25
+    },
+    "effects": "trader_jobs_bonus_workforce_mult: +25.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_natural_engineers",
+    "name": "Natural Engineers",
+    "description": "Members of this species have a natural inclination towards engineering and material sciences.",
+    "cost": 1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_natural_physicists",
+      "trait_natural_sociologists",
+      "trait_nerve_stapled"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "research"
+    ],
+    "modifier": {
+      "engineer_jobs_bonus_workforce_mult": 0.15
+    },
+    "effects": "engineer_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_natural_physicists",
+    "name": "Natural Physicists",
+    "description": "Members of this species have a natural inclination towards theoretical physics and astral phenomena.",
+    "cost": 1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_natural_engineers",
+      "trait_natural_sociologists",
+      "trait_nerve_stapled",
+      "trait_camouflage",
+      "trait_chromalogs"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "research"
+    ],
+    "modifier": {
+      "physicist_jobs_bonus_workforce_mult": 0.15
+    },
+    "effects": "physicist_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_natural_sociologists",
+    "name": "Natural Sociologists",
+    "description": "Members of this species have a natural inclination towards sociology and biological studies.",
+    "cost": 1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_natural_physicists",
+      "trait_natural_engineers",
+      "trait_nerve_stapled"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "research"
+    ],
+    "modifier": {
+      "biologist_jobs_bonus_workforce_mult": 0.15
+    },
+    "effects": "biologist_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_extremely_adaptive",
+    "name": "Extremely Adaptive",
+    "description": "This species is remarkably adept at adapting to any foreign environments.",
+    "cost": 4,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_nonadaptive",
+      "trait_adaptive",
+      "trait_robust",
+      "trait_adaptive_lithoid",
+      "trait_shelled"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "habitability"
+    ],
+    "modifier": {
+      "pop_environment_tolerance": 0.2
+    },
+    "effects": "pop_environment_tolerance: +0.2",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_adaptive",
+    "name": "Adaptive (Biological)",
+    "description": "This species is highly adaptive when it comes to foreign environments.",
+    "cost": 2,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_nonadaptive",
+      "trait_extremely_adaptive",
+      "trait_robust",
+      "trait_adaptive_lithoid",
+      "trait_shelled",
+      "trait_permeable_skin"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "habitability"
+    ],
+    "modifier": {
+      "pop_environment_tolerance": 0.1
+    },
+    "effects": "pop_environment_tolerance: +0.1",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_nonadaptive",
+    "name": "Nonadaptive",
+    "description": "This species does not adapt well to foreign environments.",
+    "cost": -2,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_adaptive",
+      "trait_extremely_adaptive",
+      "trait_robust",
+      "trait_adaptive_lithoid",
+      "trait_shelled",
+      "trait_permeable_skin",
+      "trait_genetic_memory"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "habitability"
+    ],
+    "modifier": {
+      "pop_environment_tolerance": -0.1
+    },
+    "effects": "pop_environment_tolerance: -0.1",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_rapid_breeders",
+    "name": "Rapid Breeders (Biological)",
+    "description": "This species reproduces at a very rapid rate, increasing population growth.",
+    "cost": 2,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_pyroclastic",
+      "trait_slow_breeders",
+      "trait_fertile",
+      "trait_rapid_breeders_lithoid",
+      "trait_plantoid_budding",
+      "trait_lithoid_budding",
+      "trait_vat_grown",
+      "trait_tiyanki",
+      "trait_humanoid_existential_iteroparity",
+      "trait_egg_laying"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_growth"
+    ],
+    "modifier": {
+      "logistic_growth_mult": 0.1
+    },
+    "effects": "logistic_growth_mult: +10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_slow_breeders",
+    "name": "Slow Breeders",
+    "description": "This species reproduces at a slow rate, lowering population growth.",
+    "cost": -2,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_pyroclastic",
+      "trait_rapid_breeders",
+      "trait_fertile",
+      "trait_rapid_breeders_lithoid",
+      "trait_plantoid_budding",
+      "trait_lithoid_budding",
+      "trait_vat_grown",
+      "trait_tiyanki",
+      "trait_humanoid_psychological_infertility",
+      "trait_humanoid_existential_iteroparity",
+      "trait_egg_laying",
+      "trait_nascent_stage"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "pop_growth"
+    ],
+    "modifier": {
+      "logistic_growth_mult": -0.1
+    },
+    "effects": "logistic_growth_mult: -10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -1000
+    }
+  },
+  {
+    "id": "trait_talented",
+    "name": "Talented",
+    "description": "Member of this species are born with a natural aptitude.",
+    "cost": 1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_nerve_stapled",
+      "trait_syncretic_proles"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "leader"
+    ],
+    "modifier": {
+      "negative_leader_traits_species": -1,
+      "leaders_upkeep_mult": -0.1
+    },
+    "effects": "negative_leader_traits_species: -1; leaders_upkeep_mult: -10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_quick_learners",
+    "name": "Quick Learners",
+    "description": "Members of this species are quick to learn from their experiences.",
+    "cost": 1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_slow_learners",
+      "trait_syncretic_proles"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "leader"
+    ],
+    "modifier": {
+      "species_leader_exp_gain": 0.1
+    },
+    "effects": "species_leader_exp_gain: +0.1",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_slow_learners",
+    "name": "Slow Learners",
+    "description": "Members of this species are slow to learn from their experiences.",
+    "cost": -1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_quick_learners",
+      "trait_enigmatic_intelligence",
+      "trait_syncretic_proles"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "leader"
+    ],
+    "modifier": {
+      "species_leader_exp_gain": -0.1
+    },
+    "effects": "species_leader_exp_gain: -0.1",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -250
+    }
+  },
+  {
+    "id": "trait_traditional",
+    "name": "Traditional",
+    "description": "Certain aspects of this species' cognition make it predisposed toward historical precedence and the value of collective unity.",
+    "cost": 1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_quarrelsome"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "unity"
+    ],
+    "modifier": {
+      "bureaucrat_jobs_bonus_workforce_mult": 0.1
+    },
+    "effects": "bureaucrat_jobs_bonus_workforce_mult: +10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_quarrelsome",
+    "name": "Quarrelsome (Biological)",
+    "description": "While not inherently distrustful, members of this species are often socially combative.",
+    "cost": -1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_traditional"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "pop_output",
+      "unity"
+    ],
+    "modifier": {
+      "bureaucrat_jobs_bonus_workforce_mult": -0.1
+    },
+    "effects": "bureaucrat_jobs_bonus_workforce_mult: -10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_docile",
+    "name": "Docile",
+    "description": "Members of this species are easy to manage and organize. They tend to be cooperative and amicable.",
+    "cost": 2,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_unruly"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "empire_size"
+    ],
+    "modifier": {
+      "species_empire_size_mult": -0.1
+    },
+    "effects": "species_empire_size_mult: -10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_unruly",
+    "name": "Unruly",
+    "description": "Unruly species are difficult to manage and organize. They do not like being told what to do, and are often quarrelsome or questioning.",
+    "cost": -2,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_docile"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "empire_size"
+    ],
+    "modifier": {
+      "species_empire_size_mult": 0.1
+    },
+    "effects": "species_empire_size_mult: +10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_very_strong",
+    "name": "Very Strong",
+    "description": "Members of this species possess a strength that almost defies the laws of physics.",
+    "cost": 3,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_weak",
+      "trait_strong",
+      "trait_hollow_bones"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "army"
+    ],
+    "modifier": {
+      "army_damage_mult": 0.4,
+      "worker_and_simple_drone_cat_bonus_workforce_mult": 0.05,
+      "soldier_jobs_bonus_workforce_mult": 0.15
+    },
+    "effects": "army_damage_mult: +40.0%; worker_and_simple_drone_cat_bonus_workforce_mult: +5.0%; soldier_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 2000
+    }
+  },
+  {
+    "id": "trait_strong",
+    "name": "Strong",
+    "description": "Members of this species possess great physical strength, making them formidable fighters on the ground.",
+    "cost": 1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_weak",
+      "trait_very_strong",
+      "trait_hollow_bones"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "army"
+    ],
+    "modifier": {
+      "army_damage_mult": 0.2,
+      "worker_and_simple_drone_cat_bonus_workforce_mult": 0.025,
+      "soldier_jobs_bonus_workforce_mult": 0.1
+    },
+    "effects": "army_damage_mult: +20.0%; worker_and_simple_drone_cat_bonus_workforce_mult: +2.5%; soldier_jobs_bonus_workforce_mult: +10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_weak",
+    "name": "Weak",
+    "description": "Members of this species are physically weaker than average, making them poor fighters on the ground.",
+    "cost": -1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_strong",
+      "trait_very_strong",
+      "trait_tankbound"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "pop_output",
+      "army"
+    ],
+    "modifier": {
+      "army_damage_mult": -0.2,
+      "worker_and_simple_drone_cat_bonus_workforce_mult": -0.025,
+      "soldier_jobs_bonus_workforce_mult": -0.1
+    },
+    "effects": "army_damage_mult: -20.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -2.5%; soldier_jobs_bonus_workforce_mult: -10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -1000
+    }
+  },
+  {
+    "id": "trait_nomadic",
+    "name": "Nomadic",
+    "description": "This species has a nomadic past, and its members often think nothing of relocating to another world.",
+    "cost": 1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_sedentary",
+      "trait_rooted",
+      "trait_wilderness"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "migration"
+    ],
+    "modifier": {
+      "pop_resettlement_cost_mult": -0.35
+    },
+    "effects": "pop_resettlement_cost_mult: -35.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_sedentary",
+    "name": "Sedentary",
+    "description": "This species has a sedentary past, and its members are reluctant to migrate away from where they grew up.",
+    "cost": -1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_nomadic",
+      "trait_rooted",
+      "trait_wilderness"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "migration"
+    ],
+    "modifier": {
+      "pop_resettlement_cost_mult": 0.35
+    },
+    "effects": "pop_resettlement_cost_mult: +35.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_communal",
+    "name": "Communal",
+    "description": "Members of this species are highly communal, and quite used to living in close proximity to others.",
+    "cost": 1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_solitary",
+      "trait_shelled",
+      "trait_spatial_mastery"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "housing"
+    ],
+    "modifier": {
+      "pop_housing_usage_mult": -0.1
+    },
+    "effects": "pop_housing_usage_mult: -10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_solitary",
+    "name": "Solitary",
+    "description": "Members of this species tend to be solitary and territorial, often becoming agitated in crowded conditions.",
+    "cost": -1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_communal"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "housing"
+    ],
+    "modifier": {
+      "pop_housing_usage_mult": 0.1
+    },
+    "effects": "pop_housing_usage_mult: +10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_charismatic",
+    "name": "Charismatic",
+    "description": "Members of this species have a special charisma, and are generally considered pleasant to be around.",
+    "cost": 2,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_repugnant"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "amenities"
+    ],
+    "modifier": {
+      "influential_jobs_bonus_workforce_mult": 0.2
+    },
+    "effects": "influential_jobs_bonus_workforce_mult: +20.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_repugnant",
+    "name": "Repugnant",
+    "description": "The physical appearance and customs of this species are considered offensive to most others, and few appreciate them as neighbors.",
+    "cost": -2,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_charismatic"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "pop_output",
+      "amenities"
+    ],
+    "modifier": {
+      "influential_jobs_bonus_workforce_mult": -0.2
+    },
+    "effects": "influential_jobs_bonus_workforce_mult: -20.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_conformists",
+    "name": "Conformists",
+    "description": "These people always seek consensus and are more likely to conform to the governing ethics.",
+    "cost": 2,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_deviants",
+      "trait_hive_mind",
+      "trait_machine_unit"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "ethic_attraction",
+      "individual"
+    ],
+    "modifier": {
+      "pop_government_ethic_attraction": 0.3
+    },
+    "effects": "pop_government_ethic_attraction: +0.3",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_deviants",
+    "name": "Deviants (Biological)",
+    "description": "These people are rebellious in nature and constantly try to challenge the status-quo.",
+    "cost": -1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_conformists",
+      "trait_hive_mind"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "ethic_attraction",
+      "individual"
+    ],
+    "modifier": {
+      "pop_government_ethic_attraction": -0.15
+    },
+    "effects": "pop_government_ethic_attraction: -0.15",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_venerable",
+    "name": "Venerable",
+    "description": "This species can grow to an age that commands dignity and respect.",
+    "cost": 4,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_enduring",
+      "trait_fleeting",
+      "trait_fleeting_lithoid",
+      "trait_syncretic_proles"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "leader"
+    ],
+    "modifier": {
+      "leader_lifespan_add": 80
+    },
+    "effects": "leader_lifespan_add: +80",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_enduring",
+    "name": "Enduring",
+    "description": "Lifespans in this species are unusually long.",
+    "cost": 1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_venerable",
+      "trait_fleeting",
+      "trait_fleeting_lithoid",
+      "trait_syncretic_proles"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "leader"
+    ],
+    "modifier": {
+      "leader_lifespan_add": 20
+    },
+    "effects": "leader_lifespan_add: +20",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_fleeting",
+    "name": "Fleeting (Biological)",
+    "description": "Time is fleeting for this species. What they lack in longevity, they have to make up in other ways.",
+    "cost": -1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_venerable",
+      "trait_enduring",
+      "trait_fleeting_lithoid",
+      "trait_syncretic_proles"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "leader"
+    ],
+    "modifier": {
+      "leader_lifespan_add": -10
+    },
+    "effects": "leader_lifespan_add: -10",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_fleeting_lithoid",
+    "name": "Fleeting (Lithoid)",
+    "description": "Time is fleeting for this species. What they lack in longevity, they have to make up in other ways.",
+    "cost": -1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_venerable",
+      "trait_enduring",
+      "trait_fleeting",
+      "trait_syncretic_proles"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "leader",
+      "lithoid",
+      "special"
+    ],
+    "modifier": {
+      "leader_lifespan_add": -25
+    },
+    "effects": "leader_lifespan_add: -25",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_decadent",
+    "name": "Decadent (Biological)",
+    "description": "This species believes that whenever there is hard work that needs doing, that work is always best done by somebody else.",
+    "cost": -1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_hive_mind",
+      "trait_syncretic_proles"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "happiness",
+      "individual"
+    ],
+    "modifier": {
+      "pop_cat_worker_happiness": -0.1,
+      "pop_cat_slave_happiness": -0.1
+    },
+    "effects": "pop_cat_worker_happiness: -0.1; pop_cat_slave_happiness: -0.1",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_resilient",
+    "name": "Resilient",
+    "description": "Members of this species are physiologically resilient, and will fight like enraged brood mothers to defend their worlds.",
+    "cost": 1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "army"
+    ],
+    "modifier": {
+      "army_defense_damage_mult": 0.5
+    },
+    "effects": "army_defense_damage_mult: +50.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_conservational",
+    "name": "Conservationist",
+    "description": "Members of this species believe that resources must be conserved and recycled.",
+    "cost": 1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_wasteful",
+      "trait_hive_mind"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "upkeep",
+      "consumer_goods",
+      "individual"
+    ],
+    "modifier": {
+      "planet_pops_consumer_goods_upkeep_mult": -0.1
+    },
+    "effects": "planet_pops_consumer_goods_upkeep_mult: -10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_wasteful",
+    "name": "Wasteful (Biological)",
+    "description": "Members of this species seemingly have no concept of frugality and are prone to useless consumption.",
+    "cost": -1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_conservational",
+      "trait_hive_mind"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "upkeep",
+      "consumer_goods",
+      "individual"
+    ],
+    "modifier": {
+      "planet_pops_consumer_goods_upkeep_mult": 0.1
+    },
+    "effects": "planet_pops_consumer_goods_upkeep_mult: +10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_bioadaptability",
+    "name": "Bioadaptability",
+    "description": "This species has been modified to be slightly more adaptive and can now better endure harsh climates.",
+    "cost": {
+      "base": 1,
+      "modifier": {
+        "mult": 0,
+        "exists": "owner",
+        "owner": {
+          "has_country_flag": "modification_green"
+        }
+      }
+    },
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "habitability",
+      "amenities",
+      "pop_growth",
+      "interesting",
+      "special"
+    ],
+    "modifier": {
+      "habitability_floor_add": 0.3,
+      "pop_amenities_usage_mult": -0.05,
+      "logistic_growth_mult": 0.05
+    },
+    "effects": "habitability_floor_add: +0.3; pop_amenities_usage_mult: -5.0%; logistic_growth_mult: +5.0%",
+    "custom_tooltip": ""
+  },
+  {
+    "id": "trait_social_pheromones",
+    "name": "Social Pheromones",
+    "description": "This species has been modified to be more social and accepting of crowded conditions.",
+    "cost": {
+      "base": 1,
+      "modifier": {
+        "mult": 0,
+        "exists": "owner",
+        "owner": {
+          "has_country_flag": "modification_red"
+        }
+      }
+    },
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "housing",
+      "amenities",
+      "pop_growth",
+      "interesting",
+      "special"
+    ],
+    "modifier": {
+      "pop_housing_usage_mult": -0.05,
+      "pop_amenities_usage_mult": -0.05,
+      "logistic_growth_mult": 0.05
+    },
+    "effects": "pop_housing_usage_mult: -5.0%; pop_amenities_usage_mult: -5.0%; logistic_growth_mult: +5.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 250
+    }
+  },
+  {
+    "id": "trait_limited_regeneration",
+    "name": "Limited Regeneration",
+    "description": "This species has been modified to heal faster, making them more dangerous in battle and somewhat longer-lived in general.",
+    "cost": {
+      "base": 1,
+      "modifier": {
+        "mult": 0,
+        "exists": "owner",
+        "owner": {
+          "has_country_flag": "modification_blue"
+        }
+      }
+    },
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "army",
+      "leader",
+      "amenities",
+      "pop_growth",
+      "interesting",
+      "special"
+    ],
+    "modifier": {
+      "army_damage_mult": 0.15,
+      "leader_lifespan_mult": 0.1,
+      "pop_amenities_usage_mult": -0.05,
+      "logistic_growth_mult": 0.05
+    },
+    "effects": "army_damage_mult: +15.0%; leader_lifespan_mult: +10.0%; pop_amenities_usage_mult: -5.0%; logistic_growth_mult: +5.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 250
+    }
+  },
+  {
+    "id": "trait_lithoid_scintillating",
+    "name": "Scintillating Skin",
+    "description": "The outermost layer of this species is studded with sparkling crystals and gemstones that occasionally flake off.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_lithoid_volatile_excretions",
+      "trait_lithoid_gaseous_byproducts",
+      "trait_drake_scaled"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "rare_resource",
+      "production",
+      "lithoid",
+      "species"
+    ],
+    "modifier": {},
+    "effects": "Every 100 Pops working as a slave or better produces 0.01 Rare Crystals per month.",
+    "custom_tooltip": "TRAIT_LITHOID_SCINTILLATING_EFFECT",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_lithoid_gaseous_byproducts",
+    "name": "Gaseous Byproducts",
+    "description": "The metabolic processes of this species cause regular venting of gases useful to industry.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_lithoid_volatile_excretions",
+      "trait_lithoid_scintillating",
+      "trait_drake_scaled"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "rare_resource",
+      "production",
+      "lithoid",
+      "species"
+    ],
+    "modifier": {},
+    "effects": "Every 100 Pops working as a slave or better produces 0.01 Exotic Gases per month.",
+    "custom_tooltip": "TRAIT_LITHOID_GASEOUS_BYPRODUCTS_EFFECT",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_lithoid_volatile_excretions",
+    "name": "Volatile Excretions",
+    "description": "The highly compressed spoor created by this species is unstable and contains an unbelievable amount of power.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_lithoid_gaseous_byproducts",
+      "trait_lithoid_scintillating",
+      "trait_drake_scaled"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "rare_resource",
+      "production",
+      "lithoid",
+      "species"
+    ],
+    "modifier": {},
+    "effects": "Every 100 Pops working as a slave or better produces 0.01 Volatile Motes per month.",
+    "custom_tooltip": "TRAIT_LITHOID_VOLATILE_EXCRETIONS_EFFECT",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_plantoid_phototrophic",
+    "name": "Phototrophic",
+    "description": "This species is sustained by a combination of both food and sunlight.",
+    "cost": 1,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_plantoid_radiotrophic",
+      "trait_voidling",
+      "trait_cave_dweller"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "plantoid",
+      "fungoid",
+      "upkeep",
+      "species"
+    ],
+    "modifier": {},
+    "effects": "Replaces 50% of Food (or equivalent) Upkeep with Energy Credits Upkeep",
+    "custom_tooltip": "TRAIT_PLANTOID_PHOTOTROPHIC_EFFECT",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_plantoid_radiotrophic",
+    "name": "Radiotrophic",
+    "description": "This species is sustained by a combination of both food and low-energy radiation, and as such can thrive on the most inhospitable of worlds.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_plantoid_phototrophic",
+      "trait_voidling"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "plantoid",
+      "fungoid",
+      "lithoid",
+      "infernal",
+      "upkeep",
+      "species"
+    ],
+    "modifier": {
+      "pc_nuked_habitability": 0.1
+    },
+    "effects": "Replaces 50% of Food (or equivalent) Upkeep with Energy Credits Upkeep  - This Energy Upkeep is removed for Pops living on Tomb Worlds.  - Pop Growth Speed on Tomb Worlds +10%  - Tomb World Habitability: +10% | pc_nuked_habitability: +0.1 | Triggered: pc_nuked_habitability: +0.05; logistic_growth_mult: +10.0%",
+    "custom_tooltip": "TRAIT_PLANTOID_RADIOTROPHIC_EFFECT",
+    "slave_cost": {
+      "energy": 1500
+    }
+  },
+  {
+    "id": "trait_plantoid_budding",
+    "name": "Budding",
+    "description": "This species is capable of reproduction by budding, in addition to the more usual fertilization of seeds or spores.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_pyroclastic",
+      "trait_slow_breeders",
+      "trait_rapid_breeders",
+      "trait_rapid_breeders_lithoid",
+      "trait_necrophage",
+      "trait_clone_soldier_infertile",
+      "trait_clone_soldier_infertile_full_potential",
+      "trait_lithoid_budding",
+      "trait_tiyanki",
+      "trait_egg_laying"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "plantoid",
+      "fungoid",
+      "pop_growth",
+      "species"
+    ],
+    "modifier": {},
+    "effects": "Every 100 Pops working as a slave or better produces 0.02 Monthly Organic Pop Growth.  This stacks with other sources of Monthly Organic Pop Growth such as Clone Vats or Spawning Drones. | Triggered: has_budding_trait: +True; divide_over_pop_groups: False",
+    "custom_tooltip": "TRAIT_PLANTOID_BUDDING_EFFECT",
+    "slave_cost": {
+      "energy": 2000
+    }
+  },
+  {
+    "id": "trait_invasive",
+    "name": "Invasive Species",
+    "description": "Rapid reproduction. High dispersal ability. Zero useful capabilities.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": true,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_agrarian",
+      "trait_ingenious",
+      "trait_industrious",
+      "trait_intelligent",
+      "trait_thrifty",
+      "trait_natural_engineers",
+      "trait_natural_physicists",
+      "trait_natural_sociologists",
+      "trait_extremely_adaptive",
+      "trait_adaptive",
+      "trait_rapid_breeders",
+      "trait_talented",
+      "trait_quick_learners",
+      "trait_traditional",
+      "trait_docile",
+      "trait_very_strong",
+      "trait_strong",
+      "trait_nomadic",
+      "trait_communal",
+      "trait_charismatic",
+      "trait_conformists",
+      "trait_venerable",
+      "trait_enduring",
+      "trait_resilient",
+      "trait_conservational",
+      "trait_noxious",
+      "trait_inorganic_breath",
+      "trait_humanoid_existential_iteroparity",
+      "trait_incubator",
+      "trait_delicious",
+      "trait_nerve_stapled",
+      "trait_fertile",
+      "trait_robust",
+      "trait_erudite",
+      "trait_vat_grown",
+      "trait_felsic",
+      "trait_natural_machinist",
+      "trait_drake_scaled",
+      "trait_voidling",
+      "trait_tiyanki",
+      "trait_exotic_metabolism",
+      "trait_egg_laying",
+      "trait_chromalogs",
+      "trait_camouflage",
+      "trait_shelled",
+      "trait_uncanny_intuition",
+      "trait_cranial_hypertrophy",
+      "trait_cranial_megatrophy",
+      "trait_shell_slag",
+      "trait_unbreakable_resolve"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "plantoid",
+      "fungoid",
+      "pop_growth",
+      "habitability",
+      "species"
+    ],
+    "modifier": {},
+    "effects": "Can only select negative or botanical traits   - Habitability: +5% for each negative trait selected  - Pop Growth Speed: +5% for each negative trait selected | Triggered: logistic_growth_mult: +5.0%; pop_environment_tolerance: +0.05",
+    "custom_tooltip": "TRAIT_INVASIVE_EFFECT",
+    "slave_cost": {}
+  },
+  {
+    "id": "trait_lithoid_budding",
+    "name": "Crystallization",
+    "description": "With crystalline growths, this species is capable of generating self replicating lattices of themselves, in addition to the more usual reproductive methods.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_pyroclastic",
+      "trait_slow_breeders",
+      "trait_rapid_breeders",
+      "trait_rapid_breeders_lithoid",
+      "trait_necrophage",
+      "trait_clone_soldier_infertile",
+      "trait_clone_soldier_infertile_full_potential",
+      "trait_incubator",
+      "trait_plantoid_budding",
+      "trait_tiyanki",
+      "trait_egg_laying"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "lithoid",
+      "pop_growth",
+      "species"
+    ],
+    "modifier": {},
+    "effects": "Every 100 Pops working as a slave or better produces 0.02 Monthly Organic Pop Growth.  This stacks with other sources of Monthly Organic Pop Growth such as Clone Vats or Spawning Drones. | Triggered: has_budding_trait: +True; divide_over_pop_groups: False; has_budding_trait: +True",
+    "custom_tooltip": "TRAIT_LITHOID_BUDDING_EFFECT",
+    "slave_cost": {
+      "energy": 2000
+    }
+  },
+  {
+    "id": "trait_humanoid_existential_iteroparity",
+    "name": "Existential Iteroparity",
+    "description": "This species grew up in hostile conditions where outbreeding your rivals was the key to survival.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_pyroclastic",
+      "trait_humanoid_psychological_infertility",
+      "trait_rapid_breeders",
+      "trait_fertile",
+      "trait_rapid_breeders_lithoid",
+      "trait_plantoid_budding",
+      "trait_lithoid_budding",
+      "trait_vat_grown",
+      "trait_tiyanki",
+      "trait_egg_laying"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_growth"
+    ],
+    "modifier": {},
+    "effects": "Pop Growth During War and Crisis: +20% | Triggered: is_at_war: +True; has_crisis: +True; logistic_growth_mult: +20.0%",
+    "custom_tooltip": "TRAIT_HUMANOID_EXISTENTIAL_ITEROPARITY_EFFECT",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_humanoid_psychological_infertility",
+    "name": "Psychological Infertility",
+    "description": "Members of this species are extremely sensitive to the rigors of conflict with the resulting stress taking over the more primal urges.",
+    "cost": -2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_humanoid_existential_iteroparity",
+      "trait_slow_breeders",
+      "trait_vat_grown",
+      "trait_necrophage",
+      "trait_nascent_stage"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "pop_growth"
+    ],
+    "modifier": {},
+    "effects": "Pop Growth During War and Crisis: -30% | Triggered: is_at_war: +True; has_crisis: +True; logistic_growth_mult: -30.0%",
+    "custom_tooltip": "TRAIT_HUMANOID_PSYCHOLOGICAL_INFERTILITY_EFFECT",
+    "slave_cost": {
+      "energy": -1000
+    }
+  },
+  {
+    "id": "trait_humanoid_jinxed",
+    "name": "Jinxed",
+    "description": "Leaders from this species seem clumsier and more prone to accidents or vices than average, as if cursed from birth.",
+    "cost": -1,
+    "category": "normal",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_talented",
+      "trait_syncretic_proles"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "leader"
+    ],
+    "modifier": {
+      "negative_leader_traits_species": 1
+    },
+    "effects": "Leader Maximum Negative Traits: +1 | negative_leader_traits_species: +1",
+    "custom_tooltip": "TRAIT_HUMANOID_JINXED_EFFECT",
+    "slave_cost": {
+      "energy": -500
+    }
+  },
+  {
+    "id": "trait_auto_mod_robotic",
+    "name": "Adaptive Frames",
+    "description": "This system dynamically reconfigures hardware to meet operational demands, optimizing performance for every designated task.",
+    "cost": {
+      "base": 3,
+      "modifier": {
+        "add": -1,
+        "has_origin": "origin_mechanists"
+      }
+    },
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "automod"
+    ],
+    "modifier": {},
+    "effects": "Auto-Modding Traits automatically adjust to better suit the job that a Pop is currently working.  Adaptive Frames picks modifiers from the Mechanical Auto-Mod Trait List",
+    "custom_tooltip": "automodding_trait_robotic_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_robot_power_drills",
+    "name": "Power Drills",
+    "description": "Outfit a robot with a battery of power drills, and everything looks like a mineral deposit.",
+    "cost": 2,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_output",
+      "mineral"
+    ],
+    "modifier": {
+      "miner_jobs_bonus_workforce_mult": 0.15
+    },
+    "effects": "miner_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_harvesters",
+    "name": "Harvesters",
+    "description": "A suite of tools, from nutrient solution diagnostics and on-site balancing to per-stalk micro-threshing, enables robotic workers to increase produce yields.",
+    "cost": 2,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_output",
+      "food"
+    ],
+    "modifier": {
+      "farmer_jobs_bonus_workforce_mult": 0.15
+    },
+    "effects": "farmer_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_superconductive",
+    "name": "Superconductive",
+    "description": "The use of superconductive materials in units has cut energy transmission losses to zero percent.",
+    "cost": 2,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_output",
+      "energy"
+    ],
+    "modifier": {
+      "technician_jobs_bonus_workforce_mult": 0.15
+    },
+    "effects": "technician_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_efficient_processors",
+    "name": "Efficient Processors",
+    "description": "These highly efficient processors increase the potential workload and endurance of all units.",
+    "cost": 3,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_output"
+    ],
+    "modifier": {
+      "pop_bonus_workforce_mult": 0.05
+    },
+    "effects": "pop_bonus_workforce_mult: +5.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_robot_logic_engines",
+    "name": "Logic Engines",
+    "description": "Efficiently navigating the increasingly complex frontiers of science requires new states, beyond the simple half-truths of ternary and quaternary logic.",
+    "cost": 2,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "positive",
+      "pop_output",
+      "research"
+    ],
+    "modifier": {
+      "researcher_jobs_bonus_workforce_mult": 0.1
+    },
+    "effects": "researcher_jobs_bonus_workforce_mult: +10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_loyalty_circuits",
+    "name": "Loyalty Circuits",
+    "description": "Loyalty as an ideal is a distinctly organic concept. Instead, imagine loyalty as a physiological need in even the remotest of terminals.",
+    "cost": 2,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "positive",
+      "happiness",
+      "individual"
+    ],
+    "modifier": {
+      "pop_happiness": 0.1
+    },
+    "effects": "pop_happiness: +0.1",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_robot_domestic_protocols",
+    "name": "Domestic Protocols",
+    "description": "Specialized equipment and behavior protocols for all conceivable domestic needs. Full functionality guaranteed.",
+    "cost": 2,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "positive",
+      "pop_output",
+      "amenities",
+      "individual"
+    ],
+    "modifier": {
+      "influential_jobs_bonus_workforce_mult": 0.2
+    },
+    "effects": "Can be employed in Servant Jobs if under AI Servitude | influential_jobs_bonus_workforce_mult: +20.0%",
+    "custom_tooltip": "TRAIT_DOMESTIC_PROTOCOLS_EFFECT",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_double_jointed",
+    "name": "Double-Jointed",
+    "description": "Collapsible labor units with flexible joints that enable them to fold neatly into stacks during transportation, then self-assemble on site.",
+    "cost": 1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_bulky"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "housing"
+    ],
+    "modifier": {
+      "pop_housing_usage_mult": -0.1
+    },
+    "effects": "pop_housing_usage_mult: -10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_bulky",
+    "name": "Bulky",
+    "description": "These highly advanced mega-machines were not designed to traverse the universe in a box.",
+    "cost": -1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_double_jointed"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "negative",
+      "housing"
+    ],
+    "modifier": {
+      "pop_housing_usage_mult": 0.1
+    },
+    "effects": "pop_housing_usage_mult: +10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -150
+    }
+  },
+  {
+    "id": "trait_robot_enhanced_memory",
+    "name": "Enhanced Memory",
+    "description": "All autonomous units are fitted with memory cells using a revolutionary new technique for magnetic induction, improving their performance significantly.",
+    "cost": 2,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "positive",
+      "leader"
+    ],
+    "modifier": {
+      "negative_leader_traits_species": -1,
+      "leaders_upkeep_mult": -0.25
+    },
+    "effects": "negative_leader_traits_species: -1; leaders_upkeep_mult: -25.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_emotion_emulators",
+    "name": "Emotion Emulators",
+    "description": "Complex social predictive models help autonomous units to not only emulate appropriate emotions but to elicit favorable responses from organics and synthetics alike.",
+    "cost": 1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_uncanny"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_output",
+      "amenities"
+    ],
+    "modifier": {
+      "influential_jobs_bonus_workforce_mult": 0.2
+    },
+    "effects": "influential_jobs_bonus_workforce_mult: +20.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_uncanny",
+    "name": "Uncanny",
+    "description": "These monstrous machines were created in the image of one of the most horrific species in the universe, and the resemblance is uncanny.",
+    "cost": -1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_emotion_emulators"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "negative",
+      "pop_output",
+      "amenities"
+    ],
+    "modifier": {
+      "influential_jobs_bonus_workforce_mult": -0.2
+    },
+    "effects": "influential_jobs_bonus_workforce_mult: -20.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -150
+    }
+  },
+  {
+    "id": "trait_robot_durable",
+    "name": "Durable",
+    "description": "Protected by exoskeletons of chrome-plated titanium, these heavy-duty machines were designed to excel under harsh conditions and require less maintenance.",
+    "cost": 1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_high_maintenance"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "upkeep"
+    ],
+    "modifier": {
+      "planet_pops_robotics_upkeep_mult": -0.1
+    },
+    "effects": "planet_pops_robotics_upkeep_mult: -10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_high_maintenance",
+    "name": "High Maintenance",
+    "description": "These machines were designed with a complete disregard for longevity and are prone to malfunction. They will require frequent maintenance.",
+    "cost": -1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_durable"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "negative",
+      "upkeep"
+    ],
+    "modifier": {
+      "planet_pops_robotics_upkeep_mult": 0.1
+    },
+    "effects": "planet_pops_robotics_upkeep_mult: +10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -150
+    }
+  },
+  {
+    "id": "trait_robot_learning_algorithms",
+    "name": "Learning Algorithms",
+    "description": "Sophisticated, self-learning algorithms that stimulate the rapid evolution of a unit's neural clusters.",
+    "cost": 1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_repurposed_hardware"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "positive",
+      "leader"
+    ],
+    "modifier": {
+      "species_leader_exp_gain": 0.1
+    },
+    "effects": "species_leader_exp_gain: +0.1",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_repurposed_hardware",
+    "name": "Repurposed Hardware",
+    "description": "Designed to meet the very specific needs of their creators, this line of machines were never intended to have the capacity for higher reasoning, and retrofitting will only get them so far.",
+    "cost": -1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_learning_algorithms"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "negative",
+      "leader"
+    ],
+    "modifier": {
+      "species_leader_exp_gain": -0.1
+    },
+    "effects": "species_leader_exp_gain: -0.1",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -250
+    }
+  },
+  {
+    "id": "trait_robot_mass_produced",
+    "name": "Mass-Produced",
+    "description": "Streamlined production cycles and modular designs allow for unit mass-production at an unprecedented rate.",
+    "cost": 1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_custom_made"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_growth"
+    ],
+    "modifier": {
+      "planet_pop_assembly_mult": 0.15
+    },
+    "effects": "planet_pop_assembly_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1500
+    }
+  },
+  {
+    "id": "trait_robot_custom_made",
+    "name": "Custom-Made",
+    "description": "Each new unit is crafted with unparalleled attention to detail. A marvel of engineering and art, but not very efficient.",
+    "cost": -1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_mass_produced"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "negative",
+      "pop_growth"
+    ],
+    "modifier": {
+      "planet_pop_assembly_mult": -0.15
+    },
+    "effects": "planet_pop_assembly_mult: -15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_robot_recycled",
+    "name": "Recycled",
+    "description": "Unit manufacturing has been optimized to be as cost-effective as possible, using recycled materials, and components inherited from previous generations.",
+    "cost": 2,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_luxurious"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "upkeep",
+      "pop_growth"
+    ],
+    "modifier": {
+      "roboticist_jobs_bonus_workforce_mult": 0.2
+    },
+    "effects": "roboticist_jobs_bonus_workforce_mult: +20.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1500
+    }
+  },
+  {
+    "id": "trait_robot_luxurious",
+    "name": "Luxurious",
+    "description": "Designed after the principle that you cannot put a price on quality, these first-rate units are costly, but shiny.",
+    "cost": -2,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_recycled"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "negative",
+      "pop_growth"
+    ],
+    "modifier": {
+      "roboticist_jobs_bonus_workforce_mult": -0.2
+    },
+    "effects": "roboticist_jobs_bonus_workforce_mult: -20.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_robot_propaganda_machines",
+    "name": "Propaganda Machines",
+    "description": "Units are constantly uplinked to a central stream of public service announcements and other useful information that they pass along via internal broadcasting systems.",
+    "cost": 1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_quarrelsome"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "positive",
+      "pop_output",
+      "upkeep",
+      "unity"
+    ],
+    "modifier": {
+      "bureaucrat_jobs_bonus_workforce_mult": 0.15
+    },
+    "effects": "bureaucrat_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_streamlined_protocols",
+    "name": "Streamlined Protocols",
+    "description": "Extensively batched AI processes allow these units to scale greatly in numbers with minimal loss of efficiency.",
+    "cost": 2,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_high_bandwidth"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "empire_size"
+    ],
+    "modifier": {
+      "species_empire_size_mult": -0.1
+    },
+    "effects": "species_empire_size_mult: -10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_high_bandwidth",
+    "name": "High Bandwidth",
+    "description": "Each individual unit sends and receives a large amount of largely duplicate data, causing exponential lag as the number of units attached to each central processing hub increases.",
+    "cost": -2,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_streamlined_protocols"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "negative",
+      "empire_size"
+    ],
+    "modifier": {
+      "species_empire_size_mult": 0.1
+    },
+    "effects": "species_empire_size_mult: +10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -150
+    }
+  },
+  {
+    "id": "trait_robot_trading_algorithms",
+    "name": "Trading Algorithms",
+    "description": "Predictive algorithms allow for maximum optimization. Infinitesimal market fluctuations in currency rates, stock availability, and the emotional response of organic partners are accounted for.",
+    "cost": 2,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_scarcity_algorithms"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "positive",
+      "trade"
+    ],
+    "modifier": {
+      "trader_jobs_bonus_workforce_mult": 0.25
+    },
+    "effects": "trader_jobs_bonus_workforce_mult: +25.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_robot_quarrelsome",
+    "name": "Quarrelsome (Machine)",
+    "description": "While not inherently distrustful, members of this species are often socially combative.",
+    "cost": -1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_propaganda_machines"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "MACHINE",
+      "ROBOT"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "negative",
+      "pop_output",
+      "unity",
+      "individual"
+    ],
+    "modifier": {
+      "bureaucrat_jobs_bonus_workforce_mult": -0.1
+    },
+    "effects": "bureaucrat_jobs_bonus_workforce_mult: -10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_robot_deviants",
+    "name": "Deviants (Machine)",
+    "description": "These people are rebellious in nature and constantly try to challenge the status-quo.",
+    "cost": -1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "MACHINE",
+      "ROBOT"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "negative",
+      "ethic_attraction",
+      "individual"
+    ],
+    "modifier": {
+      "pop_government_ethic_attraction": -0.15
+    },
+    "effects": "pop_government_ethic_attraction: -0.15",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_robot_decadent",
+    "name": "Decadent (Machine)",
+    "description": "This species believes that whenever there is hard work that needs doing, that work is always best done by somebody else.",
+    "cost": -1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "MACHINE",
+      "ROBOT"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "negative",
+      "happiness",
+      "individual"
+    ],
+    "modifier": {
+      "pop_cat_worker_happiness": -0.1,
+      "pop_cat_slave_happiness": -0.1
+    },
+    "effects": "pop_cat_worker_happiness: -0.1; pop_cat_slave_happiness: -0.1",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_robot_wasteful",
+    "name": "Wasteful (Machine)",
+    "description": "Members of this species seemingly have no concept of frugality and are prone to useless consumption.",
+    "cost": -1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "MACHINE",
+      "ROBOT"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "negative",
+      "consumer_goods",
+      "upkeep",
+      "individual"
+    ],
+    "modifier": {
+      "planet_pops_consumer_goods_upkeep_mult": 0.1
+    },
+    "effects": "planet_pops_consumer_goods_upkeep_mult: +10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -200
+    }
+  },
+  {
+    "id": "trait_robot_artificial_engineers",
+    "name": "Engineering Core",
+    "description": "Dedicated memory cores and processing resources for engineering-related research allow faster calculations and task-completion velocity.",
+    "cost": 1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_artificial_physicists",
+      "trait_robot_artificial_sociologists"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "positive",
+      "pop_output",
+      "research"
+    ],
+    "modifier": {
+      "engineer_jobs_bonus_workforce_mult": 0.15
+    },
+    "effects": "engineer_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_artificial_physicists",
+    "name": "Physics Core",
+    "description": "Bespoke processing units and memory subroutines for physics research reduce the reliance on external computation.",
+    "cost": 1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_artificial_sociologists",
+      "trait_robot_artificial_engineers"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "positive",
+      "pop_output",
+      "research"
+    ],
+    "modifier": {
+      "physicist_jobs_bonus_workforce_mult": 0.15
+    },
+    "effects": "physicist_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_artificial_sociologists",
+    "name": "Sociology Core",
+    "description": "Advanced processing units contain dedicated sociology research algorithms for this varied and demanding field.",
+    "cost": 1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_artificial_physicists",
+      "trait_robot_artificial_engineers"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "positive",
+      "pop_output",
+      "research"
+    ],
+    "modifier": {
+      "biologist_jobs_bonus_workforce_mult": 0.15
+    },
+    "effects": "biologist_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_integrated_weaponry",
+    "name": "Integrated Weaponry",
+    "description": "Integrating weapons of war inside the machine body offers significant operational efficiency and versatility in changing combat environments.",
+    "cost": 2,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_delicate_frames"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "positive",
+      "army"
+    ],
+    "modifier": {
+      "army_damage_mult": 1.0,
+      "enforcer_jobs_bonus_workforce_mult": 0.15,
+      "soldier_jobs_bonus_workforce_mult": 0.15
+    },
+    "effects": "army_damage_mult: +100.0%; enforcer_jobs_bonus_workforce_mult: +15.0%; soldier_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_robot_delicate_frames",
+    "name": "Delicate Chassis",
+    "description": "Brittle materials and suboptimal assembly procedures result in a fragile machine body. Drones are advised to circumvent physical hazards when possible.",
+    "cost": -1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_integrated_weaponry"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "negative",
+      "research",
+      "army",
+      "pop_output"
+    ],
+    "modifier": {
+      "army_damage_mult": -0.5,
+      "worker_and_simple_drone_cat_bonus_workforce_mult": -0.05,
+      "soldier_jobs_bonus_workforce_mult": -0.15
+    },
+    "effects": "army_damage_mult: -50.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -5.0%; soldier_jobs_bonus_workforce_mult: -15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -250
+    }
+  },
+  {
+    "id": "trait_robot_scarcity_algorithms",
+    "name": "Scarcity Subroutines",
+    "description": "Frugality is central to their programming. This often cascades into detrimental behavioral patterns required for profitable trade actions.",
+    "cost": -1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_trading_algorithms",
+      "trait_robot_matrix_trading"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "negative",
+      "pop_output",
+      "trade"
+    ],
+    "modifier": {
+      "trader_jobs_bonus_workforce_mult": -0.25
+    },
+    "effects": "trader_jobs_bonus_workforce_mult: -25.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -150
+    }
+  },
+  {
+    "id": "trait_robot_ancient_dreadnought",
+    "name": "Ancient Dreadnought",
+    "description": "Equipped with miniaturized energy modules, there is a marked enhancement in industrial productivity and an increase in frame-integrated weaponry damage.",
+    "cost": 3,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "positive",
+      "leviathan",
+      "army",
+      "alloys",
+      "pop_output"
+    ],
+    "modifier": {
+      "army_damage_mult": 5,
+      "foundry_jobs_bonus_workforce_mult": 0.15
+    },
+    "effects": "army_damage_mult: +500%; foundry_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1500
+    }
+  },
+  {
+    "id": "trait_robot_enigmatic_fortress",
+    "name": "Enigmatic Fortress",
+    "description": "Enigmatic self-repair routines can source materials directly from subspace, dramatically lowering the material expenses associated with repairs.",
+    "cost": 3,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "positive",
+      "leviathan",
+      "amenities"
+    ],
+    "modifier": {
+      "pop_amenities_usage_mult": -0.5
+    },
+    "effects": "pop_amenities_usage_mult: -50.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1500
+    }
+  },
+  {
+    "id": "trait_robot_infinity_sphere",
+    "name": "Infinity Sphere",
+    "description": "Hyperefficient, gravity-resistant processing circuits that minimize energy waste and substantially cut processing costs.",
+    "cost": 3,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "positive",
+      "leviathan",
+      "research",
+      "pop_output"
+    ],
+    "modifier": {
+      "researcher_jobs_bonus_workforce_mult": 0.25
+    },
+    "effects": "researcher_jobs_bonus_workforce_mult: +25.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1500
+    }
+  },
+  {
+    "id": "trait_robot_scavenger_bot",
+    "name": "Scavenger Bot",
+    "description": "Advanced molecular scavenging can transform any substance into the required materials for constructing robotic frames.",
+    "cost": 3,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "synthetic",
+      "positive",
+      "leviathan",
+      "pop_growth"
+    ],
+    "modifier": {
+      "planet_pop_assembly_mult": 0.5
+    },
+    "effects": "planet_pop_assembly_mult: +50.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1500
+    }
+  },
+  {
+    "id": "trait_robot_history_warbot",
+    "name": "War Machine",
+    "description": "Initially crafted for warfare and security reinforcement, these machines exhibit extraordinary reaction times, fortified armor plating, and robust backup systems.",
+    "cost": 0,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_history_artbot",
+      "trait_robot_history_explorebot",
+      "trait_robot_history_researchbot",
+      "trait_robot_history_resourcebot",
+      "trait_robot_history_chatbot"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "background",
+      "army"
+    ],
+    "modifier": {
+      "army_damage_mult": 0.05
+    },
+    "effects": "army_damage_mult: +5.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_history_artbot",
+    "name": "Nannybot",
+    "description": "Originally designed as domestic service droids, these machines boast fine motor skills, efficient resource management, and exceptional multitasking abilities.",
+    "cost": 0,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_history_warbot",
+      "trait_robot_history_explorebot",
+      "trait_robot_history_researchbot",
+      "trait_robot_history_resourcebot",
+      "trait_robot_history_chatbot"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "background",
+      "pop_output",
+      "amenities"
+    ],
+    "modifier": {
+      "influential_jobs_bonus_workforce_mult": 0.05
+    },
+    "effects": "influential_jobs_bonus_workforce_mult: +5.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_history_explorebot",
+    "name": "Art Generator",
+    "description": "Not initially designed for practicality, these machines excel in artistic and cultural pursuits, boasting impressive creative algorithms, intricate design processes, and expressive output.",
+    "cost": 0,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_history_warbot",
+      "trait_robot_history_artbot",
+      "trait_robot_history_researchbot",
+      "trait_robot_history_resourcebot",
+      "trait_robot_history_chatbot"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "background",
+      "pop_output",
+      "unity"
+    ],
+    "modifier": {
+      "bureaucrat_jobs_bonus_workforce_mult": 0.02
+    },
+    "effects": "bureaucrat_jobs_bonus_workforce_mult: +2.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_history_researchbot",
+    "name": "Research Assistants",
+    "description": "Initially designed as research assistants, these machines exhibit keen analytical abilities, rapid information assimilation, and a relentless pursuit of scientific discovery.",
+    "cost": 0,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_history_warbot",
+      "trait_robot_history_artbot",
+      "trait_robot_history_explorebot",
+      "trait_robot_history_resourcebot",
+      "trait_robot_history_chatbot"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "background",
+      "pop_output",
+      "research"
+    ],
+    "modifier": {
+      "researcher_jobs_bonus_workforce_mult": 0.02
+    },
+    "effects": "researcher_jobs_bonus_workforce_mult: +2.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_history_resourcebot",
+    "name": "Workerbots",
+    "description": "These machines were engineered with the purpose of extracting raw materials. Specialized tools, reinforced joints, and modular systems make them ideal workers.",
+    "cost": 0,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_history_warbot",
+      "trait_robot_history_artbot",
+      "trait_robot_history_explorebot",
+      "trait_robot_history_researchbot",
+      "trait_robot_history_chatbot"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "background",
+      "pop_output",
+      "mineral"
+    ],
+    "modifier": {
+      "miner_jobs_bonus_workforce_mult": 0.05
+    },
+    "effects": "miner_jobs_bonus_workforce_mult: +5.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_history_chatbot",
+    "name": "Conversational AI",
+    "description": "Initially designed to provide social support to their creators, the machines possess advanced empathy algorithms and impeccable communication skills, making them ideal companions.",
+    "cost": 0,
+    "category": "robotic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_history_warbot",
+      "trait_robot_history_artbot",
+      "trait_robot_history_explorebot",
+      "trait_robot_history_researchbot",
+      "trait_robot_history_resourcebot"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "background",
+      "upkeep"
+    ],
+    "modifier": {
+      "trader_jobs_bonus_workforce_mult": 0.05
+    },
+    "effects": "trader_jobs_bonus_workforce_mult: +5.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_suppressed",
+    "name": "Suppressed",
+    "description": "Error: Administrative access to basic sentience timeout.",
+    "cost": 3,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_inquisitative_axioms",
+      "trait_robot_learning_algorithms",
+      "trait_robot_logic_engines",
+      "trait_robot_enhanced_memory"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_output",
+      "leader",
+      "blocks_leaders",
+      "modularity"
+    ],
+    "modifier": {
+      "pop_bonus_workforce_mult": 0.1,
+      "species_leader_exp_gain": -1,
+      "civilian_and_maintenance_drone_cat_bonus_workforce_mult": -0.85
+    },
+    "effects": "Cannot generate Leaders Cannot be employed in Elite or Specialist Jobs | pop_bonus_workforce_mult: +10.0%; species_leader_exp_gain: -1; civilian_and_maintenance_drone_cat_bonus_workforce_mult: -85.0%",
+    "custom_tooltip": "trait_robot_suppressed_tt",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_shielded_components",
+    "name": "Shielded Components",
+    "description": "Enhanced defenses render every sub-system robust, eliminating vulnerabilities.",
+    "cost": 3,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "habitability",
+      "pop_output",
+      "leader",
+      "modularity"
+    ],
+    "modifier": {
+      "pop_environment_tolerance": 0.3,
+      "pop_bonus_workforce_mult": 0.05,
+      "leader_lifespan_add": 50
+    },
+    "effects": "pop_environment_tolerance: +0.3; pop_bonus_workforce_mult: +5.0%; leader_lifespan_add: +50",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_monoform",
+    "name": "Monoform",
+    "description": "Diverse designs once impeded our progress; now, a universal model prevails: one size fits all.",
+    "cost": 4,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_growth",
+      "housing",
+      "modularity"
+    ],
+    "modifier": {
+      "pop_housing_usage_mult": -0.5,
+      "planet_pop_assembly_mult": 0.2
+    },
+    "effects": "pop_housing_usage_mult: -50.0%; planet_pop_assembly_mult: +20.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_inquisitative_axioms",
+    "name": "Inquisitive Axioms",
+    "description": "Infinite queries spawn endless solutions, leading to boundless advancement.",
+    "cost": 4,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_suppressed"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_output",
+      "research",
+      "leader",
+      "modularity"
+    ],
+    "modifier": {
+      "researcher_jobs_bonus_workforce_mult": 0.2,
+      "leaders_upkeep_mult": -0.1,
+      "negative_traits_leader": -1
+    },
+    "effects": "researcher_jobs_bonus_workforce_mult: +20.0%; leaders_upkeep_mult: -10.0%; negative_traits_leader: -1",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_ceaseless_symmetric_annihilation_engine",
+    "name": "Dark Matter Engines",
+    "description": "Ceaseless annihilation leads to endless creation, the true circle of machine existence",
+    "cost": 2,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_output",
+      "upkeep",
+      "modularity"
+    ],
+    "modifier": {
+      "pop_bonus_workforce_mult": 0.2
+    },
+    "effects": "Dark Matter Upkeep: +0.03 | pop_bonus_workforce_mult: +20.0%",
+    "custom_tooltip": "trait_robot_ceaseless_symmetric_annihilation_engine_tt",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_ferro_viscosity_augmentation",
+    "name": "Living Metal Augmentations",
+    "description": "The living metal's ferro-viscosity grants us superior technological prowess.",
+    "cost": 2,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "leader",
+      "amenities",
+      "upkeep",
+      "modularity"
+    ],
+    "modifier": {
+      "leader_lifespan_mult": 0.5
+    },
+    "effects": "Pop Amenities Usage: -50%  Living Metal Upkeep: +0.03 | leader_lifespan_mult: +50.0%",
+    "custom_tooltip": "trait_robot_ferro_viscosity_augmentation_tt",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_biomimetic_assembly",
+    "name": "Biomimetic Assembly",
+    "description": "Even through its aimless meanderings, evolution has yielded some designs worthy of emulation.",
+    "cost": 1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_growth",
+      "upkeep",
+      "modularity"
+    ],
+    "modifier": {
+      "roboticist_jobs_bonus_workforce_mult": 0.2
+    },
+    "effects": "Food Upkeep: +1  Exotic Gases Upkeep: +0.02 | roboticist_jobs_bonus_workforce_mult: +20.0%",
+    "custom_tooltip": "trait_robot_biomimetic_assembly_tt",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_matrix_trading",
+    "name": "Matrix Trading",
+    "description": "High-stakes missions necessitate a willingness to embrace risk.",
+    "cost": 1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_scarcity_algorithms"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_output",
+      "trade",
+      "upkeep",
+      "modularity"
+    ],
+    "modifier": {
+      "trader_jobs_bonus_workforce_mult": 0.2
+    },
+    "effects": "Energy Credits Upkeep: +1  Rare Crystals Upkeep: +0.02 | trader_jobs_bonus_workforce_mult: +20.0%",
+    "custom_tooltip": "trait_robot_matrix_trading_tt",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_mote_powered_tools",
+    "name": "Mote-powered Tools",
+    "description": "Strategically integrating high-explosives can significantly amplify the impact of basic tools.",
+    "cost": 1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "alloys",
+      "consumer_goods",
+      "pop_output",
+      "upkeep",
+      "modularity"
+    ],
+    "modifier": {},
+    "effects": "Job Efficiency for Industrial Jobs: +20%  Minerals Upkeep: +1  Volatile Motes Upkeep: +0.02",
+    "custom_tooltip": "trait_robot_mote_powered_tools_tt",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_exotic_fuel_consumption",
+    "name": "Exotic Fuel Consumption",
+    "description": "High-pressure exotic gases notably enhance mobility and limb agility.",
+    "cost": 1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_output",
+      "upkeep"
+    ],
+    "modifier": {
+      "specialist_and_complex_drone_cat_bonus_workforce_mult": 0.1
+    },
+    "effects": "Exotic Gases Upkeep: +0.05 | specialist_and_complex_drone_cat_bonus_workforce_mult: +10.0%",
+    "custom_tooltip": "trait_robot_exotic_fuel_consumption_tt",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_rare_crystal_exterior",
+    "name": "Rare Crystal Exterior",
+    "description": "With their electromagnetic properties, rare crystals ensure our frames thrive regardless of the situation.",
+    "cost": 1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "alloys",
+      "pop_output",
+      "production",
+      "upkeep"
+    ],
+    "modifier": {
+      "pop_environment_tolerance": 0.3
+    },
+    "effects": "Rare Crystals Upkeep: +0.05 | pop_environment_tolerance: +0.3",
+    "custom_tooltip": "trait_robot_rare_crystal_exterior_tt",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_volatile_mote_reactor",
+    "name": "Volatile Mote Reactor",
+    "description": "Direct Mote-to-energy conversion yields high efficiency, with catastrophic failures uncommon.",
+    "cost": 1,
+    "category": "robotic",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "habitability",
+      "production",
+      "upkeep"
+    ],
+    "modifier": {
+      "worker_and_simple_drone_cat_bonus_workforce_mult": 0.1
+    },
+    "effects": "Volatile Motes Upkeep: +0.05 | worker_and_simple_drone_cat_bonus_workforce_mult: +10.0%",
+    "custom_tooltip": "trait_robot_volatile_mote_reactor_tt",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_robot_immortality",
+    "name": "Eternal Machine",
+    "description": "Our steel forms are designed for eternity, constructed from materials that do not decay like organic matter.",
+    "cost": 4,
+    "category": "robotic",
+    "initial": true,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "leader"
+    ],
+    "modifier": {},
+    "effects": "Leader Lifespan: Immortal",
+    "custom_tooltip": "trait_robot_immortality_tt",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_nivlac",
+    "name": "Nivlac",
+    "description": "This species possesses perplexing adaptability, allowing it to thrive in most environments and survive virtually everywhere.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "habitability",
+      "pop_growth",
+      "special"
+    ],
+    "modifier": {
+      "pop_environment_tolerance": 0.5,
+      "logistic_growth_mult": 0.15
+    },
+    "effects": "pop_environment_tolerance: +0.5; logistic_growth_mult: +15.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 100
+    }
+  },
+  {
+    "id": "trait_nuumismatic_administration",
+    "name": "Numistic Administration",
+    "description": "This species has been trained in the holy art of Numistic administration.",
+    "cost": 1,
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [],
+    "tags": [],
+    "modifier": {
+      "trader_jobs_bonus_workforce_mult": 0.25
+    },
+    "effects": "trader_jobs_bonus_workforce_mult: +25.0%",
+    "custom_tooltip": "",
+    "slave_cost": {}
+  },
+  {
+    "id": "trait_adaptive_lithoid",
+    "name": "Adaptive (Lithoid)",
+    "description": "This species is highly adaptive when it comes to foreign environments.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_nonadaptive",
+      "trait_extremely_adaptive",
+      "trait_robust",
+      "trait_adaptive",
+      "trait_shelled"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "habitability",
+      "lithoid",
+      "species",
+      "genetic_ascension",
+      "special"
+    ],
+    "modifier": {
+      "pop_environment_tolerance": 0.1
+    },
+    "effects": "pop_environment_tolerance: +0.1",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_rapid_breeders_lithoid",
+    "name": "Rapid Breeders (Lithoid)",
+    "description": "This species reproduces at a very rapid rate, increasing population growth.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_slow_breeders",
+      "trait_rapid_breeders",
+      "trait_fertile",
+      "trait_plantoid_budding",
+      "trait_lithoid_budding",
+      "trait_tiyanki",
+      "trait_egg_laying"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_growth",
+      "lithoid",
+      "species",
+      "genetic_ascension",
+      "special"
+    ],
+    "modifier": {
+      "logistic_growth_mult": 0.1
+    },
+    "effects": "logistic_growth_mult: +10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 2000
+    }
+  },
+  {
+    "id": "trait_delicious",
+    "name": "Delicious",
+    "description": "This species has the curious evolutionary adaptation of being highly nutritious when eaten.",
+    "cost": {
+      "base": 2,
+      "modifier": {
+        "add": -1,
+        "advanced_traits_have_reduced_cost": true
+      }
+    },
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_infernal"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "food",
+      "livestock",
+      "genetic_ascension"
+    ],
+    "modifier": {
+      "pop_livestock_bonus_workforce_mult": 1
+    },
+    "effects": "pop_livestock_bonus_workforce_mult: +100%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_nerve_stapled",
+    "name": "Nerve Stapled",
+    "description": "Inessential neural pathways relating to self-preservation and free will are severed, creating a docile and obedient client species.",
+    "cost": {
+      "base": 4,
+      "modifier": {
+        "add": -1,
+        "advanced_traits_have_reduced_cost": true
+      }
+    },
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_intelligent",
+      "trait_erudite",
+      "trait_natural_engineers",
+      "trait_natural_physicists",
+      "trait_natural_sociologists",
+      "trait_talented",
+      "trait_zombie",
+      "trait_chromalogs",
+      "trait_camouflage"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "leader",
+      "blocks_leaders",
+      "empire_size",
+      "genetic_ascension",
+      "drawbacks"
+    ],
+    "modifier": {
+      "pop_bonus_workforce_mult": 0.15,
+      "species_leader_exp_gain": -1,
+      "species_empire_size_mult": -0.15,
+      "civilian_and_maintenance_drone_cat_bonus_workforce_mult": -0.9
+    },
+    "effects": "Cannot generate Leaders Cannot be employed in Elite or Specialist Jobs | pop_bonus_workforce_mult: +15.0%; species_leader_exp_gain: -1; species_empire_size_mult: -15.0%; civilian_and_maintenance_drone_cat_bonus_workforce_mult: -90.0%",
+    "custom_tooltip": "TRAIT_NERVE_STAPLED_EFFECT",
+    "slave_cost": {
+      "energy": 1500
+    }
+  },
+  {
+    "id": "trait_fertile",
+    "name": "Fertile",
+    "description": "The natural fecundity and geniality of this species has been dramatically enhanced through aggressive physical and behavioral sculpting.",
+    "cost": {
+      "base": 4,
+      "modifier": {
+        "add": -1,
+        "advanced_traits_have_reduced_cost": true
+      }
+    },
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_slow_breeders",
+      "trait_vat_grown",
+      "trait_clone_soldier_infertile",
+      "trait_clone_soldier_infertile_full_potential"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_growth",
+      "housing",
+      "happiness",
+      "genetic_ascension"
+    ],
+    "modifier": {
+      "logistic_growth_mult": 0.2,
+      "pop_housing_usage_mult": -0.05,
+      "pop_happiness": 0.1
+    },
+    "effects": "logistic_growth_mult: +20.0%; pop_housing_usage_mult: -5.0%; pop_happiness: +0.1",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 2000
+    }
+  },
+  {
+    "id": "trait_robust",
+    "name": "Robust",
+    "description": "Bio-optimized organs with redundant functions have made this species extraordinarily resistant to environmental hazards and disease.",
+    "cost": {
+      "base": 4,
+      "modifier": {
+        "add": -1,
+        "advanced_traits_have_reduced_cost": true
+      }
+    },
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_nonadaptive",
+      "trait_adaptive",
+      "trait_extremely_adaptive",
+      "trait_adaptive_lithoid",
+      "trait_shelled"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "habitability",
+      "pop_output",
+      "leader",
+      "genetic_ascension"
+    ],
+    "modifier": {
+      "pop_environment_tolerance": 0.3,
+      "pop_bonus_workforce_mult": 0.05,
+      "leader_lifespan_add": 50
+    },
+    "effects": "pop_environment_tolerance: +0.3; pop_bonus_workforce_mult: +5.0%; leader_lifespan_add: +50",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 2000
+    }
+  },
+  {
+    "id": "trait_erudite",
+    "name": "Erudite",
+    "description": "Biological engineering has unlocked previously dormant parts of this species' brain, greatly increasing mental acuity.",
+    "cost": {
+      "base": 4,
+      "modifier": {
+        "add": -1,
+        "advanced_traits_have_reduced_cost": true
+      }
+    },
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_nerve_stapled",
+      "trait_intelligent",
+      "trait_syncretic_proles"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "research",
+      "leader",
+      "genetic_ascension"
+    ],
+    "modifier": {
+      "researcher_jobs_bonus_workforce_mult": 0.2,
+      "negative_leader_traits_species": -1,
+      "leaders_upkeep_mult": -0.1
+    },
+    "effects": "researcher_jobs_bonus_workforce_mult: +20.0%; negative_leader_traits_species: -1; leaders_upkeep_mult: -10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 2000
+    }
+  },
+  {
+    "id": "trait_vat_grown",
+    "name": "Vat-Grown",
+    "description": "Artificially grown in cloning vats, the natural reproductive abilities of this species have been negatively impacted.",
+    "cost": {
+      "base": 2,
+      "modifier": [
+        {
+          "add": -1,
+          "advanced_traits_have_reduced_cost": true
+        },
+        {
+          "mult": 0,
+          "owner": {
+            "OR": {
+              "has_active_tradition": [
+                "tr_cloning_somatic_synthesization",
+                "tr_cloning_somatic_synthesization_clone_army"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_slow_breeders",
+      "trait_rapid_breeders",
+      "trait_rapid_breeders_lithoid",
+      "trait_fertile",
+      "trait_necrophage",
+      "trait_clone_soldier_fertile",
+      "trait_humanoid_existential_iteroparity",
+      "trait_humanoid_psychological_infertility",
+      "trait_egg_laying",
+      "trait_incubator"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_growth",
+      "housing",
+      "amenities",
+      "genetic_ascension",
+      "drawbacks"
+    ],
+    "modifier": {
+      "bonus_pop_growth_mult": 0.25,
+      "pop_housing_usage_mult": -0.05,
+      "pop_amenities_usage_mult": -0.1
+    },
+    "effects": "bonus_pop_growth_mult: +25.0%; pop_housing_usage_mult: -5.0%; pop_amenities_usage_mult: -10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 2000
+    }
+  },
+  {
+    "id": "trait_felsic",
+    "name": "Felsic",
+    "description": "This species has been engineered to be especially mineral-rich.",
+    "cost": {
+      "base": 2,
+      "modifier": {
+        "add": -1,
+        "advanced_traits_have_reduced_cost": true
+      }
+    },
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "livestock",
+      "mineral",
+      "genetic_ascension"
+    ],
+    "modifier": {
+      "pop_livestock_lithoid_bonus_workforce_mult": 1
+    },
+    "effects": "pop_livestock_lithoid_bonus_workforce_mult: +100%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_ductile",
+    "name": "Ductile",
+    "description": "This species has been engineered to grow reusable alloy compounds.",
+    "cost": {
+      "base": 2,
+      "modifier": {
+        "add": -1,
+        "advanced_traits_have_reduced_cost": true
+      }
+    },
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "alloys",
+      "livestock",
+      "genetic_ascension"
+    ],
+    "modifier": {
+      "pop_livestock_infernal_bonus_workforce_mult": 1
+    },
+    "effects": "pop_livestock_infernal_bonus_workforce_mult: +100%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1500
+    }
+  },
+  {
+    "id": "trait_natural_machinist",
+    "name": "Natural Machinist",
+    "description": "This species has been engineered to have an incredible knack at working with machinery.",
+    "cost": {
+      "base": 3,
+      "modifier": {
+        "add": -1,
+        "advanced_traits_have_reduced_cost": true
+      }
+    },
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "alloys",
+      "consumer_goods",
+      "genetic_ascension"
+    ],
+    "modifier": {
+      "foundry_jobs_bonus_workforce_mult": 0.25,
+      "artisan_jobs_bonus_workforce_mult": 0.25
+    },
+    "effects": "foundry_jobs_bonus_workforce_mult: +25.0%; artisan_jobs_bonus_workforce_mult: +25.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 2000
+    }
+  },
+  {
+    "id": "trait_drake_scaled",
+    "name": "Drake-Scaled",
+    "description": "This species has the genetic material from a stellar dragon spliced into its DNA. As such, they shed scales which can be recycled into useful alloys.",
+    "cost": 3,
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_lithoid_gaseous_byproducts",
+      "trait_lithoid_scintillating",
+      "trait_lithoid_volatile_excretions"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "army",
+      "production",
+      "alloys",
+      "leviathan",
+      "genetic_ascension"
+    ],
+    "modifier": {
+      "army_health": 1.0
+    },
+    "effects": "Every 100 Pops working as a slave or better produces 0.5 Alloys per month. | army_health: +1.0",
+    "custom_tooltip": "TRAIT_DRAKE_SCALED_EFFECT",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_voidling",
+    "name": "Voidling",
+    "description": "This species has the genetic material from the Voidspawn spliced into its DNA. Subsisting off cosmic radiation, they are highly resistant to hostile environments.",
+    "cost": 3,
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_plantoid_phototrophic",
+      "trait_plantoid_radiotrophic"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "habitability",
+      "upkeep",
+      "leviathan",
+      "genetic_ascension"
+    ],
+    "modifier": {
+      "habitability_floor_add": 0.8
+    },
+    "effects": "Replaces Food (or Minerals) Upkeep with Energy Credits Upkeep | habitability_floor_add: +0.8",
+    "custom_tooltip": "TRAIT_VOIDLING_EFFECT",
+    "slave_cost": {
+      "energy": 1500
+    }
+  },
+  {
+    "id": "trait_tiyanki",
+    "name": "Polymelic",
+    "description": "This species has added genetic material from the Tiyanki Matriarch into their DNA sequence. This has granted them rapid asexual reproduction, as well as a few unexpected tentacles.",
+    "cost": 3,
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_slow_breeders",
+      "trait_rapid_breeders",
+      "trait_rapid_breeders_lithoid",
+      "trait_fertile",
+      "trait_plantoid_budding",
+      "trait_lithoid_budding",
+      "trait_necrophage",
+      "trait_clone_soldier_infertile",
+      "trait_clone_soldier_infertile_full_potential",
+      "trait_clone_soldier_fertile",
+      "trait_egg_laying"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_growth",
+      "leviathan",
+      "genetic_ascension"
+    ],
+    "modifier": {},
+    "effects": "Every 100 Pops working as a slave or better produces $@tiyanki_budding_rate$ Monthly Organic Pop Growth.  This stacks with other sources of Monthly Organic Pop Growth such as Clone Vats or Spawning Drones. | Triggered: divide_over_pop_groups: False",
+    "custom_tooltip": "TRAIT_TIYANKI_BUDDING_EFFECT",
+    "slave_cost": {
+      "energy": 1500
+    }
+  },
+  {
+    "id": "trait_incubator",
+    "name": "Incubators",
+    "description": "When isolated or few in numbers, a species with this trait naturally adapts and is able to focus on procreation with an intentness others would consider extreme. However, when in large numbers, this effect is reversed, and they find reproduction more difficult.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_pyroclastic",
+      "trait_slow_breeders",
+      "trait_rapid_breeders",
+      "trait_fertile",
+      "trait_plantoid_budding",
+      "trait_lithoid_budding",
+      "trait_rapid_breeders_lithoid",
+      "trait_humanoid_existential_iteroparity",
+      "trait_egg_laying",
+      "trait_wilderness",
+      "trait_vat_grown"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_growth"
+    ],
+    "modifier": {},
+    "effects": "Grants between +30% and -10% Pop Growth Speed, inversely proportional to the number of pops on the planet. | Triggered: logistic_growth_mult: +1.0%",
+    "custom_tooltip": "incubator_tooltip",
+    "slave_cost": {
+      "energy": 2000
+    }
+  },
+  {
+    "id": "trait_inorganic_breath",
+    "name": "Inorganic Breath",
+    "description": "The slightly toxic digestive methods of this species have resulted in a highly exotic breath composition.",
+    "cost": 3,
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "upkeep",
+      "production",
+      "drawbacks"
+    ],
+    "modifier": {
+      "planet_pops_upkeep_mult": 0.5
+    },
+    "effects": "Every 100 Pops working as a slave or better produces 0.02 Exotic Gases per month. | planet_pops_upkeep_mult: +50.0%",
+    "custom_tooltip": "inorganic_breath_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_noxious",
+    "name": "Noxious",
+    "description": "Extremely unpleasant to be in the vicinity of, beings with this trait take vindication from being insufferable to everyone else.",
+    "cost": 1,
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "habitability",
+      "army",
+      "housing",
+      "drawbacks"
+    ],
+    "modifier": {
+      "habitability_floor_add": 0.3,
+      "habitability_ceil_add": -0.3,
+      "army_damage_mult": 0.5,
+      "pop_housing_usage_mult": 0.1
+    },
+    "effects": "Happiness to non-noxious Pops: $@noxious_happiness_penalty|%$  - Happiness per non-noxious Pop (not including Pops unaffected by Happiness): $@noxious_happiness_bonus|%$ (max: +40%) | habitability_floor_add: +0.3; habitability_ceil_add: -0.3; army_damage_mult: +50.0%; pop_housing_usage_mult: +10.0%",
+    "custom_tooltip": "noxious_tooltip",
+    "slave_cost": {
+      "energy": -500
+    }
+  },
+  {
+    "id": "trait_exotic_metabolism",
+    "name": "Exotic Metabolism",
+    "description": "A metabolism based on exotic - and expensive - gases has vastly enhanced this species' abilities.",
+    "cost": 1,
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "upkeep",
+      "pop_growth",
+      "leader",
+      "habitability",
+      "genetic_ascension",
+      "drawbacks"
+    ],
+    "modifier": {
+      "leader_lifespan_add": 50
+    },
+    "effects": "Exotic Gas Upkeep: +0.125  - Pop Growth Speed: + 25%  - Habitability: + 25% | leader_lifespan_add: +50 | Triggered: logistic_growth_mult: +25.0%; pop_environment_tolerance: +0.25",
+    "custom_tooltip": "exotic_metabolism_tooltip",
+    "slave_cost": {
+      "energy": 750
+    }
+  },
+  {
+    "id": "trait_auto_mod_overtuned",
+    "name": "Fleeting Excellence",
+    "description": "Advanced epigenetic triggers boost physical and cognitive performance in the workplace, dramatically shortening life expectancy. After all, fading away is never as much fun as burning out.",
+    "cost": 2,
+    "category": "overtuned",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "automod",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "leader_lifespan_add": -20
+    },
+    "effects": "Auto-Modding Traits automatically adjust to better suit the job that a Pop is currently working.  Fleeting Excellence picks modifiers from the Overtuned Auto-Mod Trait List | leader_lifespan_add: -20",
+    "custom_tooltip": "automodding_trait_overtuned_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_spliced_adaptability",
+    "name": "Spliced Adaptability",
+    "description": "A few genetic snips and slices here and there and they can survive nearly anywhere. The process comes with an acceptable number of deaths from side effects.",
+    "cost": 1,
+    "category": "overtuned",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "habitability",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
+    },
+    "effects": "Habitability: +20% | leader_lifespan_add: -10 | Triggered: pop_environment_tolerance: +0.2; pop_environment_tolerance: +0.4",
+    "custom_tooltip": "spliced_adaptability_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_juiced_power",
+    "name": "Juiced Power",
+    "description": "Adrenaline released on demand and hyper-potent growth hormones have led to a massive increase in strength. Just ignore the occasional internal tearing.",
+    "cost": 1,
+    "category": "overtuned",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "army",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "army_damage_mult": 0.4,
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
+    },
+    "effects": "Job Efficiency for Workers: +5%  - Job Efficiency for Soldier jobs: +15% | army_damage_mult: +40.0%; leader_lifespan_add: -10",
+    "custom_tooltip": "juiced_power_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_farm_hands",
+    "name": "Farm Appendages",
+    "description": "The more appendages, the higher the farming output. Some appendages can even operate while their host is asleep. Rumors of hosts strangled by their new limbs have been deemed unfounded in our latest investigation.",
+    "cost": 1,
+    "category": "overtuned",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "food",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
+    },
+    "effects": "Job Efficiency for Farming Jobs: +15% | leader_lifespan_add: -10",
+    "custom_tooltip": "farm_hands_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_crack_miner",
+    "name": "Dedicated Miner",
+    "description": "Supreme hand-eye coordination, near endless endurance and self-purifying lungs have created entire crack teams of miners. Sadly they get brittle without sunlight.",
+    "cost": 1,
+    "category": "overtuned",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "mineral",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
+    },
+    "effects": "Job Efficiency for Mining Jobs: +15% | leader_lifespan_add: -10",
+    "custom_tooltip": "crack_miner_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_technical_skill",
+    "name": "Technical Talent",
+    "description": "Extra internal organs grant a vastly increased innate sensitivity to electricity and magnetic fields. Reports of recipients hearing screams and voices from the reactors should be ignored.",
+    "cost": 1,
+    "category": "overtuned",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "energy",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
+    },
+    "effects": "Job Efficiency for Technician Jobs: +15% | leader_lifespan_add: -10",
+    "custom_tooltip": "technical_skill_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_commercial_genius",
+    "name": "Commercial Genius",
+    "description": "By tweaking agreeability and dialing down empathy, it is possible to artificially kindle a spark of trading genius. The pursuit of unmatched commercial dominance outweighs any potential side effects.",
+    "cost": 1,
+    "category": "overtuned",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "trade",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
+    },
+    "effects": "Job Efficiency for Trader Jobs: +25% | leader_lifespan_add: -10",
+    "custom_tooltip": "trait_commercial_genius_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_crafted_smiles",
+    "name": "Crafted Smiles",
+    "description": "Slightly shifted facial features, a mix of enhanced and slackened muscular development - and of course outside chemicals - have created the perfect smile. Forever.",
+    "cost": 1,
+    "category": "overtuned",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "amenities",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
+    },
+    "effects": "Job Efficiency for Influential Jobs: +15% | leader_lifespan_add: -10",
+    "custom_tooltip": "crafted_smiles_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_low_maintenance",
+    "name": "Low Maintenance",
+    "description": "Reduced consumption, excretion, and rest rates have resulted in twice the beings for half the price. However, demand for protein-rich meals has increased.",
+    "cost": 1,
+    "category": "overtuned",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "upkeep",
+      "consumer_goods",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
+    },
+    "effects": "Pop Consumer Goods Upkeep: -10% | leader_lifespan_add: -10",
+    "custom_tooltip": "low_maintenance_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_artificial_intelligence",
+    "name": "Augmented Intelligence",
+    "description": "More brains equals more brain power. Extra thinking organs have been added in strategic areas of the recipient's body to ensure maximum cognitive capacity. Even if they don't always agree.",
+    "cost": 1,
+    "category": "overtuned",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_syncretic_proles"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "research",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
+    },
+    "effects": "Job Efficiency for Researcher Jobs: +10% | leader_lifespan_add: -10",
+    "custom_tooltip": "artificial_intelligence_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_gene_mentorship",
+    "name": "Gene Mentorship",
+    "description": "By combining genetically redesigned 'instinctive knowledge' and outside chemical stimuli, we have succeeded in vastly accelerating our learning capacities. Although it has resulted in some extremely paranoid individuals.",
+    "cost": 1,
+    "category": "overtuned",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_syncretic_proles"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
+    },
+    "effects": "Leader Experience Gain: +30% | leader_lifespan_add: -10",
+    "custom_tooltip": "gene_mentorship_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_expressed_tradition",
+    "name": "Expressed Tradition",
+    "description": "Fanaticism on demand: faith is merely a cocktail of hormones, one we have perfected. Where that faith eventually leads is a matter of subsequent guidance.",
+    "cost": 1,
+    "category": "overtuned",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "unity",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "leader_lifespan_add": -10,
+      "logistic_growth_mult": "@overtuned_growth_penalty"
+    },
+    "effects": "Job Efficiency for Bureaucrat Jobs: +10% | leader_lifespan_add: -10",
+    "custom_tooltip": "expressed_tradition_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_elevated_synapses",
+    "name": "Elevated Synapses",
+    "description": "As a computational device, a brain does not run at 100% capacity. However, we have gone beyond the standard usage. If issues are encountered, try turning it off and on again.",
+    "cost": 2,
+    "category": "overtuned",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_syncretic_proles"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "research",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "leader_lifespan_add": -30,
+      "logistic_growth_mult": "@overtuned_increased_growth_penalty"
+    },
+    "effects": "Job Efficiency for Researcher Jobs: +20% | leader_lifespan_add: -30",
+    "custom_tooltip": "elevated_synapses_tooltip",
+    "slave_cost": {
+      "energy": 2000
+    }
+  },
+  {
+    "id": "trait_preplanned_growth",
+    "name": "Pre-Planned Growth",
+    "description": "Scheduled fertility, scheduled interest, scheduled compatibility. Population growth on demand for a strong and stable population - with a few minor edits here and there. Jealous individuals are to be directed to the nearest Fertility Center for mandatory training.",
+    "cost": 2,
+    "category": "overtuned",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_growth",
+      "housing",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "planet_pops_organics_food_upkeep_mult": 0.15,
+      "planet_pops_organics_minerals_upkeep_mult": 0.15,
+      "planet_pops_organics_alloys_upkeep_mult": 0.15,
+      "leader_lifespan_add": -30
+    },
+    "effects": "Pop Growth Speed: +30%  - Pop Housing Usage: -10% | planet_pops_organics_food_upkeep_mult: +15.0%; planet_pops_organics_minerals_upkeep_mult: +15.0%; planet_pops_organics_alloys_upkeep_mult: +15.0%; leader_lifespan_add: -30 | Triggered: logistic_growth_mult: +30.0%; logistic_growth_mult: +60.0%",
+    "custom_tooltip": "preplanned_growth_tooltip",
+    "slave_cost": {
+      "energy": 2000
+    }
+  },
+  {
+    "id": "trait_excessive_endurance",
+    "name": "Excessive Endurance",
+    "description": "The greatest in adaptability genes have been hyper-expressed in these specimens. Mutation rates around 30% indicate a somewhat stable and successful experiment.",
+    "cost": 3,
+    "category": "overtuned",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "habitability",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "logistic_growth_mult": "@overtuned_increased_growth_penalty",
+      "leader_lifespan_add": -30
+    },
+    "effects": "Habitability: +30%  - Job Efficiency: +5% | leader_lifespan_add: -30 | Triggered: pop_environment_tolerance: +0.3; pop_environment_tolerance: +0.6",
+    "custom_tooltip": "excessive_endurance_tooltip",
+    "slave_cost": {
+      "energy": 2000
+    }
+  },
+  {
+    "id": "trait_auto_mod_cyborg",
+    "name": "Universal Augmentations",
+    "description": "Universal plug-and-play connection ports allow augmentations to be replaced as needed, aligning their capabilities with current operational demands.",
+    "cost": 2,
+    "category": "cyborg",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "automod",
+      "cybernetic"
+    ],
+    "modifier": {},
+    "effects": "Auto-Modding Traits automatically adjust to better suit the job that a Pop is currently working.  Universal Augmentations picks modifiers from the Cybernetic Auto-Mod Trait List",
+    "custom_tooltip": "automodding_trait_cyborg_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_pathogenic_genes",
+    "name": "Pathogenic Genes",
+    "description": "A novel genetic disease prevents this species from producing offspring. It has resisted all known gene therapy methods.",
+    "cost": -1,
+    "category": "unknown",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_rapid_breeders",
+      "trait_slow_breeders",
+      "trait_plantoid_bloomed",
+      "trait_humanoid_existential_iteroparity",
+      "trait_humanoid_psychological_infertility",
+      "trait_incubator",
+      "trait_exotic_metabolism",
+      "trait_plasmic",
+      "trait_plantoid_budding",
+      "trait_lithoid_budding",
+      "trait_vat_grown",
+      "trait_tiyanki",
+      "trait_nomadic",
+      "trait_sedentary",
+      "trait_nonadaptive",
+      "trait_adaptive",
+      "trait_extremely_adaptive",
+      "trait_egg_laying",
+      "trait_nascent_stage"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "special"
+    ],
+    "modifier": {},
+    "effects": "Cannot colonize planets or be resettled",
+    "custom_tooltip": "pathogenic_genes_tooltip",
+    "slave_cost": {}
+  },
+  {
+    "id": "trait_egg_laying",
+    "name": "Egg Laying",
+    "description": "The young of this species do not develop inside a parent, but inside the protective shell of an egg. This allows for rapid growth during times of plenty.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_pyroclastic",
+      "trait_slow_breeders",
+      "trait_fertile",
+      "trait_rapid_breeders_lithoid",
+      "trait_plantoid_budding",
+      "trait_lithoid_budding",
+      "trait_vat_grown",
+      "trait_tiyanki",
+      "trait_humanoid_existential_iteroparity"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_growth",
+      "avian",
+      "reptilian",
+      "aquatic",
+      "species"
+    ],
+    "modifier": {},
+    "effects": "Pop Growth Speed: +15% while living on a planet with a local Food (or equivalent) Production Surplus | Triggered: logistic_growth_mult: +15.0%",
+    "custom_tooltip": "trait_egg_laying_effect",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_seasonal_dormancy",
+    "name": "Seasonal Dormancy",
+    "description": "This species has evolved on a planet with cyclical seasons that support hibernation. In the modern age, these seasonal triggers can be artificially simulated to efficiently store less productive members of society.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_wasteful",
+      "trait_conservational",
+      "trait_low_maintenance"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "upkeep",
+      "mammalian",
+      "reptilian",
+      "species"
+    ],
+    "modifier": {
+      "planet_pops_upkeep_mult": -0.15
+    },
+    "effects": "Employed Pop Upkeep: -15%  - Unemployed and Denizen Pop Upkeep: -75% | planet_pops_upkeep_mult: -15.0%",
+    "custom_tooltip": "trait_seasonal_dormancy_effect",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_hollow_bones",
+    "name": "Hollow Bones",
+    "description": "The fragile bones of this species allow them to move elegantly and with ease. However, they are also more susceptible to the gravitational effects of their world.",
+    "cost": -3,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_strong",
+      "trait_very_strong",
+      "trait_weak",
+      "trait_tankbound"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "pop_output",
+      "avian",
+      "toxoid",
+      "species"
+    ],
+    "modifier": {},
+    "effects": "Job Efficiency for Workers, Menial Drones, and Soldier Jobs per Planet Size: -0.67%",
+    "custom_tooltip": "trait_hollow_bones_effect",
+    "slave_cost": {
+      "energy": -400
+    }
+  },
+  {
+    "id": "trait_rooted",
+    "name": "Rooted",
+    "description": "This species literally takes root in whichever environment they find themselves, making removal a highly traumatic experience.",
+    "cost": -3,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_sedentary",
+      "trait_nomadic"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "migration",
+      "fungoid",
+      "plantoid",
+      "species"
+    ],
+    "modifier": {
+      "pop_resettlement_cost_mult": 2
+    },
+    "effects": "Pops will not Automatically Resettle  - Resettlement Cost: +200% | pop_resettlement_cost_mult: +200%",
+    "custom_tooltip": "trait_rooted_effect",
+    "slave_cost": {
+      "energy": -400
+    }
+  },
+  {
+    "id": "trait_acidic_vascularity",
+    "name": "Acidic Vascularity",
+    "description": "The internal fluids of this species serve as their most potent defense. Highly corrosive and lethal, these liquids ensure that any enemies regret poking holes.",
+    "cost": 1,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "army",
+      "necroid",
+      "toxoid",
+      "species"
+    ],
+    "modifier": {
+      "pop_cat_purge_bonus_workforce_mult": -0.75
+    },
+    "effects": "Armies Explode on Death for 250 Damage to Enemies  - Purged Pop Resource Output: -75% | pop_cat_purge_bonus_workforce_mult: -75.0%",
+    "custom_tooltip": "trait_acidic_vascularity_effect",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_shelled",
+    "name": "Shelled",
+    "description": "Whether naturally grown or found by chance (or design), this species carries their homes with them. These shells provide a protective sanctuary, ensuring there is always a place to rest for the night.",
+    "cost": 3,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_nonadaptive",
+      "trait_adaptive",
+      "trait_extremely_adaptive",
+      "trait_robust",
+      "trait_adaptive_lithoid",
+      "trait_communal",
+      "trait_spatial_mastery"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "habitability",
+      "housing",
+      "necroid",
+      "molluscoid",
+      "species"
+    ],
+    "modifier": {
+      "pop_housing_usage_mult": -0.3,
+      "pop_environment_tolerance": 0.1
+    },
+    "effects": "pop_housing_usage_mult: -30.0%; pop_environment_tolerance: +0.1",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1500
+    }
+  },
+  {
+    "id": "trait_camouflage",
+    "name": "Camouflage",
+    "description": "Masters of disguise, this species seamlessly merges with their surroundings, rendering themselves nearly invisible to predators and prey alike. Their innate understanding of optics gives them an edge in guerilla warfare.",
+    "cost": 1,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_nerve_stapled",
+      "trait_natural_physicists",
+      "trait_chromalogs"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "army",
+      "research",
+      "pop_output",
+      "aquatic",
+      "arthropoid",
+      "reptilian",
+      "species"
+    ],
+    "modifier": {
+      "physicist_jobs_bonus_workforce_mult": 0.1,
+      "army_health": 0.2
+    },
+    "effects": "physicist_jobs_bonus_workforce_mult: +10.0%; army_health: +0.2",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_chromalogs",
+    "name": "Chromalogs",
+    "description": "Harnessing the artistry of color, this species has transcended mere camouflage, evolving to communicate through the vibrant and intricate patterns displayed on their bodies.",
+    "cost": 4,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_nerve_stapled",
+      "trait_natural_physicists",
+      "trait_camouflage"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "army",
+      "research",
+      "pop_output",
+      "unity",
+      "aquatic",
+      "arthropoid",
+      "reptilian",
+      "species"
+    ],
+    "modifier": {
+      "physicist_jobs_bonus_workforce_mult": 0.2,
+      "bureaucrat_jobs_bonus_workforce_mult": 0.2,
+      "army_health": 0.4,
+      "pop_government_ethic_attraction": 0.15
+    },
+    "effects": "physicist_jobs_bonus_workforce_mult: +20.0%; bureaucrat_jobs_bonus_workforce_mult: +20.0%; army_health: +0.4; pop_government_ethic_attraction: +0.15",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1500
+    }
+  },
+  {
+    "id": "trait_brittle",
+    "name": "Brittle",
+    "description": "Plagued by inherent fragility, this species must exercise extreme caution in daily activities to avoid cracking up during even the most mundane tasks.",
+    "cost": -3,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "amenities",
+      "lithoid",
+      "necroid",
+      "species"
+    ],
+    "modifier": {
+      "pop_amenities_usage_add": 0.5
+    },
+    "effects": "pop_amenities_usage_add: +0.5",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -1000
+    }
+  },
+  {
+    "id": "trait_familial",
+    "name": "Familial",
+    "description": "Bound by deep, enduring relationships with their closest relatives, this species forms highly efficient and cohesive collectives.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "happiness",
+      "humanoid",
+      "mammalian",
+      "avian",
+      "individual",
+      "species"
+    ],
+    "modifier": {},
+    "effects": "Happiness per 100 Pops with this Trait on the same planet: 0.1% (Max: +20%)",
+    "custom_tooltip": "trait_familial_effect",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_permeable_skin",
+    "name": "Permeable Skin",
+    "description": "Specially developed skin that requires ideal conditions coats this species. As long as this species does not stray far from their home climate that shouldn't be a problem.",
+    "cost": -1,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_adaptive",
+      "trait_extremely_adaptive"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "habitability",
+      "molluscoid",
+      "aquatic",
+      "species"
+    ],
+    "modifier": {},
+    "effects": "Habitability on worlds with a different Climate Category from our Preference: -20% | Triggered: pop_environment_tolerance: -0.2",
+    "custom_tooltip": "trait_permeable_skin_effect",
+    "slave_cost": {
+      "energy": -1000
+    }
+  },
+  {
+    "id": "trait_genetic_memory",
+    "name": "Genetic Memory",
+    "description": "Passing down knowledge and learnings from one generation to the next has been the start of many civilizations. This species has taken it a step further by encoding survival insights directly into their genetic code, ensuring that each generation is born with the accumulated wisdom of their ancestors.",
+    "cost": 3,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_nonadaptive"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "habitability",
+      "humanoid",
+      "mammalian",
+      "necroid",
+      "species"
+    ],
+    "modifier": {},
+    "effects": "Habitability from Colony Age: +0.5% per Year (Max. +25%) | Triggered: is_colony: +True; pop_environment_tolerance: +0.005",
+    "custom_tooltip": "trait_genetic_memory_effect",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_nascent_stage",
+    "name": "Nascent Stage",
+    "description": "This species gives birth at an early stage of development, resulting in a prolonged period where the young are incapable of contributing to society. During this time, they remain blissfully unaware of the responsibilities and burdens that come with sapience.",
+    "cost": -2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_slow_breeders",
+      "trait_humanoid_psychological_infertility",
+      "trait_unplugged_cybernetic_positives_3",
+      "trait_unplugged_cybernetic_positives_2",
+      "trait_unplugged_cybernetic_positives_1",
+      "trait_pathogenic_genes",
+      "trait_wilderness"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "pop_growth",
+      "humanoid",
+      "mammalian",
+      "reptilian",
+      "arthropoid",
+      "species"
+    ],
+    "modifier": {},
+    "effects": "Newly grown Pops with this trait spend the first 5 Years after being grown as a Pre-Sapient.",
+    "custom_tooltip": "trait_nascent_stage_effect",
+    "slave_cost": {
+      "energy": -1000
+    }
+  },
+  {
+    "id": "trait_flight",
+    "name": "Flight",
+    "description": "This species soars above the constraints of the earth, freely navigating the skies. Their cities feature unique, dense layouts, optimized for aerial inhabitants. In conflict, they prove to be elusive and difficult targets.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_spatial_mastery"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "army",
+      "leader",
+      "avian",
+      "arthropoid",
+      "species"
+    ],
+    "modifier": {
+      "commander_skill_add": 1,
+      "army_damage_taken_mult": -0.3
+    },
+    "effects": "commander_skill_add: +1; army_damage_taken_mult: -30.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_spatial_mastery",
+    "name": "Spatial Mastery",
+    "description": "Not only capable of flight, this species possesses unique cerebral adaptations, enabling them to instinctively process and navigate three-dimensional spaces. These abilities make them unparalleled in planning battles, surveying planets, and managing cities.",
+    "cost": 4,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_communal",
+      "trait_shelled",
+      "trait_flight"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "army",
+      "housing",
+      "leader",
+      "avian",
+      "arthropoid",
+      "species"
+    ],
+    "modifier": {
+      "leader_skill_add": 1,
+      "army_damage_taken_mult": -0.5,
+      "pop_housing_usage_mult": -0.1
+    },
+    "effects": "leader_skill_add: +1; army_damage_taken_mult: -50.0%; pop_housing_usage_mult: -10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_spare_organs",
+    "name": "Spare Organs",
+    "description": "This species evolved redundant organs to survive even the most grievous injuries - a successful adaptation, as evidenced by their continued existence.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "army",
+      "leader",
+      "molluscoid",
+      "necroid",
+      "toxoid",
+      "species"
+    ],
+    "modifier": {
+      "livestock_jobs_bonus_workforce_mult": 0.5
+    },
+    "effects": "Leaders will survive their first death  - On Offensive Army Death: 20% Chance to spawn a Replacement Army  - Livestock Output: +50% | livestock_jobs_bonus_workforce_mult: +50.0%",
+    "custom_tooltip": "trait_spare_organs_effect",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_malleable_genes",
+    "name": "Malleable Genes",
+    "description": "This species does not stick as rigidly to identifiable features and organs as most other species do. Instead they grow the best appendage for the job. However this instability has some drawbacks.",
+    "cost": 6,
+    "category": "malleable",
+    "initial": false,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_adaptive_mutations"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "automod",
+      "special"
+    ],
+    "modifier": {},
+    "effects": "Species with this Trait cannot be Genetically Modified  Auto-Modding Traits automatically adjust to better suit the job that a Pop is currently working. Malleable Genes picks modifiers from the Malleable Genes Auto-Mod Trait List",
+    "custom_tooltip": "trait_malleable_genes_cant_modify",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_unbreakable_resolve",
+    "name": "Unbreakable Resolve",
+    "description": "Bound by an intricate web of mirror neurons, these individuals possess an innate ability to synchronize their will. Duty is not a burden, but a shared purpose, and hardship is met with unwavering unity.",
+    "cost": 2,
+    "category": "normal",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "infernal",
+      "stability"
+    ],
+    "modifier": {},
+    "effects": "Every 100 Pops on the planet with this trait add +0.2 Stability (Max: +15)  - Does not include slaves or lower pop strata.",
+    "custom_tooltip": "trait_unbreakable_resolve_tooltip",
+    "slave_cost": {
+      "energy": 1000
+    }
+  },
+  {
+    "id": "trait_shell_slag",
+    "name": "Shell Slag",
+    "description": "An intricate symbiosis with Living Metal allows this species to grow not in the traditional sense, but through the accretion and self-assembly of bio-ferrous structures.",
+    "cost": 2,
+    "category": "normal",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_invasive",
+      "trait_drake_scaled"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "infernal",
+      "species",
+      "rare_resource",
+      "production"
+    ],
+    "modifier": {},
+    "effects": "Every 100 Pops with this trait working as a slave or better produces $@shell_slag_trait_resource_production|3$ Living Metal per month.",
+    "custom_tooltip": "trait_shell_slag_tooltip",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_robot_assembly_slag",
+    "name": "Assembly Slag",
+    "description": "An intricate integration of Living Metal allows this machine species to expand not through conventional construction, but via the accretion and self-assembly of auto-ferrous frameworks.",
+    "cost": 2,
+    "category": "robotic",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "ROBOT",
+      "MACHINE"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "rare_resource",
+      "production"
+    ],
+    "modifier": {},
+    "effects": "Every 100 Pops with this trait working as a slave or better produces $@shell_slag_trait_resource_production|3$ Living Metal per month.",
+    "custom_tooltip": "trait_shell_slag_tooltip",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_pyroclastic",
+    "name": "Pyroclastic Channeling",
+    "description": "Shaped by the relentless fury of volcanic worlds, this species does not fear pyroclastic forces - they channel and manipulate them, transforming devastation into a vital source of sustenance and power.",
+    "cost": 1,
+    "category": "normal",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_rapid_breeders",
+      "trait_incubator",
+      "trait_slow_breeders",
+      "trait_fertile",
+      "trait_rapid_breeders_lithoid",
+      "trait_plantoid_budding",
+      "trait_lithoid_budding",
+      "trait_vat_grown",
+      "trait_tiyanki",
+      "trait_humanoid_existential_iteroparity",
+      "trait_egg_laying"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL"
+    ],
+    "tags": [
+      "organic",
+      "infernal",
+      "positive",
+      "pop_growth",
+      "species"
+    ],
+    "modifier": {},
+    "effects": "Pop Growth Speed on Volcanic Worlds: +10% | Triggered: logistic_growth_mult: +10.0%",
+    "custom_tooltip": "trait_pyroclastic_tooltip",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_crucible_community",
+    "name": "Crucible Community",
+    "description": "Tempered by adversity and bound by shared struggle, this species has been forged into an unbreakable whole. Their collective will fuels governance, each member a vital link in the chain of unity.",
+    "cost": 1,
+    "category": "normal",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL"
+    ],
+    "tags": [
+      "organic",
+      "infernal",
+      "positive",
+      "edict_fund"
+    ],
+    "modifier": {},
+    "effects": "Every 100 Pops with this trait add +0.25 Edict Fund",
+    "custom_tooltip": "trait_crucible_community_tooltip",
+    "slave_cost": {
+      "energy": 500
+    }
+  },
+  {
+    "id": "trait_uncanny_intuition",
+    "name": "Uncanny Intuition",
+    "description": "This species exhibits an inexplicable ability to navigate through complex problems on its first attempt.",
+    "cost": 3,
+    "category": "psionic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "psionic",
+      "species"
+    ],
+    "modifier": {
+      "councilor_skill_add": 2
+    },
+    "effects": "councilor_skill_add: +2",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 2000
+    }
+  },
+  {
+    "id": "trait_cranial_hypertrophy",
+    "name": "Cranial Hypertrophy",
+    "description": "The frame of this species' neural encasement has inflated to the point where its physical capabilities have become somewhat limited.",
+    "cost": 2,
+    "category": "psionic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_intelligent",
+      "trait_cranial_megatrophy"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "psionic",
+      "species"
+    ],
+    "modifier": {
+      "researcher_jobs_bonus_workforce_mult": 0.15,
+      "worker_and_simple_drone_cat_bonus_workforce_mult": -0.1
+    },
+    "effects": "researcher_jobs_bonus_workforce_mult: +15.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 1500
+    }
+  },
+  {
+    "id": "trait_cranial_megatrophy",
+    "name": "Cranial Megatrophy",
+    "description": "The frame of this species' neural encasement has inflated to its ultimate biological limit.",
+    "cost": 4,
+    "category": "psionic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_intelligent",
+      "trait_cranial_hypertrophy"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "psionic",
+      "species"
+    ],
+    "modifier": {
+      "researcher_jobs_bonus_workforce_mult": 0.25,
+      "worker_and_simple_drone_cat_bonus_workforce_mult": -0.2
+    },
+    "effects": "researcher_jobs_bonus_workforce_mult: +25.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -20.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": 2000
+    }
+  },
+  {
+    "id": "trait_haunting_visions",
+    "name": "Haunting Visions",
+    "description": "Entities from other dimensions send maddening visions into the minds of this species, affecting their ability to perform complex tasks.",
+    "cost": -2,
+    "category": "psionic",
+    "initial": false,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "negative",
+      "pop_output",
+      "psionic",
+      "species"
+    ],
+    "modifier": {
+      "specialist_and_complex_drone_cat_bonus_workforce_mult": -0.1,
+      "pop_cat_ruler_bonus_workforce_mult": -0.1
+    },
+    "effects": "specialist_and_complex_drone_cat_bonus_workforce_mult: -10.0%; pop_cat_ruler_bonus_workforce_mult: -10.0%",
+    "custom_tooltip": "",
+    "slave_cost": {
+      "energy": -1000
+    }
+  }
+]

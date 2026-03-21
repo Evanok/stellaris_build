@@ -192,58 +192,56 @@ export const BuildDetail: React.FC = () => {
   useEffect(() => {
     if (!id) return;
 
-    // Load build data AND all game data in parallel
-    // Don't show anything until EVERYTHING is loaded to avoid flashing IDs/wrong values
-    Promise.all([
-      fetch(`/api/builds`).then(res => res.json()),
-      fetch('/api/species-classes').then(res => res.json()),
-      fetch('/api/traits').then(res => res.json()),
-      fetch('/api/origins').then(res => res.json()),
-      fetch('/api/ethics').then(res => res.json()),
-      fetch('/api/authorities').then(res => res.json()),
-      fetch('/api/civics').then(res => res.json()),
-      fetch('/api/ascension-perks').then(res => res.json()),
-      fetch('/api/traditions').then(res => res.json()),
-      fetch('/api/ruler-traits').then(res => res.json()),
-    ]).then(([buildsData, speciesClasses, traits, origins, ethics, authorities, civics, perks, traditions, rulerTraits]) => {
-      // Set game data first
-      setAllSpeciesClasses(speciesClasses);
-      setAllTraits(traits);
-      setAllOrigins(Array.isArray(origins) ? origins : (origins.origins || []));
-      setAllEthics(ethics);
-      setAllAuthorities(authorities);
-      setAllCivics(Array.isArray(civics) ? civics : (civics.civics || []));
-      setAllAscensionPerks(Array.isArray(perks) ? perks : (perks.all || []));
+    // First fetch the build to know its game version, then load matching game data
+    fetch(`/api/builds/${id}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Build not found');
+        return res.json();
+      })
+      .then(({ build: foundBuild }) => {
+        const v = foundBuild.game_version || '';
+        const qs = v ? `?version=${encodeURIComponent(v)}` : '';
 
-      // Process tradition trees
-      const trees: TraditionTree[] = [];
-      for (const key in traditions) {
-        if (traditions[key].adopt && traditions[key].adopt.name) {
-          trees.push({
-            name: key,
-            adopt: traditions[key].adopt,
-            finish: traditions[key].finish
-          });
-        }
-      }
-      setAllTraditionTrees(trees);
-      setAllRulerTraits(rulerTraits);
+        return Promise.all([
+          fetch(`/api/species-classes${qs}`).then(res => res.json()),
+          fetch(`/api/traits${qs}`).then(res => res.json()),
+          fetch(`/api/origins${qs}`).then(res => res.json()),
+          fetch(`/api/ethics${qs}`).then(res => res.json()),
+          fetch(`/api/authorities${qs}`).then(res => res.json()),
+          fetch(`/api/civics${qs}`).then(res => res.json()),
+          fetch(`/api/ascension-perks${qs}`).then(res => res.json()),
+          fetch(`/api/traditions${qs}`).then(res => res.json()),
+          fetch(`/api/ruler-traits${qs}`).then(res => res.json()),
+        ]).then(([speciesClasses, traits, origins, ethics, authorities, civics, perks, traditions, rulerTraits]) => {
+          setAllSpeciesClasses(speciesClasses);
+          setAllTraits(traits);
+          setAllOrigins(Array.isArray(origins) ? origins : (origins.origins || []));
+          setAllEthics(ethics);
+          setAllAuthorities(authorities);
+          setAllCivics(Array.isArray(civics) ? civics : (civics.civics || []));
+          setAllAscensionPerks(Array.isArray(perks) ? perks : (perks.all || []));
 
-      // Now set the build
-      const foundBuild = buildsData.builds.find((b: Build) => b.id === parseInt(id));
-      if (foundBuild) {
-        setBuild(foundBuild);
-      } else {
-        setError('Build not found');
-      }
-
-      // Only now mark as loaded (everything is ready)
-      setLoading(false);
-    }).catch((err) => {
-      console.error('Failed to load data:', err);
-      setError('Failed to load build');
-      setLoading(false);
-    });
+          const trees: TraditionTree[] = [];
+          for (const key in traditions) {
+            if (traditions[key].adopt && traditions[key].adopt.name) {
+              trees.push({
+                name: key,
+                adopt: traditions[key].adopt,
+                finish: traditions[key].finish
+              });
+            }
+          }
+          setAllTraditionTrees(trees);
+          setAllRulerTraits(rulerTraits);
+          setBuild(foundBuild);
+          setLoading(false);
+        });
+      })
+      .catch((err) => {
+        console.error('Failed to load data:', err);
+        setError('Failed to load build');
+        setLoading(false);
+      });
   }, [id]);
 
   // Load rating data
@@ -293,8 +291,9 @@ export const BuildDetail: React.FC = () => {
     }
   };
 
-  const parseList = (str: string | null | undefined): string[] => {
+  const parseList = (str: string | string[] | null | undefined): string[] => {
     if (!str) return [];
+    if (Array.isArray(str)) return str.map(s => s.trim()).filter(s => s);
     return str.split(',').map(s => s.trim()).filter(s => s);
   };
 
@@ -633,7 +632,7 @@ export const BuildDetail: React.FC = () => {
           )}
 
           {/* Secondary Species Traits */}
-          {build.secondary_traits && build.secondary_traits.trim() !== '' && (
+          {build.secondary_traits && (Array.isArray(build.secondary_traits) ? build.secondary_traits.length > 0 : build.secondary_traits.trim() !== '') && (
             <div className="card bg-dark border-secondary mb-4">
               <div className="card-header bg-secondary">
                 <h4 className="mb-0 text-white">
