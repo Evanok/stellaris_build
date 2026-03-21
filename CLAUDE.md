@@ -465,6 +465,10 @@ After making changes to game data:
 - `STEAM_RETURN_URL` - Your domain + `/auth/steam/callback`
 - `STEAM_REALM` - Your domain (e.g., https://stellaris-build.com/)
 
+## Known Bugs / TODO
+
+- **Scripted variables not resolved in effects text**: Some civics/traits show raw Paradox variable references like `$@civic_tankbound_job_upkeep|0=-%$` instead of numeric values. Fix: `localization_parser.py` needs to load `common/scripted_variables/` and resolve `$@var|format$` syntax.
+
 ## Future Development
 
 Planned features (not yet implemented):
