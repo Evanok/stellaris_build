@@ -205,17 +205,32 @@ The project uses npm workspaces with three main parts:
 - `DELETE /api/builds/:id` - Soft deletes a build (sets deleted=1)
 - `GET /api/resources` - Returns curated community resources (YouTube channels, guides, tools, mods, communities)
 
-**Static Data Files (backend/data/):**
-All data is fully localized (English) with clean names and descriptions:
-- `traits.json` - 349 species traits (filtered, no leader traits)
-- `origins.json` - 55 origins (playable only)
-- `ethics.json` - 17 ethics
-- `authorities.json` - 7 authorities
-- `civics.json` - 207 civics (filtered, no NPC civics)
-- `ascension_perks.json` - 44 perks (player-available only)
-- `traditions.json` - 32 tradition trees with adopt/finish/individual traditions
-- `ruler_traits.json` - Ruler/leader traits for starting leaders
-- `resources.json` - Curated community resources organized by category (YouTube, guides, tools, streamers, mods, communities)
+**Static Data Files (backend/data/versions/):**
+Game data is versioned by Stellaris patch. Each folder maps to a game version:
+- `backend/data/versions/4.2/` - Stellaris 4.2 "Corvus" data
+- `backend/data/versions/4.3/` - Stellaris 4.3 "Cetus" data
+
+Each version folder contains the same set of files:
+- `traits.json` - species traits (filtered, no leader traits)
+- `origins.json` - origins (playable only)
+- `ethics.json` - ethics
+- `authorities.json` - authorities
+- `civics.json` - civics (filtered, no NPC civics)
+- `ascension_perks.json` - perks (player-available only)
+- `traditions.json` - tradition trees with adopt/finish/individual traditions
+- `ruler_traits.json` - ruler/leader traits for starting leaders
+- `species_classes.json` - species classes (filtered, no NPC-only)
+
+Non-versioned files (still in `backend/data/`):
+- `resources.json` - Curated community resources (not game data)
+
+**Version routing logic (backend/index.js):**
+- All game data endpoints accept `?version=X.Y` query param
+- `getDataVersion(requestedVersion)` maps any version string to the nearest available data folder
+- Versions below the oldest available (4.2) fall back to 4.2
+- Versions above the latest available fall back to the latest (4.3)
+- `AVAILABLE_DATA_VERSIONS` array must be updated when adding new version folders
+- `LATEST_DATA_VERSION` is auto-derived from the last element of that array
 
 ### Data Extractor (data-extractor/)
 
@@ -243,24 +258,39 @@ All data is fully localized (English) with clean names and descriptions:
 ```bash
 cd data-extractor
 
-# Extract all data (WSL example)
+# Extract all data - auto-detects game version from launcher-settings.json
 python3 extract_all.py "/mnt/c/Program Files (x86)/Steam/steamapps/common/Stellaris"
-
-# Copy extracted data to backend
-cp output/traits.json ../backend/data/
-cp output/civics_civics_only.json ../backend/data/civics.json
-cp output/civics_origins_only.json ../backend/data/origins.json
-cp output/ethics.json ../backend/data/
-cp output/authorities.json ../backend/data/
-cp output/ascension_perks.json ../backend/data/
-cp output/traditions_by_tree.json ../backend/data/traditions.json
+# Output goes to: output/versions/X.Y/ (created or updated automatically)
 ```
+
+**Process for a new Stellaris version (e.g. 4.4):**
+1. Run `extract_all.py` — it auto-detects the version and creates `output/versions/4.4/`
+2. Copy to backend:
+```bash
+VERSION=4.4
+mkdir -p ../backend/data/versions/$VERSION
+git mv ../backend/data/versions/4.3/authorities.json ../backend/data/versions/$VERSION/authorities.json  # if unchanged, or copy
+cp output/versions/$VERSION/traits.json ../backend/data/versions/$VERSION/
+cp output/versions/$VERSION/civics_civics_only.json ../backend/data/versions/$VERSION/civics.json
+cp output/versions/$VERSION/civics_origins_only.json ../backend/data/versions/$VERSION/origins.json
+cp output/versions/$VERSION/ethics.json ../backend/data/versions/$VERSION/
+cp output/versions/$VERSION/traditions_by_tree.json ../backend/data/versions/$VERSION/traditions.json
+cp output/versions/$VERSION/ascension_perks.json ../backend/data/versions/$VERSION/
+cp output/versions/$VERSION/ruler_traits.json ../backend/data/versions/$VERSION/
+cp output/versions/$VERSION/species_classes.json ../backend/data/versions/$VERSION/
+```
+3. Update `AVAILABLE_DATA_VERSIONS` in `backend/index.js` to add `'4.4'`
+4. Add `4.4` to `GAME_VERSIONS` in `frontend/src/BuildForm.tsx` (mark as Latest, update previous)
+5. Update `latestNews` in `frontend/src/pages/Home.tsx`
+6. Rebuild frontend and restart backend
 
 **When to Re-Extract:**
 1. Stellaris major updates (new DLCs, patches)
 2. Game balance changes (trait costs, civic effects)
 3. Localization updates (text changes)
 4. Bug fixes in game files
+
+**Note:** `authorities.json` is not extracted by `extract_all.py` (rarely changes). Copy from previous version if unchanged.
 
 ### Key Technical Details
 
@@ -449,6 +479,16 @@ Planned features (not yet implemented):
 ---
 
 ## Recent Completions
+
+### Versioned Game Data + Stellaris 4.3 "Cetus" Support (2026-03-20)
+- Game data is now versioned: `backend/data/versions/4.2/` and `backend/data/versions/4.3/`
+- All game data API endpoints accept `?version=X.Y` — `getDataVersion()` maps any version string to the nearest available folder
+- `BuildDetail` fetches build first via `/api/builds/:id`, then loads game data with the matching version
+- `BuildForm` reloads game data when version changes, deselects items no longer valid in the new version
+- `extract_all.py` auto-detects game version from `launcher-settings.json`, outputs to `output/versions/X.Y/`
+- Home page: added version filter dropdown (populated dynamically from loaded builds)
+- Default build version changed to 4.3; old builds without version data fall back to 4.2
+- Key files: `backend/index.js`, `frontend/src/pages/BuildDetail.tsx`, `frontend/src/BuildForm.tsx`, `frontend/src/pages/Home.tsx`, `data-extractor/extract_all.py`
 
 ### Custom Display Names for OAuth Users (2026-01-11)
 - Added display_name system for Google/Steam authenticated users
