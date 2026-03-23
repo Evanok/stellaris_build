@@ -10,7 +10,8 @@ export const Navbar: React.FC = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand d-flex align-items-center gap-2" to="/">
+          <img src="/icon.svg" alt="" width="32" height="32" />
           <strong>Stellaris Build Sharing</strong>
         </Link>
         <button

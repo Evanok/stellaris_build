@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1b2d52"/>
+      <stop offset="100%" stop-color="#070c18"/>
+    </radialGradient>
+    <radialGradient id="planet" cx="38%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#b0dff0"/>
+      <stop offset="30%" stop-color="#4a9ec7"/>
+      <stop offset="70%" stop-color="#1a5090"/>
+      <stop offset="100%" stop-color="#081830"/>
+    </radialGradient>
+    <radialGradient id="atmo" cx="50%" cy="50%" r="50%">
+      <stop offset="80%" stop-color="transparent"/>
+      <stop offset="100%" stop-color="#4fc3f7" stop-opacity="0.25"/>
+    </radialGradient>
+    <clipPath id="upper">
+      <rect x="0" y="0" width="64" height="33"/>
+    </clipPath>
+    <clipPath id="lower">
+      <rect x="0" y="33" width="64" height="31"/>
+    </clipPath>
+    <clipPath id="planet-clip">
+      <circle cx="32" cy="32" r="15"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="32" fill="url(#bg)"/>
+
+  <!-- Stars -->
+  <circle cx="11" cy="10" r="0.8" fill="white" opacity="0.9"/>
+  <circle cx="51" cy="8"  r="0.6" fill="white" opacity="0.7"/>
+  <circle cx="58" cy="34" r="0.7" fill="white" opacity="0.8"/>
+  <circle cx="9"  cy="47" r="0.9" fill="white" opacity="0.7"/>
+  <circle cx="54" cy="53" r="0.7" fill="white" opacity="0.6"/>
+  <circle cx="21" cy="57" r="0.6" fill="white" opacity="0.5"/>
+  <circle cx="6"  cy="23" r="0.5" fill="white" opacity="0.5"/>
+  <circle cx="44" cy="5"  r="0.5" fill="white" opacity="0.4"/>
+  <circle cx="58" cy="18" r="0.4" fill="white" opacity="0.4"/>
+  <circle cx="16" cy="4"  r="0.4" fill="white" opacity="0.3"/>
+
+  <!-- Ring - back half (behind planet) -->
+  <ellipse cx="32" cy="34" rx="23" ry="6" fill="none" stroke="#e8c547" stroke-width="2.2"
+           clip-path="url(#upper)" opacity="0.35"/>
+
+  <!-- Planet body -->
+  <circle cx="32" cy="32" r="15" fill="url(#planet)"/>
+
+  <!-- Continents -->
+  <g clip-path="url(#planet-clip)">
+    <path d="M22 34 Q25 27 31 29 Q35 30 34 37 Q30 41 25 38 Z"
+          fill="#1e6b35" opacity="0.50"/>
+    <path d="M35 25 Q40 22 43 26 Q42 31 38 31 Q34 28 35 25 Z"
+          fill="#1e6b35" opacity="0.40"/>
+    <path d="M27 40 Q30 42 29 45 Q25 44 24 41 Z"
+          fill="#1e6b35" opacity="0.30"/>
+  </g>
+
+  <!-- Atmosphere highlight (top-left rim light) -->
+  <ellipse cx="25" cy="23" rx="7.5" ry="5" fill="white" opacity="0.09"
+           transform="rotate(-30 25 23)"/>
+
+  <!-- Atmospheric glow rim -->
+  <circle cx="32" cy="32" r="15" fill="url(#atmo)"/>
+  <circle cx="32" cy="32" r="15" fill="none" stroke="#5dd4f8" stroke-width="1.2" opacity="0.25"/>
+
+  <!-- Ring - front half (in front of planet) -->
+  <ellipse cx="32" cy="34" rx="23" ry="6" fill="none" stroke="#e8c547" stroke-width="2.2"
+           clip-path="url(#lower)" opacity="0.92"/>
+
+  <!-- Ring highlight dot (far end) -->
+  <circle cx="55" cy="35.5" r="1.8" fill="#f0d460" opacity="0.7"/>
+</svg>
