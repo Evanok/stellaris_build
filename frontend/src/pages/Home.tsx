@@ -214,38 +214,56 @@ export const Home: React.FC = () => {
         <div className="row mb-4">
           {/* Resources Call-to-Action */}
           <div className="col-lg-6 mb-3 mb-lg-0">
-            <Link to="/resources" className="text-decoration-none">
-              <div
-                className="alert alert-info border-0 shadow-sm d-flex flex-column h-100"
-                style={{
-                  background: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)',
-                  cursor: 'pointer',
-                  transition: 'transform 0.2s, box-shadow 0.2s',
-                  padding: '0.75rem 1rem'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 8px 16px rgba(0,0,0,0.3)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '';
-                }}
-              >
+            <div
+              className="border-0 shadow-sm h-100"
+              style={{
+                background: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)',
+                borderRadius: '0.375rem',
+                padding: '0.75rem 1rem'
+              }}
+            >
+              {/* Header */}
+              <div className="d-flex align-items-center justify-content-between mb-2">
                 <div className="d-flex align-items-center">
-                  <span className="fs-4 me-2">📚</span>
-                  <div className="flex-grow-1">
-                    <h6 className="mb-0 text-white fw-bold">Curated Resources</h6>
-                    <p className="mb-0 text-white opacity-90 small">
-                      YouTube channels, guides, tier lists, and mods
-                    </p>
-                  </div>
-                  <span className="badge bg-light text-primary">
-                    Explore →
-                  </span>
+                  <span className="fs-5 me-2">📚</span>
+                  <h6 className="mb-0 text-white fw-bold">Curated Resources</h6>
                 </div>
+                <Link to="/resources" className="text-decoration-none">
+                  <span className="badge bg-light text-primary">Explore all →</span>
+                </Link>
               </div>
-            </Link>
+              {/* Featured guides */}
+              <div className="d-flex flex-column gap-1">
+                {[
+                  {
+                    title: 'The COMPLETE Economy Guide for Stellaris 4.3',
+                    url: 'https://youtu.be/FSAfATg-8Uk?si=R9M_HtozIPrNSLds'
+                  },
+                  {
+                    title: 'How To Start Every Game Of Stellaris 4.3 - Every Single Click',
+                    url: 'https://youtu.be/omVc01TjWdE?si=O0YaXjg0XJe-_rqr'
+                  }
+                ].map((guide, i) => (
+                  <a
+                    key={i}
+                    href={guide.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-decoration-none"
+                  >
+                    <div
+                      className="d-flex align-items-center gap-2 px-2 py-1 rounded"
+                      style={{ background: 'rgba(0,0,0,0.2)', transition: 'background 0.15s' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(0,0,0,0.35)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(0,0,0,0.2)'; }}
+                    >
+                      <span style={{ fontSize: '0.85rem' }}>▶</span>
+                      <small className="text-white fw-semibold text-truncate">{guide.title}</small>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* What's New Section */}
