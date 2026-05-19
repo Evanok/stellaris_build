@@ -83,10 +83,10 @@ export const Home: React.FC = () => {
       type: 'update'
     },
     {
-      date: '11 Jan 2026',
-      title: 'Custom Display Names for OAuth Users',
-      description: 'Google and Steam users can now set a custom display name that will appear on all their builds instead of their provider username.',
-      type: 'feature'
+      date: '19 May 2026',
+      title: 'Mobile Navigation Fix',
+      description: 'Fixed the hamburger menu not working on mobile devices.',
+      type: 'fix'
     }
   ];
 
