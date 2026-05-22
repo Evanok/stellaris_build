@@ -9,6 +9,7 @@ interface User {
   provider: string;
   provider_id: string;
   created_at: string;
+  is_admin: number;
 }
 
 interface AuthContextType {
