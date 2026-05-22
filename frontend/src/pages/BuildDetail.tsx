@@ -408,7 +408,7 @@ export const BuildDetail: React.FC = () => {
             },
             "author": {
               "@type": "Person",
-              "name": "Arthur LAMBERT"
+              "name": build.author_username || "Community Member"
             },
             "datePublished": build.created_at || new Date().toISOString(),
             "dateModified": build.updated_at || build.created_at || new Date().toISOString(),

@@ -1,0 +1,51 @@
+# stellaris-build.com
+
+> A community platform for sharing, discovering, and optimizing Stellaris empire builds. Covers all game elements: species traits, origins, ethics, authorities, civics, ascension perks, and tradition trees. Supports Stellaris versions 4.2 "Corvus" and 4.3 "Cetus".
+
+## About
+
+Stellaris Build is a free, open community website where players of Stellaris (the 4X grand strategy game by Paradox Interactive) can create and share complete empire build configurations. Each build captures the full empire setup: species class, traits, origin, ethics, authority, civics, ruler traits, ascension perk order, and tradition tree order.
+
+The site is updated with each major Stellaris patch and includes data extracted directly from the game files, ensuring accuracy and completeness.
+
+## What is a Stellaris Build?
+
+A "build" in Stellaris is a complete empire configuration optimized for a particular playstyle (e.g., military conquest, economic tall, research rush, roleplay). It includes:
+- Species class and traits (biological, lithoid, machine, robot)
+- Origin (how the empire started)
+- Ethics (the empire's values: materialist, militarist, etc.)
+- Government authority (democratic, oligarchic, imperial, corporate, etc.)
+- Civics (government policies and institutions)
+- Starting ruler traits
+- Recommended ascension perks (in priority order)
+- Recommended tradition trees (in unlock order)
+
+## Supported Game Versions
+
+- Stellaris 4.3 "Cetus" (latest)
+- Stellaris 4.2 "Corvus"
+
+## Features
+
+- Browse and search community builds with filters by version, ethics, authority, and civics
+- Create builds with full game data validation (trait points, civic compatibility, ethics limits, etc.)
+- Authentication via Google or Steam OAuth
+- Curated community resources: guides, YouTube channels, tools, mods, and communities
+- All game data is version-aware and sourced directly from Stellaris game files
+
+## Key Pages
+
+- https://stellaris-build.com/ — Browse all community builds
+- https://stellaris-build.com/create — Create a new build (requires login)
+- https://stellaris-build.com/resources — Curated Stellaris community resources
+
+## Data Coverage (Stellaris 4.3)
+
+- 349 species traits
+- 55 playable origins
+- 17 ethics
+- 7 authorities
+- 207 playable civics
+- 44 ascension perks
+- 32 tradition trees
+- 18 species classes

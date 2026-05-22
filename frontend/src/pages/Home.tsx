@@ -177,6 +177,21 @@ export const Home: React.FC = () => {
       <Helmet>
         <title>Stellaris Build Sharing - Discover Community Empire Builds</title>
         <meta name="description" content="Browse community-created Stellaris empire builds. Find optimized species traits, civics, ethics, origins, and strategies. Share your own builds with the community." />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          "name": "Stellaris Community Empire Builds",
+          "description": "Community-created empire builds for Stellaris by Paradox Interactive, including species traits, civics, ethics, origins, ascension perks, and tradition trees.",
+          "url": "https://stellaris-build.com/",
+          "numberOfItems": builds.length,
+          "itemListElement": builds.slice(0, 20).map((build, index) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "url": `https://stellaris-build.com/builds/${build.id}`,
+            "name": build.name,
+            "description": build.description || `Stellaris empire build - ${build.game_version}`
+          }))
+        })}</script>
       </Helmet>
 
       <div className="container-fluid p-0">

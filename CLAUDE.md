@@ -484,6 +484,14 @@ Planned features (not yet implemented):
 
 ## Recent Completions
 
+### AI Search Optimization / LLM SEO (2026-05-22)
+- `frontend/public/robots.txt`: Added explicit allow rules for AI crawlers (GPTBot, ChatGPT-User, Google-Extended, ClaudeBot, PerplexityBot, Amazonbot, cohere-ai)
+- `frontend/public/llms.txt`: New file (served at `/llms.txt`) — describes the site for LLMs with structured markdown: purpose, what a Stellaris build is, supported versions, data coverage stats
+- `frontend/index.html`: Added `WebSite` JSON-LD schema with `SearchAction` — tells LLMs the site is about Stellaris and how to search it
+- `frontend/src/pages/Home.tsx`: Added `ItemList` JSON-LD schema (top 20 builds) in Helmet
+- `frontend/src/pages/BuildDetail.tsx`: Fixed hardcoded author `"Arthur LAMBERT"` → dynamic `build.author_username || "Community Member"`
+- Key files: `frontend/public/robots.txt`, `frontend/public/llms.txt`, `frontend/index.html`, `frontend/src/pages/Home.tsx`, `frontend/src/pages/BuildDetail.tsx`
+
 ### Versioned Game Data + Stellaris 4.3 "Cetus" Support (2026-03-20)
 - Game data is now versioned: `backend/data/versions/4.2/` and `backend/data/versions/4.3/`
 - All game data API endpoints accept `?version=X.Y` — `getDataVersion()` maps any version string to the nearest available folder
