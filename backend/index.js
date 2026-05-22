@@ -1421,7 +1421,7 @@ app.get('/api/admin/stats', isAdmin, async (req, res) => {
           strftime('%Y-W%W', created_at) as week,
           COUNT(*) as count
          FROM builds
-         WHERE created_at >= date('now', '-12 weeks')
+         WHERE created_at >= date('now', '-84 days')
          GROUP BY week
          ORDER BY week`,
         (err, rows) => {
@@ -1439,7 +1439,7 @@ app.get('/api/admin/stats', isAdmin, async (req, res) => {
           strftime('%Y-W%W', created_at) as week,
           COUNT(*) as count
          FROM users
-         WHERE created_at >= date('now', '-12 weeks')
+         WHERE created_at >= date('now', '-84 days')
          GROUP BY week
          ORDER BY week`,
         (err, rows) => {
