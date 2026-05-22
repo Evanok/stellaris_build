@@ -42,6 +42,11 @@ export const Navbar: React.FC = () => {
                 Stats
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/feedback">
+                Feedback
+              </Link>
+            </li>
             {user && (
               <li className="nav-item">
                 <Link className="nav-link" to="/create">

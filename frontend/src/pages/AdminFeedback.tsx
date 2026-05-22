@@ -220,7 +220,7 @@ const AdminFeedback: React.FC = () => {
                     </div>
                     {feedback.username && (
                       <div className="col-md-6">
-                        <strong>User:</strong> {feedback.username} ({feedback.email})
+                        <strong>User:</strong> {feedback.username}
                       </div>
                     )}
                   </div>

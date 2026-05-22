@@ -1512,6 +1512,38 @@ app.post('/api/feedback', upload.single('screenshot'), (req, res) => {
   );
 });
 
+// Get feedback (public - no email exposed)
+app.get('/api/feedback', (req, res) => {
+  const { status } = req.query;
+
+  let query = `
+    SELECT
+      f.id, f.type, f.description, f.screenshot_path, f.page_url,
+      f.status, f.created_at,
+      u.username, u.avatar
+    FROM feedback f
+    LEFT JOIN users u ON f.user_id = u.id
+  `;
+
+  const params = [];
+
+  if (status && ['new', 'in_progress', 'resolved'].includes(status)) {
+    query += ' WHERE f.status = ?';
+    params.push(status);
+  }
+
+  query += ' ORDER BY f.created_at DESC';
+
+  db.all(query, params, (err, rows) => {
+    if (err) {
+      console.error('Error fetching feedback:', err);
+      return res.status(500).json({ error: 'Failed to fetch feedback' });
+    }
+
+    res.json(rows);
+  });
+});
+
 // Get all feedback (admin only)
 app.get('/api/admin/feedback', isAdmin, (req, res) => {
   const { status } = req.query;

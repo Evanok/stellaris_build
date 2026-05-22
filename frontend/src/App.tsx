@@ -17,6 +17,7 @@ const BuildDetail = lazy(() => import('./pages/BuildDetail').then(module => ({ d
 const Stats = lazy(() => import('./pages/Stats'));
 const AdminStats = lazy(() => import('./pages/AdminStats'));
 const AdminFeedback = lazy(() => import('./pages/AdminFeedback'));
+const Feedback = lazy(() => import('./pages/Feedback'));
 const Resources = lazy(() => import('./pages/Resources'));
 
 // Loading fallback component
@@ -86,6 +87,7 @@ const AppContent = () => {
                   <Route path="/resources" element={<Resources />} />
                   <Route path="/stats" element={<Stats />} />
                   <Route path="/admin/stats" element={<AdminStats />} />
+                  <Route path="/feedback" element={<Feedback />} />
                   <Route path="/admin/feedback" element={<AdminFeedback />} />
                 </Routes>
               </Suspense>
