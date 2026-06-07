@@ -66,11 +66,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Serve static files from the frontend build
-// Cache icons for 30 days (immutable assets)
-app.use('/icons', express.static(path.join(__dirname, '../frontend/dist/icons'), {
-  maxAge: '30d',
-  immutable: true
-}));
+const staticOpts = { maxAge: '30d', immutable: true };
+app.use('/icons', express.static(path.join(__dirname, '../frontend/dist/icons'), staticOpts));
+app.use('/portraits', express.static(path.join(__dirname, '../frontend/dist/portraits'), staticOpts));
+app.use('/loading_screens', express.static(path.join(__dirname, '../frontend/dist/loading_screens'), staticOpts));
+// Vite assets have content-hash filenames — safe to cache aggressively
+app.use('/assets', express.static(path.join(__dirname, '../frontend/dist/assets'), staticOpts));
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 // Setup the database

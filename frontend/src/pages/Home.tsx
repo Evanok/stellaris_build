@@ -65,18 +65,51 @@ interface Build {
   rating_count?: number;
 }
 
+// Module-level cache — survives navigation, cleared on page refresh
+const _cache: {
+  builds?: Build[];
+  originNames?: Record<string, Record<string, string>>;
+  ethicNames?: Record<string, Record<string, string>>;
+  authorityNames?: Record<string, Record<string, string>>;
+} = {};
+
+const IconWithFallback: React.FC<{ src: string; label: string }> = ({ src, label }) => {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return (
+      <span
+        className="badge bg-secondary"
+        title={label}
+        style={{ fontSize: '0.65rem', maxWidth: '80px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+      >
+        {label}
+      </span>
+    );
+  }
+  return (
+    <img
+      src={src}
+      alt=""
+      title={label}
+      style={{ width: '28px', height: '28px', objectFit: 'contain' }}
+      loading="lazy"
+      onError={() => setFailed(true)}
+    />
+  );
+};
+
 export const Home: React.FC = () => {
-  const [builds, setBuilds] = useState<Build[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [builds, setBuilds] = useState<Build[]>(_cache.builds || []);
+  const [loading, setLoading] = useState(!_cache.builds);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState<string>('');
   const [versionFilter, setVersionFilter] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('newest');
-  const [originNamesByVersion, setOriginNamesByVersion] = useState<Record<string, Record<string, string>>>({});
-  const [ethicNamesByVersion, setEthicNamesByVersion] = useState<Record<string, Record<string, string>>>({});
-  const [authorityNamesByVersion, setAuthorityNamesByVersion] = useState<Record<string, Record<string, string>>>({});
+  const [originNamesByVersion, setOriginNamesByVersion] = useState<Record<string, Record<string, string>>>(_cache.originNames || {});
+  const [ethicNamesByVersion, setEthicNamesByVersion] = useState<Record<string, Record<string, string>>>(_cache.ethicNames || {});
+  const [authorityNamesByVersion, setAuthorityNamesByVersion] = useState<Record<string, Record<string, string>>>(_cache.authorityNames || {});
   const buildsPerPage = 12;
 
   // What's New data
@@ -96,10 +129,15 @@ export const Home: React.FC = () => {
   ];
 
   useEffect(() => {
+    if (_cache.builds) {
+      setLoading(false);
+      return;
+    }
     fetch('/api/builds')
       .then(res => res.json())
       .then(data => {
-        setBuilds(data.builds || []);
+        _cache.builds = data.builds || [];
+        setBuilds(_cache.builds!);
         setLoading(false);
       })
       .catch(() => {
@@ -110,6 +148,8 @@ export const Home: React.FC = () => {
 
   useEffect(() => {
     if (builds.length === 0) return;
+    if (_cache.originNames && _cache.ethicNames && _cache.authorityNames) return;
+
     const versions = [...new Set(builds.map(b => b.game_version).filter(Boolean))];
 
     const buildMap = (items: { id: string; name: string }[]) => {
@@ -137,6 +177,9 @@ export const Home: React.FC = () => {
       fetchForVersions('/api/ethics'),
       fetchForVersions('/api/authorities'),
     ]).then(([origins, ethics, authorities]) => {
+      _cache.originNames = origins;
+      _cache.ethicNames = ethics;
+      _cache.authorityNames = authorities;
       setOriginNamesByVersion(origins);
       setEthicNamesByVersion(ethics);
       setAuthorityNamesByVersion(authorities);
@@ -465,14 +508,10 @@ export const Home: React.FC = () => {
                           <div className="d-flex align-items-center gap-1 mb-1 flex-wrap">
                             <small className="text-muted" style={{ minWidth: '72px', display: 'inline-block' }}>Civics:</small>
                             {build.civics.split(',').map(s => s.trim()).filter(Boolean).map((id, idx) => (
-                              <img
+                              <IconWithFallback
                                 key={idx}
                                 src={`/icons/civics/${id}.png`}
-                                alt=""
-                                title={id.replace(/^civic_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
-                                style={{ width: '28px', height: '28px', objectFit: 'contain' }}
-                                loading="lazy"
-                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                label={id.replace(/^civic_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
                               />
                             ))}
                           </div>
@@ -483,14 +522,10 @@ export const Home: React.FC = () => {
                           <div className="d-flex align-items-center gap-1 mb-1 flex-wrap">
                             <small className="text-muted" style={{ minWidth: '72px', display: 'inline-block' }}>Traits:</small>
                             {build.traits.split(',').map(s => s.trim()).filter(Boolean).map((id, idx) => (
-                              <img
+                              <IconWithFallback
                                 key={idx}
                                 src={`/icons/traits/${id}.png`}
-                                alt=""
-                                title={id.replace(/^trait_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
-                                style={{ width: '28px', height: '28px', objectFit: 'contain' }}
-                                loading="lazy"
-                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                label={id.replace(/^trait_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
                               />
                             ))}
                           </div>
