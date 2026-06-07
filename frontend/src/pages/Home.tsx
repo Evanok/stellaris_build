@@ -74,6 +74,9 @@ export const Home: React.FC = () => {
   const [difficultyFilter, setDifficultyFilter] = useState<string>('');
   const [versionFilter, setVersionFilter] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('newest');
+  const [originNamesByVersion, setOriginNamesByVersion] = useState<Record<string, Record<string, string>>>({});
+  const [ethicNamesByVersion, setEthicNamesByVersion] = useState<Record<string, Record<string, string>>>({});
+  const [authorityNamesByVersion, setAuthorityNamesByVersion] = useState<Record<string, Record<string, string>>>({});
   const buildsPerPage = 12;
 
   // What's New data
@@ -104,6 +107,41 @@ export const Home: React.FC = () => {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    if (builds.length === 0) return;
+    const versions = [...new Set(builds.map(b => b.game_version).filter(Boolean))];
+
+    const buildMap = (items: { id: string; name: string }[]) => {
+      const map: Record<string, string> = {};
+      items.forEach(o => { map[o.id] = o.name; });
+      return map;
+    };
+
+    const fetchForVersions = (endpoint: string) =>
+      Promise.all(
+        versions.map(v =>
+          fetch(`${endpoint}?version=${encodeURIComponent(v)}`)
+            .then(r => r.json())
+            .then((items: { id: string; name: string }[]) => ({ version: v, items }))
+            .catch(() => ({ version: v, items: [] as { id: string; name: string }[] }))
+        )
+      ).then(results => {
+        const map: Record<string, Record<string, string>> = {};
+        results.forEach(({ version, items }) => { map[version] = buildMap(items as { id: string; name: string }[]); });
+        return map;
+      });
+
+    Promise.all([
+      fetchForVersions('/api/origins'),
+      fetchForVersions('/api/ethics'),
+      fetchForVersions('/api/authorities'),
+    ]).then(([origins, ethics, authorities]) => {
+      setOriginNamesByVersion(origins);
+      setEthicNamesByVersion(ethics);
+      setAuthorityNamesByVersion(authorities);
+    });
+  }, [builds]);
 
   // Filter and sort builds
   const filteredBuilds = builds
@@ -523,14 +561,18 @@ export const Home: React.FC = () => {
                           {build.origin && (
                             <div className="mb-1">
                               <small className="text-muted">Origin:</small>
-                              <small className="text-info ms-2">{build.origin}</small>
+                              <small className="text-info ms-2">
+                                {originNamesByVersion[build.game_version]?.[build.origin] || build.origin.replace(/^origin_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+                              </small>
                             </div>
                           )}
                           {build.ethics && (
                             <div className="mb-1">
                               <small className="text-muted">Ethics:</small>
                               <small className="text-warning ms-2">
-                                {build.ethics.split(',').slice(0, 2).join(', ')}
+                                {build.ethics.split(',').slice(0, 2).map(id =>
+                                  ethicNamesByVersion[build.game_version]?.[id.trim()] || id.trim()
+                                ).join(', ')}
                                 {build.ethics.split(',').length > 2 && '...'}
                               </small>
                             </div>
@@ -538,7 +580,9 @@ export const Home: React.FC = () => {
                           {build.authority && (
                             <div className="mb-1">
                               <small className="text-muted">Authority:</small>
-                              <small className="text-success ms-2">{build.authority}</small>
+                              <small className="text-success ms-2">
+                                {authorityNamesByVersion[build.game_version]?.[build.authority] || build.authority}
+                              </small>
                             </div>
                           )}
                         </div>
