@@ -422,7 +422,7 @@ export const Home: React.FC = () => {
               {currentBuilds.map(build => (
                 <div key={build.id} className="col">
                   <Link to={`/build/${build.id}`} className="build-card-link">
-                    <div className="card bg-dark border-secondary h-100 build-card">
+                    <div className="card h-100 build-card">
                       <div className="card-body">
                         {/* Top row: portrait | version + difficulty */}
                         <div className="d-flex justify-content-between align-items-start mb-2">
@@ -445,55 +445,89 @@ export const Home: React.FC = () => {
                           <ReactMarkdown>{decodeHtmlEntities(build.name)}</ReactMarkdown>
                         </h5>
 
-                        {/* Civics */}
+                        {/* Origin icon */}
+                        {build.origin && (
+                          <div className="d-flex align-items-center gap-1 mb-1 flex-wrap">
+                            <small className="text-muted" style={{ minWidth: '72px', display: 'inline-block' }}>Origin:</small>
+                            <img
+                              src={`/icons/origin_mini/${build.origin}.png`}
+                              alt=""
+                              title={originNamesByVersion[build.game_version]?.[build.origin] || build.origin.replace(/^origin_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+                              style={{ width: '28px', height: '28px', objectFit: 'contain' }}
+                              loading="lazy"
+                              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                            />
+                          </div>
+                        )}
+
+                        {/* Civics icons */}
                         {build.civics && (
-                          <div className="mb-1">
-                            <small className="text-muted">Civics:</small>
-                            <small className="ms-2" style={{ color: '#a78bfa' }}>
-                              {build.civics.split(',').map(s => s.trim().replace(/^civic_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())).join(', ')}
-                            </small>
+                          <div className="d-flex align-items-center gap-1 mb-1 flex-wrap">
+                            <small className="text-muted" style={{ minWidth: '72px', display: 'inline-block' }}>Civics:</small>
+                            {build.civics.split(',').map(s => s.trim()).filter(Boolean).map((id, idx) => (
+                              <img
+                                key={idx}
+                                src={`/icons/civics/${id}.png`}
+                                alt=""
+                                title={id.replace(/^civic_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+                                style={{ width: '28px', height: '28px', objectFit: 'contain' }}
+                                loading="lazy"
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                              />
+                            ))}
                           </div>
                         )}
 
-                        {/* Traits */}
+                        {/* Traits icons */}
                         {build.traits && (
-                          <div className="mb-2">
-                            <small className="text-muted">Traits:</small>
-                            <small className="ms-2" style={{ color: '#67e8f9' }}>
-                              {build.traits.split(',').map(s => s.trim().replace(/^trait_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())).join(', ')}
-                            </small>
+                          <div className="d-flex align-items-center gap-1 mb-1 flex-wrap">
+                            <small className="text-muted" style={{ minWidth: '72px', display: 'inline-block' }}>Traits:</small>
+                            {build.traits.split(',').map(s => s.trim()).filter(Boolean).map((id, idx) => (
+                              <img
+                                key={idx}
+                                src={`/icons/traits/${id}.png`}
+                                alt=""
+                                title={id.replace(/^trait_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+                                style={{ width: '28px', height: '28px', objectFit: 'contain' }}
+                                loading="lazy"
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                              />
+                            ))}
                           </div>
                         )}
 
-                        {/* Key Features */}
-                        <div className="mb-2">
-                          {build.origin && (
-                            <div className="mb-1">
-                              <small className="text-muted">Origin:</small>
-                              <small className="text-info ms-2">
-                                {originNamesByVersion[build.game_version]?.[build.origin] || build.origin.replace(/^origin_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
-                              </small>
-                            </div>
-                          )}
-                          {build.ethics && (
-                            <div className="mb-1">
-                              <small className="text-muted">Ethics:</small>
-                              <small className="text-warning ms-2">
-                                {build.ethics.split(',').map(id =>
-                                  ethicNamesByVersion[build.game_version]?.[id.trim()] || id.trim()
-                                ).join(', ')}
-                              </small>
-                            </div>
-                          )}
-                          {build.authority && (
-                            <div className="mb-1">
-                              <small className="text-muted">Authority:</small>
-                              <small className="text-success ms-2">
-                                {authorityNamesByVersion[build.game_version]?.[build.authority] || build.authority}
-                              </small>
-                            </div>
-                          )}
-                        </div>
+                        {/* Ethics icons */}
+                        {build.ethics && (
+                          <div className="d-flex align-items-center gap-1 mb-1 flex-wrap">
+                            <small className="text-muted" style={{ minWidth: '72px', display: 'inline-block' }}>Ethics:</small>
+                            {build.ethics.split(',').map(s => s.trim()).filter(Boolean).map((id, idx) => (
+                              <img
+                                key={idx}
+                                src={`/icons/ethics/${id}.png`}
+                                alt=""
+                                title={ethicNamesByVersion[build.game_version]?.[id] || id}
+                                style={{ width: '28px', height: '28px', objectFit: 'contain' }}
+                                loading="lazy"
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                              />
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Authority icon */}
+                        {build.authority && (
+                          <div className="d-flex align-items-center gap-1 mb-2 flex-wrap">
+                            <small className="text-muted" style={{ minWidth: '72px', display: 'inline-block' }}>Authority:</small>
+                            <img
+                              src={`/icons/authorities/${build.authority}.png`}
+                              alt=""
+                              title={authorityNamesByVersion[build.game_version]?.[build.authority] || build.authority}
+                              style={{ width: '28px', height: '28px', objectFit: 'contain' }}
+                              loading="lazy"
+                              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                            />
+                          </div>
+                        )}
 
                         {/* Tags */}
                         {build.tags && (
