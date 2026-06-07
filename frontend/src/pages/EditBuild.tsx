@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BuildForm } from '../BuildForm';
 import { useAuth } from '../AuthContext';
+import { invalidateBuildsCache } from './Home';
 
 const EditBuild: React.FC = () => {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const EditBuild: React.FC = () => {
   }, [id, user]);
 
   const handleBuildUpdated = () => {
-    // Redirect to build detail page after successful update
+    invalidateBuildsCache();
     navigate(`/build/${id}`);
   };
 
