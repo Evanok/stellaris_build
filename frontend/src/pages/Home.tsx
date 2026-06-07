@@ -424,120 +424,20 @@ export const Home: React.FC = () => {
                   <Link to={`/build/${build.id}`} className="build-card-link">
                     <div className="card bg-dark border-secondary h-100 build-card">
                       <div className="card-body">
-                        {/* Icon Gallery Header */}
-                        <div className="d-flex justify-content-between align-items-start mb-3">
-                          <div className="d-flex gap-2">
-                            {/* Origin Icon */}
-                            {build.origin && (
-                              <div
-                                className="d-flex align-items-center justify-content-center rounded"
-                                style={{
-                                  width: '40px',
-                                  height: '40px',
-                                  background: 'rgba(255, 255, 255, 0.1)',
-                                  border: '2px solid rgba(255, 255, 255, 0.2)'
-                                }}
-                              >
-                                <img
-                                  src={`/icons/origin_mini/${build.origin}.png`}
-                                  alt=""
-                                  style={{ width: '32px', height: '32px', objectFit: 'contain' }}
-                                  loading="lazy"
-                                  onError={(e) => {
-                                    const img = e.target as HTMLImageElement;
-                                    img.style.opacity = '0';
-                                    const container = img.parentElement as HTMLElement;
-                                    if (container) {
-                                      container.style.visibility = 'hidden';
-                                      container.style.width = '0';
-                                      container.style.minWidth = '0';
-                                      container.style.padding = '0';
-                                      container.style.margin = '0';
-                                      container.style.border = 'none';
-                                    }
-                                  }}
-                                />
-                              </div>
-                            )}
-                            {/* First Ethic Icon */}
-                            {build.ethics && build.ethics.split(',')[0] && (
-                              <div
-                                className="d-flex align-items-center justify-content-center rounded"
-                                style={{
-                                  width: '40px',
-                                  height: '40px',
-                                  background: 'rgba(255, 193, 7, 0.1)',
-                                  border: '2px solid rgba(255, 193, 7, 0.3)'
-                                }}
-                              >
-                                <img
-                                  src={`/icons/ethics/${build.ethics.split(',')[0].trim()}.png`}
-                                  alt=""
-                                  style={{ width: '32px', height: '32px', objectFit: 'contain' }}
-                                  loading="lazy"
-                                  onError={(e) => {
-                                    const img = e.target as HTMLImageElement;
-                                    img.style.opacity = '0';
-                                    const container = img.parentElement as HTMLElement;
-                                    if (container) {
-                                      container.style.visibility = 'hidden';
-                                      container.style.width = '0';
-                                      container.style.minWidth = '0';
-                                      container.style.padding = '0';
-                                      container.style.margin = '0';
-                                      container.style.border = 'none';
-                                    }
-                                  }}
-                                />
-                              </div>
-                            )}
-                            {/* Authority Icon */}
-                            {build.authority && (
-                              <div
-                                className="d-flex align-items-center justify-content-center rounded"
-                                style={{
-                                  width: '40px',
-                                  height: '40px',
-                                  background: 'rgba(40, 167, 69, 0.1)',
-                                  border: '2px solid rgba(40, 167, 69, 0.3)'
-                                }}
-                              >
-                                <img
-                                  src={`/icons/authorities/${build.authority}.png`}
-                                  alt=""
-                                  style={{ width: '32px', height: '32px', objectFit: 'contain' }}
-                                  loading="lazy"
-                                  onError={(e) => {
-                                    const img = e.target as HTMLImageElement;
-                                    img.style.opacity = '0';
-                                    const container = img.parentElement as HTMLElement;
-                                    if (container) {
-                                      container.style.visibility = 'hidden';
-                                      container.style.width = '0';
-                                      container.style.minWidth = '0';
-                                      container.style.padding = '0';
-                                      container.style.margin = '0';
-                                      container.style.border = 'none';
-                                    }
-                                  }}
-                                />
-                              </div>
-                            )}
-                          </div>
-                          <div className="d-flex flex-column align-items-end gap-1">
-                            <div>
-                              <span className="badge bg-primary me-1">{VERSION_NAMES[build.game_version] ?? build.game_version ?? 'Unknown'}</span>
-                              {getDifficultyBadge(build.difficulty)}
-                            </div>
-                            {build.portrait && (
-                              <img
-                                src={`/portraits/${build.portrait}.png`}
-                                alt=""
-                                loading="lazy"
-                                style={{ width: '56px', height: '56px', objectFit: 'cover', objectPosition: 'top', borderRadius: '6px', border: '2px solid #0dcaf0' }}
-                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                              />
-                            )}
+                        {/* Top row: portrait | version + difficulty */}
+                        <div className="d-flex justify-content-between align-items-start mb-2">
+                          {build.portrait ? (
+                            <img
+                              src={`/portraits/${build.portrait}.png`}
+                              alt=""
+                              loading="lazy"
+                              style={{ width: '40px', height: '40px', objectFit: 'cover', objectPosition: 'top', borderRadius: '6px', border: '2px solid #0dcaf0', flexShrink: 0 }}
+                              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                            />
+                          ) : <div />}
+                          <div>
+                            <span className="badge bg-primary me-1">{VERSION_NAMES[build.game_version] ?? build.game_version ?? 'Unknown'}</span>
+                            {getDifficultyBadge(build.difficulty)}
                           </div>
                         </div>
 
@@ -545,16 +445,25 @@ export const Home: React.FC = () => {
                           <ReactMarkdown>{decodeHtmlEntities(build.name)}</ReactMarkdown>
                         </h5>
 
-                        {/* Description */}
-                        <div className="card-text text-light small mb-3">
-                          {build.description ? (
-                            <ReactMarkdown>
-                              {decodeHtmlEntities(build.description).substring(0, 100) + (build.description.length > 100 ? '...' : '')}
-                            </ReactMarkdown>
-                          ) : (
-                            <p className="mb-0">No description provided.</p>
-                          )}
-                        </div>
+                        {/* Civics */}
+                        {build.civics && (
+                          <div className="mb-1">
+                            <small className="text-muted">Civics:</small>
+                            <small className="ms-2" style={{ color: '#a78bfa' }}>
+                              {build.civics.split(',').map(s => s.trim().replace(/^civic_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())).join(', ')}
+                            </small>
+                          </div>
+                        )}
+
+                        {/* Traits */}
+                        {build.traits && (
+                          <div className="mb-2">
+                            <small className="text-muted">Traits:</small>
+                            <small className="ms-2" style={{ color: '#67e8f9' }}>
+                              {build.traits.split(',').map(s => s.trim().replace(/^trait_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())).join(', ')}
+                            </small>
+                          </div>
+                        )}
 
                         {/* Key Features */}
                         <div className="mb-2">
@@ -570,10 +479,9 @@ export const Home: React.FC = () => {
                             <div className="mb-1">
                               <small className="text-muted">Ethics:</small>
                               <small className="text-warning ms-2">
-                                {build.ethics.split(',').slice(0, 2).map(id =>
+                                {build.ethics.split(',').map(id =>
                                   ethicNamesByVersion[build.game_version]?.[id.trim()] || id.trim()
                                 ).join(', ')}
-                                {build.ethics.split(',').length > 2 && '...'}
                               </small>
                             </div>
                           )}
