@@ -139,6 +139,20 @@
           "description": "Comprehensive Reddit post explaining the population growth mechanics in Stellaris 4.0 and how they differ from previous versions.",
           "tags": ["population", "growth", "mechanics", "4.0", "reddit"],
           "featured": false
+        },
+        {
+          "title": "How Pop Growth Actually Works In Stellaris 4.3",
+          "url": "https://youtu.be/902Og2cxrhs?si=V-4pf8zAZfIGz3rh",
+          "description": "Detailed breakdown of population growth mechanics in Stellaris 4.3.",
+          "tags": ["population", "growth", "mechanics", "4.3", "guide"],
+          "featured": true
+        },
+        {
+          "title": "17 Stellaris 4.3 Tips I Wish I Knew Earlier",
+          "url": "https://youtu.be/C4Knz2xdSBI?si=BHgFVB712ZoAyyD8",
+          "description": "17 essential tips and tricks for Stellaris 4.3 to improve your gameplay.",
+          "tags": ["tips", "guide", "4.3", "beginner"],
+          "featured": true
         }
       ]
     },
