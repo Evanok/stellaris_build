@@ -219,7 +219,7 @@ Each version folder contains the same set of files:
 - `ascension_perks.json` - perks (player-available only)
 - `traditions.json` - tradition trees with adopt/finish/individual traditions
 - `ruler_traits.json` - ruler/leader traits for starting leaders
-- `species_classes.json` - species classes (filtered, no NPC-only)
+- `species_classes.json` - species classes with portrait IDs (18 categories from portrait_categories)
 
 Non-versioned files (still in `backend/data/`):
 - `resources.json` - Curated community resources (not game data)
@@ -240,6 +240,8 @@ Non-versioned files (still in `backend/data/`):
 - `extract_all.py` - Extract all data types at once (recommended)
 - `paradox_parser.py` - Generic parser for Paradox Script format (.txt files)
 - `localization_parser.py` - Parse and resolve localized names/descriptions from .yml files
+- `extract_species_classes.py` - Extracts 18 portrait categories from `portrait_categories` + `portrait_sets` (NOT species_classes.txt)
+- `download_wiki_portraits.py` - Downloads portrait PNGs from Stellaris wiki (requires browser cookies to bypass CDN)
 - Individual extractors: `extract_traits.py`, `extract_civics.py`, `extract_ethics.py`, etc.
 
 **Localization System:**
@@ -483,6 +485,23 @@ Planned features (not yet implemented):
 ---
 
 ## Recent Completions
+
+### Species Portrait System (2026-06-07)
+- Downloaded ~312 pre-rendered portrait PNGs from Stellaris wiki (stellaris.paradoxwikis.com/Category:Species_portraits)
+- Rewrote `extract_species_classes.py` to use `portrait_categories` + `portrait_sets` as source of truth instead of `species_classes.txt` — now correctly extracts all 18 player-selectable portrait categories (was missing MACHINE, CYBERNETIC, SYNTH, PSIONIC, BIOGENESIS with 0 portraits before)
+- Built `output/portrait_wiki_map.json` mapping 309 game portrait IDs → wiki PNG filenames
+- Portraits copied to `frontend/public/portraits/` as `{portrait_id}.png`, resized to 256px (21MB total)
+- Database: `portrait` column already existed; fixed `PUT /api/builds/:id` to include `species_class` and `portrait` in UPDATE query (were missing)
+- `BuildForm.tsx`: activated portrait selector (was hidden behind `{false &&}`), replaced placeholder emoji with real `<img>` tags, 72px thumbnails with `objectPosition: top`
+- `BuildDetail.tsx`: portrait displayed as 128px image next to species class badge
+- `Home.tsx`: portrait thumbnail (56px) shown top-right of build cards
+- Key files: `data-extractor/extract_species_classes.py`, `data-extractor/download_wiki_portraits.py`, `data-extractor/output/portrait_wiki_map.json`, `frontend/public/portraits/`, `frontend/src/BuildForm.tsx`, `frontend/src/pages/BuildDetail.tsx`, `frontend/src/pages/Home.tsx`, `backend/index.js`
+
+**Portrait extraction notes:**
+- Source: `common/portrait_categories/00_portrait_categories.txt` → `common/portrait_sets/00_portrait_sets.txt`
+- 341 total portrait IDs across 18 categories (295 unique — many shared between categories e.g. cybernetic portraits appear under both MAM and CYBERNETIC)
+- ~29 portraits still missing images (psionic_02/05/06/09, bio7/9/10/11, mammalian_ar_03/06/08/09, etc.) — these timed out on wiki; show broken image silently via `onError` handler
+- Wiki uses different naming conventions: `Cyber_NN_stage_2.png`, `Synth_NN.png`, `Bio_species_NN.png`, etc.
 
 ### AI Search Optimization / LLM SEO (2026-05-22)
 - `frontend/public/robots.txt`: Added explicit allow rules for AI crawlers (GPTBot, ChatGPT-User, Google-Extended, ClaudeBot, PerplexityBot, Amazonbot, cohere-ai)
