@@ -1,296 +1,196 @@
 #!/usr/bin/env python3
 """
-Stellaris Species Classes Extractor
-Extracts species classes and their associated portraits from Stellaris game files
+Extract species class portrait groups from portrait_categories + portrait_sets.
 """
 
 import json
 import os
-import sys
 import re
-from pathlib import Path
-from typing import Dict, List, Any
-from paradox_parser import parse_stellaris_file
+import sys
 from localization_parser import load_all_localizations, get_localized_text
 
-# Mapping of species class codes to their portrait file prefixes
-SPECIES_CLASS_PORTRAIT_PREFIXES = {
-    'MAM': 'mam',       # Mammalian
-    'REP': 'rep',       # Reptilian
-    'AVI': 'avi',       # Avian
-    'ART': 'art',       # Arthropoid
-    'FUN': 'fun',       # Fungoid
-    'MOL': 'mol',       # Molluscoid
-    'PLANT': 'pla',     # Plantoid
-    'HUM': 'human',     # Humanoid
-    'IMPERIAL': 'human',     # Imperial (DLC)
-    'LITHOID': 'lith',     # Lithoid
-    'NECROID': 'nec',       # Necroid
-    'AQUATIC': 'aqu',       # Aquatic
-    'TOX': 'tox',       # Toxoid
+STELLARIS_PATH = "/mnt/c/Program Files (x86)/Steam/steamapps/common/Stellaris"
+OUTPUT_FILE = os.path.join(os.path.dirname(__file__), "output", "species_classes.json")
+
+# Remap portrait_category name field → our ID (when they differ)
+ID_REMAP = {
+    'BIOGENESIS_CAT': 'BIOGENESIS',
+}
+
+# Archetype per category ID (fallback when not in species_classes.txt)
+ARCHETYPE_FALLBACK = {
+    'HUM': 'BIOLOGICAL',
+    'MAM': 'BIOLOGICAL',
+    'REP': 'BIOLOGICAL',
+    'AVI': 'BIOLOGICAL',
+    'ART': 'BIOLOGICAL',
+    'MOL': 'BIOLOGICAL',
+    'FUN': 'BIOLOGICAL',
+    'PLANT': 'BIOLOGICAL',
+    'AQUATIC': 'BIOLOGICAL',
+    'TOX': 'BIOLOGICAL',
+    'NECROID': 'BIOLOGICAL',
+    'LITHOID': 'LITHOID',
+    'MACHINE': 'MACHINE',
+    'INF': 'BIOLOGICAL',
+    'CYBERNETIC': 'BIOLOGICAL',
+    'SYNTH': 'ROBOT',
+    'BIOGENESIS': 'BIOLOGICAL',
+    'PSIONIC': 'BIOLOGICAL',
+}
+
+# Display name overrides when localization key doesn't resolve
+NAME_OVERRIDES = {
+    'BIOGENESIS': 'BioGenesis',
+    'SYNTH': 'Synthetic',
+    'PSIONIC': 'Psionic',
+    'CYBERNETIC': 'Cybernetic',
+    'INF': 'Infernal',
 }
 
 
-def extract_portraits_from_file(filepath: str) -> List[str]:
-    """
-    Extract portrait IDs from a portraits file
-
-    Args:
-        filepath: Path to the portraits file
-
-    Returns:
-        List of portrait IDs
-    """
-    try:
-        data = parse_stellaris_file(filepath)
-        portraits = []
-
-        # Look for 'portraits' section
-        if 'portraits' in data and isinstance(data['portraits'], dict):
-            for portrait_id in data['portraits'].keys():
-                # Skip internal keys and gendered variations (we'll handle groups)
-                if not portrait_id.startswith('_') and not portrait_id.endswith('_f') and not portrait_id.endswith('_m'):
-                    portraits.append(portrait_id)
-                # For gendered portraits, we need to include the group name
-                elif portrait_id.endswith('_f'):
-                    # Check if there's a corresponding group
-                    base_id = portrait_id[:-2]  # Remove '_f'
-                    portraits.append(base_id)
-
-        return portraits
-    except Exception as e:
-        print(f"  Error reading portraits from {os.path.basename(filepath)}: {e}")
-        return []
+def _extract_block(content, open_brace_pos):
+    depth = 0
+    i = open_brace_pos
+    while i < len(content):
+        if content[i] == '{':
+            depth += 1
+        elif content[i] == '}':
+            depth -= 1
+            if depth == 0:
+                return content[open_brace_pos + 1:i], i + 1
+        i += 1
+    return content[open_brace_pos + 1:], len(content)
 
 
-def extract_all_portraits(stellaris_path: str) -> Dict[str, List[str]]:
-    """
-    Extract all portraits organized by species class prefix
+def parse_portrait_categories(stellaris_path):
+    filepath = os.path.join(stellaris_path, "common", "portrait_categories", "00_portrait_categories.txt")
+    with open(filepath, encoding='utf-8') as f:
+        content = re.sub(r'#[^\n]*', '', f.read())
 
-    Args:
-        stellaris_path: Path to Stellaris installation
+    categories = []
+    for m in re.finditer(r'^(\w+)\s*=\s*\{', content, re.MULTILINE):
+        cat_key = m.group(1)
+        brace_pos = m.start() + m.group().index('{')
+        block, _ = _extract_block(content, brace_pos)
 
-    Returns:
-        Dictionary mapping species class to list of portrait IDs
-    """
-    portraits_dir = os.path.join(stellaris_path, "gfx", "portraits", "portraits")
-    portraits_by_class = {}
+        name_m = re.search(r'\bname\s*=\s*(\S+)', block)
+        sets_m = re.search(r'\bsets\s*=\s*\{([^}]*)\}', block, re.DOTALL)
+        if not name_m or not sets_m:
+            continue
 
-    # Get all portrait files
-    portrait_files = [
-        "01_portraits_mammalian.txt",
-        "02_portraits_reptilian.txt",
-        "03_portraits_avian.txt",
-        "04_portraits_arthropoid.txt",
-        "05_portraits_fungoid.txt",
-        "06_portraits_molluscoid.txt",
-        "07_portraits_human.txt",
-        "08_portraits_plantoid.txt",
-        "09_portraits_humanoid.txt",
-        "11_portraits_humanoid_hp.txt",
-        "14_portraits_lithoid.txt",
-        "15_portraits_necroid.txt",
-        "16_portraits_aquatic.txt",
-        "17_portraits_toxoid.txt",
-    ]
+        cat_id = name_m.group(1)
+        sets = re.findall(r'\b(\w+)\b', sets_m.group(1))
 
-    all_portraits = []
+        categories.append({
+            'key': cat_key,
+            'id': ID_REMAP.get(cat_id, cat_id),
+            'sets': sets,
+        })
 
-    for filename in portrait_files:
-        filepath = os.path.join(portraits_dir, filename)
-        if os.path.exists(filepath):
-            portraits = extract_portraits_from_file(filepath)
-            all_portraits.extend(portraits)
-            print(f"  Found {len(portraits)} portraits in {filename}")
-
-    # Now organize portraits by their prefix
-    for species_class, prefix in SPECIES_CLASS_PORTRAIT_PREFIXES.items():
-        matching_portraits = [p for p in all_portraits if p.startswith(prefix)]
-        if matching_portraits:
-            portraits_by_class[species_class] = sorted(list(set(matching_portraits)))
-
-    return portraits_by_class
+    return categories
 
 
-def extract_species_class_data(class_id: str, class_data: Dict[str, Any],
-                                portraits: List[str], localizations: Dict[str, str]) -> Dict[str, Any]:
-    """
-    Extract data for a single species class
+def parse_portrait_sets(stellaris_path):
+    filepath = os.path.join(stellaris_path, "common", "portrait_sets", "00_portrait_sets.txt")
+    with open(filepath, encoding='utf-8') as f:
+        content = re.sub(r'#[^\n]*', '', f.read())
 
-    Args:
-        class_id: The species class identifier (e.g., 'MAM', 'REP')
-        class_data: Raw species class data from parser
-        portraits: List of portrait IDs for this class
-        localizations: Dictionary of localization strings
+    sets_map = {}
+    for m in re.finditer(r'^(\w+)\s*=\s*\{', content, re.MULTILINE):
+        set_name = m.group(1)
+        brace_pos = m.start() + m.group().index('{')
+        block, _ = _extract_block(content, brace_pos)
 
-    Returns:
-        Cleaned species class data
-    """
-    # Get localized name (use just the class_id, not SPEC_ prefix)
-    name_key = class_id
-    name = get_localized_text(name_key, localizations)
+        # All quoted strings in portrait set blocks are portrait IDs
+        portrait_ids = list(dict.fromkeys(re.findall(r'"(\w+)"', block)))
 
-    # Track if this is a manual override (to skip post-processing)
-    is_manual_override = False
+        if portrait_ids:
+            sets_map[set_name] = portrait_ids
 
-    # If no localization found, generate from ID
-    if name == name_key:
-        # Convert MAM -> Mammalian, REP -> Reptilian, etc.
-        name_mapping = {
-            'MAM': 'Mammalian',
-            'REP': 'Reptilian',
-            'AVI': 'Avian',
-            'ART': 'Arthropoid',
-            'FUN': 'Fungoid',
-            'MOL': 'Molluscoid',
-            'PLANT': 'Plantoid',
-            'IMPERIAL': 'Human',
-            'LITHOID': 'Lithoid',
-            'NECROID': 'Necroid',
-            'AQUATIC': 'Aquatic',
-            'TOX': 'Toxoid',
-        }
-        name = name_mapping.get(class_id, class_id)
-
-    # Post-processing: Clean up special species names (only if not manual override)
-    if not is_manual_override:
-        # Remove trailing numbers (e.g., BIOGENESIS_01 -> Biogenesis)
-        if '_' in name and name.split('_')[-1].isdigit():
-            name = name.rsplit('_', 1)[0]
-
-        # Convert all-caps names to title case (e.g., MACHINE -> Machine, PSIONIC -> Psionic)
-        if name.isupper() and len(name) > 1:
-            name = name.capitalize()
-
-        # Replace underscores with spaces and title case (e.g., BIOGENESIS_01 -> Biogenesis)
-        name = name.replace('_', ' ').title()
-
-    # Manual overrides for specific species classes (applied AFTER post-processing)
-    if class_id == 'ROBOT':
-        name = 'Synthetic'  # More commonly known as Synthetic in the game
-    elif class_id == 'BIOGENESIS_01':
-        name = 'BioGenesis'  # Use origin name instead of species name
-
-    # Get description if available
-    desc_key = f"{name_key}_desc"
-    description = get_localized_text(desc_key, localizations)
-    if description == desc_key:
-        description = ""
-
-    species_class = {
-        "id": class_id,
-        "name": name,
-        "description": description,
-        "archetype": class_data.get("archetype", "BIOLOGICAL"),
-        "graphical_culture": class_data.get("graphical_culture", ""),
-        "portraits": portraits,
-        "portrait_count": len(portraits)
-    }
-
-    return species_class
+    return sets_map
 
 
-def extract_all_species_classes(stellaris_path: str, output_file: str = "output/species_classes.json"):
-    """
-    Extract all species classes from Stellaris installation
+def parse_species_class_archetypes(stellaris_path):
+    classes_dir = os.path.join(stellaris_path, "common", "species_classes")
+    archetypes = {}
+    for fname in sorted(os.listdir(classes_dir)):
+        if not fname.endswith('.txt'):
+            continue
+        with open(os.path.join(classes_dir, fname), encoding='utf-8', errors='replace') as f:
+            content = re.sub(r'#[^\n]*', '', f.read())
+        for m in re.finditer(r'^(\w+)\s*=\s*\{', content, re.MULTILINE):
+            class_id = m.group(1)
+            brace_pos = m.start() + m.group().index('{')
+            block, _ = _extract_block(content, brace_pos)
+            arch_m = re.search(r'\barchetype\s*=\s*(\S+)', block)
+            if arch_m:
+                archetypes[class_id] = arch_m.group(1)
+    return archetypes
 
-    Args:
-        stellaris_path: Path to Stellaris installation directory
-        output_file: Output JSON file path
-    """
-    species_classes_dir = os.path.join(stellaris_path, "common", "species_classes")
 
-    if not os.path.exists(species_classes_dir):
-        print(f"Error: Species classes directory not found at {species_classes_dir}")
-        sys.exit(1)
+def get_display_name(cat_id, localizations):
+    if cat_id in NAME_OVERRIDES:
+        return NAME_OVERRIDES[cat_id]
+    name = get_localized_text(cat_id, localizations)
+    if name == cat_id:
+        return cat_id.replace('_', ' ').title()
+    return name
 
+
+def main(stellaris_path=STELLARIS_PATH, output_file=OUTPUT_FILE):
     print("Loading localizations...")
     localizations = load_all_localizations(stellaris_path)
 
-    print("Extracting portraits...")
-    portraits_by_class = extract_all_portraits(stellaris_path)
+    print("Parsing portrait categories...")
+    categories = parse_portrait_categories(stellaris_path)
+    print(f"  Found {len(categories)} categories")
 
-    # Get all .txt files in species_classes directory
-    species_classes_files = sorted([
-        f for f in os.listdir(species_classes_dir)
-        if f.endswith('.txt')
-    ])
+    print("Parsing portrait sets...")
+    sets_map = parse_portrait_sets(stellaris_path)
+    print(f"  Found {len(sets_map)} sets")
 
-    print(f"\nProcessing species classes from {len(species_classes_files)} files:")
-    all_species_data = {}
+    print("Parsing species class archetypes...")
+    archetypes = parse_species_class_archetypes(stellaris_path)
 
-    # Read all files and merge data
-    for filename in species_classes_files:
-        filepath = os.path.join(species_classes_dir, filename)
-        print(f"  Reading {filename}...")
-        try:
-            data = parse_stellaris_file(filepath)
-            all_species_data.update(data)
-        except Exception as e:
-            print(f"    Error reading {filename}: {e}")
+    print("\nBuilding species classes:")
+    species_classes = []
+    for cat in categories:
+        cat_id = cat['id']
+        portrait_ids = []
+        for set_name in cat['sets']:
+            for pid in sets_map.get(set_name, []):
+                if pid not in portrait_ids:
+                    portrait_ids.append(pid)
 
-    print(f"\nFound {len(all_species_data)} species class definitions")
+        archetype = archetypes.get(cat_id, ARCHETYPE_FALLBACK.get(cat_id, 'BIOLOGICAL'))
+        name = get_display_name(cat_id, localizations)
 
-    try:
-        species_classes = []
+        desc_key = f"{cat_id}_desc"
+        description = get_localized_text(desc_key, localizations)
+        if description == desc_key:
+            description = ""
 
-        # Define player-selectable species classes (including those without specific portraits)
-        # NPC-only classes should be excluded
-        npc_only_classes = [
-            'PRE_MAM', 'PRE_REP', 'PRE_AVI', 'PRE_ART', 'PRE_MOL', 'PRE_FUN', 'PRE_PLANT',
-            'PRE_LITHOID', 'PRE_AQUATIC', 'PRE_TOX', 'PRE_INF',  # Primitives
-            'AI', 'SWARM', 'EXD',  # Event-spawned species
-            'SALVAGER', 'SHROUDWALKER', 'MINDWARDEN_ENCLAVE', 'PARAGON', 'MSI_SLAVER',  # Special NPC species
-            'WILDERNESS',  # Special origin species
-            'MINDWARDEN',  # Special event species
-            'SOLARPUNK',  # Not yet released/playable
-            'BIOGENESIS_02',  # Duplicate, keep only BIOGENESIS_01
-            'IMPERIAL',  # Requires Nemesis DLC, duplicate of HUM
-        ]
+        entry = {
+            "id": cat_id,
+            "name": name,
+            "description": description,
+            "archetype": archetype,
+            "portraits": sorted(portrait_ids),
+            "portrait_count": len(portrait_ids),
+        }
+        species_classes.append(entry)
+        print(f"  {cat_id}: {name} — {len(portrait_ids)} portraits")
 
-        for class_id, class_data in all_species_data.items():
-            if isinstance(class_data, dict) and not class_id.startswith('_'):
-                # Skip NPC-only classes
-                if class_id in npc_only_classes:
-                    print(f"  Skipping {class_id} - NPC-only species")
-                    continue
+    os.makedirs(os.path.dirname(output_file), exist_ok=True)
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(species_classes, f, indent=2, ensure_ascii=False)
 
-                # Get portraits for this class (may be empty for special species)
-                portraits = portraits_by_class.get(class_id, [])
-
-                species_class = extract_species_class_data(class_id, class_data, portraits, localizations)
-                species_classes.append(species_class)
-
-                if portraits:
-                    print(f"  {class_id}: {species_class['name']} ({len(portraits)} portraits)")
-                else:
-                    print(f"  {class_id}: {species_class['name']} (special species, uses other portraits)")
-
-        # Sort by name for better readability
-        species_classes.sort(key=lambda x: x['name'])
-
-        # Create output directory
-        os.makedirs(os.path.dirname(output_file), exist_ok=True)
-
-        # Write to JSON
-        with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump(species_classes, f, indent=2, ensure_ascii=False)
-
-        print(f"\nTotal species classes extracted: {len(species_classes)}")
-        print(f"Output saved to: {output_file}")
-
-    except Exception as e:
-        print(f"Error processing species classes: {e}")
-        import traceback
-        traceback.print_exc()
-        sys.exit(1)
+    print(f"\nTotal: {len(species_classes)} species classes")
+    print(f"Output: {output_file}")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        stellaris_path = sys.argv[1]
-    else:
-        # Default path for WSL
-        stellaris_path = "/mnt/c/Program Files (x86)/Steam/steamapps/common/Stellaris"
-
-    extract_all_species_classes(stellaris_path)
+    path = sys.argv[1] if len(sys.argv) > 1 else STELLARIS_PATH
+    out = sys.argv[2] if len(sys.argv) > 2 else OUTPUT_FILE
+    main(path, out)

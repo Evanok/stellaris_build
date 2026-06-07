@@ -1193,8 +1193,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
             )}
           </div>
 
-          {/* Portrait Selector - HIDDEN until images are available */}
-          {false && selectedSpeciesClass && (
+          {selectedSpeciesClass && (
             <div className="mb-3">
               <label className="form-label">
                 Portrait ({allSpeciesClasses.find(sc => sc.id === selectedSpeciesClass)?.portraits.length || 0} available)
@@ -1205,54 +1204,29 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                   ?.portraits.map(portraitId => (
                     <div key={portraitId} className="col-auto">
                       <div
-                        className={`border rounded p-2 ${selectedPortrait === portraitId ? 'border-primary border-3 bg-primary bg-opacity-10' : 'border-secondary'}`}
-                        style={{
-                          cursor: 'pointer',
-                          transition: 'all 0.2s',
-                        }}
+                        className={`border rounded ${selectedPortrait === portraitId ? 'border-primary border-3' : 'border-secondary'}`}
+                        style={{ cursor: 'pointer', transition: 'border-color 0.15s' }}
                         onClick={() => setSelectedPortrait(portraitId)}
                         title={portraitId}
-                        onMouseEnter={(e) => {
-                          if (selectedPortrait !== portraitId) {
-                            e.currentTarget.classList.add('border-info');
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.classList.remove('border-info');
-                        }}
                       >
-                        <div
+                        <img
+                          src={`/portraits/${portraitId}.png`}
+                          alt={portraitId}
+                          loading="lazy"
                           style={{
-                            width: '96px',
-                            height: '96px',
-                            backgroundColor: '#1a1a2e',
-                            borderRadius: '8px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '4px',
-                            padding: '8px',
+                            width: '72px',
+                            height: '72px',
+                            objectFit: 'cover',
+                            objectPosition: 'top',
+                            display: 'block',
+                            borderRadius: '4px',
+                            opacity: selectedPortrait === portraitId ? 1 : 0.6,
+                            transition: 'opacity 0.15s',
                           }}
-                        >
-                          <div style={{
-                            fontSize: '32px',
-                            filter: selectedPortrait === portraitId ? 'grayscale(0%) brightness(1.2)' : 'grayscale(50%)',
-                            transition: 'filter 0.2s',
-                          }}>
-                            👤
-                          </div>
-                          <div style={{
-                            fontSize: '9px',
-                            wordBreak: 'break-word',
-                            color: selectedPortrait === portraitId ? '#0dcaf0' : '#6c757d',
-                            fontWeight: selectedPortrait === portraitId ? 'bold' : 'normal',
-                            textAlign: 'center',
-                            width: '100%',
-                          }}>
-                            {portraitId}
-                          </div>
-                        </div>
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
                       </div>
                     </div>
                   ))}

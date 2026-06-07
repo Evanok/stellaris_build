@@ -56,6 +56,8 @@ interface Build {
   traditions: string;
   ruler_trait: string;
   tags: string;
+  species_class?: string;
+  portrait?: string;
   created_at: string;
   author_username?: string;
   author_avatar?: string;
@@ -484,9 +486,20 @@ export const Home: React.FC = () => {
                               </div>
                             )}
                           </div>
-                          <div>
-                            <span className="badge bg-primary me-1">{VERSION_NAMES[build.game_version] ?? build.game_version ?? 'Unknown'}</span>
-                            {getDifficultyBadge(build.difficulty)}
+                          <div className="d-flex flex-column align-items-end gap-1">
+                            <div>
+                              <span className="badge bg-primary me-1">{VERSION_NAMES[build.game_version] ?? build.game_version ?? 'Unknown'}</span>
+                              {getDifficultyBadge(build.difficulty)}
+                            </div>
+                            {build.portrait && (
+                              <img
+                                src={`/portraits/${build.portrait}.png`}
+                                alt=""
+                                loading="lazy"
+                                style={{ width: '56px', height: '56px', objectFit: 'cover', objectPosition: 'top', borderRadius: '6px', border: '2px solid #0dcaf0' }}
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                              />
+                            )}
                           </div>
                         </div>
 

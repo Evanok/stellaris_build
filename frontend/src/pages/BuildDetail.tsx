@@ -15,6 +15,7 @@ interface Build {
   source_url?: string;
   difficulty?: string;
   species_class?: string;
+  portrait?: string;
   origin: string;
   authority: string;
   ethics: string;
@@ -458,7 +459,15 @@ export const BuildDetail: React.FC = () => {
               {build.species_class && (() => {
                 const speciesClass = getSpeciesClassData(build.species_class);
                 return (
-                  <div className="mb-2">
+                  <div className="mb-2 d-flex align-items-center gap-2 flex-wrap">
+                    {build.portrait && (
+                      <img
+                        src={`/portraits/${build.portrait}.png`}
+                        alt={build.portrait}
+                        loading="lazy"
+                        style={{ width: '128px', height: '128px', objectFit: 'cover', objectPosition: 'top', borderRadius: '8px', border: '2px solid #0dcaf0' }}
+                      />
+                    )}
                     <span className="badge bg-info fs-6">
                       <i className="bi bi-person-badge me-1"></i>
                       {speciesClass?.name || build.species_class}
