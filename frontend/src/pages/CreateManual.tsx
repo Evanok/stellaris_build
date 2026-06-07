@@ -1,12 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BuildForm } from '../BuildForm';
+import { invalidateBuildsCache } from './Home';
 
 const CreateManual: React.FC = () => {
   const navigate = useNavigate();
 
   const handleBuildCreated = () => {
-    // Redirect to home page after successful creation
+    invalidateBuildsCache();
     navigate('/');
   };
 

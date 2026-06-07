@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BuildForm } from '../BuildForm';
+import { invalidateBuildsCache } from './Home';
 
 const ImportSave: React.FC = () => {
   const navigate = useNavigate();
@@ -49,6 +50,7 @@ const ImportSave: React.FC = () => {
   };
 
   const handleBuildCreated = () => {
+    invalidateBuildsCache();
     navigate('/');
   };
 

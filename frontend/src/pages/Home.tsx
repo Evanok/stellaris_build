@@ -73,6 +73,8 @@ const _cache: {
   authorityNames?: Record<string, Record<string, string>>;
 } = {};
 
+export const invalidateBuildsCache = () => { _cache.builds = undefined; };
+
 const IconWithFallback: React.FC<{ src: string; label: string }> = ({ src, label }) => {
   const [failed, setFailed] = useState(false);
   if (failed) {

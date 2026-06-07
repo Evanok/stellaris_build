@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../AuthContext';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
 import RatingStars from '../components/RatingStars';
+import { invalidateBuildsCache } from './Home';
 
 interface Build {
   id: number;
@@ -337,7 +338,7 @@ export const BuildDetail: React.FC = () => {
         throw new Error(data.error || 'Failed to delete build');
       }
 
-      // Redirect to home after successful deletion
+      invalidateBuildsCache();
       navigate('/');
     } catch (err: any) {
       setDeleteError(err.message);
