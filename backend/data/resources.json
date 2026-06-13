@@ -271,6 +271,18 @@
             "documentation"
           ],
           "featured": true
+        },
+        {
+          "title": "Stellaris Map Editor v1.0.4",
+          "url": "https://github.com/non-npc/Stellaris-Map-Editor",
+          "description": "Community-built map editor for Stellaris, allowing custom galaxy and system editing.",
+          "tags": [
+            "tool",
+            "map",
+            "editor",
+            "modding"
+          ],
+          "featured": true
         }
       ]
     },
