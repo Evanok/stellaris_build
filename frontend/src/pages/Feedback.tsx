@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../AuthContext';
+import ChatPanel from '../components/ChatPanel';
 
 interface FeedbackItem {
   id: number;
@@ -115,18 +116,18 @@ const Feedback: React.FC = () => {
       </Helmet>
 
       <div className="container mt-4">
-        <div className="row mb-4">
-          <div className="col">
-            <h2>
-              <i className="bi bi-chat-dots me-2"></i>
-              Feedback & Bug Reports
-            </h2>
-            <p className="text-muted">
-              Community-reported bugs and suggestions. Use the feedback button at the bottom of any page to submit your own.
-            </p>
-          </div>
+        {/* Header — full width above both columns */}
+        <div className="mb-3">
+          <h2>
+            <i className="bi bi-chat-dots me-2"></i>
+            Feedback & Bug Reports
+          </h2>
+          <p className="text-muted mb-0">
+            Community-reported bugs and suggestions. Use the feedback button at the bottom of any page to submit your own.
+          </p>
         </div>
 
+        {/* Tabs — full width */}
         <ul className="nav nav-tabs mb-4">
           {['all', 'new', 'in_progress', 'resolved'].map((s) => (
             <li className="nav-item" key={s}>
@@ -140,93 +141,105 @@ const Feedback: React.FC = () => {
           ))}
         </ul>
 
-        {feedbacks.length === 0 ? (
-          <div className="alert alert-info">
-            <i className="bi bi-info-circle me-2"></i>
-            No feedback found.
-          </div>
-        ) : (
-          <div className="row">
-            {feedbacks.map((feedback) => (
-              <div key={feedback.id} className="col-12 mb-3">
-                <div className="card bg-dark border-secondary">
-                  <div className="card-header d-flex justify-content-between align-items-center">
-                    <div>
-                      {getTypeIcon(feedback.type)}
-                      <span className="ms-2 text-capitalize">{feedback.type}</span>
-                      <span className="ms-3 text-muted small">
-                        {new Date(feedback.created_at).toLocaleString()}
-                      </span>
-                    </div>
-                    <div>
-                      {getStatusBadge(feedback.status)}
-                    </div>
-                  </div>
-                  <div className="card-body">
-                    <p className="card-text">{feedback.description}</p>
-
-                    {feedback.screenshot_path && (
-                      <div className="mb-3">
-                        <a
-                          href={`/${feedback.screenshot_path}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-sm btn-outline-secondary"
-                        >
-                          <i className="bi bi-image me-1"></i>
-                          View Screenshot
-                        </a>
-                      </div>
-                    )}
-
-                    <div className="row text-muted small">
-                      <div className="col-md-6">
-                        <strong>Page:</strong> {feedback.page_url}
-                      </div>
-                      {feedback.username && (
-                        <div className="col-md-6">
-                          <strong>Submitted by:</strong> {feedback.username}
-                        </div>
-                      )}
-                    </div>
-
-                    {isAdmin && (
-                      <div className="mt-3">
-                        <label className="me-2 text-muted small">Change Status:</label>
-                        <div className="btn-group" role="group">
-                          <button
-                            type="button"
-                            className={`btn btn-sm ${feedback.status === 'new' ? 'btn-primary' : 'btn-outline-primary'}`}
-                            onClick={() => updateStatus(feedback.id, 'new')}
-                            disabled={feedback.status === 'new'}
-                          >
-                            New
-                          </button>
-                          <button
-                            type="button"
-                            className={`btn btn-sm ${feedback.status === 'in_progress' ? 'btn-warning' : 'btn-outline-warning'}`}
-                            onClick={() => updateStatus(feedback.id, 'in_progress')}
-                            disabled={feedback.status === 'in_progress'}
-                          >
-                            In Progress
-                          </button>
-                          <button
-                            type="button"
-                            className={`btn btn-sm ${feedback.status === 'resolved' ? 'btn-success' : 'btn-outline-success'}`}
-                            onClick={() => updateStatus(feedback.id, 'resolved')}
-                            disabled={feedback.status === 'resolved'}
-                          >
-                            Resolved
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
+        <div className="row">
+          {/* Main feedback list */}
+          <div className="col-lg-8">
+            {feedbacks.length === 0 ? (
+              <div className="alert alert-info">
+                <i className="bi bi-info-circle me-2"></i>
+                No feedback found.
               </div>
-            ))}
+            ) : (
+              <div className="row">
+                {feedbacks.map((feedback) => (
+                  <div key={feedback.id} className="col-12 mb-3">
+                    <div className="card bg-dark border-secondary">
+                      <div className="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                          {getTypeIcon(feedback.type)}
+                          <span className="ms-2 text-capitalize">{feedback.type}</span>
+                          <span className="ms-3 text-muted small">
+                            {new Date(feedback.created_at).toLocaleString()}
+                          </span>
+                        </div>
+                        <div>
+                          {getStatusBadge(feedback.status)}
+                        </div>
+                      </div>
+                      <div className="card-body">
+                        <p className="card-text">{feedback.description}</p>
+
+                        {feedback.screenshot_path && (
+                          <div className="mb-3">
+                            <a
+                              href={`/${feedback.screenshot_path}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="btn btn-sm btn-outline-secondary"
+                            >
+                              <i className="bi bi-image me-1"></i>
+                              View Screenshot
+                            </a>
+                          </div>
+                        )}
+
+                        <div className="row text-muted small">
+                          <div className="col-md-6">
+                            <strong>Page:</strong> {feedback.page_url}
+                          </div>
+                          {feedback.username && (
+                            <div className="col-md-6">
+                              <strong>Submitted by:</strong> {feedback.username}
+                            </div>
+                          )}
+                        </div>
+
+                        {isAdmin && (
+                          <div className="mt-3">
+                            <label className="me-2 text-muted small">Change Status:</label>
+                            <div className="btn-group" role="group">
+                              <button
+                                type="button"
+                                className={`btn btn-sm ${feedback.status === 'new' ? 'btn-primary' : 'btn-outline-primary'}`}
+                                onClick={() => updateStatus(feedback.id, 'new')}
+                                disabled={feedback.status === 'new'}
+                              >
+                                New
+                              </button>
+                              <button
+                                type="button"
+                                className={`btn btn-sm ${feedback.status === 'in_progress' ? 'btn-warning' : 'btn-outline-warning'}`}
+                                onClick={() => updateStatus(feedback.id, 'in_progress')}
+                                disabled={feedback.status === 'in_progress'}
+                              >
+                                In Progress
+                              </button>
+                              <button
+                                type="button"
+                                className={`btn btn-sm ${feedback.status === 'resolved' ? 'btn-success' : 'btn-outline-success'}`}
+                                onClick={() => updateStatus(feedback.id, 'resolved')}
+                                disabled={feedback.status === 'resolved'}
+                              >
+                                Resolved
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Chat sidebar */}
+          <div className="col-lg-4 mt-4 mt-lg-0">
+            <div style={{ position: 'sticky', top: '1rem' }}>
+              <ChatPanel />
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

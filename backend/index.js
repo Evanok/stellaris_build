@@ -1607,6 +1607,105 @@ app.patch('/api/admin/feedback/:id', isAdmin, (req, res) => {
   );
 });
 
+// ── Chat ────────────────────────────────────────────────────────────────────
+
+// In-memory rate limit: key → [timestamp, ...]
+const chatRateLimit = new Map();
+const CHAT_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
+const CHAT_MAX_PER_WINDOW = 5;
+
+function allowChatMessage(key) {
+  const now = Date.now();
+  const recent = (chatRateLimit.get(key) || []).filter(t => now - t < CHAT_WINDOW_MS);
+  if (recent.length >= CHAT_MAX_PER_WINDOW) return false;
+  recent.push(now);
+  chatRateLimit.set(key, recent);
+  return true;
+}
+
+// Clean up old rate limit entries every 10 minutes to avoid memory leaks
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, timestamps] of chatRateLimit.entries()) {
+    const recent = timestamps.filter(t => now - t < CHAT_WINDOW_MS);
+    if (recent.length === 0) chatRateLimit.delete(key);
+    else chatRateLimit.set(key, recent);
+  }
+}, 10 * 60 * 1000);
+
+app.get('/api/chat', (req, res) => {
+  db.all(
+    `SELECT cm.id, cm.content, cm.author_name, cm.is_guest, cm.created_at,
+            u.avatar
+     FROM chat_messages cm
+     LEFT JOIN users u ON cm.author_id = u.id
+     WHERE cm.deleted = 0
+     ORDER BY cm.created_at ASC
+     LIMIT 100`,
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: 'Failed to fetch messages' });
+      res.json(rows || []);
+    }
+  );
+});
+
+app.post('/api/chat', (req, res) => {
+  const { content, guest_name } = req.body;
+
+  if (!content || content.trim().length === 0) {
+    return res.status(400).json({ error: 'Message cannot be empty' });
+  }
+  if (content.trim().length > 300) {
+    return res.status(400).json({ error: 'Message too long (max 300 characters)' });
+  }
+
+  let authorName, authorId, isGuest, rateLimitKey;
+
+  if (req.isAuthenticated()) {
+    authorName = req.user.display_name || req.user.username;
+    authorId = req.user.id;
+    isGuest = 0;
+    rateLimitKey = `user_${req.user.id}`;
+  } else {
+    const trimmedName = (guest_name || '').trim();
+    if (trimmedName.length < 2 || trimmedName.length > 20) {
+      return res.status(400).json({ error: 'Guest name must be 2–20 characters' });
+    }
+    if (!/^[a-zA-Z0-9 _-]+$/.test(trimmedName)) {
+      return res.status(400).json({ error: 'Guest name: alphanumeric, spaces, _ and - only' });
+    }
+    authorName = trimmedName;
+    authorId = null;
+    isGuest = 1;
+    rateLimitKey = `ip_${req.ip}`;
+  }
+
+  if (!allowChatMessage(rateLimitKey)) {
+    return res.status(429).json({ error: `Too many messages — max ${CHAT_MAX_PER_WINDOW} per 5 minutes` });
+  }
+
+  db.run(
+    `INSERT INTO chat_messages (content, author_name, author_id, is_guest) VALUES (?, ?, ?, ?)`,
+    [content.trim(), authorName, authorId, isGuest],
+    function(err) {
+      if (err) return res.status(500).json({ error: 'Failed to post message' });
+      res.status(201).json({ id: this.lastID, author_name: authorName, content: content.trim() });
+    }
+  );
+});
+
+app.delete('/api/chat/:id', isAdmin, (req, res) => {
+  db.run(
+    `UPDATE chat_messages SET deleted = 1 WHERE id = ?`,
+    [req.params.id],
+    function(err) {
+      if (err) return res.status(500).json({ error: 'Failed to delete message' });
+      if (this.changes === 0) return res.status(404).json({ error: 'Message not found' });
+      res.json({ success: true });
+    }
+  );
+});
+
 // Serve React app for all other routes (must be after API routes)
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));

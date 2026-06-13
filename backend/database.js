@@ -231,6 +231,22 @@ const setupDatabase = () => {
       }
     });
 
+    // Create chat_messages table for community chat
+    db.run(`CREATE TABLE IF NOT EXISTS chat_messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      content TEXT NOT NULL,
+      author_name TEXT NOT NULL,
+      author_id INTEGER,
+      is_guest INTEGER DEFAULT 0,
+      deleted INTEGER DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (author_id) REFERENCES users (id)
+    )`, (err) => {
+      if (err) {
+        console.error('Error creating chat_messages table:', err.message);
+      }
+    });
+
     // Create ratings table for build ratings
     db.run(`CREATE TABLE IF NOT EXISTS ratings (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
