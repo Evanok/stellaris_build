@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
 import { Helmet } from 'react-helmet-async';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
 import RatingStars from '../components/RatingStars';
@@ -75,30 +74,16 @@ const _cache: {
 
 export const invalidateBuildsCache = () => { _cache.builds = undefined; };
 
-const IconWithFallback: React.FC<{ src: string; label: string }> = ({ src, label }) => {
-  const [failed, setFailed] = useState(false);
-  if (failed) {
-    return (
-      <span
-        className="badge bg-secondary"
-        title={label}
-        style={{ fontSize: '0.65rem', maxWidth: '80px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
-      >
-        {label}
-      </span>
-    );
-  }
-  return (
-    <img
-      src={src}
-      alt=""
-      title={label}
-      style={{ width: '28px', height: '28px', objectFit: 'contain' }}
-      loading="lazy"
-      onError={() => setFailed(true)}
-    />
-  );
-};
+const IconWithFallback: React.FC<{ src: string; label: string }> = ({ src, label }) => (
+  <img
+    src={src}
+    alt=""
+    title={label}
+    style={{ width: '28px', height: '28px', objectFit: 'contain' }}
+    loading="lazy"
+    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+  />
+);
 
 export const Home: React.FC = () => {
   const [builds, setBuilds] = useState<Build[]>(_cache.builds || []);
@@ -487,7 +472,7 @@ export const Home: React.FC = () => {
                         </div>
 
                         <h5 className="card-title text-white mb-3">
-                          <ReactMarkdown>{decodeHtmlEntities(build.name)}</ReactMarkdown>
+                          {decodeHtmlEntities(build.name)}
                         </h5>
 
                         {/* Origin icon */}
