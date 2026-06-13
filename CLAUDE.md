@@ -145,6 +145,7 @@ The project uses npm workspaces with three main parts:
 - `BuildDetail.tsx` - Individual build view with all details, embedded YouTube videos, and soft delete button
 - `Login.tsx` - OAuth login page with Google and Steam buttons
 - `Resources.tsx` - Curated community resources page with categorized links to guides, tools, YouTubers, mods, and communities
+- `Feedback.tsx` - Feedback & bug reports list (col-lg-8) with community chat sidebar (col-lg-4)
 
 **Authentication:**
 - `AuthContext.tsx` - React context providing authentication state and user info
@@ -177,9 +178,10 @@ The project uses npm workspaces with three main parts:
 
 **Database:** `backend/database.js`
 - SQLite database stored at `./stellaris_builds.db` (created at runtime)
-- Two tables: `users` and `builds`
+- Tables: `users`, `builds`, `ratings`, `feedback`, `page_views`, `chat_messages`
 - Users table: stores OAuth user info (provider, provider_id, username, email, avatar)
 - Builds table: stores complete empire configurations with soft delete support and author_id foreign key
+- chat_messages table: community chat (content, author_name, author_id nullable, is_guest, deleted, created_at)
 - Schema uses ALTER TABLE for migrations to add new columns without breaking existing data
 
 **Authentication Routes:**
@@ -204,6 +206,9 @@ The project uses npm workspaces with three main parts:
 - `POST /api/builds` - Creates new build (requires authentication, name, checks for duplicates)
 - `DELETE /api/builds/:id` - Soft deletes a build (sets deleted=1)
 - `GET /api/resources` - Returns curated community resources (YouTube channels, guides, tools, mods, communities)
+- `GET /api/chat` - Returns last 100 non-deleted chat messages (oldest first)
+- `POST /api/chat` - Posts a chat message (logged-in or guest with pseudo); rate-limited 5 msg/5 min per IP or user_id
+- `DELETE /api/chat/:id` - Soft-deletes a chat message (admin only)
 
 **Static Data Files (backend/data/versions/):**
 Game data is versioned by Stellaris patch. Each folder maps to a game version:
@@ -485,6 +490,24 @@ Planned features (not yet implemented):
 ---
 
 ## Recent Completions
+
+### Community Chat on Feedback Page (2026-06-13)
+- Added IRC-style chat panel as a sticky sidebar on the Feedback page (col-lg-8 feedback / col-lg-4 chat)
+- New `chat_messages` SQLite table (content, author_name, author_id nullable, is_guest, deleted, created_at)
+- Backend endpoints: `GET /api/chat` (last 100 msgs), `POST /api/chat`, `DELETE /api/chat/:id` (admin only)
+- Rate limiting: 5 messages / 5 min per IP (guests) or user_id (logged-in), in-memory Map with auto-cleanup every 10 min
+- Guest users: set a pseudo on first post, stored in `localStorage` as `chat_guest_name`, editable from the panel header
+- Admin: red `×` button on each message triggers a Bootstrap modal confirmation before soft-delete
+- Polling every 8 seconds; auto-scrolls to bottom only when already near the bottom
+- Layout fix: page header (h2 + description) and tabs are full-width above the two-column grid so the chat top aligns exactly with the first feedback card
+- Key files: `backend/database.js`, `backend/index.js`, `frontend/src/components/ChatPanel.tsx`, `frontend/src/pages/Feedback.tsx`
+
+### Home Page Performance Optimization (2026-06-13)
+- Removed `ReactMarkdown` from build card titles — was instantiating a full markdown parser × 12 cards per page
+- Replaced stateful `IconWithFallback` (`useState`) with a stateless `<img onError→display:none>` — eliminated ~96 stateful React components per page load
+- Removed `react-markdown` import from `Home.tsx`; the library is now only loaded lazily from `BuildDetail`
+- HTTP caching for static assets already set to `maxAge: '30d', immutable` (portraits, icons, loading screens, JS assets)
+- Key file: `frontend/src/pages/Home.tsx`
 
 ### Species Portrait System (2026-06-07)
 - Downloaded ~312 pre-rendered portrait PNGs from Stellaris wiki (stellaris.paradoxwikis.com/Category:Species_portraits)
