@@ -18,6 +18,44 @@ const VERSION_NAMES: Record<string, string> = {
   '3.13': '3.13 (Vela)',
 };
 
+// Ethic → color (matches in-game palette)
+const ETHIC_COLORS: Record<string, string> = {
+  ethic_militarist:          '#e05c5c',
+  ethic_fanatic_militarist:  '#e84040',
+  ethic_pacifist:            '#7eb8e8',
+  ethic_fanatic_pacifist:    '#5ba3d9',
+  ethic_materialist:         '#4fc3f7',
+  ethic_fanatic_materialist: '#29b6f6',
+  ethic_spiritualist:        '#c792ea',
+  ethic_fanatic_spiritualist:'#ab47bc',
+  ethic_xenophile:           '#81c784',
+  ethic_fanatic_xenophile:   '#66bb6a',
+  ethic_xenophobe:           '#ff8a65',
+  ethic_fanatic_xenophobe:   '#ff7043',
+  ethic_authoritarian:       '#ffca28',
+  ethic_fanatic_authoritarian:'#ffb300',
+  ethic_egalitarian:         '#aed581',
+  ethic_fanatic_egalitarian: '#9ccc65',
+  ethic_gestalt_consciousness:'#26c6da',
+};
+
+const getEthicTitleColor = (ethics: string): string => {
+  const first = ethics.split(',')[0]?.trim();
+  return ETHIC_COLORS[first] ?? '#e0e0e0';
+};
+
+// Deterministic color for origins from a Stellaris-themed palette
+const ORIGIN_PALETTE = [
+  '#4fc3f7', '#c792ea', '#ffca28', '#81c784',
+  '#ff8a65', '#90caf9', '#f48fb1', '#80cbc4',
+  '#b39ddb', '#e6ee9c', '#80deea', '#ffab91',
+];
+
+const hashOriginColor = (id: string): string => {
+  const h = id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  return ORIGIN_PALETTE[h % ORIGIN_PALETTE.length];
+};
+
 // Helper function to get difficulty badge styling
 const getDifficultyBadge = (difficulty: string | undefined) => {
   if (!difficulty) return null;
@@ -79,7 +117,7 @@ const IconWithFallback: React.FC<{ src: string; label: string }> = ({ src, label
     src={src}
     alt=""
     title={label}
-    style={{ width: '28px', height: '28px', objectFit: 'contain' }}
+    style={{ width: '20px', height: '20px', objectFit: 'contain' }}
     loading="lazy"
     onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
   />
@@ -471,22 +509,20 @@ export const Home: React.FC = () => {
                           </div>
                         </div>
 
-                        <h5 className="card-title text-white mb-3">
+                        <h5
+                          className="card-title mb-3 fw-bold"
+                          style={{ color: build.ethics ? getEthicTitleColor(build.ethics) : '#e0e0e0' }}
+                        >
                           {decodeHtmlEntities(build.name)}
                         </h5>
 
-                        {/* Origin icon */}
+                        {/* Origin name */}
                         {build.origin && (
                           <div className="d-flex align-items-center gap-1 mb-1 flex-wrap">
                             <small className="text-muted" style={{ minWidth: '72px', display: 'inline-block' }}>Origin:</small>
-                            <img
-                              src={`/icons/origin_mini/${build.origin}.png`}
-                              alt=""
-                              title={originNamesByVersion[build.game_version]?.[build.origin] || build.origin.replace(/^origin_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
-                              style={{ width: '28px', height: '28px', objectFit: 'contain' }}
-                              loading="lazy"
-                              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                            />
+                            <small style={{ color: hashOriginColor(build.origin), fontWeight: 500 }}>
+                              {originNamesByVersion[build.game_version]?.[build.origin] || build.origin.replace(/^origin_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+                            </small>
                           </div>
                         )}
 
@@ -497,7 +533,7 @@ export const Home: React.FC = () => {
                             {build.civics.split(',').map(s => s.trim()).filter(Boolean).map((id, idx) => (
                               <IconWithFallback
                                 key={idx}
-                                src={`/icons/civics/${id}.png`}
+                                src={`/icons/home/${id}.webp`}
                                 label={id.replace(/^civic_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
                               />
                             ))}
@@ -511,7 +547,7 @@ export const Home: React.FC = () => {
                             {build.traits.split(',').map(s => s.trim()).filter(Boolean).map((id, idx) => (
                               <IconWithFallback
                                 key={idx}
-                                src={`/icons/traits/${id}.png`}
+                                src={`/icons/home/${id}.webp`}
                                 label={id.replace(/^trait_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
                               />
                             ))}
@@ -525,10 +561,10 @@ export const Home: React.FC = () => {
                             {build.ethics.split(',').map(s => s.trim()).filter(Boolean).map((id, idx) => (
                               <img
                                 key={idx}
-                                src={`/icons/ethics/${id}.png`}
+                                src={`/icons/home/${id}.webp`}
                                 alt=""
                                 title={ethicNamesByVersion[build.game_version]?.[id] || id}
-                                style={{ width: '28px', height: '28px', objectFit: 'contain' }}
+                                style={{ width: '20px', height: '20px', objectFit: 'contain' }}
                                 loading="lazy"
                                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                               />
@@ -541,10 +577,10 @@ export const Home: React.FC = () => {
                           <div className="d-flex align-items-center gap-1 mb-2 flex-wrap">
                             <small className="text-muted" style={{ minWidth: '72px', display: 'inline-block' }}>Authority:</small>
                             <img
-                              src={`/icons/authorities/${build.authority}.png`}
+                              src={`/icons/home/${build.authority}.webp`}
                               alt=""
                               title={authorityNamesByVersion[build.game_version]?.[build.authority] || build.authority}
-                              style={{ width: '28px', height: '28px', objectFit: 'contain' }}
+                              style={{ width: '20px', height: '20px', objectFit: 'contain' }}
                               loading="lazy"
                               onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                             />
