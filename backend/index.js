@@ -596,6 +596,22 @@ app.get('/sitemap.xml', (req, res) => {
     xml += '    <priority>0.7</priority>\n';
     xml += '  </url>\n';
 
+    // Resources page
+    xml += '  <url>\n';
+    xml += `    <loc>${baseUrl}/resources</loc>\n`;
+    xml += `    <lastmod>${currentDate}</lastmod>\n`;
+    xml += '    <changefreq>monthly</changefreq>\n';
+    xml += '    <priority>0.6</priority>\n';
+    xml += '  </url>\n';
+
+    // Feedback page
+    xml += '  <url>\n';
+    xml += `    <loc>${baseUrl}/feedback</loc>\n`;
+    xml += `    <lastmod>${currentDate}</lastmod>\n`;
+    xml += '    <changefreq>weekly</changefreq>\n';
+    xml += '    <priority>0.5</priority>\n';
+    xml += '  </url>\n';
+
     // Individual build pages
     rows.forEach(build => {
       const lastmod = build.updated_at || build.created_at;
