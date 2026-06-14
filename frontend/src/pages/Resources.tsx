@@ -71,6 +71,7 @@ export const Resources: React.FC = () => {
         <title>Stellaris Resources - Guides, Tools, YouTubers & Communities</title>
         <meta name="description" content="Curated collection of Stellaris resources: YouTube channels, written guides, online tools, Twitch streamers, essential mods, and active communities. Everything you need to master Stellaris." />
         <meta name="keywords" content="stellaris guides, stellaris youtube, stellaris mods, stellaris tools, stellaris community, stellaris tutorial, stellaris wiki" />
+        <link rel="canonical" href="https://stellaris-build.com/resources" />
       </Helmet>
 
       <div className="container-fluid p-0">

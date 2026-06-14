@@ -113,6 +113,7 @@ const Feedback: React.FC = () => {
       <Helmet>
         <title>Feedback & Bug Reports - Stellaris Build Sharing</title>
         <meta name="description" content="Community feedback, bug reports, and suggestions for Stellaris Build Sharing." />
+        <link rel="canonical" href="https://stellaris-build.com/feedback" />
       </Helmet>
 
       <div className="container mt-4">

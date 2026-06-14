@@ -285,6 +285,7 @@ export const Home: React.FC = () => {
       <Helmet>
         <title>Stellaris Build Sharing - Discover Community Empire Builds</title>
         <meta name="description" content="Browse community-created Stellaris empire builds. Find optimized species traits, civics, ethics, origins, and strategies. Share your own builds with the community." />
+        <link rel="canonical" href="https://stellaris-build.com/" />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "ItemList",
