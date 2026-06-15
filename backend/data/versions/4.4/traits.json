@@ -6179,5 +6179,277 @@
     "slave_cost": {
       "trade": -1000
     }
+  },
+  {
+    "id": "trait_photoadaptive",
+    "name": "Photoadaptive",
+    "description": "This species resonates with starlight. Variations in stellar luminosity subtly reshape their biology as they journey between stars.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_weak",
+      "trait_hollow_bones",
+      "trait_tankbound"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "drawbacks",
+      "research",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "leader_lifespan_add": 10
+    },
+    "effects": "Job Efficiency from Star Classes:   - Workers & Menial Drones: Min: -15%, Max: +15%   - Black Holes, Physicist jobs: +15%   - Class M Stars, Engineer jobs: +15% | leader_lifespan_add: +10",
+    "custom_tooltip": "trait_photoadaptive_effects",
+    "slave_cost": {
+      "trade": 1000
+    }
+  },
+  {
+    "id": "trait_solar_cells",
+    "name": "Solar Celled",
+    "description": "This species developed specialized solar cells to absorb different kinds of stellar radiation in unique ways, resulting in a variety of benefits adapted to each star type.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_delicate_frames"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "MACHINE",
+      "ROBOT"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_output",
+      "drawbacks",
+      "research",
+      "leader",
+      "special"
+    ],
+    "modifier": {
+      "leader_lifespan_add": 10
+    },
+    "effects": "Job Efficiency from Star Classes:   - Workers & Menial Drones: Min: -15%, Max: +15%   - Black Holes, Physicist jobs: +15%   - Class M Stars, Engineer jobs: +15% | leader_lifespan_add: +10",
+    "custom_tooltip": "trait_photoadaptive_effects",
+    "slave_cost": {
+      "trade": 1000
+    }
+  },
+  {
+    "id": "trait_recursive_learners",
+    "name": "Recursive Learners",
+    "description": "Born to the Arkship, this species refines its knowledge in generational cycles, each cohort improving upon the last to meet their vessel's unique demands.",
+    "cost": 1,
+    "category": "unknown",
+    "initial": true,
+    "randomized": false,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_natural_physicists",
+      "trait_natural_sociologists",
+      "trait_natural_engineers"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID"
+    ],
+    "tags": [
+      "organic",
+      "positive",
+      "pop_output",
+      "research"
+    ],
+    "modifier": {},
+    "effects": "Grants +1.25% Job Efficiency per District (up to +25%) depending on Arkship Class.   - On Civilian Arkships: Job Efficiency for Metallurgist Jobs, Artisan Jobs and Astro-Harvesters   - On Scientific Arkships: Job Efficiency for Researcher Jobs   - On Military Arkships: Job Efficiency for Engineer Jobs and Soldier Jobs",
+    "custom_tooltip": "trait_recursive_learners_effects",
+    "slave_cost": {
+      "trade": 500
+    }
+  },
+  {
+    "id": "trait_structural_awareness",
+    "name": "Structural Awareness",
+    "description": "Designed to live within the Arkship, these machines continuously map its internal stresses, flows, and routines. Different arkship designs produce different patterns, and they iteratively optimize their behavior to match the vessel they inhabit.",
+    "cost": 1,
+    "category": "unknown",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_artificial_physicists",
+      "trait_robot_artificial_sociologists",
+      "trait_robot_artificial_engineers"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "MACHINE",
+      "ROBOT"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_output",
+      "research"
+    ],
+    "modifier": {},
+    "effects": "Grants +1.25% Job Efficiency per District (up to +25%) depending on Arkship Class.   - On Civilian Arkships: Job Efficiency for Metallurgist Jobs, Artisan Jobs and Astro-Harvesters   - On Scientific Arkships: Job Efficiency for Researcher Jobs   - On Military Arkships: Job Efficiency for Engineer Jobs and Soldier Jobs",
+    "custom_tooltip": "trait_recursive_learners_effects",
+    "slave_cost": {
+      "trade": 500
+    }
+  },
+  {
+    "id": "trait_interconnected",
+    "name": "Interconnected",
+    "description": "Over generations, the boundary between Arkship and occupant has dissolved. The vessel became an extension of their senses and limbs; they, in turn, became a functional component of its design.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_double_jointed",
+      "trait_robot_emotion_emulators",
+      "trait_defence_drones"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "MACHINE",
+      "ROBOT"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_growth",
+      "amenities",
+      "upkeep",
+      "drawbacks"
+    ],
+    "modifier": {},
+    "effects": "On Arkships:   - Robot Upkeep: Min: -15%, Max: +5%   - Pop Amenities Usage: Min: -10%, Max: 0%   - These effects are proportional to the number of the Pops with this trait on the Colony.",
+    "custom_tooltip": "trait_interconnected_effects",
+    "slave_cost": {
+      "trade": 500
+    }
+  },
+  {
+    "id": "trait_reavers",
+    "name": "Reaver",
+    "description": "Cunning, not camaraderie, shaped this species' evolution. Every interaction is a contest of will, and survival belongs to the most ruthless.",
+    "cost": 2,
+    "category": "unknown",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_charismatic",
+      "trait_terraphobic"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID",
+      "ROBOT"
+    ],
+    "tags": [
+      "positive",
+      "leader"
+    ],
+    "modifier": {
+      "trader_jobs_bonus_workforce_mult": 0.05
+    },
+    "effects": "Commanders start with the Plunderer trait if they are not Xenophile or Pacifist | trader_jobs_bonus_workforce_mult: +5.0%",
+    "custom_tooltip": "trait_reavers_effects",
+    "slave_cost": {
+      "trade": 500
+    }
+  },
+  {
+    "id": "trait_defence_drones",
+    "name": "Combat-Synced",
+    "description": "Each unit is both engineer and combatant. In wartime, their synchronized protocols stabilize the whole and keep critical systems repaired and optimized.",
+    "cost": 1,
+    "category": "unknown",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_robot_bulky",
+      "trait_interconnected"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "MACHINE",
+      "ROBOT"
+    ],
+    "tags": [
+      "machine",
+      "positive",
+      "pop_output",
+      "stability",
+      "drawbacks"
+    ],
+    "modifier": {
+      "engineer_jobs_bonus_workforce_mult": 0.07,
+      "planet_pops_energy_upkeep_mult": 0.05
+    },
+    "effects": "During War or Crisis: Every 100 Pops with this trait adds +$@defence_drones_stability$ Stability to the Colony, up to +15   - These effects only apply on Artificial Worlds | engineer_jobs_bonus_workforce_mult: +7.000000000000001%; planet_pops_energy_upkeep_mult: +5.0%",
+    "custom_tooltip": "trait_defence_drones_effects",
+    "slave_cost": {
+      "trade": 1000
+    }
+  },
+  {
+    "id": "trait_terraphobic",
+    "name": "Terraphobic",
+    "description": "Having adapted to life aboard artificial environments, this species finds planetary environments oppressive. Gravity, atmosphere, and terrain pose constant challenges to their frail physiology.",
+    "cost": -1,
+    "category": "unknown",
+    "initial": true,
+    "randomized": true,
+    "modification_species_add": true,
+    "opposites": [
+      "trait_reavers",
+      "trait_adaptive",
+      "trait_extremely_adaptive"
+    ],
+    "prerequisites": [],
+    "allowed_archetypes": [
+      "BIOLOGICAL",
+      "LITHOID",
+      "MACHINE",
+      "ROBOT"
+    ],
+    "tags": [
+      "negative",
+      "amenities",
+      "army"
+    ],
+    "modifier": {
+      "army_health": -0.35
+    },
+    "effects": "On non-Artificial Worlds:   - Job Efficiency: -15%   - Pop Amenities Usage: +15% | army_health: -0.35",
+    "custom_tooltip": "trait_terraphobic_effects",
+    "slave_cost": {
+      "trade": -250
+    }
   }
 ]
