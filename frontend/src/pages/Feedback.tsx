@@ -87,27 +87,6 @@ const Feedback: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="container mt-5 text-center">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="container mt-5">
-        <div className="alert alert-danger">
-          <i className="bi bi-exclamation-triangle me-2"></i>
-          {error}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
       <Helmet>
@@ -145,7 +124,18 @@ const Feedback: React.FC = () => {
         <div className="row">
           {/* Main feedback list */}
           <div className="col-lg-8">
-            {feedbacks.length === 0 ? (
+            {loading ? (
+              <div className="text-center mt-5">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            ) : error ? (
+              <div className="alert alert-danger">
+                <i className="bi bi-exclamation-triangle me-2"></i>
+                {error}
+              </div>
+            ) : feedbacks.length === 0 ? (
               <div className="alert alert-info">
                 <i className="bi bi-info-circle me-2"></i>
                 No feedback found.
