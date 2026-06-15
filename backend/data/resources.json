@@ -7,6 +7,17 @@
       "icon": "bi-book",
       "resources": [
         {
+          "title": "Stellaris 2026 Complete Beginner's Guide",
+          "url": "https://youtu.be/6LIACJ4kqys",
+          "description": "A complete beginner's guide to Stellaris updated for 2026, covering all the fundamentals to get started.",
+          "tags": [
+            "beginner",
+            "guide",
+            "video"
+          ],
+          "featured": true
+        },
+        {
           "title": "Official Stellaris Wiki",
           "url": "https://stellaris.paradoxwikis.com/",
           "description": "Complete game mechanics reference with up-to-date patch information, maintained by the community.",
