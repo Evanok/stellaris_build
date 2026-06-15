@@ -37,7 +37,7 @@ const ChatPanel: React.FC = () => {
       const data: ChatMessage[] = await res.json();
       setMessages(data);
     } catch {
-      // silent — polling will retry
+      // network error — silently retry on next poll
     }
   };
 

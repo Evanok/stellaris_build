@@ -72,7 +72,14 @@ app.use('/portraits', express.static(path.join(__dirname, '../frontend/dist/port
 app.use('/loading_screens', express.static(path.join(__dirname, '../frontend/dist/loading_screens'), staticOpts));
 // Vite assets have content-hash filenames — safe to cache aggressively
 app.use('/assets', express.static(path.join(__dirname, '../frontend/dist/assets'), staticOpts));
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
+// index.html must never be cached — always serve fresh so users get the latest bundle hashes
+app.use(express.static(path.join(__dirname, '../frontend/dist'), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('index.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
+  }
+}));
 
 // Setup the database
 setupDatabase();
@@ -1724,6 +1731,7 @@ app.delete('/api/chat/:id', isAdmin, (req, res) => {
 
 // Serve React app for all other routes (must be after API routes)
 app.use((req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
