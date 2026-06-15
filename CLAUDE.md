@@ -214,6 +214,7 @@ The project uses npm workspaces with three main parts:
 Game data is versioned by Stellaris patch. Each folder maps to a game version:
 - `backend/data/versions/4.2/` - Stellaris 4.2 "Corvus" data
 - `backend/data/versions/4.3/` - Stellaris 4.3 "Cetus" data
+- `backend/data/versions/4.4/` - Stellaris 4.4 "Pegasus" data
 
 Each version folder contains the same set of files:
 - `traits.json` - species traits (filtered, no leader traits)
@@ -233,7 +234,7 @@ Non-versioned files (still in `backend/data/`):
 - All game data endpoints accept `?version=X.Y` query param
 - `getDataVersion(requestedVersion)` maps any version string to the nearest available data folder
 - Versions below the oldest available (4.2) fall back to 4.2
-- Versions above the latest available fall back to the latest (4.3)
+- Versions above the latest available fall back to the latest (4.4)
 - `AVAILABLE_DATA_VERSIONS` array must be updated when adding new version folders
 - `LATEST_DATA_VERSION` is auto-derived from the last element of that array
 
@@ -270,13 +271,21 @@ python3 extract_all.py "/mnt/c/Program Files (x86)/Steam/steamapps/common/Stella
 # Output goes to: output/versions/X.Y/ (created or updated automatically)
 ```
 
-**Process for a new Stellaris version (e.g. 4.4):**
-1. Run `extract_all.py` — it auto-detects the version and creates `output/versions/4.4/`
-2. Copy to backend:
+**Process for a new Stellaris version (e.g. 4.5):**
+1. Run `extract_all.py` — it auto-detects the version and creates `output/versions/4.5/`
+2. Also run separately (not included in extract_all):
 ```bash
-VERSION=4.4
+python3 extract_ruler_traits.py "<stellaris_path>"   # output/ruler_traits.json
+python3 extract_species_classes.py "<stellaris_path>" # output/species_classes.json
+cp output/ruler_traits.json output/versions/4.5/ruler_traits.json
+cp output/species_classes.json output/versions/4.5/species_classes.json
+```
+3. Check for new trait files — each DLC adds a new numbered file (e.g. `18_nomads_species_traits.txt`). Add any new file to the `species_trait_files` list in `extract_traits.py` and re-run.
+4. Copy to backend:
+```bash
+VERSION=4.5
 mkdir -p ../backend/data/versions/$VERSION
-git mv ../backend/data/versions/4.3/authorities.json ../backend/data/versions/$VERSION/authorities.json  # if unchanged, or copy
+cp ../backend/data/versions/4.4/authorities.json ../backend/data/versions/$VERSION/  # if unchanged
 cp output/versions/$VERSION/traits.json ../backend/data/versions/$VERSION/
 cp output/versions/$VERSION/civics_civics_only.json ../backend/data/versions/$VERSION/civics.json
 cp output/versions/$VERSION/civics_origins_only.json ../backend/data/versions/$VERSION/origins.json
@@ -286,10 +295,10 @@ cp output/versions/$VERSION/ascension_perks.json ../backend/data/versions/$VERSI
 cp output/versions/$VERSION/ruler_traits.json ../backend/data/versions/$VERSION/
 cp output/versions/$VERSION/species_classes.json ../backend/data/versions/$VERSION/
 ```
-3. Update `AVAILABLE_DATA_VERSIONS` in `backend/index.js` to add `'4.4'`
-4. Add `4.4` to `GAME_VERSIONS` in `frontend/src/BuildForm.tsx` (mark as Latest, update previous)
-5. Update `latestNews` in `frontend/src/pages/Home.tsx`
-6. Rebuild frontend and restart backend
+5. Update `AVAILABLE_DATA_VERSIONS` in `backend/index.js` to add `'4.5'`
+6. Add `4.5` to `GAME_VERSIONS` in `frontend/src/BuildForm.tsx` (mark as Latest, update previous)
+7. Update `latestNews` in `frontend/src/pages/Home.tsx`
+8. Rebuild frontend and restart backend
 
 **When to Re-Extract:**
 1. Stellaris major updates (new DLCs, patches)
@@ -533,6 +542,14 @@ Planned features (not yet implemented):
 - `frontend/src/pages/Home.tsx`: Added `ItemList` JSON-LD schema (top 20 builds) in Helmet
 - `frontend/src/pages/BuildDetail.tsx`: Fixed hardcoded author `"Arthur LAMBERT"` → dynamic `build.author_username || "Community Member"`
 - Key files: `frontend/public/robots.txt`, `frontend/public/llms.txt`, `frontend/index.html`, `frontend/src/pages/Home.tsx`, `frontend/src/pages/BuildDetail.tsx`
+
+### Stellaris 4.4 "Pegasus" Support (2026-06-15)
+- Added `backend/data/versions/4.4/` with all game data for Pegasus patch
+- New content: 4 origins (Voidfarers, Heirs of the Khan, The Sacred Path, Forever Cruise), 16 civics, 8 nomad species traits, 1 ascension perk (Wanderlust)
+- `18_nomads_species_traits.txt` added to `species_trait_files` list in `extract_traits.py` (same pattern as `16_infernals_traits.txt` for Infernals DLC)
+- `AVAILABLE_DATA_VERSIONS` updated to `['4.2', '4.3', '4.4']` in `backend/index.js`
+- Default build version set to 4.4 in `BuildForm.tsx`
+- Key files: `backend/data/versions/4.4/`, `backend/index.js`, `frontend/src/BuildForm.tsx`, `frontend/src/pages/Home.tsx`, `data-extractor/extract_traits.py`
 
 ### Versioned Game Data + Stellaris 4.3 "Cetus" Support (2026-03-20)
 - Game data is now versioned: `backend/data/versions/4.2/` and `backend/data/versions/4.3/`
