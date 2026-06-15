@@ -17,7 +17,8 @@
       "origin_treasure_hunters"
     ],
     "allowed_ethics": [],
-    "opposites": []
+    "opposites": [],
+    "icon": "/icons/ruler_traits/leader_trait_principled.png"
   },
   {
     "id": "leader_trait_fleet_organizer",
@@ -40,7 +41,8 @@
     "opposites": [
       "leader_trait_nervous",
       "leader_trait_nervous_2"
-    ]
+    ],
+    "icon": "/icons/ruler_traits/leader_trait_fleet_organizer.png"
   },
   {
     "id": "leader_trait_spycraft",
@@ -61,7 +63,8 @@
       "origin_treasure_hunters"
     ],
     "allowed_ethics": [],
-    "opposites": []
+    "opposites": [],
+    "icon": "/icons/ruler_traits/leader_trait_spycraft.png"
   },
   {
     "id": "leader_trait_spark_of_genius",
@@ -84,7 +87,8 @@
     "opposites": [
       "leader_trait_paranoid",
       "leader_trait_paranoid_2"
-    ]
+    ],
+    "icon": "/icons/ruler_traits/leader_trait_spark_of_genius.png"
   },
   {
     "id": "trait_ruler_industrialist",
@@ -103,7 +107,8 @@
       "origin_treasure_hunters"
     ],
     "allowed_ethics": [],
-    "opposites": []
+    "opposites": [],
+    "icon": "/icons/ruler_traits/trait_ruler_industrialist.png"
   },
   {
     "id": "trait_ruler_warlike",
@@ -124,7 +129,8 @@
       "origin_treasure_hunters"
     ],
     "allowed_ethics": [],
-    "opposites": []
+    "opposites": [],
+    "icon": "/icons/ruler_traits/trait_ruler_warlike.png"
   },
   {
     "id": "trait_ruler_charismatic",
@@ -147,7 +153,8 @@
       "origin_treasure_hunters"
     ],
     "allowed_ethics": [],
-    "opposites": []
+    "opposites": [],
+    "icon": "/icons/ruler_traits/trait_ruler_charismatic.png"
   },
   {
     "id": "trait_ruler_feedback_loop",
@@ -175,7 +182,8 @@
     "opposites": [
       "leader_trait_tyrannical",
       "leader_trait_tyrannical_2"
-    ]
+    ],
+    "icon": "/icons/ruler_traits/trait_ruler_feedback_loop.png"
   },
   {
     "id": "trait_ruler_logistic_understanding",
@@ -197,7 +205,8 @@
       "origin_treasure_hunters"
     ],
     "allowed_ethics": [],
-    "opposites": []
+    "opposites": [],
+    "icon": "/icons/ruler_traits/trait_ruler_logistic_understanding.png"
   },
   {
     "id": "trait_ruler_eye_for_talent",
@@ -219,6 +228,7 @@
       "origin_treasure_hunters"
     ],
     "allowed_ethics": [],
-    "opposites": []
+    "opposites": [],
+    "icon": "/icons/ruler_traits/trait_ruler_eye_for_talent.png"
   }
 ]
