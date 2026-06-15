@@ -438,7 +438,7 @@ app.post('/api/test/cleanup', (req, res) => {
 });
 
 // Versioned game data helpers
-const AVAILABLE_DATA_VERSIONS = ['4.2', '4.3'];
+const AVAILABLE_DATA_VERSIONS = ['4.2', '4.3', '4.4'];
 const LATEST_DATA_VERSION = AVAILABLE_DATA_VERSIONS[AVAILABLE_DATA_VERSIONS.length - 1];
 
 function getDataVersion(requestedVersion) {

@@ -140,16 +140,16 @@ export const Home: React.FC = () => {
   // What's New data
   const latestNews: NewsItem[] = [
     {
+      date: '15 Jun 2026',
+      title: 'Stellaris 4.4 "Pegasus" Support',
+      description: 'Build data updated for game version 4.4 "Pegasus". New traits, civics, origins and traditions extracted from the latest patch.',
+      type: 'update'
+    },
+    {
       date: '07 Jun 2026',
       title: 'Species Portraits & Card Redesign',
       description: 'Build cards now display species portraits, with icons for civics, traits, origin, ethics and authority. Portrait selector added to the build form.',
       type: 'feature'
-    },
-    {
-      date: '20 Mar 2026',
-      title: 'Stellaris 4.3 "Cetus" Support',
-      description: 'Build data updated for game version 4.3 "Cetus". Builds now load the correct game data for their version, preserving older builds accuracy.',
-      type: 'update'
     }
   ];
 
