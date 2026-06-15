@@ -35,17 +35,7 @@ const ChatPanel: React.FC = () => {
       const res = await fetch('/api/chat');
       if (!res.ok) return;
       const data: ChatMessage[] = await res.json();
-      setMessages(() => {
-        // Only scroll to bottom if already near the bottom
-        const list = listRef.current;
-        const wasAtBottom = list
-          ? list.scrollHeight - list.scrollTop - list.clientHeight < 80
-          : true;
-        if (wasAtBottom) {
-          setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
-        }
-        return data;
-      });
+      setMessages(data);
     } catch {
       // silent — polling will retry
     }
@@ -57,12 +47,20 @@ const ChatPanel: React.FC = () => {
     return () => clearInterval(id);
   }, []);
 
-  // Scroll to bottom on first load
+  // Scroll to bottom on first load and when new messages arrive if already near bottom
+  const prevLengthRef = useRef(0);
   useEffect(() => {
-    if (messages.length > 0) {
-      bottomRef.current?.scrollIntoView();
+    if (messages.length === 0) return;
+    const list = listRef.current;
+    const isFirstLoad = prevLengthRef.current === 0;
+    const wasAtBottom = list
+      ? list.scrollHeight - list.scrollTop - list.clientHeight < 80
+      : true;
+    if (isFirstLoad || wasAtBottom) {
+      bottomRef.current?.scrollIntoView({ behavior: isFirstLoad ? 'auto' : 'smooth' });
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    prevLengthRef.current = messages.length;
+  }, [messages]);
 
   const handleSend = async () => {
     const trimmed = input.trim();

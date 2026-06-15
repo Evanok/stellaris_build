@@ -7,6 +7,7 @@ import { WhatsNewBanner, NewsItem } from '../components/WhatsNewBanner';
 import './Home.css';
 
 const VERSION_NAMES: Record<string, string> = {
+  '4.4': '4.4 (Pegasus)',
   '4.3': '4.3 (Cetus)',
   '4.2': '4.2 (Corvus)',
   '4.1': '4.1 (Lyra)',
