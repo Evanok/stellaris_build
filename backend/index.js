@@ -1657,6 +1657,10 @@ setInterval(() => {
 }, 10 * 60 * 1000);
 
 app.get('/api/chat', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  // Prevent Express from returning 304 — the browser may have cached an empty response
+  delete req.headers['if-none-match'];
+  delete req.headers['if-modified-since'];
   db.all(
     `SELECT cm.id, cm.content, cm.author_name, cm.is_guest, cm.created_at,
             u.avatar
