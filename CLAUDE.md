@@ -500,6 +500,23 @@ Planned features (not yet implemented):
 
 ## Recent Completions
 
+### Stats Page Improvements + Resources SEO (2026-06-19)
+
+**Stats page — new stats:**
+- Added "Builds by Game Version" card (full-width, side by side with Total Builds): groups `game_version` column, normalizes legacy freeform strings (strips trailing `+`, DLC suffixes) via `normalizeVersion()` in backend
+- Added "Top 5 Most Popular Species Traits" bar chart (full-width, height 350px)
+- `renderTopItemsChart` now accepts an optional `height` param (default 250)
+- COLORS array extended to 5 entries; `VERSION_NAMES` mapping covers 4.4→3.13 (names sourced from `GAME_VERSIONS` in `BuildForm.tsx`)
+- Backend: loads `traits.json` for name mapping; queries `game_version` (not `version` — correct column name) and `traits` columns
+- Key files: `backend/index.js`, `frontend/src/pages/Stats.tsx`
+
+**Resources page SEO:**
+- Added Open Graph tags (`og:type`, `og:url`, `og:title`, `og:description`, `og:image`, `og:site_name`)
+- Added Twitter Card tags
+- Added JSON-LD `CollectionPage` + `ItemList` schema (built dynamically from `resourcesData` once loaded)
+- Sitemap priority `0.6 → 0.8`, changefreq `monthly → weekly`
+- Key files: `frontend/src/pages/Resources.tsx`, `backend/index.js`
+
 ### Community Chat on Feedback Page (2026-06-13)
 - Added IRC-style chat panel as a sticky sidebar on the Feedback page (col-lg-8 feedback / col-lg-4 chat)
 - New `chat_messages` SQLite table (content, author_name, author_id nullable, is_guest, deleted, created_at)
