@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Container, Card, Row, Col, Alert, Spinner, ListGroup } from 'react-bootstrap';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
 
 interface TopItem {
   name: string;
@@ -128,7 +128,7 @@ export default function Stats() {
       <Row className="mb-4">
         <Col md={4}>
           <Card bg="secondary" text="white" className="h-100">
-            <Card.Body className="text-center">
+            <Card.Body className="text-center d-flex flex-column justify-content-center">
               <Card.Title>Total Builds Shared</Card.Title>
               <h2>{stats.totalBuilds}</h2>
             </Card.Body>
@@ -138,19 +138,23 @@ export default function Stats() {
           <Card bg="secondary" text="white" className="h-100">
             <Card.Body>
               <Card.Title>Builds by Game Version</Card.Title>
-              <Row className="g-2 mt-1">
-                {stats.versionDistribution.map((v, i) => (
-                  <Col key={i} xs={6} sm={4}>
-                    <div className="p-2 rounded text-center" style={{ background: 'rgba(0,0,0,0.3)' }}>
-                      <div className="fw-bold" style={{ color: COLORS[i % COLORS.length] }}>
-                        {VERSION_NAMES[v.name] || v.name}
-                      </div>
-                      <div className="fs-4 fw-bold text-white">{v.count}</div>
-                      <div className="text-secondary small">{v.percentage}%</div>
-                    </div>
-                  </Col>
-                ))}
-              </Row>
+              {(() => {
+                const top = stats.versionDistribution.slice(0, 5);
+                const otherCount = stats.versionDistribution.slice(5).reduce((s, v) => s + v.count, 0);
+                const pieData = otherCount > 0
+                  ? [...top.map(v => ({ name: VERSION_NAMES[v.name] || v.name, value: v.count })), { name: 'Other', value: otherCount }]
+                  : top.map(v => ({ name: VERSION_NAMES[v.name] || v.name, value: v.count }));
+                return (
+                  <ResponsiveContainer width="100%" height={200}>
+                    <PieChart>
+                      <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} label={({ name, percent }: any) => `${name} ${((percent as number) * 100).toFixed(0)}%`} labelLine={false}>
+                        {pieData.map((_entry, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                      </Pie>
+                      <Tooltip formatter={(value: number) => [`${value} builds`, '']} contentStyle={{ backgroundColor: '#333', border: '1px solid #555' }} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                );
+              })()}
             </Card.Body>
           </Card>
         </Col>
