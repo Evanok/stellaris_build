@@ -30,9 +30,13 @@ interface StatsData {
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#a4de6c'];
 
 const VERSION_NAMES: Record<string, string> = {
-  '4.2': '4.2 "Corvus"',
-  '4.3': '4.3 "Cetus"',
   '4.4': '4.4 "Pegasus"',
+  '4.3': '4.3 "Cetus"',
+  '4.2': '4.2 "Corvus"',
+  '4.1': '4.1 "Lyra"',
+  '4.0': '4.0 "Phoenix"',
+  '3.14': '3.14 "Circinus"',
+  '3.13': '3.13 "Vela"',
 };
 
 export default function Stats() {
