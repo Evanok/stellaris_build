@@ -10,215 +10,142 @@
           "title": "Stellaris 2026 Complete Beginner's Guide",
           "url": "https://youtu.be/6LIACJ4kqys",
           "description": "A complete beginner's guide to Stellaris updated for 2026, covering all the fundamentals to get started.",
-          "tags": [
-            "beginner",
-            "guide",
-            "video"
-          ],
+          "tags": ["beginner", "guide", "video"],
+          "era": "4.3+",
           "featured": true
         },
         {
           "title": "Official Stellaris Wiki",
           "url": "https://stellaris.paradoxwikis.com/",
           "description": "Complete game mechanics reference with up-to-date patch information, maintained by the community.",
-          "tags": [
-            "wiki",
-            "reference",
-            "mechanics"
-          ],
+          "tags": ["wiki", "reference", "mechanics"],
           "featured": false
         },
         {
           "title": "Steam Community Guides",
           "url": "https://steamcommunity.com/app/281990/guides/",
           "description": "Player-created guides covering everything from beginner tips to advanced min-maxing strategies.",
-          "tags": [
-            "steam",
-            "guides",
-            "community"
-          ],
+          "tags": ["steam", "guides", "community"],
           "featured": false
         },
         {
           "title": "How To Tech Rush In Stellaris 4.0",
           "url": "https://www.youtube.com/watch?v=rK6RstNJtXM&t=1524s",
           "description": "Complete guide to tech rushing strategies in Stellaris 4.0 for early game dominance.",
-          "tags": [
-            "tech",
-            "strategy",
-            "guide",
-            "4.0"
-          ],
+          "tags": ["tech", "strategy", "guide", "4.0"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "13 Stellaris 4.0 Tips I Wish I Knew Earlier",
           "url": "https://www.youtube.com/watch?v=QFn2uu_m7ek",
           "description": "Essential tips and tricks for Stellaris 4.0 to improve your gameplay.",
-          "tags": [
-            "tips",
-            "guide",
-            "4.0",
-            "beginner"
-          ],
+          "tags": ["tips", "guide", "4.0", "beginner"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "Stellaris 4.3 Early Game Colonization Guide",
           "url": "https://youtu.be/10e4M_Vy-Ac?si=kgIZrDK2f5APT1fQ",
           "description": "Complete early game colonization guide for Stellaris 4.3, covering expansion strategy and planet setup.",
-          "tags": [
-            "colonization",
-            "early-game",
-            "guide",
-            "4.3"
-          ],
+          "tags": ["colonization", "early-game", "guide", "4.3"],
+          "era": "4.3+",
           "featured": true
         },
         {
           "title": "The COMPLETE Economy Guide for Stellaris 4.3",
           "url": "https://youtu.be/FSAfATg-8Uk?si=R9M_HtozIPrNSLds",
           "description": "Complete economy guide for Stellaris 4.3 covering all aspects of resource management and optimization.",
-          "tags": [
-            "economy",
-            "guide",
-            "4.3",
-            "resources"
-          ],
+          "tags": ["economy", "guide", "4.3", "resources"],
+          "era": "4.3+",
           "featured": true
         },
         {
           "title": "How To Start Every Game Of Stellaris 4.3 - Every Single Click",
           "url": "https://youtu.be/omVc01TjWdE?si=O0YaXjg0XJe-_rqr",
           "description": "Step-by-step guide for optimal early game opening moves in Stellaris 4.3.",
-          "tags": [
-            "early-game",
-            "guide",
-            "4.3",
-            "tutorial"
-          ],
+          "tags": ["early-game", "guide", "4.3", "tutorial"],
+          "era": "4.3+",
           "featured": true
         },
         {
           "title": "How To Start Every Game Of Stellaris 4.0 - Every Single Click",
           "url": "https://www.youtube.com/watch?v=Ya9wOYyZTtk&t=362s",
           "description": "Step-by-step guide for optimal early game opening moves in Stellaris 4.0.",
-          "tags": [
-            "early-game",
-            "guide",
-            "4.0",
-            "tutorial"
-          ],
+          "tags": ["early-game", "guide", "4.0", "tutorial"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "The ULTIMATE Stellaris 4.0 Trade Build",
           "url": "https://www.youtube.com/watch?v=nPIoETuun_I",
           "description": "Complete trade-focused empire build guide for maximum economic power.",
-          "tags": [
-            "trade",
-            "build",
-            "economy",
-            "4.0"
-          ],
+          "tags": ["trade", "build", "economy", "4.0"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "How To Play Stellaris 4.0 - Planetary Management",
           "url": "https://www.youtube.com/watch?v=YoEB3AQTiDI",
           "description": "Comprehensive guide to managing planets efficiently in Stellaris 4.0.",
-          "tags": [
-            "planets",
-            "management",
-            "guide",
-            "4.0"
-          ],
+          "tags": ["planets", "management", "guide", "4.0"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "A Starter Guide To Planets In Stellaris 4.0",
           "url": "https://www.youtube.com/watch?v=mnq4dWvDh1w&t=13s",
           "description": "Beginner-friendly introduction to planetary mechanics and optimization.",
-          "tags": [
-            "planets",
-            "beginner",
-            "guide",
-            "4.0"
-          ],
+          "tags": ["planets", "beginner", "guide", "4.0"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "Tradition Tier List",
           "url": "https://www.youtube.com/watch?v=FXR-euo0LmI",
-          "description": "Comprehensive tier list ranking all tradition trees by effectiveness.",
-          "tags": [
-            "traditions",
-            "tier-list",
-            "meta",
-            "guide"
-          ],
+          "description": "Comprehensive tier list ranking all tradition trees by effectiveness — Stellaris 4.1.",
+          "tags": ["traditions", "tier-list", "meta", "guide"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "Civic Tier List 4.1",
           "url": "https://www.youtube.com/watch?v=kn5mHcg8uko&t=45s",
           "description": "Updated civic tier list for Stellaris 4.1 with meta analysis.",
-          "tags": [
-            "civics",
-            "tier-list",
-            "meta",
-            "4.1"
-          ],
+          "tags": ["civics", "tier-list", "meta", "4.1"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "6 Essential Tips to DOMINATE the Early Game in Stellaris",
           "url": "https://youtu.be/WJlSrJxdhck",
           "description": "Key strategies for gaining early game advantage and snowballing to victory.",
-          "tags": [
-            "early-game",
-            "tips",
-            "strategy",
-            "guide"
-          ],
+          "tags": ["early-game", "tips", "strategy", "guide"],
+          "era": "pre-4.0",
           "featured": false
         },
         {
           "title": "Population Growth in 4.0: How it Works and How it Changed",
           "url": "https://www.reddit.com/r/Stellaris/comments/1kifurt/population_growth_in_40_how_it_works_and_how_it/",
           "description": "Comprehensive Reddit post explaining the population growth mechanics in Stellaris 4.0 and how they differ from previous versions.",
-          "tags": [
-            "population",
-            "growth",
-            "mechanics",
-            "4.0",
-            "reddit"
-          ],
+          "tags": ["population", "growth", "mechanics", "4.0", "reddit"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "How Pop Growth Actually Works In Stellaris 4.3",
           "url": "https://youtu.be/902Og2cxrhs?si=V-4pf8zAZfIGz3rh",
           "description": "Detailed breakdown of population growth mechanics in Stellaris 4.3.",
-          "tags": [
-            "population",
-            "growth",
-            "mechanics",
-            "4.3",
-            "guide"
-          ],
+          "tags": ["population", "growth", "mechanics", "4.3", "guide"],
+          "era": "4.3+",
           "featured": true
         },
         {
           "title": "17 Stellaris 4.3 Tips I Wish I Knew Earlier",
           "url": "https://youtu.be/C4Knz2xdSBI?si=BHgFVB712ZoAyyD8",
           "description": "17 essential tips and tricks for Stellaris 4.3 to improve your gameplay.",
-          "tags": [
-            "tips",
-            "guide",
-            "4.3",
-            "beginner"
-          ],
+          "tags": ["tips", "guide", "4.3", "beginner"],
+          "era": "4.3+",
           "featured": true
         }
       ]
@@ -233,35 +160,21 @@
           "title": "Montu Plays",
           "url": "https://www.youtube.com/@MontuPlays",
           "description": "Meta analysis, tier lists, and competitive builds. Best for min-maxers and players seeking overpowered strategies.",
-          "tags": [
-            "meta",
-            "builds",
-            "guides",
-            "tier-lists"
-          ],
+          "tags": ["meta", "builds", "guides", "tier-lists"],
           "featured": true
         },
         {
           "title": "Ep3o",
           "url": "https://www.youtube.com/@ep3o",
           "description": "In-depth strategy guides, optimization tips, and competitive gameplay for experienced players.",
-          "tags": [
-            "strategy",
-            "guides",
-            "advanced",
-            "competitive"
-          ],
+          "tags": ["strategy", "guides", "advanced", "competitive"],
           "featured": true
         },
         {
           "title": "Thundershock",
           "url": "https://www.youtube.com/@Thundershock",
           "description": "Comprehensive tutorials, gameplay analysis, and strategic content for Stellaris players.",
-          "tags": [
-            "guides",
-            "tutorial",
-            "strategy"
-          ],
+          "tags": ["guides", "tutorial", "strategy"],
           "featured": false
         }
       ]
@@ -276,23 +189,14 @@
           "title": "Stellaris Modding Tools",
           "url": "https://stellaris.paradoxwikis.com/Modding",
           "description": "Official modding documentation and tools for creating custom content.",
-          "tags": [
-            "modding",
-            "tools",
-            "documentation"
-          ],
+          "tags": ["modding", "tools", "documentation"],
           "featured": true
         },
         {
           "title": "Stellaris Map Editor v1.0.4",
           "url": "https://github.com/non-npc/Stellaris-Map-Editor",
           "description": "Community-built map editor for Stellaris, allowing custom galaxy and system editing.",
-          "tags": [
-            "tool",
-            "map",
-            "editor",
-            "modding"
-          ],
+          "tags": ["tool", "map", "editor", "modding"],
           "featured": true
         }
       ]
@@ -314,286 +218,208 @@
           "title": "((( NSC3 - Season 1 )))",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=683230077",
           "description": "Adds new ship classes, stations, and expanded gameplay mechanics for naval warfare.",
-          "tags": [
-            "mod",
-            "workshop",
-            "ships"
-          ],
+          "tags": ["mod", "workshop", "ships"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "More Events Mod",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=727000451",
           "description": "Introduces a wide variety of new events to enrich your gameplay experience.",
-          "tags": [
-            "mod",
-            "workshop",
-            "events"
-          ],
+          "tags": ["mod", "workshop", "events"],
+          "era": "4.0+",
           "featured": true
         },
         {
           "title": "Guilli's Planet Modifiers and Features",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=865040033",
           "description": "Adds numerous unique planetary modifiers and features for diverse worlds.",
-          "tags": [
-            "mod",
-            "workshop",
-            "planets"
-          ],
+          "tags": ["mod", "workshop", "planets"],
+          "era": "4.0+",
           "featured": true
         },
         {
           "title": "Real Space 4.0",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=937289339",
           "description": "Improves the scale and realism of star systems and galaxy visuals.",
-          "tags": [
-            "mod",
-            "workshop",
-            "visual"
-          ],
+          "tags": ["mod", "workshop", "visual"],
+          "era": "4.0+",
           "featured": true
         },
         {
           "title": "Ethics and Civics Classic (Machine Spirit Update)",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1100284147",
           "description": "Expands ethics and civics options for greater empire customization.",
-          "tags": [
-            "mod",
-            "workshop",
-            "civics"
-          ],
+          "tags": ["mod", "workshop", "civics"],
+          "era": "4.0+",
           "featured": true
         },
         {
           "title": "Gigastructural Engineering & More (4.1)",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1121692237",
           "description": "Build massive megastructures and gigastructures beyond vanilla limits.",
-          "tags": [
-            "mod",
-            "workshop",
-            "megastructures"
-          ],
+          "tags": ["mod", "workshop", "megastructures"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "Dynamic Political Events",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1227620643",
           "description": "Adds dynamic political events to make internal empire management more engaging.",
-          "tags": [
-            "mod",
-            "workshop",
-            "politics"
-          ],
+          "tags": ["mod", "workshop", "politics"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "UI Overhaul Dynamic",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1623423360",
           "description": "Complete UI overhaul with improved readability, scaling, and customization options.",
-          "tags": [
-            "mod",
-            "workshop",
-            "ui"
-          ],
+          "tags": ["mod", "workshop", "ui"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "Even More Origins",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1998204784",
           "description": "Introduces even more origins to start your game in unique ways.",
-          "tags": [
-            "mod",
-            "workshop",
-            "origins"
-          ],
+          "tags": ["mod", "workshop", "origins"],
+          "era": "4.0+",
           "featured": true
         },
         {
           "title": "More Origins Mod",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2025131190",
           "description": "Adds a selection of new origins to diversify early game starts.",
-          "tags": [
-            "mod",
-            "workshop",
-            "origins"
-          ],
+          "tags": ["mod", "workshop", "origins"],
+          "era": "4.0+",
           "featured": true
         },
         {
           "title": "Extra Events 4.1 Continued",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2807778592",
           "description": "Continues adding extra events for mid and late game variety.",
-          "tags": [
-            "mod",
-            "workshop",
-            "events"
-          ],
+          "tags": ["mod", "workshop", "events"],
+          "era": "4.0+",
           "featured": true
         },
         {
           "title": "Forgotten Empires 4.1",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3062038863",
           "description": "Adds new fallen empires with unique mechanics and lore.",
-          "tags": [
-            "mod",
-            "workshop",
-            "empires"
-          ],
+          "tags": ["mod", "workshop", "empires"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "Archaeology Story Pack 4.1",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3079374348",
           "description": "Story pack focused on archaeology with new event chains and discoveries.",
-          "tags": [
-            "mod",
-            "workshop",
-            "archaeology"
-          ],
+          "tags": ["mod", "workshop", "archaeology"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "UI Overhaul Dynamic - Extended Topbar for DLCs",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3090328185",
           "description": "Extension for UI Overhaul Dynamic that enhances the topbar with DLC information.",
-          "tags": [
-            "mod",
-            "workshop",
-            "ui"
-          ],
+          "tags": ["mod", "workshop", "ui"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "More Ascension Perks",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3099975582",
           "description": "Adds many new ascension perks to further specialize your empire.",
-          "tags": [
-            "mod",
-            "workshop",
-            "perks"
-          ],
+          "tags": ["mod", "workshop", "perks"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "31 Tradition Slots + 32 AP Slots",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3359568450",
           "description": "Increases the number of tradition and ascension perk slots available.",
-          "tags": [
-            "mod",
-            "workshop",
-            "slots"
-          ],
+          "tags": ["mod", "workshop", "slots"],
+          "era": "4.0+",
           "featured": true
         },
         {
           "title": "Species Traits Expansion: Galactic Diversity",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3484023963",
           "description": "Significantly expands available species traits for greater galactic diversity.",
-          "tags": [
-            "mod",
-            "workshop",
-            "traits"
-          ],
+          "tags": ["mod", "workshop", "traits"],
+          "era": "4.0+",
           "featured": true
         },
         {
           "title": "UI Overhaul Dynamic - Planet View Performance Mode",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3491116708",
           "description": "Performance mode for UI Overhaul Dynamic's planet view.",
-          "tags": [
-            "mod",
-            "workshop",
-            "ui"
-          ],
+          "tags": ["mod", "workshop", "ui"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "! Immersive Galaxy and Skybox",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2407436476",
           "description": "Enhances immersion with new galaxy and skybox textures.",
-          "tags": [
-            "mod",
-            "workshop",
-            "visual"
-          ],
+          "tags": ["mod", "workshop", "visual"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "French Traduction",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3513691177",
           "description": "Provides French translation for the game and many popular mods.",
-          "tags": [
-            "mod",
-            "workshop",
-            "localization"
-          ],
+          "tags": ["mod", "workshop", "localization"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "National Statistics Bureau with Outer Web GUI",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3515361444",
           "description": "Adds a national statistics bureau with external web interface.",
-          "tags": [
-            "mod",
-            "workshop",
-            "statistics"
-          ],
+          "tags": ["mod", "workshop", "statistics"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "Fatal Foundations Story Pack [4.1]",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2627609414",
           "description": "Story pack adding new narrative foundations and events.",
-          "tags": [
-            "mod",
-            "workshop",
-            "story"
-          ],
+          "tags": ["mod", "workshop", "story"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "More Leader Traits",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3195070547",
           "description": "Increases the number of traits available for leaders.",
-          "tags": [
-            "mod",
-            "workshop",
-            "leaders"
-          ],
+          "tags": ["mod", "workshop", "leaders"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "More Astral Rifts",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3275068730",
           "description": "Adds more astral rifts to explore and exploit.",
-          "tags": [
-            "mod",
-            "workshop",
-            "astral"
-          ],
+          "tags": ["mod", "workshop", "astral"],
+          "era": "4.0+",
           "featured": true
         },
         {
           "title": "UI Overhaul Dynamic - Extended Topbar",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1780481482",
           "description": "Extends the resource topbar to display more information.",
-          "tags": [
-            "mod",
-            "workshop",
-            "ui"
-          ],
+          "tags": ["mod", "workshop", "ui"],
+          "era": "4.0+",
           "featured": false
         },
         {
           "title": "Longer Contracts",
           "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3585198165",
           "description": "Allows signing mercenary and other contracts for longer durations.",
-          "tags": [
-            "mod",
-            "workshop",
-            "contracts"
-          ],
+          "tags": ["mod", "workshop", "contracts"],
+          "era": "4.0+",
           "featured": false
         }
       ]
@@ -608,44 +434,28 @@
           "title": "Official Stellaris Discord",
           "url": "https://discord.com/invite/stellarisofficial",
           "description": "Official community Discord with channels for strategy, modding, multiplayer, and announcements.",
-          "tags": [
-            "discord",
-            "official",
-            "community"
-          ],
+          "tags": ["discord", "official", "community"],
           "featured": true
         },
         {
           "title": "Paradox Forums",
           "url": "https://forum.paradoxplaza.com/forum/forums/stellaris.900/",
           "description": "Official forums for bug reports, suggestions, developer interaction, and detailed strategy discussions.",
-          "tags": [
-            "forum",
-            "official",
-            "support"
-          ],
+          "tags": ["forum", "official", "support"],
           "featured": true
         },
         {
           "title": "r/Stellaris Reddit Community",
           "url": "https://www.reddit.com/r/Stellaris/",
           "description": "Active community with daily discussions, build sharing, memes, and strategy debates.",
-          "tags": [
-            "reddit",
-            "community",
-            "discussions"
-          ],
+          "tags": ["reddit", "community", "discussions"],
           "featured": true
         },
         {
           "title": "Steam General Discussion",
           "url": "https://steamcommunity.com/app/281990/discussions/",
           "description": "Official Steam community discussions for general topics, technical support, and community interaction.",
-          "tags": [
-            "steam",
-            "forum",
-            "community"
-          ],
+          "tags": ["steam", "forum", "community"],
           "featured": true
         }
       ]
