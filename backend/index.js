@@ -1181,6 +1181,7 @@ app.get('/api/stats', async (req, res) => {
     const authoritiesData = JSON.parse(fs.readFileSync(path.join(latestVersionPath, 'authorities.json'), 'utf8'));
     const perksDataRaw = JSON.parse(fs.readFileSync(path.join(latestVersionPath, 'ascension_perks.json'), 'utf8'));
     const traditionsData = JSON.parse(fs.readFileSync(path.join(latestVersionPath, 'traditions.json'), 'utf8'));
+    const traitsData = JSON.parse(fs.readFileSync(path.join(latestVersionPath, 'traits.json'), 'utf8'));
 
     // Extract perks array from object structure
     const perksData = Array.isArray(perksDataRaw) ? perksDataRaw : (perksDataRaw.all || []);
@@ -1195,6 +1196,7 @@ app.get('/api/stats', async (req, res) => {
       // Tradition trees are stored as object with tree name as key
       return traditionsData[id]?.adopt?.name || id;
     };
+    const getTraitName = (id) => traitsData.find(t => t.id === id)?.name || id;
 
     // 1. Total builds
     const totalBuilds = await new Promise((resolve, reject) => {
@@ -1369,7 +1371,54 @@ app.get('/api/stats', async (req, res) => {
       }));
     stats.topTraditions = topTraditions;
 
-    // 8. Top 5 Contributors
+    // 8. Version distribution
+    const versionDistribution = await new Promise((resolve, reject) => {
+      db.all(
+        `SELECT COALESCE(version, 'Unknown') as version, COUNT(*) as count
+         FROM builds
+         WHERE deleted = 0
+         GROUP BY version
+         ORDER BY count DESC`,
+        (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows.map(row => ({
+            name: row.version,
+            count: row.count,
+            percentage: ((row.count / totalBuilds) * 100).toFixed(1)
+          })));
+        }
+      );
+    });
+    stats.versionDistribution = versionDistribution;
+
+    // 9. Top 5 Traits
+    const allBuildsTraits = await new Promise((resolve, reject) => {
+      db.all('SELECT traits FROM builds WHERE deleted = 0 AND traits IS NOT NULL', (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      });
+    });
+
+    const traitCounts = {};
+    allBuildsTraits.forEach(build => {
+      if (build.traits) {
+        build.traits.split(',').map(t => t.trim()).filter(t => t).forEach(trait => {
+          traitCounts[trait] = (traitCounts[trait] || 0) + 1;
+        });
+      }
+    });
+
+    const topTraits = Object.entries(traitCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([id, count]) => ({
+        name: getTraitName(id),
+        count,
+        percentage: ((count / totalBuilds) * 100).toFixed(1)
+      }));
+    stats.topTraits = topTraits;
+
+    // 10. Top 5 Contributors
     const topContributors = await new Promise((resolve, reject) => {
       db.all(
         `SELECT u.username, u.avatar, COUNT(b.id) as buildCount
