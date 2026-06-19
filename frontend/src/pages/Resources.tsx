@@ -7,6 +7,7 @@ interface Resource {
   url: string;
   description: string;
   tags: string[];
+  era?: '4.3+' | '4.0+';
   featured: boolean;
 }
 
@@ -27,6 +28,7 @@ export const Resources: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedEra, setSelectedEra] = useState<string>('all');
 
   useEffect(() => {
     fetch('/api/resources')
@@ -61,9 +63,26 @@ export const Resources: React.FC = () => {
     );
   }
 
-  const filteredCategories = selectedCategory === 'all'
+  const eraOptions = [
+    { value: 'all', label: 'All Versions' },
+    { value: '4.3+', label: '4.3+ Current' },
+    { value: '4.0+', label: '4.0+' },
+  ];
+
+  const filterByEra = (resource: Resource) => {
+    if (selectedEra === 'all') return true;
+    if (selectedEra === '4.3+') return resource.era === '4.3+';
+    if (selectedEra === '4.0+') return resource.era === '4.0+' || resource.era === '4.3+';
+    return true;
+  };
+
+  const filteredCategories = (selectedCategory === 'all'
     ? resourcesData.categories
-    : resourcesData.categories.filter(cat => cat.id === selectedCategory);
+    : resourcesData.categories.filter(cat => cat.id === selectedCategory)
+  ).map(cat => ({
+    ...cat,
+    resources: cat.resources.filter(filterByEra)
+  })).filter(cat => cat.resources.length > 0);
 
   return (
     <>
@@ -122,10 +141,16 @@ export const Resources: React.FC = () => {
               <div className="col-md-8">
                 <h1 className="display-3 fw-bold text-white mb-3">
                   <i className="bi bi-collection me-3"></i>
-                  Community Resources
+                  Best Stellaris Guides & Resources
                 </h1>
-                <p className="lead text-light mb-0">
+                <p className="lead text-light mb-2">
                   Curated guides, tools, and content creators to help you master Stellaris
+                </p>
+                <p className="text-light mb-0" style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
+                  New to Stellaris? Start without mods and pick a simple build — the game is complex enough on its own.
+                  Patch <strong className="text-white">4.0 "Phoenix"</strong> was a complete overhaul of the game's economy and population systems, making most older guides obsolete.
+                  However, 4.0 shipped with severe performance issues — especially in the late game. These were finally fixed in <strong className="text-white">4.3 "Cetus"</strong>, which is when the game became stable again.
+                  For up-to-date video content, <strong className="text-white">Montu Plays</strong> and <strong className="text-white">Ep3o</strong> are the most active creators covering the current meta.
                 </p>
               </div>
               <div className="col-md-4 text-end">
@@ -139,6 +164,24 @@ export const Resources: React.FC = () => {
         </div>
 
         <div className="container mt-4">
+          {/* Era Filter */}
+          <div className="row mb-2">
+            <div className="col-12">
+              <div className="d-flex flex-wrap gap-2 align-items-center">
+                <span className="text-secondary small me-1">Version:</span>
+                {eraOptions.map(era => (
+                  <button
+                    key={era.value}
+                    className={`btn btn-sm ${selectedEra === era.value ? 'btn-warning' : 'btn-outline-secondary'}`}
+                    onClick={() => setSelectedEra(era.value)}
+                  >
+                    {era.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
           {/* Category Filter Tabs */}
           <div className="row mb-4">
             <div className="col-12">
@@ -200,7 +243,14 @@ export const Resources: React.FC = () => {
                                   {resource.title}
                                   <i className="bi bi-box-arrow-up-right ms-2 text-muted small"></i>
                                 </h5>
-                                <span className="badge bg-warning text-dark">Featured</span>
+                                <div className="d-flex gap-1">
+                                  {resource.era && (
+                                    <span className={`badge ${resource.era === '4.3+' ? 'bg-success' : resource.era === 'pre-4.0' ? 'bg-danger' : 'bg-secondary'}`}>
+                                      {resource.era}
+                                    </span>
+                                  )}
+                                  <span className="badge bg-warning text-dark">Featured</span>
+                                </div>
                               </div>
                               <p className="text-light mb-3">{resource.description}</p>
                               <div className="d-flex flex-wrap gap-1">
@@ -236,10 +286,17 @@ export const Resources: React.FC = () => {
                         >
                           <div className="card bg-dark border-secondary h-100 resource-card">
                             <div className="card-body">
-                              <h6 className="text-white mb-2">
-                                {resource.title}
-                                <i className="bi bi-box-arrow-up-right ms-2 text-muted small"></i>
-                              </h6>
+                              <div className="d-flex justify-content-between align-items-start mb-1">
+                                <h6 className="text-white mb-0">
+                                  {resource.title}
+                                  <i className="bi bi-box-arrow-up-right ms-2 text-muted small"></i>
+                                </h6>
+                                {resource.era && (
+                                  <span className={`badge ms-2 flex-shrink-0 ${resource.era === '4.3+' ? 'bg-success' : resource.era === 'pre-4.0' ? 'bg-danger' : 'bg-secondary'}`}>
+                                    {resource.era}
+                                  </span>
+                                )}
+                              </div>
                               <p className="text-light small mb-2">{resource.description}</p>
                               <div className="d-flex flex-wrap gap-1">
                                 {resource.tags.map((tag, tagIdx) => (
