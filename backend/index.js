@@ -607,8 +607,9 @@ app.get('/sitemap.xml', (req, res) => {
     xml += '  <url>\n';
     xml += `    <loc>${baseUrl}/resources</loc>\n`;
     xml += `    <lastmod>${currentDate}</lastmod>\n`;
-    xml += '    <changefreq>monthly</changefreq>\n';
-    xml += '    <priority>0.6</priority>\n';
+
+    xml += '    <changefreq>weekly</changefreq>\n';
+    xml += '    <priority>0.8</priority>\n';
     xml += '  </url>\n';
 
     // Feedback page

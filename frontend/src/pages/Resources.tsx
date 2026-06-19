@@ -72,6 +72,39 @@ export const Resources: React.FC = () => {
         <meta name="description" content="Curated collection of Stellaris resources: YouTube channels, written guides, online tools, Twitch streamers, essential mods, and active communities. Everything you need to master Stellaris." />
         <meta name="keywords" content="stellaris guides, stellaris youtube, stellaris mods, stellaris tools, stellaris community, stellaris tutorial, stellaris wiki" />
         <link rel="canonical" href="https://stellaris-build.com/resources" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://stellaris-build.com/resources" />
+        <meta property="og:title" content="Stellaris Resources - Guides, Tools, YouTubers & Communities" />
+        <meta property="og:description" content="Curated collection of Stellaris resources: YouTube channels, written guides, online tools, essential mods, and active communities. Everything you need to master Stellaris." />
+        <meta property="og:image" content="https://stellaris-build.com/og-image.jpg" />
+        <meta property="og:site_name" content="Stellaris Build Sharing" />
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://stellaris-build.com/resources" />
+        <meta property="twitter:title" content="Stellaris Resources - Guides, Tools, YouTubers & Communities" />
+        <meta property="twitter:description" content="Curated collection of Stellaris resources: YouTube channels, written guides, online tools, essential mods, and active communities." />
+        <meta property="twitter:image" content="https://stellaris-build.com/og-image.jpg" />
+        {resourcesData && (
+          <script type="application/ld+json">{JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "name": "Stellaris Resources - Guides, Tools, YouTubers & Communities",
+            "description": "Curated collection of Stellaris resources: YouTube channels, written guides, online tools, essential mods, and active communities.",
+            "url": "https://stellaris-build.com/resources",
+            "mainEntity": {
+              "@type": "ItemList",
+              "numberOfItems": resourcesData.categories.reduce((sum, cat) => sum + cat.resources.length, 0),
+              "itemListElement": resourcesData.categories.flatMap(cat =>
+                cat.resources.map((resource, idx) => ({
+                  "@type": "ListItem",
+                  "position": idx + 1,
+                  "name": resource.title,
+                  "url": resource.url,
+                  "description": resource.description
+                }))
+              )
+            }
+          })}</script>
+        )}
       </Helmet>
 
       <div className="container-fluid p-0">
