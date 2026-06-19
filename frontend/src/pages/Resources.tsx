@@ -245,7 +245,7 @@ export const Resources: React.FC = () => {
                                 </h5>
                                 <div className="d-flex gap-1">
                                   {resource.era && (
-                                    <span className={`badge ${resource.era === '4.3+' ? 'bg-success' : resource.era === 'pre-4.0' ? 'bg-danger' : 'bg-secondary'}`}>
+                                    <span className={`badge ${resource.era === '4.3+' ? 'bg-success' : 'bg-secondary'}`}>
                                       {resource.era}
                                     </span>
                                   )}
@@ -292,7 +292,7 @@ export const Resources: React.FC = () => {
                                   <i className="bi bi-box-arrow-up-right ms-2 text-muted small"></i>
                                 </h6>
                                 {resource.era && (
-                                  <span className={`badge ms-2 flex-shrink-0 ${resource.era === '4.3+' ? 'bg-success' : resource.era === 'pre-4.0' ? 'bg-danger' : 'bg-secondary'}`}>
+                                  <span className={`badge ms-2 flex-shrink-0 ${resource.era === '4.3+' ? 'bg-success' : 'bg-secondary'}`}>
                                     {resource.era}
                                   </span>
                                 )}
