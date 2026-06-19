@@ -32,7 +32,10 @@ const ChatPanel: React.FC = () => {
 
   const fetchMessages = async () => {
     try {
-      const res = await fetch('/api/chat');
+      // cache: 'no-store' bypasses the browser HTTP cache entirely, and the
+      // timestamp query param makes the URL unique so an old heuristically-cached
+      // empty response (from before the backend sent no-store) can never be reused.
+      const res = await fetch(`/api/chat?t=${Date.now()}`, { cache: 'no-store' });
       if (!res.ok) return;
       const data: ChatMessage[] = await res.json();
       setMessages(data);
