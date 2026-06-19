@@ -1372,23 +1372,40 @@ app.get('/api/stats', async (req, res) => {
     stats.topTraditions = topTraditions;
 
     // 8. Version distribution
-    const versionDistribution = await new Promise((resolve, reject) => {
+    const rawVersionRows = await new Promise((resolve, reject) => {
       db.all(
-        `SELECT COALESCE(version, 'Unknown') as version, COUNT(*) as count
+        `SELECT COALESCE(game_version, 'Unknown') as version, COUNT(*) as count
          FROM builds
          WHERE deleted = 0
-         GROUP BY version
-         ORDER BY count DESC`,
+         GROUP BY game_version`,
         (err, rows) => {
           if (err) reject(err);
-          else resolve(rows.map(row => ({
-            name: row.version,
-            count: row.count,
-            percentage: ((row.count / totalBuilds) * 100).toFixed(1)
-          })));
+          else resolve(rows);
         }
       );
     });
+
+    // Normalize legacy freeform version strings to clean X.Y format
+    const normalizeVersion = (v) => {
+      if (!v || v === 'Unknown') return 'Unknown';
+      if (v === 'other') return 'Other';
+      const match = v.match(/^(\d+\.\d+)/);
+      return match ? match[1] : 'Other';
+    };
+
+    const versionAgg = {};
+    rawVersionRows.forEach(row => {
+      const key = normalizeVersion(row.version);
+      versionAgg[key] = (versionAgg[key] || 0) + row.count;
+    });
+
+    const versionDistribution = Object.entries(versionAgg)
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, count]) => ({
+        name,
+        count,
+        percentage: ((count / totalBuilds) * 100).toFixed(1)
+      }));
     stats.versionDistribution = versionDistribution;
 
     // 9. Top 5 Traits
