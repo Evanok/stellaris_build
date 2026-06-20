@@ -281,7 +281,7 @@ export const Home: React.FC = () => {
                   <h6 className="mb-0 text-white fw-bold">Curated Resources</h6>
                 </div>
                 <Link to="/resources" className="text-decoration-none">
-                  <span className="badge bg-light text-primary">Explore all →</span>
+                  <span className="badge bg-primary text-white">Explore all →</span>
                 </Link>
               </div>
               {/* Featured guides */}
@@ -337,6 +337,7 @@ export const Home: React.FC = () => {
           </div>
           <div className="col-md-2 mb-3 mb-md-0">
             <select
+              aria-label="Filter by difficulty"
               className="form-select form-select-lg bg-secondary text-white border-secondary"
               value={difficultyFilter}
               onChange={(e) => {
@@ -354,6 +355,7 @@ export const Home: React.FC = () => {
           </div>
           <div className="col-md-2 mb-3 mb-md-0">
             <select
+              aria-label="Filter by game version"
               className="form-select form-select-lg bg-secondary text-white border-secondary"
               value={versionFilter}
               onChange={(e) => {
@@ -369,6 +371,7 @@ export const Home: React.FC = () => {
           </div>
           <div className="col-md-2">
             <select
+              aria-label="Sort builds"
               className="form-select form-select-lg bg-secondary text-white border-secondary"
               value={sortBy}
               onChange={(e) => {
