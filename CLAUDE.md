@@ -526,8 +526,13 @@ Diagnosed with WebPageTest (waterfall analysis). Fixes applied in order of impac
 - Changed to `listen 443 ssl http2` on prod server: `sudo sed -i 's/listen 443 ssl;/listen 443 ssl http2;/' /etc/nginx/sites-enabled/stellaris-build`
 - Zero downtime (`nginx reload` is graceful)
 
-**Remaining axes (not yet done):**
-- Server-side pagination on `/api/builds` (currently returns all builds, frontend paginates client-side)
+**5. Server-side pagination, filtering and sorting on `/api/builds`**
+- Previously: returned all builds at once (~100KB), frontend did client-side filter/sort/paginate
+- Now: `GET /api/builds?page=1&limit=12&sort=newest&search=&difficulty=&version=` returns `{ builds, total, page, totalPages, availableVersions }`
+- Version filter uses display names (e.g. "4.1 (Lyra)") — backend maps to all equivalent raw version strings via `_versionGroups`
+- Frontend: `useEffect` on [page, debouncedSearch, difficulty, version, sort] → fetch. 300ms debounce on search. No client-side filter logic remains.
+- `invalidateBuildsCache()` is now a no-op — home always fetches fresh data from server
+- Key files: `backend/index.js` (`VERSION_NAMES_MAP`, `_versionGroups`, `/api/builds` handler), `frontend/src/pages/Home.tsx`
 
 ### Stats Page Improvements + Resources SEO (2026-06-19)
 
