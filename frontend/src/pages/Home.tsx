@@ -101,14 +101,14 @@ interface Build {
   author_avatar?: string;
   average_rating?: number;
   rating_count?: number;
+  origin_name?: string | null;
+  authority_name?: string | null;
+  ethics_names?: Record<string, string>;
 }
 
 // Module-level cache — survives navigation, cleared on page refresh
 const _cache: {
   builds?: Build[];
-  originNames?: Record<string, Record<string, string>>;
-  ethicNames?: Record<string, Record<string, string>>;
-  authorityNames?: Record<string, Record<string, string>>;
 } = {};
 
 export const invalidateBuildsCache = () => { _cache.builds = undefined; };
@@ -133,9 +133,6 @@ export const Home: React.FC = () => {
   const [difficultyFilter, setDifficultyFilter] = useState<string>('');
   const [versionFilter, setVersionFilter] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('newest');
-  const [originNamesByVersion, setOriginNamesByVersion] = useState<Record<string, Record<string, string>>>(_cache.originNames || {});
-  const [ethicNamesByVersion, setEthicNamesByVersion] = useState<Record<string, Record<string, string>>>(_cache.ethicNames || {});
-  const [authorityNamesByVersion, setAuthorityNamesByVersion] = useState<Record<string, Record<string, string>>>(_cache.authorityNames || {});
   const buildsPerPage = 12;
 
   // What's New data
@@ -172,45 +169,6 @@ export const Home: React.FC = () => {
       });
   }, []);
 
-  useEffect(() => {
-    if (builds.length === 0) return;
-    if (_cache.originNames && _cache.ethicNames && _cache.authorityNames) return;
-
-    const versions = [...new Set(builds.map(b => b.game_version).filter(Boolean))];
-
-    const buildMap = (items: { id: string; name: string }[]) => {
-      const map: Record<string, string> = {};
-      items.forEach(o => { map[o.id] = o.name; });
-      return map;
-    };
-
-    const fetchForVersions = (endpoint: string) =>
-      Promise.all(
-        versions.map(v =>
-          fetch(`${endpoint}?version=${encodeURIComponent(v)}`)
-            .then(r => r.json())
-            .then((items: { id: string; name: string }[]) => ({ version: v, items }))
-            .catch(() => ({ version: v, items: [] as { id: string; name: string }[] }))
-        )
-      ).then(results => {
-        const map: Record<string, Record<string, string>> = {};
-        results.forEach(({ version, items }) => { map[version] = buildMap(items as { id: string; name: string }[]); });
-        return map;
-      });
-
-    Promise.all([
-      fetchForVersions('/api/origins'),
-      fetchForVersions('/api/ethics'),
-      fetchForVersions('/api/authorities'),
-    ]).then(([origins, ethics, authorities]) => {
-      _cache.originNames = origins;
-      _cache.ethicNames = ethics;
-      _cache.authorityNames = authorities;
-      setOriginNamesByVersion(origins);
-      setEthicNamesByVersion(ethics);
-      setAuthorityNamesByVersion(authorities);
-    });
-  }, [builds]);
 
   // Filter and sort builds
   const filteredBuilds = builds
@@ -523,7 +481,7 @@ export const Home: React.FC = () => {
                           <div className="d-flex align-items-center gap-1 mb-1 flex-wrap">
                             <small className="text-muted" style={{ minWidth: '72px', display: 'inline-block' }}>Origin:</small>
                             <small style={{ color: hashOriginColor(build.origin), fontWeight: 500 }}>
-                              {originNamesByVersion[build.game_version]?.[build.origin] || build.origin.replace(/^origin_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+                              {build.origin_name || build.origin.replace(/^origin_/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
                             </small>
                           </div>
                         )}
@@ -565,7 +523,7 @@ export const Home: React.FC = () => {
                                 key={idx}
                                 src={`/icons/home/${id}.webp`}
                                 alt=""
-                                title={ethicNamesByVersion[build.game_version]?.[id] || id}
+                                title={build.ethics_names?.[id] || id}
                                 style={{ width: '20px', height: '20px', objectFit: 'contain' }}
                                 loading="lazy"
                                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
@@ -581,7 +539,7 @@ export const Home: React.FC = () => {
                             <img
                               src={`/icons/home/${build.authority}.webp`}
                               alt=""
-                              title={authorityNamesByVersion[build.game_version]?.[build.authority] || build.authority}
+                              title={build.authority_name || build.authority}
                               style={{ width: '20px', height: '20px', objectFit: 'contain' }}
                               loading="lazy"
                               onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}

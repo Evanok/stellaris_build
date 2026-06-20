@@ -448,6 +448,36 @@ app.post('/api/test/cleanup', (req, res) => {
 const AVAILABLE_DATA_VERSIONS = ['4.2', '4.3', '4.4'];
 const LATEST_DATA_VERSION = AVAILABLE_DATA_VERSIONS[AVAILABLE_DATA_VERSIONS.length - 1];
 
+// Pre-load name maps for enriching /api/builds responses (avoids N×3 frontend requests)
+const _nameCache = {};
+for (const v of AVAILABLE_DATA_VERSIONS) {
+  const load = (file) => {
+    try {
+      const items = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'versions', v, file), 'utf8'));
+      const map = {};
+      items.forEach(item => { map[item.id] = item.name; });
+      return map;
+    } catch { return {}; }
+  };
+  _nameCache[v] = {
+    origins: load('origins.json'),
+    ethics: load('ethics.json'),
+    authorities: load('authorities.json'),
+  };
+}
+
+function enrichBuild(build) {
+  const names = _nameCache[getDataVersion(build.game_version)] || {};
+  return {
+    ...build,
+    origin_name: names.origins?.[build.origin] || null,
+    authority_name: names.authorities?.[build.authority] || null,
+    ethics_names: build.ethics
+      ? Object.fromEntries(build.ethics.split(',').map(id => [id.trim(), names.ethics?.[id.trim()] || null]).filter(([, v]) => v))
+      : {},
+  };
+}
+
 function getDataVersion(requestedVersion) {
   if (!requestedVersion) return '4.2';
   const match = String(requestedVersion).match(/(\d+)\.(\d+)/);
@@ -553,7 +583,7 @@ app.get('/api/builds', (req, res) => {
       res.status(500).json({ error: err.message });
       return;
     }
-    res.json({ builds: rows });
+    res.json({ builds: rows.map(enrichBuild) });
   });
 });
 
