@@ -31,13 +31,10 @@ const LoadingFallback = () => (
 
 // Helper to get a random background image
 const getRandomBackground = () => {
-  // Only load background on desktop (screen width > 768px)
-  if (typeof window !== 'undefined' && window.innerWidth <= 768) {
-    return null;
-  }
+  if (typeof window !== 'undefined' && window.innerWidth <= 768) return null;
   const images = [
-    'load_12.jpg', 'load_13.jpg', 'load_14.jpg', 'load_15.jpg',
-    'load_16.jpg', 'load_17.jpg', 'load_18.jpg', 'Load_19.jpg'
+    'load_12.webp', 'load_13.webp', 'load_14.webp', 'load_15.webp',
+    'load_16.webp', 'load_17.webp', 'load_18.webp', 'Load_19.webp'
   ];
   return images[Math.floor(Math.random() * images.length)];
 };
@@ -45,9 +42,9 @@ const getRandomBackground = () => {
 // AppContent component that uses useLocation
 const AppContent = () => {
   const location = useLocation();
-  const [backgroundImage, setBackgroundImage] = useState<string | null>(getRandomBackground);
+  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
 
-  // Change background image on every page navigation
+  // Load background after first render so it doesn't block initial paint
   useEffect(() => {
     setBackgroundImage(getRandomBackground());
   }, [location.pathname]);
