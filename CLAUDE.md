@@ -500,6 +500,35 @@ Planned features (not yet implemented):
 
 ## Recent Completions
 
+### Home Page Performance Pass (2026-06-20)
+Diagnosed with WebPageTest (waterfall analysis). Fixes applied in order of impact:
+
+**1. Eliminated 18 redundant API calls on home page**
+- Home page was calling `/api/origins`, `/api/ethics`, `/api/authorities` for every unique game version in the builds list (up to 6 versions = 18 requests, ~213KB)
+- Fix: backend `enrichBuild()` resolves names at request time using in-memory maps loaded at startup
+- `/api/builds` now returns `origin_name`, `authority_name`, `ethics_names` (Record<id,name>) directly on each build
+- Frontend `Home.tsx`: removed `fetchForVersions`, all name lookup states, and the `useEffect` that triggered the cascade
+- Key files: `backend/index.js` (`enrichBuild`, `_nameCache`), `frontend/src/pages/Home.tsx`
+
+**2. Loading screens: JPEG → WebP + deferred load**
+- Converted 19 loading screen JPEGs to WebP (quality 82): 8.1MB → 2.6MB (68% reduction)
+- Deferred background load: `useState(null)` + `useEffect` so background sets after first render paint instead of blocking it
+- Key files: `frontend/public/loading_screens/*.webp`, `frontend/src/App.tsx`
+
+**3. Bootstrap Icons: CDN → local bundle**
+- Bootstrap Icons was loaded from `cdn.jsdelivr.net` (external DNS + SSL handshake on every cold visit)
+- Installed `bootstrap-icons` as a local npm dependency, imported in `main.tsx`
+- Removed CDN `<link>` and `preconnect`/`dns-prefetch` hints from `index.html`
+- Key files: `frontend/src/main.tsx`, `frontend/index.html`
+
+**4. HTTP/2 enabled on nginx (server config only, no code change)**
+- Certbot had generated `listen 443 ssl` without `http2` — all 116+ requests to stellaris-build.com were HTTP/1.1
+- Changed to `listen 443 ssl http2` on prod server: `sudo sed -i 's/listen 443 ssl;/listen 443 ssl http2;/' /etc/nginx/sites-enabled/stellaris-build`
+- Zero downtime (`nginx reload` is graceful)
+
+**Remaining axes (not yet done):**
+- Server-side pagination on `/api/builds` (currently returns all builds, frontend paginates client-side)
+
 ### Stats Page Improvements + Resources SEO (2026-06-19)
 
 **Stats page — new stats:**
