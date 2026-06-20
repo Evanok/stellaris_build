@@ -448,6 +448,17 @@ app.post('/api/test/cleanup', (req, res) => {
 const AVAILABLE_DATA_VERSIONS = ['4.2', '4.3', '4.4'];
 const LATEST_DATA_VERSION = AVAILABLE_DATA_VERSIONS[AVAILABLE_DATA_VERSIONS.length - 1];
 
+const VERSION_NAMES_MAP = {
+  '4.4': '4.4 (Pegasus)', '4.3': '4.3 (Cetus)', '4.2': '4.2 (Corvus)',
+  '4.1': '4.1 (Lyra)', '4.1+ (Shadows of the Shroud DLC)': '4.1 (Lyra)', '4.14': '4.1 (Lyra)',
+  '4.0': '4.0 (Phoenix)', '4.0+': '4.0 (Phoenix)',
+  '3.14': '3.14 (Circinus)', '3.13': '3.13 (Vela)',
+};
+const _versionGroups = {};
+for (const [raw, display] of Object.entries(VERSION_NAMES_MAP)) {
+  (_versionGroups[display] = _versionGroups[display] || []).push(raw);
+}
+
 // Pre-load name maps for enriching /api/builds responses (avoids N×3 frontend requests)
 const _nameCache = {};
 for (const v of AVAILABLE_DATA_VERSIONS) {
@@ -562,28 +573,78 @@ app.get('/api/resources', (req, res) => {
   });
 });
 
-// Get all builds (excluding soft-deleted ones)
+// Get builds — paginated, filtered, sorted
 app.get('/api/builds', (req, res) => {
-  const sql = `
-    SELECT
-      builds.*,
-      COALESCE(users.display_name, users.username) as author_username,
-      users.avatar as author_avatar,
-      COALESCE(AVG(ratings.rating), 0) as average_rating,
-      COUNT(ratings.id) as rating_count
-    FROM builds
-    LEFT JOIN users ON builds.author_id = users.id
-    LEFT JOIN ratings ON builds.id = ratings.build_id
-    WHERE builds.deleted = 0
-    GROUP BY builds.id
-    ORDER BY builds.created_at DESC
-  `;
-  db.all(sql, [], (err, rows) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-      return;
-    }
-    res.json({ builds: rows.map(enrichBuild) });
+  const page    = Math.max(1, parseInt(req.query.page)  || 1);
+  const limit   = Math.min(50, Math.max(1, parseInt(req.query.limit) || 12));
+  const offset  = (page - 1) * limit;
+  const search  = req.query.search?.trim()     || null;
+  const diff    = req.query.difficulty?.trim() || null;
+  const verDisp = req.query.version?.trim()    || null;
+  const sort    = req.query.sort               || 'newest';
+
+  const conditions = ['builds.deleted = 0'];
+  const params = [];
+
+  if (search) {
+    const p = `%${search}%`;
+    conditions.push('(builds.name LIKE ? OR builds.description LIKE ? OR builds.tags LIKE ? OR builds.origin LIKE ? OR builds.ethics LIKE ?)');
+    params.push(p, p, p, p, p);
+  }
+  if (diff) {
+    conditions.push('builds.difficulty = ?');
+    params.push(diff);
+  }
+  if (verDisp) {
+    const rawVersions = _versionGroups[verDisp] || [verDisp];
+    conditions.push(`builds.game_version IN (${rawVersions.map(() => '?').join(',')})`);
+    params.push(...rawVersions);
+  }
+
+  const where = `WHERE ${conditions.join(' AND ')}`;
+  const orderBy = sort === 'rating'  ? 'ORDER BY average_rating DESC, rating_count DESC'
+                : sort === 'oldest'  ? 'ORDER BY builds.created_at ASC'
+                :                      'ORDER BY builds.created_at DESC';
+
+  db.get(`SELECT COUNT(*) as total FROM builds ${where}`, params, (err, countRow) => {
+    if (err) return res.status(500).json({ error: err.message });
+
+    const total      = countRow.total;
+    const totalPages = Math.ceil(total / limit);
+
+    const sql = `
+      SELECT builds.*,
+        COALESCE(users.display_name, users.username) as author_username,
+        users.avatar as author_avatar,
+        COALESCE(AVG(ratings.rating), 0) as average_rating,
+        COUNT(ratings.id) as rating_count
+      FROM builds
+      LEFT JOIN users ON builds.author_id = users.id
+      LEFT JOIN ratings ON builds.id = ratings.build_id
+      ${where}
+      GROUP BY builds.id
+      ${orderBy}
+      LIMIT ? OFFSET ?
+    `;
+
+    db.all(sql, [...params, limit, offset], (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+
+      db.all(`SELECT DISTINCT game_version FROM builds WHERE deleted = 0 AND game_version IS NOT NULL AND game_version != ''`, [], (_err, vRows) => {
+        const seen = new Set();
+        const availableVersions = [];
+        for (const { game_version: raw } of (vRows || [])) {
+          const display = VERSION_NAMES_MAP[raw] ?? raw;
+          if (!seen.has(display)) { seen.add(display); availableVersions.push(display); }
+        }
+        availableVersions.sort((a, b) => {
+          const pv = s => { const m = s.match(/(\d+)\.(\d+)/); return m ? parseInt(m[1]) * 100 + parseInt(m[2]) : 0; };
+          return pv(b) - pv(a);
+        });
+
+        res.json({ builds: rows.map(enrichBuild), total, page, limit, totalPages, availableVersions });
+      });
+    });
   });
 });
 

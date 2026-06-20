@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
@@ -106,12 +106,7 @@ interface Build {
   ethics_names?: Record<string, string>;
 }
 
-// Module-level cache — survives navigation, cleared on page refresh
-const _cache: {
-  builds?: Build[];
-} = {};
-
-export const invalidateBuildsCache = () => { _cache.builds = undefined; };
+export const invalidateBuildsCache = () => { /* no-op: home always fetches fresh data */ };
 
 const IconWithFallback: React.FC<{ src: string; label: string }> = ({ src, label }) => (
   <img
@@ -125,15 +120,19 @@ const IconWithFallback: React.FC<{ src: string; label: string }> = ({ src, label
 );
 
 export const Home: React.FC = () => {
-  const [builds, setBuilds] = useState<Build[]>(_cache.builds || []);
-  const [loading, setLoading] = useState(!_cache.builds);
+  const [pagedBuilds, setPagedBuilds] = useState<Build[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [availableVersions, setAvailableVersions] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState<string>('');
   const [versionFilter, setVersionFilter] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('newest');
-  const buildsPerPage = 12;
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // What's New data
   const latestNews: NewsItem[] = [
@@ -151,71 +150,41 @@ export const Home: React.FC = () => {
     }
   ];
 
+  // Debounce search input
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    searchTimerRef.current = setTimeout(() => {
+      setDebouncedSearch(value);
+      setCurrentPage(1);
+    }, 300);
+  };
+
   useEffect(() => {
-    if (_cache.builds) {
-      setLoading(false);
-      return;
-    }
-    fetch('/api/builds')
-      .then(res => res.json())
+    let cancelled = false;
+    setLoading(true);
+
+    const params = new URLSearchParams({ page: String(currentPage), limit: '12', sort: sortBy });
+    if (debouncedSearch) params.set('search', debouncedSearch);
+    if (difficultyFilter) params.set('difficulty', difficultyFilter);
+    if (versionFilter) params.set('version', versionFilter);
+
+    fetch(`/api/builds?${params}`)
+      .then(r => r.json())
       .then(data => {
-        _cache.builds = data.builds || [];
-        setBuilds(_cache.builds!);
+        if (cancelled) return;
+        setPagedBuilds(data.builds || []);
+        setTotal(data.total || 0);
+        setTotalPages(data.totalPages || 1);
+        if (data.availableVersions?.length) setAvailableVersions(data.availableVersions);
         setLoading(false);
       })
       .catch(() => {
-        setError('Failed to load builds');
-        setLoading(false);
+        if (!cancelled) { setError('Failed to load builds'); setLoading(false); }
       });
-  }, []);
 
-
-  // Filter and sort builds
-  const filteredBuilds = builds
-    .filter(build => {
-      // Search filter
-      const matchesSearch = !searchQuery || (() => {
-        const query = searchQuery.toLowerCase();
-        return (
-          build.name.toLowerCase().includes(query) ||
-          build.description?.toLowerCase().includes(query) ||
-          build.tags?.toLowerCase().includes(query) ||
-          build.origin?.toLowerCase().includes(query) ||
-          build.ethics?.toLowerCase().includes(query)
-        );
-      })();
-
-      // Difficulty filter
-      const matchesDifficulty = !difficultyFilter || build.difficulty === difficultyFilter;
-
-      // Version filter — compare normalized labels so "4.1", "4.14", "4.1+ (...)" all match "4.1 (Lyra)"
-      const matchesVersion = !versionFilter ||
-        (VERSION_NAMES[build.game_version] ?? build.game_version) === (VERSION_NAMES[versionFilter] ?? versionFilter);
-
-      return matchesSearch && matchesDifficulty && matchesVersion;
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case 'rating':
-          // Sort by average rating (descending), then by rating count
-          const ratingDiff = (b.average_rating || 0) - (a.average_rating || 0);
-          if (ratingDiff !== 0) return ratingDiff;
-          return (b.rating_count || 0) - (a.rating_count || 0);
-        case 'oldest':
-          // Sort by creation date (ascending)
-          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-        case 'newest':
-        default:
-          // Sort by creation date (descending)
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-      }
-    });
-
-  // Pagination
-  const indexOfLastBuild = currentPage * buildsPerPage;
-  const indexOfFirstBuild = indexOfLastBuild - buildsPerPage;
-  const currentBuilds = filteredBuilds.slice(indexOfFirstBuild, indexOfLastBuild);
-  const totalPages = Math.ceil(filteredBuilds.length / buildsPerPage);
+    return () => { cancelled = true; };
+  }, [currentPage, debouncedSearch, difficultyFilter, versionFilter, sortBy]);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -251,8 +220,8 @@ export const Home: React.FC = () => {
           "name": "Stellaris Community Empire Builds",
           "description": "Community-created empire builds for Stellaris by Paradox Interactive, including species traits, civics, ethics, origins, ascension perks, and tradition trees.",
           "url": "https://stellaris-build.com/",
-          "numberOfItems": builds.length,
-          "itemListElement": builds.slice(0, 20).map((build, index) => ({
+          "numberOfItems": total,
+          "itemListElement": pagedBuilds.slice(0, 20).map((build, index) => ({
             "@type": "ListItem",
             "position": index + 1,
             "url": `https://stellaris-build.com/builds/${build.id}`,
@@ -284,7 +253,7 @@ export const Home: React.FC = () => {
             </div>
             <div className="col-md-4 text-end">
               <div className="d-inline-block p-2 rounded" style={{ background: 'rgba(255, 255, 255, 0.1)' }}>
-                <h4 className="text-white mb-1">{builds.length}</h4>
+                <h4 className="text-white mb-1">{total}</h4>
                 <p className="text-light mb-0 small">Community Builds</p>
               </div>
             </div>
@@ -363,10 +332,7 @@ export const Home: React.FC = () => {
               className="form-control form-control-lg bg-secondary text-white border-secondary"
               placeholder="Search builds by name, origin, ethics, tags..."
               value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setCurrentPage(1);
-              }}
+              onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
           <div className="col-md-2 mb-3 mb-md-0">
@@ -396,21 +362,9 @@ export const Home: React.FC = () => {
               }}
             >
               <option value="">All Versions</option>
-              {(() => {
-                const seen = new Set<string>();
-                const parseVer = (v: string) => { const label = VERSION_NAMES[v] ?? v; const m = label.match(/(\d+)\.(\d+)/); return m ? parseInt(m[1]) * 100 + parseInt(m[2]) : 0; };
-                return Array.from(new Set(builds.map(b => b.game_version).filter(v => v && v !== 'other')))
-                  .sort((a, b) => parseVer(b) - parseVer(a))
-                  .filter(v => {
-                    const label = VERSION_NAMES[v] ?? v;
-                    if (seen.has(label)) return false;
-                    seen.add(label);
-                    return true;
-                  })
-                  .map(v => (
-                    <option key={v} value={v}>{VERSION_NAMES[v] ?? v}</option>
-                  ));
-              })()}
+              {availableVersions.map(v => (
+                <option key={v} value={v}>{v}</option>
+              ))}
             </select>
           </div>
           <div className="col-md-2">
@@ -433,21 +387,21 @@ export const Home: React.FC = () => {
         <div className="row mb-3">
           <div className="col-12">
             <p className="text-muted">
-              Showing {currentBuilds.length} of {filteredBuilds.length} builds
-              {(searchQuery || difficultyFilter || versionFilter) && ` (filtered from ${builds.length} total)`}
+              Showing {pagedBuilds.length} of {total} builds
+              {(debouncedSearch || difficultyFilter || versionFilter) && ` (filtered)`}
             </p>
           </div>
         </div>
 
         {/* Builds Grid */}
-        {currentBuilds.length === 0 ? (
+        {pagedBuilds.length === 0 ? (
           <div className="alert alert-info">
             {searchQuery ? 'No builds match your search.' : 'No builds available yet. Be the first to create one!'}
           </div>
         ) : (
           <>
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-              {currentBuilds.map(build => (
+              {pagedBuilds.map(build => (
                 <div key={build.id} className="col">
                   <Link to={`/build/${build.id}`} className="build-card-link">
                     <div className="card h-100 build-card">
