@@ -1,3 +1,3 @@
 #!/bin/bash
-pm2 start stellaris-build
-echo 'Maintenance mode disabled. Site is live.'
+pm2 restart stellaris-build
+echo "Maintenance mode disabled. Site is live."
