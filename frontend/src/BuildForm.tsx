@@ -246,6 +246,9 @@ const BASE_MAX_TRAIT_COUNT = 5;
 const MAX_ETHICS_POINTS = 3;
 const MAX_CIVIC_SLOTS = 3;
 
+// Nomads DLC was introduced in 4.4 "Pegasus"
+const supportsNomadic = (version: string) => parseFloat(version) >= 4.4;
+
 // Stellaris game versions
 const GAME_VERSIONS = [
   { value: '4.4', label: '4.4 "Pegasus" (Latest)' },
@@ -461,6 +464,10 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setSelectedAscensionPerks(prev => prev.filter((id: string) => validPerkIds.has(id)));
         setSelectedTraditions(prev => prev.filter((id: string) => validTreeNames.has(id)));
         setSelectedRulerTrait(prev => (prev && validRulerTraitIds.has(prev) ? prev : ''));
+        if (!supportsNomadic(game_version)) {
+          setIsNomadic(false);
+          setArkType('');
+        }
       }
     }).catch(() => setError('Could not load game data.'));
 
@@ -1768,8 +1775,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
             </div>
           </div>
 
-          {/* Nomadic Empire (Nomads DLC) */}
-          <div className="mb-3">
+          {/* Nomadic Empire (Nomads DLC) — only available in 4.4+ */}
+          {supportsNomadic(game_version) && <div className="mb-3">
             <div
               className="card border-2"
               style={{ borderColor: isNomadic ? '#e8a838' : '#6c757d', backgroundColor: isNomadic ? 'rgba(232, 168, 56, 0.08)' : undefined }}
@@ -1851,7 +1858,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                 )}
               </div>
             </div>
-          </div>
+          </div>}
 
           {/* Authority Selection */}
           <div className="mb-3">
