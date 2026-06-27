@@ -55,13 +55,13 @@ const AppContent = () => {
     setBackgroundImage(getRandomBackground());
   }, [location.pathname]);
 
-  // Show email prompt for local users without an email (unless dismissed)
+  // Show email prompt for local users without an email (unless dismissed for this specific user)
   useEffect(() => {
     if (
       user &&
       user.provider === 'local' &&
       !user.email &&
-      !localStorage.getItem('skip_email_prompt')
+      !localStorage.getItem(`skip_email_prompt_${user.id}`)
     ) {
       setShowSetEmailModal(true);
     } else {
