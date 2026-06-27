@@ -500,6 +500,50 @@ Planned features (not yet implemented):
 
 ## Recent Completions
 
+### Tips & Tricks Page — IN PROGRESS (2026-06-27)
+Community tips page with upvote-only voting, version/category filtering, sort by top/new. Login required to post/vote.
+
+**Status:** Database schema done, backend + frontend TODO.
+
+**Database (done — `backend/database.js`):**
+- `tips` table: `id, title, content, categories TEXT (CSV), game_version, author_id, author_name, deleted, created_at`
+- `tip_votes` table: `id, tip_id, user_id, created_at` — `UNIQUE(tip_id, user_id)` enforces one vote per user per tip
+
+**Backend (TODO — `backend/index.js`):**
+- `GET /api/tips?version=&category=&sort=top|new` — joins with tip_votes for `vote_count` + `user_voted`
+- `POST /api/tips` — isAuthenticated, validates title (non-empty), content (max 500 chars), version, categories
+- `POST /api/tips/:id/vote` — isAuthenticated, toggle: DELETE if exists, INSERT if not, return new count
+- `DELETE /api/tips/:id` — isAuthenticated, author or admin only, soft delete
+- 11 categories: `Early Game, Population, Economy, Science, Military, Diplomacy, Optimization, Planet Management, Traditions & Perks, General, Nomads`
+- `TIP_MAX_LENGTH = 500`
+
+**Frontend (TODO):**
+- `frontend/src/pages/Tips.tsx` — filter bar (version + category dropdowns, sort toggle top/new), tip cards with vote column (▲ + count) on left, submit form below filters (login-gated)
+- Route `/tips` in `App.tsx` (lazy import)
+- Nav link "Tips" in `Navbar.tsx` between Resources and Stats
+
+**Tips data (TODO):**
+- 31 tips to insert as Evanok22 (user_id=6): 10 nomadic (4.4) + 21 general (4.3)
+- Script at `/tmp/claude-.../scratchpad/insert_tips.js` (may be gone — regenerate from session transcript if needed)
+
+### Maintenance Mode Fix (2026-06-27)
+Replaced the old maintenance scripts (which swapped the entire nginx config and required sudo interactively) with a simpler approach.
+
+**How it works now:**
+- nginx has a permanent `error_page 502 503 504 @maintenance` directive pointing to `frontend/public/maintenance.html`
+- `enable_maintenance.sh` — just `pm2 stop stellaris-build`
+- `disable_maintenance.sh` — just `pm2 restart stellaris-build`
+
+**Prod nginx config change (one-time, already applied):**
+```nginx
+error_page 502 503 504 @maintenance;
+location @maintenance {
+    root /home/arthur/work/stellaris_build/frontend/public;
+    try_files /maintenance.html =502;
+}
+```
+Also required: `proxy_intercept_errors on;` inside `location /`, and the `sites-enabled/stellaris-build` must be a **symlink** to `sites-available/stellaris-build` (was a plain file — fixed).
+
 ### Nomadic Empire Feature (2026-06-27)
 Added full support for the Nomads DLC nomadic empire mechanic.
 
