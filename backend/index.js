@@ -446,6 +446,35 @@ app.patch('/api/user/display-name', isAuthenticated, (req, res) => {
   );
 });
 
+// Set email for local accounts (used by the "set email for password recovery" prompt)
+app.patch('/api/user/email', isAuthenticated, (req, res) => {
+  if (req.user.provider !== 'local') {
+    return res.status(403).json({ error: 'Only local accounts can set an email here.' });
+  }
+
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email is required.' });
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) return res.status(400).json({ error: 'Invalid email address.' });
+
+  const normalized = email.toLowerCase();
+
+  db.get('SELECT id FROM users WHERE email = ? AND provider = ? AND id != ?', [normalized, 'local', req.user.id], (err, existing) => {
+    if (err) return res.status(500).json({ error: 'Database error.' });
+    if (existing) return res.status(409).json({ error: 'This email is already used by another account.' });
+
+    db.run('UPDATE users SET email = ? WHERE id = ?', [normalized, req.user.id], (err) => {
+      if (err) return res.status(500).json({ error: 'Database error.' });
+
+      db.get('SELECT * FROM users WHERE id = ?', [req.user.id], (err, updatedUser) => {
+        if (err) return res.status(500).json({ error: 'Database error.' });
+        res.json({ user: sanitizeUser(updatedUser) });
+      });
+    });
+  });
+});
+
 // ============ API ROUTES ============
 
 app.get('/api/test', (req, res) => {
