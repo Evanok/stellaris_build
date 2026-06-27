@@ -4,6 +4,8 @@ import { Navbar } from './components/Navbar';
 import Footer from './components/Footer';
 import { GoogleAnalytics } from './components/GoogleAnalytics';
 import { FeedbackButton } from './components/FeedbackButton';
+import { SetEmailModal } from './components/SetEmailModal';
+import { useAuth } from './AuthContext';
 import { Home } from './pages/Home';
 import Login from './pages/Login';
 
@@ -19,6 +21,8 @@ const AdminStats = lazy(() => import('./pages/AdminStats'));
 const AdminFeedback = lazy(() => import('./pages/AdminFeedback'));
 const Feedback = lazy(() => import('./pages/Feedback'));
 const Resources = lazy(() => import('./pages/Resources'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -42,17 +46,34 @@ const getRandomBackground = () => {
 // AppContent component that uses useLocation
 const AppContent = () => {
   const location = useLocation();
+  const { user } = useAuth();
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
+  const [showSetEmailModal, setShowSetEmailModal] = useState(false);
 
   // Load background after first render so it doesn't block initial paint
   useEffect(() => {
     setBackgroundImage(getRandomBackground());
   }, [location.pathname]);
 
+  // Show email prompt for local users without an email (unless dismissed for this specific user)
+  useEffect(() => {
+    if (
+      user &&
+      user.provider === 'local' &&
+      !user.email &&
+      !localStorage.getItem(`skip_email_prompt_${user.id}`)
+    ) {
+      setShowSetEmailModal(true);
+    } else {
+      setShowSetEmailModal(false);
+    }
+  }, [user]);
+
   return (
     <>
       <GoogleAnalytics />
       <FeedbackButton />
+      <SetEmailModal show={showSetEmailModal} onClose={() => setShowSetEmailModal(false)} />
       <div
         style={{
           backgroundImage: backgroundImage ? `url(/loading_screens/${backgroundImage})` : 'none',
@@ -86,6 +107,8 @@ const AppContent = () => {
                   <Route path="/admin/stats" element={<AdminStats />} />
                   <Route path="/feedback" element={<Feedback />} />
                   <Route path="/admin/feedback" element={<AdminFeedback />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
                 </Routes>
               </Suspense>
             </main>

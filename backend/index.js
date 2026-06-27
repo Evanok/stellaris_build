@@ -4,6 +4,32 @@ require('dotenv').config({ path: __dirname + '/.env' });
 const { validateEnv } = require('./validateEnv');
 validateEnv();
 
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+
+function createMailTransporter() {
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT || '587'),
+    secure: process.env.SMTP_SECURE === 'true',
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+}
+
+async function sendResetEmail(toEmail, resetUrl) {
+  const transporter = createMailTransporter();
+  await transporter.sendMail({
+    from: process.env.SMTP_FROM || 'Stellaris Build <noreply@stellaris-build.com>',
+    to: toEmail,
+    subject: 'Reset your Stellaris Build password',
+    text: `You requested a password reset.\n\nClick the link below to reset your password (expires in 1 hour):\n\n${resetUrl}\n\nIf you did not request this, you can ignore this email.`,
+    html: `<p>You requested a password reset.</p><p><a href="${resetUrl}">Reset my password</a></p><p>This link expires in 1 hour. If you did not request this, ignore this email.</p>`,
+  });
+}
+
 const express = require('express');
 const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
@@ -83,6 +109,13 @@ app.use(express.static(path.join(__dirname, '../frontend/dist'), {
 
 // Setup the database
 setupDatabase();
+
+// Strip sensitive DB fields before sending user data to the frontend
+function sanitizeUser(user) {
+  if (!user) return null;
+  const { password_hash, reset_token, reset_token_expires, provider_id, ...safe } = user;
+  return safe;
+}
 
 // Authentication middleware
 const isAuthenticated = (req, res, next) => {
@@ -169,11 +202,16 @@ app.get('/auth/logout', (req, res) => {
 
 // Register route (create local account)
 app.post('/auth/register', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, email } = req.body;
 
   // Validation
-  if (!username || !password) {
-    return res.status(400).json({ error: 'Username and password are required.' });
+  if (!username || !password || !email) {
+    return res.status(400).json({ error: 'Username, email and password are required.' });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: 'Invalid email address.' });
   }
 
   if (username.length < 3 || username.length > 50) {
@@ -206,44 +244,48 @@ app.post('/auth/register', async (req, res) => {
       return res.status(409).json({ error: 'This username is already taken.' });
     }
 
+    // Check if email already used by another local account
+    db.get('SELECT id FROM users WHERE email = ? AND provider = ?', [email.toLowerCase(), 'local'], async (err, existingEmail) => {
+      if (err) return res.status(500).json({ error: 'Database error.' });
+      if (existingEmail) return res.status(409).json({ error: 'An account with this email already exists.' });
+
     // Hash password
     const bcrypt = require('bcrypt');
     const saltRounds = 10;
     const password_hash = await bcrypt.hash(password, saltRounds);
 
     // Create new user
-    db.run(
-      'INSERT INTO users (username, provider, provider_id, password_hash) VALUES (?, ?, ?, ?)',
-      [username, 'local', username, password_hash],
-      function (err) {
-        if (err) {
-          return res.status(500).json({ error: 'Failed to create user.' });
-        }
-
-        // Get the newly created user
-        db.get('SELECT * FROM users WHERE id = ?', [this.lastID], (err, newUser) => {
+      db.run(
+        'INSERT INTO users (username, email, provider, provider_id, password_hash) VALUES (?, ?, ?, ?, ?)',
+        [username, email.toLowerCase(), 'local', username, password_hash],
+        function (err) {
           if (err) {
-            return res.status(500).json({ error: 'Failed to retrieve user.' });
+            return res.status(500).json({ error: 'Failed to create user.' });
           }
 
-          // Log the user in
-          req.login(newUser, (err) => {
+          db.get('SELECT * FROM users WHERE id = ?', [this.lastID], (err, newUser) => {
             if (err) {
-              return res.status(500).json({ error: 'Login failed after registration.' });
+              return res.status(500).json({ error: 'Failed to retrieve user.' });
             }
 
-            res.status(201).json({
-              success: true,
-              user: {
-                id: newUser.id,
-                username: newUser.username,
-                provider: newUser.provider
+            req.login(newUser, (err) => {
+              if (err) {
+                return res.status(500).json({ error: 'Login failed after registration.' });
               }
+
+              res.status(201).json({
+                success: true,
+                user: {
+                  id: newUser.id,
+                  username: newUser.username,
+                  provider: newUser.provider
+                }
+              });
             });
           });
-        });
-      }
-    );
+        }
+      );
+    });
   });
 });
 
@@ -275,10 +317,68 @@ app.post('/auth/login', (req, res, next) => {
   })(req, res, next);
 });
 
+// Forgot password (local accounts only)
+app.post('/auth/forgot-password', (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email is required.' });
+
+  db.get('SELECT * FROM users WHERE email = ? AND provider = ?', [email.toLowerCase(), 'local'], (err, user) => {
+    if (err) return res.status(500).json({ error: 'Database error.' });
+
+    // Always return success to prevent email enumeration
+    if (!user) return res.json({ success: true });
+
+    const token = crypto.randomBytes(32).toString('hex');
+    const expires = Date.now() + 3600000; // 1 hour
+
+    db.run('UPDATE users SET reset_token = ?, reset_token_expires = ? WHERE id = ?', [token, expires, user.id], async (err) => {
+      if (err) return res.status(500).json({ error: 'Database error.' });
+
+      const frontendUrl = process.env.FRONTEND_URL || (process.env.NODE_ENV === 'production' ? 'https://stellaris-build.com' : 'http://localhost:3000');
+      const resetUrl = `${frontendUrl}/reset-password?token=${token}`;
+
+      try {
+        await sendResetEmail(user.email, resetUrl);
+      } catch (mailErr) {
+        console.error('Failed to send reset email:', mailErr.message);
+        return res.status(500).json({ error: 'Failed to send email. Please try again later.' });
+      }
+
+      res.json({ success: true });
+    });
+  });
+});
+
+// Reset password (consume token)
+app.post('/auth/reset-password', async (req, res) => {
+  const { token, password } = req.body;
+  if (!token || !password) return res.status(400).json({ error: 'Token and password are required.' });
+
+  if (password.length < 12) return res.status(400).json({ error: 'Password must be at least 12 characters long.' });
+  if (password.length > 128) return res.status(400).json({ error: 'Password must be less than 128 characters.' });
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]/;
+  if (!passwordRegex.test(password)) {
+    return res.status(400).json({ error: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&#).' });
+  }
+
+  db.get('SELECT * FROM users WHERE reset_token = ? AND reset_token_expires > ?', [token, Date.now()], async (err, user) => {
+    if (err) return res.status(500).json({ error: 'Database error.' });
+    if (!user) return res.status(400).json({ error: 'Invalid or expired reset link.' });
+
+    const bcrypt = require('bcrypt');
+    const password_hash = await bcrypt.hash(password, 10);
+
+    db.run('UPDATE users SET password_hash = ?, reset_token = NULL, reset_token_expires = NULL WHERE id = ?', [password_hash, user.id], (err) => {
+      if (err) return res.status(500).json({ error: 'Database error.' });
+      res.json({ success: true });
+    });
+  });
+});
+
 // Get current user
 app.get('/api/user', (req, res) => {
   if (req.isAuthenticated()) {
-    res.json({ user: req.user });
+    res.json({ user: sanitizeUser(req.user) });
   } else {
     res.json({ user: null });
   }
@@ -338,12 +438,41 @@ app.patch('/api/user/display-name', isAuthenticated, (req, res) => {
               return res.status(500).json({ error: 'Failed to fetch updated user' });
             }
 
-            res.json({ user: updatedUser });
+            res.json({ user: sanitizeUser(updatedUser) });
           });
         }
       );
     }
   );
+});
+
+// Set email for local accounts (used by the "set email for password recovery" prompt)
+app.patch('/api/user/email', isAuthenticated, (req, res) => {
+  if (req.user.provider !== 'local') {
+    return res.status(403).json({ error: 'Only local accounts can set an email here.' });
+  }
+
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email is required.' });
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) return res.status(400).json({ error: 'Invalid email address.' });
+
+  const normalized = email.toLowerCase();
+
+  db.get('SELECT id FROM users WHERE email = ? AND provider = ? AND id != ?', [normalized, 'local', req.user.id], (err, existing) => {
+    if (err) return res.status(500).json({ error: 'Database error.' });
+    if (existing) return res.status(409).json({ error: 'This email is already used by another account.' });
+
+    db.run('UPDATE users SET email = ? WHERE id = ?', [normalized, req.user.id], (err) => {
+      if (err) return res.status(500).json({ error: 'Database error.' });
+
+      db.get('SELECT * FROM users WHERE id = ?', [req.user.id], (err, updatedUser) => {
+        if (err) return res.status(500).json({ error: 'Database error.' });
+        res.json({ user: sanitizeUser(updatedUser) });
+      });
+    });
+  });
 });
 
 // ============ API ROUTES ============
@@ -382,7 +511,7 @@ app.post('/api/test/login', (req, res) => {
           if (loginErr) {
             return res.status(500).json({ error: 'Login failed' });
           }
-          res.json({ success: true, user: existingUser });
+          res.json({ success: true, user: sanitizeUser(existingUser) });
         });
       } else {
         // Create new test user
@@ -403,7 +532,7 @@ app.post('/api/test/login', (req, res) => {
               if (loginErr) {
                 return res.status(500).json({ error: 'Login failed' });
               }
-              res.json({ success: true, user: newUser });
+              res.json({ success: true, user: sanitizeUser(newUser) });
             });
           }
         );
@@ -567,6 +696,16 @@ app.get('/api/resources', (req, res) => {
   fs.readFile('./data/resources.json', 'utf8', (err, data) => {
     if (err) {
       res.status(500).json({ error: "Could not read resources data." });
+      return;
+    }
+    res.json(JSON.parse(data));
+  });
+});
+
+app.get('/api/ark-types', (req, res) => {
+  fs.readFile('./data/ark_types.json', 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json({ error: "Could not read ark types data." });
       return;
     }
     res.json(JSON.parse(data));
@@ -883,7 +1022,7 @@ app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
 
   // Sanitize input data to prevent XSS
   const sanitizedData = sanitizeBuildData(req.body);
-  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags } = sanitizedData;
+  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type } = sanitizedData;
 
   // Get author_id from authenticated user
   const author_id = req.user.id;
@@ -898,8 +1037,8 @@ app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
     }
 
     // If no duplicate, proceed with insert
-    const sql = `INSERT INTO builds (name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, author_id];
+    const sql = `INSERT INTO builds (name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, author_id];
 
     db.run(sql, params, function(err) {
       if (err) {
@@ -991,7 +1130,7 @@ app.put('/api/builds/:id', isAuthenticated, createBuildLimiter, (req, res) => {
 
   // Sanitize input data to prevent XSS
   const sanitizedData = sanitizeBuildData(req.body);
-  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags } = sanitizedData;
+  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type } = sanitizedData;
 
   // First, check if the build exists and belongs to the user
   db.get('SELECT * FROM builds WHERE id = ? AND deleted = 0', [id], (err, build) => {
@@ -1037,10 +1176,12 @@ app.put('/api/builds/:id', isAuthenticated, createBuildLimiter, (req, res) => {
         species_class = ?,
         portrait = COALESCE(NULLIF(?, ''), portrait),
         dlcs = ?,
-        tags = ?
+        tags = ?,
+        is_nomadic = ?,
+        ark_type = ?
       WHERE id = ?`;
 
-      const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, id];
+      const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, id];
 
       db.run(sql, params, function(err) {
         if (err) {

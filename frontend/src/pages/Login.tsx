@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 
 const Login: React.FC = () => {
@@ -7,6 +7,7 @@ const Login: React.FC = () => {
   const { user, loading } = useAuth();
   const [activeTab, setActiveTab] = useState<'login' | 'register' | 'oauth'>('oauth');
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -34,7 +35,7 @@ const Login: React.FC = () => {
       const response = await fetch('/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, email, password }),
       });
 
       const data = await response.json();
@@ -198,6 +199,11 @@ const Login: React.FC = () => {
                   >
                     {submitting ? 'Logging in...' : 'Login'}
                   </button>
+                  <div className="text-center mt-3">
+                    <Link to="/forgot-password" className="text-muted small">
+                      Forgot your password?
+                    </Link>
+                  </div>
                 </form>
               )}
 
@@ -220,6 +226,21 @@ const Login: React.FC = () => {
                       required
                     />
                     <small className="text-muted">3-50 characters</small>
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="register-email" className="form-label">
+                      Email address
+                    </label>
+                    <input
+                      type="email"
+                      className="form-control bg-secondary text-white border-secondary"
+                      id="register-email"
+                      autoComplete="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                    <small className="text-muted">Used only for password recovery</small>
                   </div>
                   <div className="mb-3">
                     <label htmlFor="register-password" className="form-label">

@@ -61,7 +61,7 @@ export const WhatsNewBanner: React.FC<WhatsNewBannerProps> = ({ news }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="mb-2">
-        <span className="badge bg-light text-success small">
+        <span className="badge bg-success text-white small">
           What's New
         </span>
       </div>

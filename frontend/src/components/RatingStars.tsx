@@ -71,7 +71,7 @@ const RatingStars: React.FC<RatingStarsProps> = ({
         {[0, 1, 2, 3, 4].map(index => renderStar(index))}
       </div>
       {ratingCount !== undefined && (
-        <span className="text-secondary" style={{ fontSize: '0.9rem' }}>
+        <span className="text-light" style={{ fontSize: '0.9rem' }}>
           ({rating.toFixed(1)} - {ratingCount} {ratingCount === 1 ? 'vote' : 'votes'})
         </span>
       )}

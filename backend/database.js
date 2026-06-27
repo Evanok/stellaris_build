@@ -184,6 +184,32 @@ const setupDatabase = () => {
       }
     });
 
+    // Add nomadic fields for Nomads DLC builds
+    db.run(`ALTER TABLE builds ADD COLUMN is_nomadic INTEGER DEFAULT 0`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding is_nomadic column:', err.message);
+      }
+    });
+
+    db.run(`ALTER TABLE builds ADD COLUMN ark_type TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding ark_type column:', err.message);
+      }
+    });
+
+    // Add reset_token columns for password recovery (local accounts)
+    db.run(`ALTER TABLE users ADD COLUMN reset_token TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding reset_token column:', err.message);
+      }
+    });
+
+    db.run(`ALTER TABLE users ADD COLUMN reset_token_expires INTEGER`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding reset_token_expires column:', err.message);
+      }
+    });
+
     // Add display_name column for custom usernames (OAuth users)
     db.run(`ALTER TABLE users ADD COLUMN display_name TEXT`, (err) => {
       if (err && !err.message.includes('duplicate column')) {
