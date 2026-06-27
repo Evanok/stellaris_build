@@ -19,6 +19,8 @@ const AdminStats = lazy(() => import('./pages/AdminStats'));
 const AdminFeedback = lazy(() => import('./pages/AdminFeedback'));
 const Feedback = lazy(() => import('./pages/Feedback'));
 const Resources = lazy(() => import('./pages/Resources'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -86,6 +88,8 @@ const AppContent = () => {
                   <Route path="/admin/stats" element={<AdminStats />} />
                   <Route path="/feedback" element={<Feedback />} />
                   <Route path="/admin/feedback" element={<AdminFeedback />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
                 </Routes>
               </Suspense>
             </main>

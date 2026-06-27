@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 interface AuthModalProps {
   show: boolean;
@@ -9,6 +10,7 @@ interface AuthModalProps {
 export const AuthModal: React.FC<AuthModalProps> = ({ show, onClose, onSuccess }) => {
   const [activeTab, setActiveTab] = useState<'login' | 'register' | 'oauth'>('oauth');
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -29,7 +31,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ show, onClose, onSuccess }
       const response = await fetch('/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, email, password }),
       });
 
       const data = await response.json();
@@ -193,6 +195,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ show, onClose, onSuccess }
                 >
                   {loading ? 'Logging in...' : 'Login'}
                 </button>
+                <div className="text-center mt-3">
+                  <Link to="/forgot-password" className="text-muted small" onClick={onClose}>
+                    Forgot your password?
+                  </Link>
+                </div>
               </form>
             )}
 
@@ -215,6 +222,21 @@ export const AuthModal: React.FC<AuthModalProps> = ({ show, onClose, onSuccess }
                     required
                   />
                   <small className="text-muted">3-50 characters</small>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="modal-register-email" className="form-label">
+                    Email address
+                  </label>
+                  <input
+                    type="email"
+                    className="form-control bg-secondary text-white border-secondary"
+                    id="modal-register-email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                  <small className="text-muted">Used only for password recovery</small>
                 </div>
                 <div className="mb-3">
                   <label htmlFor="register-password" className="form-label">
