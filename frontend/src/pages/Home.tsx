@@ -425,11 +425,11 @@ export const Home: React.FC = () => {
                             ) : null}
                             {build.is_nomadic ? (
                               <>
-                                <img src="/icons/home/nomad_toggle.webp" width={40} height={40} alt="Nomadic Empire" title="Nomadic Empire" />
+                                <img src="/icons/home/nomad_toggle.webp" width={28} height={28} alt="Nomadic Empire" title="Nomadic Empire" />
                                 {build.ark_type && (
                                   <img
                                     src={`/icons/home/${build.ark_type === 'civilian_arkship' ? 'tech_civilian_arkship' : build.ark_type === 'science_arkship' ? 'tech_science_arkship' : 'tech_military_arkship'}.webp`}
-                                    width={40} height={40}
+                                    width={28} height={28}
                                     alt={build.ark_type.replace(/_/g, ' ')}
                                     title={build.ark_type.replace(/_arkship$/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) + ' Arkship'}
                                   />
