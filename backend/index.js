@@ -2032,6 +2032,127 @@ app.delete('/api/chat/:id', isAdmin, (req, res) => {
   );
 });
 
+// ─── Tips & Tricks ────────────────────────────────────────────────────────────
+
+const TIP_CATEGORIES = [
+  'Early Game', 'Population', 'Economy', 'Science', 'Military',
+  'Diplomacy', 'Optimization', 'Planet Management', 'Species & Traits',
+  'Traditions & Perks', 'General'
+];
+const TIP_MAX_LENGTH = 500;
+
+app.get('/api/tips', (req, res) => {
+  const { version, category, sort } = req.query;
+  const userId = req.isAuthenticated() ? req.user.id : null;
+
+  let whereClauses = ['t.deleted = 0'];
+  const params = [];
+
+  if (version) {
+    whereClauses.push('t.game_version = ?');
+    params.push(version);
+  }
+  if (category) {
+    whereClauses.push("(',' || t.categories || ',' LIKE '%,' || ? || ',%')");
+    params.push(category);
+  }
+
+  const where = whereClauses.join(' AND ');
+  const orderBy = sort === 'new' ? 't.created_at DESC' : 'vote_count DESC, t.created_at DESC';
+
+  const sql = `
+    SELECT
+      t.id, t.title, t.content, t.categories, t.game_version,
+      t.author_id, t.author_name, t.created_at,
+      COUNT(v.id) as vote_count,
+      ${userId ? 'MAX(CASE WHEN v.user_id = ? THEN 1 ELSE 0 END) as user_voted' : '0 as user_voted'}
+    FROM tips t
+    LEFT JOIN tip_votes v ON t.id = v.tip_id
+    WHERE ${where}
+    GROUP BY t.id
+    ORDER BY ${orderBy}
+  `;
+
+  const allParams = userId ? [userId, ...params] : params;
+
+  db.all(sql, allParams, (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    res.json(rows.map(r => ({ ...r, user_voted: !!r.user_voted })));
+  });
+});
+
+app.post('/api/tips', isAuthenticated, (req, res) => {
+  const { title, content, categories, game_version } = req.body;
+
+  if (!title || !title.trim()) return res.status(400).json({ error: 'Title is required.' });
+  if (!content || !content.trim()) return res.status(400).json({ error: 'Content is required.' });
+  if (content.length > TIP_MAX_LENGTH) return res.status(400).json({ error: `Content must be ${TIP_MAX_LENGTH} characters or less.` });
+  if (!game_version) return res.status(400).json({ error: 'Game version is required.' });
+
+  const cats = Array.isArray(categories) ? categories : [];
+  const validCats = cats.filter(c => TIP_CATEGORIES.includes(c));
+  const categoriesStr = validCats.join(',');
+
+  const authorName = req.user.display_name || req.user.username;
+
+  db.run(
+    `INSERT INTO tips (title, content, categories, game_version, author_id, author_name) VALUES (?, ?, ?, ?, ?, ?)`,
+    [title.trim(), content.trim(), categoriesStr, game_version, req.user.id, authorName],
+    function(err) {
+      if (err) return res.status(500).json({ error: 'Failed to create tip.' });
+      res.status(201).json({ id: this.lastID });
+    }
+  );
+});
+
+app.post('/api/tips/:id/vote', isAuthenticated, (req, res) => {
+  const tipId = parseInt(req.params.id);
+  const userId = req.user.id;
+
+  db.get('SELECT id FROM tips WHERE id = ? AND deleted = 0', [tipId], (err, tip) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    if (!tip) return res.status(404).json({ error: 'Tip not found' });
+
+    db.get('SELECT id FROM tip_votes WHERE tip_id = ? AND user_id = ?', [tipId, userId], (err, existing) => {
+      if (err) return res.status(500).json({ error: 'Database error' });
+
+      if (existing) {
+        db.run('DELETE FROM tip_votes WHERE tip_id = ? AND user_id = ?', [tipId, userId], (err) => {
+          if (err) return res.status(500).json({ error: 'Failed to remove vote' });
+          db.get('SELECT COUNT(*) as count FROM tip_votes WHERE tip_id = ?', [tipId], (err, row) => {
+            res.json({ voted: false, vote_count: row ? row.count : 0 });
+          });
+        });
+      } else {
+        db.run('INSERT INTO tip_votes (tip_id, user_id) VALUES (?, ?)', [tipId, userId], (err) => {
+          if (err) return res.status(500).json({ error: 'Failed to add vote' });
+          db.get('SELECT COUNT(*) as count FROM tip_votes WHERE tip_id = ?', [tipId], (err, row) => {
+            res.json({ voted: true, vote_count: row ? row.count : 0 });
+          });
+        });
+      }
+    });
+  });
+});
+
+app.delete('/api/tips/:id', isAuthenticated, (req, res) => {
+  const tipId = parseInt(req.params.id);
+
+  db.get('SELECT author_id FROM tips WHERE id = ? AND deleted = 0', [tipId], (err, tip) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    if (!tip) return res.status(404).json({ error: 'Tip not found' });
+
+    const isOwner = tip.author_id === req.user.id;
+    const isAdmin = req.user.is_admin === 1;
+    if (!isOwner && !isAdmin) return res.status(403).json({ error: 'Forbidden' });
+
+    db.run('UPDATE tips SET deleted = 1 WHERE id = ?', [tipId], (err) => {
+      if (err) return res.status(500).json({ error: 'Failed to delete tip' });
+      res.json({ success: true });
+    });
+  });
+});
+
 // Serve React app for all other routes (must be after API routes)
 app.use((req, res) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

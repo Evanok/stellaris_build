@@ -21,6 +21,7 @@ const AdminStats = lazy(() => import('./pages/AdminStats'));
 const AdminFeedback = lazy(() => import('./pages/AdminFeedback'));
 const Feedback = lazy(() => import('./pages/Feedback'));
 const Resources = lazy(() => import('./pages/Resources'));
+const Tips = lazy(() => import('./pages/Tips'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 
@@ -103,6 +104,7 @@ const AppContent = () => {
                   <Route path="/build/:id" element={<BuildDetail />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/resources" element={<Resources />} />
+                  <Route path="/tips" element={<Tips />} />
                   <Route path="/stats" element={<Stats />} />
                   <Route path="/admin/stats" element={<AdminStats />} />
                   <Route path="/feedback" element={<Feedback />} />

@@ -290,6 +290,35 @@ const setupDatabase = () => {
       }
     });
 
+    // Create tips table for community tips & tricks
+    db.run(`CREATE TABLE IF NOT EXISTS tips (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      content TEXT NOT NULL,
+      categories TEXT NOT NULL DEFAULT '',
+      game_version TEXT NOT NULL,
+      author_id INTEGER NOT NULL,
+      author_name TEXT NOT NULL,
+      deleted INTEGER DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (author_id) REFERENCES users (id)
+    )`, (err) => {
+      if (err) console.error('Error creating tips table:', err.message);
+    });
+
+    // Create tip_votes table (one upvote per user per tip)
+    db.run(`CREATE TABLE IF NOT EXISTS tip_votes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      tip_id INTEGER NOT NULL,
+      user_id INTEGER NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (tip_id) REFERENCES tips (id) ON DELETE CASCADE,
+      FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+      UNIQUE(tip_id, user_id)
+    )`, (err) => {
+      if (err) console.error('Error creating tip_votes table:', err.message);
+    });
+
     console.log('Database tables checked/created.');
   });
 };
