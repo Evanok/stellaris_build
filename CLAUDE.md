@@ -500,6 +500,48 @@ Planned features (not yet implemented):
 
 ## Recent Completions
 
+### Nomadic Empire Feature (2026-06-27)
+Added full support for the Nomads DLC nomadic empire mechanic.
+
+**Database:**
+- `is_nomadic INTEGER DEFAULT 0` and `ark_type TEXT` columns added to `builds` table via ALTER TABLE migrations (in `backend/database.js`)
+- Existing builds retroactively non-nomadic via `DEFAULT 0`
+
+**Backend:**
+- POST and PUT `/api/builds` handle `is_nomadic` and `ark_type` fields
+- New endpoint `GET /api/ark-types` serves `backend/data/ark_types.json` (non-versioned)
+- `is_nomadic` and `ark_type` returned in `/api/builds` responses (`enrichBuild` passes them through)
+
+**Data extraction (`data-extractor/extract_ark_types.py`):**
+- Parses `common/ship_sizes/29_nomads_dlc_ships.txt` for `ship_modifier` blocks per type (civilian/science/military) and tier (I/II/III)
+- Resolves `@scripted_variables` from `common/scripted_variables/`
+- Uses `localization_parser.py` for display names and feature text
+- Excludes `ship_starbase_stockpile_collection_rate_add` (shared by all types, not differentiating)
+- Run: `python3 extract_ark_types.py "<stellaris_path>"` → `output/ark_types.json`
+- Copy output to `backend/data/ark_types.json` after each Stellaris update
+- Key files: `data-extractor/extract_ark_types.py`, `backend/data/ark_types.json`
+
+**BuildForm (`frontend/src/BuildForm.tsx`):**
+- `supportsNomadic(version)` helper: returns true only for version >= 4.4 (Nomads DLC)
+- Nomadic section hidden entirely for builds < 4.4; reset automatically when user switches version down
+- Card with `nomad_toggle.png` icon (64px), checkbox toggle, and ark type selector (3 buttons with tech icons)
+- Per-tier modifier table shown when an ark type is selected (data from `/api/ark-types`)
+- Nomadic section positioned above Authority selection
+- Key icons: `frontend/public/icons/nomad_toggle.png`, `tech_{civilian,science,military}_arkship.png`
+
+**BuildDetail (`frontend/src/pages/BuildDetail.tsx`):**
+- Nomadic badge + ark type icon displayed if `is_nomadic` is set
+
+**Home page cards (`frontend/src/pages/Home.tsx`):**
+- `is_nomadic` and `ark_type` added to `Build` interface
+- Nomadic empire icon + ark type icon displayed to the right of the portrait, same row, same size (40×40px)
+- Icons are WebP at 40px: `frontend/public/icons/home/nomad_toggle.webp`, `tech_{civilian,science,military}_arkship.webp`
+
+### SetEmailModal Per-User localStorage Fix (2026-06-27)
+- Global key `skip_email_prompt` caused "don't show again" to bleed between accounts on the same browser
+- Fixed to per-user key `` `skip_email_prompt_${user.id}` `` in both `SetEmailModal.tsx` and `App.tsx`
+- Key files: `frontend/src/components/SetEmailModal.tsx`, `frontend/src/App.tsx`
+
 ### Home Page Performance Pass (2026-06-20)
 Diagnosed with WebPageTest (waterfall analysis). Fixes applied in order of impact:
 
