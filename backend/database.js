@@ -184,6 +184,19 @@ const setupDatabase = () => {
       }
     });
 
+    // Add reset_token columns for password recovery (local accounts)
+    db.run(`ALTER TABLE users ADD COLUMN reset_token TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding reset_token column:', err.message);
+      }
+    });
+
+    db.run(`ALTER TABLE users ADD COLUMN reset_token_expires INTEGER`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding reset_token_expires column:', err.message);
+      }
+    });
+
     // Add display_name column for custom usernames (OAuth users)
     db.run(`ALTER TABLE users ADD COLUMN display_name TEXT`, (err) => {
       if (err && !err.message.includes('duplicate column')) {
