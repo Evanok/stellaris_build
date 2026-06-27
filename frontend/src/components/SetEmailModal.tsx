@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../AuthContext';
 
-const SKIP_KEY = 'skip_email_prompt';
+const skipKey = (userId: number) => `skip_email_prompt_${userId}`;
 
 interface SetEmailModalProps {
   show: boolean;
@@ -9,7 +9,7 @@ interface SetEmailModalProps {
 }
 
 export const SetEmailModal: React.FC<SetEmailModalProps> = ({ show, onClose }) => {
-  const { refreshUser } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [email, setEmail] = useState('');
   const [confirmEmail, setConfirmEmail] = useState('');
   const [dontShowAgain, setDontShowAgain] = useState(false);
@@ -17,8 +17,8 @@ export const SetEmailModal: React.FC<SetEmailModalProps> = ({ show, onClose }) =
   const [error, setError] = useState('');
 
   const handleClose = () => {
-    if (dontShowAgain) {
-      localStorage.setItem(SKIP_KEY, '1');
+    if (dontShowAgain && user) {
+      localStorage.setItem(skipKey(user.id), '1');
     }
     onClose();
   };

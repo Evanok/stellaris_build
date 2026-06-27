@@ -163,6 +163,21 @@ interface Ethic {
   };
 }
 
+interface ArkTypeModifier {
+  key: string;
+  label: string;
+  tier1: string;
+  tier2: string;
+  tier3: string;
+}
+
+interface ArkType {
+  id: string;
+  name: string;
+  modifiers: ArkTypeModifier[];
+  features: string[];
+}
+
 interface Authority {
   id: string;
   name: string;
@@ -231,6 +246,9 @@ const BASE_MAX_TRAIT_COUNT = 5;
 const MAX_ETHICS_POINTS = 3;
 const MAX_CIVIC_SLOTS = 3;
 
+// Nomads DLC was introduced in 4.4 "Pegasus"
+const supportsNomadic = (version: string) => parseFloat(version) >= 4.4;
+
 // Stellaris game versions
 const GAME_VERSIONS = [
   { value: '4.4', label: '4.4 "Pegasus" (Latest)' },
@@ -284,6 +302,11 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const [selectedEthics, setSelectedEthics] = useState<string[]>([]);
   const [ethicsSearchQuery, setEthicsSearchQuery] = useState('');
 
+  // Nomadic empire (Nomads DLC)
+  const [isNomadic, setIsNomadic] = useState(false);
+  const [arkType, setArkType] = useState('');
+  const [allArkTypes, setAllArkTypes] = useState<ArkType[]>([]);
+
   // Authority data from API
   const [allAuthorities, setAllAuthorities] = useState<Authority[]>([]);
   const [selectedAuthority, setSelectedAuthority] = useState<string>('');
@@ -319,6 +342,14 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
   // Track whether the user manually changed the version (vs initial load or initialData population)
   const userChangedVersion = useRef(false);
+
+  // Load non-versioned ark types data once on mount
+  useEffect(() => {
+    fetch('/api/ark-types')
+      .then(res => res.json())
+      .then((data: ArkType[]) => setAllArkTypes(Array.isArray(data) ? data : []))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const qs = `?version=${encodeURIComponent(game_version)}`;
@@ -433,6 +464,10 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setSelectedAscensionPerks(prev => prev.filter((id: string) => validPerkIds.has(id)));
         setSelectedTraditions(prev => prev.filter((id: string) => validTreeNames.has(id)));
         setSelectedRulerTrait(prev => (prev && validRulerTraitIds.has(prev) ? prev : ''));
+        if (!supportsNomadic(game_version)) {
+          setIsNomadic(false);
+          setArkType('');
+        }
       }
     }).catch(() => setError('Could not load game data.'));
 
@@ -455,6 +490,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       // Set empire selections
       if (initialData.origin) setSelectedOrigin(initialData.origin);
       if (initialData.authority) setSelectedAuthority(initialData.authority);
+      setIsNomadic(!!initialData.is_nomadic);
+      if (initialData.ark_type) setArkType(initialData.ark_type);
 
       // Handle ethics (array of strings) - trim whitespace
       if (Array.isArray(initialData.ethics)) {
@@ -895,6 +932,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       difficulty,
       dlcs,
       tags,
+      isNomadic,
+      arkType,
       selectedSpeciesClass,
       selectedTraits,
       selectedSecondaryTraits,
@@ -929,6 +968,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setSelectedOrigin(formData.selectedOrigin || '');
         setSelectedEthics(formData.selectedEthics || []);
         setSelectedAuthority(formData.selectedAuthority || '');
+        setIsNomadic(!!formData.isNomadic);
+        setArkType(formData.arkType || '');
         setSelectedCivics(formData.selectedCivics || []);
         setSelectedAscensionPerks(formData.selectedAscensionPerks || []);
         setSelectedTraditions(formData.selectedTraditions || []);
@@ -1025,7 +1066,9 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
           traditions: selectedTraditions.join(', '), // Convert array to comma-separated string
           ruler_trait: selectedRulerTrait,
           species_class: selectedSpeciesClass,
-          portrait: selectedPortrait
+          portrait: selectedPortrait,
+          is_nomadic: isNomadic ? 1 : 0,
+          ark_type: isNomadic ? arkType : null,
         }),
       });
 
@@ -1052,6 +1095,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       setSelectedOrigin('');
       setSelectedEthics([]);
       setSelectedAuthority('');
+      setIsNomadic(false);
+      setArkType('');
       setSelectedCivics([]);
       setSelectedAscensionPerks([]);
       setSelectedTraditions([]);
@@ -1729,6 +1774,91 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
               </div>
             </div>
           </div>
+
+          {/* Nomadic Empire (Nomads DLC) — only available in 4.4+ */}
+          {supportsNomadic(game_version) && <div className="mb-3">
+            <div
+              className="card border-2"
+              style={{ borderColor: isNomadic ? '#e8a838' : '#6c757d', backgroundColor: isNomadic ? 'rgba(232, 168, 56, 0.08)' : undefined }}
+            >
+              <div className="card-body p-3">
+                <div className="d-flex align-items-center gap-3">
+                  <img src="/icons/nomad_toggle.png" width={64} height={64} alt="Nomadic Empire" style={{ flexShrink: 0 }} />
+                  <div className="flex-grow-1">
+                    <div className="d-flex align-items-center gap-2 mb-1">
+                      <input
+                        type="checkbox"
+                        className="form-check-input mt-0"
+                        id="is-nomadic"
+                        checked={isNomadic}
+                        onChange={(e) => {
+                          setIsNomadic(e.target.checked);
+                          if (!e.target.checked) setArkType('');
+                        }}
+                      />
+                      <label className="form-check-label mb-0" htmlFor="is-nomadic" style={{ cursor: 'pointer' }}>
+                        <strong className="text-white fs-6">Nomadic Empire</strong>
+                        <span className="badge bg-warning text-dark ms-2 fw-normal">Nomads DLC</span>
+                      </label>
+                    </div>
+                    <p className="text-muted small mb-0">Your empire starts aboard a fleet of ark ships instead of a home planet.</p>
+                  </div>
+                </div>
+                {isNomadic && (
+                  <div className="mt-3 pt-3 border-top border-secondary">
+                    <div className="form-label mb-2">Ark Ship Type</div>
+                    <div className="d-flex gap-2 flex-wrap mb-2">
+                      {[
+                        { value: 'civilian_arkship', label: 'Civilian', icon: '/icons/tech_civilian_arkship.png' },
+                        { value: 'science_arkship', label: 'Science', icon: '/icons/tech_science_arkship.png' },
+                        { value: 'military_arkship', label: 'Military', icon: '/icons/tech_military_arkship.png' },
+                      ].map(opt => {
+                        const selected = arkType === opt.value;
+                        const arkData = allArkTypes.find(a => a.id === opt.value);
+                        return (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => setArkType(selected ? '' : opt.value)}
+                            title={arkData ? arkData.modifiers.map(m => `${m.label}: ${m.tier1}`).join(' | ') : ''}
+                            className={`btn d-flex align-items-center gap-2 ${selected ? 'btn-success' : 'btn-outline-secondary'}`}
+                          >
+                            <img src={opt.icon} width={32} height={32} alt={opt.label} />
+                            {arkData?.name || `${opt.label} Arkship`}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {/* Show selected ark type characteristics */}
+                    {arkType && (() => {
+                      const arkData = allArkTypes.find(a => a.id === arkType);
+                      if (!arkData) return null;
+                      return (
+                        <div className="alert alert-secondary py-2 px-3 mb-0">
+                          <div className="small text-white-50 mb-1">Unique modifiers per tier (I / II / III)</div>
+                          {arkData.modifiers.map(mod => (
+                            <div key={mod.key} className="small">
+                              <span className="text-light">{mod.label}:</span>{' '}
+                              <span className="text-success">{mod.tier1}</span>
+                              {' / '}
+                              <span className="text-success">{mod.tier2}</span>
+                              {' / '}
+                              <span className="text-success">{mod.tier3}</span>
+                            </div>
+                          ))}
+                          {arkData.features.length > 0 && (
+                            <div className="mt-1 text-white-50 small">
+                              {arkData.features.map((f, i) => <div key={i}>{f}</div>)}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>}
 
           {/* Authority Selection */}
           <div className="mb-3">

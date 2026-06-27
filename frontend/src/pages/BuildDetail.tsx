@@ -28,6 +28,8 @@ interface Build {
   ruler_trait: string;
   dlcs: string;
   tags: string;
+  is_nomadic?: number;
+  ark_type?: string;
   author_id: number;
   author_username?: string;
   author_avatar?: string;
@@ -816,6 +818,37 @@ export const BuildDetail: React.FC = () => {
                     </div>
                   );
                 })}
+              </div>
+            </div>
+          )}
+
+          {/* Nomadic Empire */}
+          {!!build.is_nomadic && (
+            <div className="card bg-dark border-secondary mb-4">
+              <div className="card-header bg-secondary">
+                <h4 className="mb-0 text-white">
+                  <img src="/icons/nomad_toggle.png" width={28} height={28} alt="" className="me-2" style={{ verticalAlign: 'text-bottom' }} />
+                  Nomadic Empire
+                </h4>
+              </div>
+              <div className="card-body d-flex align-items-center gap-3">
+                <div>
+                  <span className="badge bg-warning text-dark fs-6">Nomads DLC</span>
+                  {build.ark_type && (() => {
+                    const arkMap: Record<string, { label: string; icon: string }> = {
+                      civilian_arkship: { label: 'Civilian Arkship', icon: '/icons/tech_civilian_arkship.png' },
+                      science_arkship: { label: 'Science Arkship', icon: '/icons/tech_science_arkship.png' },
+                      military_arkship: { label: 'Military Arkship', icon: '/icons/tech_military_arkship.png' },
+                    };
+                    const ark = arkMap[build.ark_type];
+                    return (
+                      <span className="ms-3 d-inline-flex align-items-center gap-2">
+                        {ark && <img src={ark.icon} width={32} height={32} alt="" />}
+                        <strong className="text-success">{ark?.label || build.ark_type}</strong>
+                      </span>
+                    );
+                  })()}
+                </div>
               </div>
             </div>
           )}

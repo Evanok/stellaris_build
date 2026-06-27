@@ -96,6 +96,8 @@ interface Build {
   tags: string;
   species_class?: string;
   portrait?: string;
+  is_nomadic?: number;
+  ark_type?: string;
   created_at: string;
   author_username?: string;
   author_avatar?: string;
@@ -409,17 +411,32 @@ export const Home: React.FC = () => {
                   <Link to={`/build/${build.id}`} className="build-card-link">
                     <div className="card h-100 build-card">
                       <div className="card-body">
-                        {/* Top row: portrait | version + difficulty */}
+                        {/* Top row: portrait + nomad icons | version + difficulty */}
                         <div className="d-flex justify-content-between align-items-start mb-2">
-                          {build.portrait ? (
-                            <img
-                              src={`/portraits/${build.portrait}.png`}
-                              alt=""
-                              loading="lazy"
-                              style={{ width: '40px', height: '40px', objectFit: 'cover', objectPosition: 'top', borderRadius: '6px', border: '2px solid #0dcaf0', flexShrink: 0 }}
-                              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                            />
-                          ) : <div />}
+                          <div className="d-flex align-items-center gap-1">
+                            {build.portrait ? (
+                              <img
+                                src={`/portraits/${build.portrait}.png`}
+                                alt=""
+                                loading="lazy"
+                                style={{ width: '40px', height: '40px', objectFit: 'cover', objectPosition: 'top', borderRadius: '6px', border: '2px solid #0dcaf0', flexShrink: 0 }}
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                              />
+                            ) : null}
+                            {build.is_nomadic ? (
+                              <>
+                                <img src="/icons/home/nomad_toggle.webp" width={28} height={28} alt="Nomadic Empire" title="Nomadic Empire" />
+                                {build.ark_type && (
+                                  <img
+                                    src={`/icons/home/${build.ark_type === 'civilian_arkship' ? 'tech_civilian_arkship' : build.ark_type === 'science_arkship' ? 'tech_science_arkship' : 'tech_military_arkship'}.webp`}
+                                    width={28} height={28}
+                                    alt={build.ark_type.replace(/_/g, ' ')}
+                                    title={build.ark_type.replace(/_arkship$/, '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) + ' Arkship'}
+                                  />
+                                )}
+                              </>
+                            ) : null}
+                          </div>
                           <div>
                             <span className="badge bg-primary me-1">{VERSION_NAMES[build.game_version] ?? build.game_version ?? 'Unknown'}</span>
                             {getDifficultyBadge(build.difficulty)}
