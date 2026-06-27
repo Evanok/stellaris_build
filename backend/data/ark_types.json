@@ -1,0 +1,71 @@
+[
+  {
+    "id": "civilian_arkship",
+    "name": "Civilian Arkship",
+    "modifiers": [
+      {
+        "key": "arkship_harvest_resources_produces_mult",
+        "label": "Resources from Harvesting Actions",
+        "tier1": "+5%",
+        "tier2": "+10%",
+        "tier3": "+15%"
+      }
+    ],
+    "features": [
+      "Tiers II-III: Access to Arkship Strip Mine"
+    ]
+  },
+  {
+    "id": "science_arkship",
+    "name": "Scientific Arkship",
+    "modifiers": [
+      {
+        "key": "science_ship_survey_speed",
+        "label": "Survey Speed",
+        "tier1": "+5%",
+        "tier2": "+10%",
+        "tier3": "+15%"
+      },
+      {
+        "key": "sensor_range_add",
+        "label": "Sensor Range",
+        "tier1": "+1",
+        "tier2": "+1",
+        "tier3": "+1"
+      },
+      {
+        "key": "hyperlane_range_add",
+        "label": "Ship Hyperlane Detection Range",
+        "tier1": "+1",
+        "tier2": "+1",
+        "tier3": "+1"
+      }
+    ],
+    "features": [
+      "Tiers II-III: Access to Arkship Deep Scan"
+    ]
+  },
+  {
+    "id": "military_arkship",
+    "name": "Military Arkship",
+    "modifiers": [
+      {
+        "key": "ship_fire_rate_mult",
+        "label": "Ship Fire Rate",
+        "tier1": "+5%",
+        "tier2": "+10%",
+        "tier3": "+15%"
+      },
+      {
+        "key": "ship_weapon_range_mult",
+        "label": "Ship Weapons Range",
+        "tier1": "+5%",
+        "tier2": "+10%",
+        "tier3": "+15%"
+      }
+    ],
+    "features": [
+      "Tiers I-III: Military Arkship Weapons"
+    ]
+  }
+]

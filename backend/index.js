@@ -702,6 +702,16 @@ app.get('/api/resources', (req, res) => {
   });
 });
 
+app.get('/api/ark-types', (req, res) => {
+  fs.readFile('./data/ark_types.json', 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json({ error: "Could not read ark types data." });
+      return;
+    }
+    res.json(JSON.parse(data));
+  });
+});
+
 // Get builds — paginated, filtered, sorted
 app.get('/api/builds', (req, res) => {
   const page    = Math.max(1, parseInt(req.query.page)  || 1);
@@ -1012,7 +1022,7 @@ app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
 
   // Sanitize input data to prevent XSS
   const sanitizedData = sanitizeBuildData(req.body);
-  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags } = sanitizedData;
+  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type } = sanitizedData;
 
   // Get author_id from authenticated user
   const author_id = req.user.id;
@@ -1027,8 +1037,8 @@ app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
     }
 
     // If no duplicate, proceed with insert
-    const sql = `INSERT INTO builds (name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, author_id];
+    const sql = `INSERT INTO builds (name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, author_id];
 
     db.run(sql, params, function(err) {
       if (err) {
@@ -1120,7 +1130,7 @@ app.put('/api/builds/:id', isAuthenticated, createBuildLimiter, (req, res) => {
 
   // Sanitize input data to prevent XSS
   const sanitizedData = sanitizeBuildData(req.body);
-  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags } = sanitizedData;
+  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type } = sanitizedData;
 
   // First, check if the build exists and belongs to the user
   db.get('SELECT * FROM builds WHERE id = ? AND deleted = 0', [id], (err, build) => {
@@ -1166,10 +1176,12 @@ app.put('/api/builds/:id', isAuthenticated, createBuildLimiter, (req, res) => {
         species_class = ?,
         portrait = COALESCE(NULLIF(?, ''), portrait),
         dlcs = ?,
-        tags = ?
+        tags = ?,
+        is_nomadic = ?,
+        ark_type = ?
       WHERE id = ?`;
 
-      const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, id];
+      const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, id];
 
       db.run(sql, params, function(err) {
         if (err) {
