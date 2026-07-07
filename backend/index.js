@@ -1,5 +1,12 @@
 require('dotenv').config({ path: __dirname + '/.env' });
 
+// Raise libuv's threadpool size (default 4) before any async fs/sqlite I/O can create it.
+// SQLite writes and static file serving both queue on this pool; 4 slots is easy to saturate
+// under concurrent requests, which stalls unrelated static asset/API responses.
+if (!process.env.UV_THREADPOOL_SIZE) {
+  process.env.UV_THREADPOOL_SIZE = '8';
+}
+
 // Validate environment variables before starting the app
 const { validateEnv } = require('./validateEnv');
 validateEnv();
