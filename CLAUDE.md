@@ -72,6 +72,8 @@ sudo systemctl restart nginx # Restart nginx (if config changed)
 - Backend changes only need `pm2 restart stellaris-build`
 - Database is at `/home/arthur/work/stellaris_build/backend/stellaris_builds.db`
 
+**nginx config:** Tracked in the repo at `infra/nginx/stellaris-build.conf` (mirrors the live prod config — edit this file, not the server directly). Deploy changes with `infra/deploy_nginx.sh` (requires `PROD_HOST`, see `CLAUDE.local.md`).
+
 ### OAuth Setup (Development)
 
 The site uses Google and Steam OAuth for authentication. To run locally:
