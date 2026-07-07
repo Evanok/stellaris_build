@@ -503,6 +503,22 @@ Planned features (not yet implemented):
 
 ## Recent Completions
 
+### Server Perf + Public Repo Hardening (2026-07-07)
+Diagnosed intermittent home page freezes (site fully unresponsive while loading, images popping in one by one). Root cause: prod is a single 2-core box where SQLite session writes and static asset serving both compete for Node's 4-slot libuv threadpool.
+
+**Fixes:**
+- `UV_THREADPOOL_SIZE=8` default set in `backend/index.js` (before any async I/O)
+- Both SQLite DBs switched to WAL mode: `stellaris_builds.db` via `PRAGMA` in `backend/database.js`, `sessions.db` via `concurrentDb: true` on the `connect-sqlite3` store in `backend/index.js`
+- nginx now serves `/icons`, `/portraits`, `/loading_screens`, `/assets` directly from disk instead of proxying through Node — see `infra/nginx/stellaris-build.conf` (tracked, mirrors prod) and `infra/deploy_nginx.sh` (deploys + `nginx -t` + graceful reload, needs `PROD_HOST` env var)
+
+**Icon pipeline gap fixed:** `icons/home/*.webp` (20x20, used by home page cards) were never auto-generated for new DLC content — only `icons/{civics,traits,ethics,authorities}/*.png` (32px, build page) were. `data-extractor/extract_icons.py` now generates both together for every extraction run; backfilled 14 civics + 6 traits missing from the Nomads DLC (e.g. `civic_flight_schools`).
+
+**Public repo hardening** (repo is public): prod IP/SSH details moved out of `CLAUDE.md` into `CLAUDE.local.md` (gitignored, auto-loaded by Claude Code same as `CLAUDE.md`); added a "never commit" warning banner at the top of this file; infra scripts (`deploy_nginx.sh`, `fetch_prod_db.sh`) take the server address via `PROD_HOST` env var instead of hardcoding it.
+
+**New script:** `infra/fetch_prod_db.sh` — pulls a consistent snapshot of prod's `stellaris_builds.db` (via `sqlite3 .backup`, safe on a live WAL DB) for local testing; never touches `sessions.db`; backs up the local DB before overwriting.
+
+**Admin pages cleanup:** deleted `frontend/src/pages/AdminFeedback.tsx` and `GET /api/admin/feedback` — fully redundant, the public `/feedback` page already has admin-gated resolve controls hitting the same `PATCH` endpoint. `AdminStats.tsx` kept (shows data with no public equivalent: user counts, signups, referrers) but fixed a missing guard — it only checked login, not `is_admin`.
+
 ### Tips & Tricks Page — IN PROGRESS (2026-06-27)
 Community tips page with upvote-only voting, version/category filtering, sort by top/new. Login required to post/vote.
 
