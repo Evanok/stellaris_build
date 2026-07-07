@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## ⚠️ Public Repository — Never Commit
+
+This repo is **PUBLIC**. Never commit: `.env` files, database files/backups (`*.db`, `*.db.backup*`), credentials, API keys, session secrets, real user data, or server IPs/access details. Server connection details live in `CLAUDE.local.md` (gitignored, not committed) — see that file locally, never add them here. Always double-check `git status` before staging with `-A` or `add .`.
+
 ## Project Overview
 
 This is a community website for sharing Stellaris (game) builds. It's a monorepo with a React frontend, Express backend, and Python data extraction tools.
@@ -40,10 +44,7 @@ npm run build -w frontend  # Runs TypeScript compiler + Vite build
 
 **Production Server:**
 - Domain: https://stellaris-build.com
-- IP: 51.159.55.29
-- User: arthur
-- SSH: `ssh arthur@51.159.55.29`
-- SCP: `scp file.txt arthur@51.159.55.29:~/path/`
+- Connection details (IP, user, SSH/SCP commands): see `CLAUDE.local.md` (not committed — ask the project owner if you don't have it)
 
 ```bash
 # On production server (stellaris-build.com)

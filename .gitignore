@@ -21,6 +21,9 @@ playwright-report/
 .env.local
 .env.*.local
 
+# Personal/local project notes (never committed - see CLAUDE.local.md)
+CLAUDE.local.md
+
 # IDE
 .vscode/
 .idea/
