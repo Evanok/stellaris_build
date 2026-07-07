@@ -18,7 +18,6 @@ const ImportEmpireDesigns = lazy(() => import('./pages/ImportEmpireDesigns'));
 const BuildDetail = lazy(() => import('./pages/BuildDetail').then(module => ({ default: module.BuildDetail })));
 const Stats = lazy(() => import('./pages/Stats'));
 const AdminStats = lazy(() => import('./pages/AdminStats'));
-const AdminFeedback = lazy(() => import('./pages/AdminFeedback'));
 const Feedback = lazy(() => import('./pages/Feedback'));
 const Resources = lazy(() => import('./pages/Resources'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
@@ -106,7 +105,6 @@ const AppContent = () => {
                   <Route path="/stats" element={<Stats />} />
                   <Route path="/admin/stats" element={<AdminStats />} />
                   <Route path="/feedback" element={<Feedback />} />
-                  <Route path="/admin/feedback" element={<AdminFeedback />} />
                   <Route path="/forgot-password" element={<ForgotPassword />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
                 </Routes>

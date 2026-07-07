@@ -8,6 +8,12 @@ const db = new sqlite3.Database('./stellaris_builds.db', (err) => {
   console.log('Connected to the stellaris_builds.db SQLite database.');
 });
 
+// WAL mode: writers no longer take an exclusive lock that blocks concurrent readers.
+// synchronous=NORMAL is the safe pairing for WAL (recommended by SQLite docs) - it only
+// risks losing the last commit on an OS crash/power loss, never DB corruption.
+db.run('PRAGMA journal_mode = WAL');
+db.run('PRAGMA synchronous = NORMAL');
+
 // Create tables
 const setupDatabase = () => { 
   db.serialize(() => {

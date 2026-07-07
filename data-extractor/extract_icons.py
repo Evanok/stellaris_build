@@ -108,7 +108,28 @@ def convert_dds_to_png(dds_path, png_path, target_size=64):
         print(f"  ✗ Error converting {os.path.basename(dds_path)}: {e}")
         return False
 
-def extract_icons_for_type(stellaris_path, output_path, icon_type, ids_list, target_size=64):
+def create_home_icon_webp(png_path, home_dir, item_id, target_size=20):
+    """
+    Generate a small WebP copy of an icon for the home page build cards
+    (frontend/public/icons/home/{item_id}.webp, displayed at 20x20px).
+
+    Skipped if the destination already exists, so previously hand-tuned
+    icons are left untouched - this only fills gaps for new items.
+    """
+    dest_path = os.path.join(home_dir, f"{item_id}.webp")
+    if os.path.exists(dest_path):
+        return False
+    try:
+        from PIL import Image as PILImage
+        with PILImage.open(png_path) as img:
+            resized = img.resize((target_size, target_size), PILImage.LANCZOS)
+            resized.save(dest_path, 'WEBP')
+        return True
+    except Exception as e:
+        print(f"  ⚠ Error creating home webp for {item_id}: {e}")
+        return False
+
+def extract_icons_for_type(stellaris_path, output_path, icon_type, ids_list, target_size=64, home_webp_dir=None):
     """
     Extract icons for a specific game element type
 
@@ -118,6 +139,8 @@ def extract_icons_for_type(stellaris_path, output_path, icon_type, ids_list, tar
         icon_type: Type of icon ('civics', 'traits', 'ethics', etc.)
         ids_list: List of IDs to extract icons for
         target_size: Target size for output images
+        home_webp_dir: If set, also generate a 20x20 WebP copy for the home
+            page in this directory for any item that doesn't already have one
     """
     # Map icon types to their source directories
     source_dirs = {
@@ -171,6 +194,10 @@ def extract_icons_for_type(stellaris_path, output_path, icon_type, ids_list, tar
 
     extracted = 0
     missing = 0
+    home_generated = 0
+
+    if home_webp_dir:
+        ensure_dir(home_webp_dir)
 
     for item_id in ids_list:
         # Check if there's a custom mapping for this item
@@ -199,6 +226,8 @@ def extract_icons_for_type(stellaris_path, output_path, icon_type, ids_list, tar
         if os.path.exists(dds_path):
             if convert_dds_to_png(dds_path, png_path, target_size):
                 extracted += 1
+                if home_webp_dir and create_home_icon_webp(png_path, home_webp_dir, item_id):
+                    home_generated += 1
         else:
             missing += 1
             print(f"  ⚠ Missing icon: {dds_filename}")
@@ -206,6 +235,8 @@ def extract_icons_for_type(stellaris_path, output_path, icon_type, ids_list, tar
     print(f"   ✓ Extracted: {extracted}")
     if missing > 0:
         print(f"   ⚠ Missing: {missing}")
+    if home_webp_dir and home_generated > 0:
+        print(f"   ✓ Generated {home_generated} new home page icon(s) (20x20 webp)")
 
     return extracted, missing
 
@@ -241,6 +272,11 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
         'total_missing': 0
     }
 
+    # Home page build cards read small icons from icons/home/{id}.webp for
+    # civics, traits, ethics and authorities - generate any missing ones
+    # alongside the normal 32px PNGs so new DLC content is never missed again.
+    home_dir = os.path.join(output_path, 'home')
+
     # Extract Traits
     traits_file = os.path.join(data_path, 'traits.json')
     if os.path.exists(traits_file):
@@ -249,7 +285,7 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
             trait_ids = [t['id'] for t in traits]
             extracted, missing = extract_icons_for_type(
                 stellaris_path, output_path, 'traits', trait_ids,
-                optimal_sizes.get('traits', target_size)
+                optimal_sizes.get('traits', target_size), home_webp_dir=home_dir
             )
             stats['total_extracted'] += extracted
             stats['total_missing'] += missing
@@ -262,7 +298,7 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
             civic_ids = [c['id'] for c in civics]
             extracted, missing = extract_icons_for_type(
                 stellaris_path, output_path, 'civics', civic_ids,
-                optimal_sizes.get('civics', target_size)
+                optimal_sizes.get('civics', target_size), home_webp_dir=home_dir
             )
             stats['total_extracted'] += extracted
             stats['total_missing'] += missing
@@ -320,7 +356,7 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
             ethic_ids = [e['id'] for e in ethics]
             extracted, missing = extract_icons_for_type(
                 stellaris_path, output_path, 'ethics', ethic_ids,
-                optimal_sizes.get('ethics', target_size)
+                optimal_sizes.get('ethics', target_size), home_webp_dir=home_dir
             )
             stats['total_extracted'] += extracted
             stats['total_missing'] += missing
@@ -333,7 +369,7 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
             auth_ids = [a['id'] for a in authorities]
             extracted, missing = extract_icons_for_type(
                 stellaris_path, output_path, 'authorities', auth_ids,
-                optimal_sizes.get('authorities', target_size)
+                optimal_sizes.get('authorities', target_size), home_webp_dir=home_dir
             )
             stats['total_extracted'] += extracted
             stats['total_missing'] += missing

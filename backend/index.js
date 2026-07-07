@@ -1,5 +1,12 @@
 require('dotenv').config({ path: __dirname + '/.env' });
 
+// Raise libuv's threadpool size (default 4) before any async fs/sqlite I/O can create it.
+// SQLite writes and static file serving both queue on this pool; 4 slots is easy to saturate
+// under concurrent requests, which stalls unrelated static asset/API responses.
+if (!process.env.UV_THREADPOOL_SIZE) {
+  process.env.UV_THREADPOOL_SIZE = '8';
+}
+
 // Validate environment variables before starting the app
 const { validateEnv } = require('./validateEnv');
 validateEnv();
@@ -75,6 +82,7 @@ app.use(
     store: new SQLiteStore({
       db: 'sessions.db',
       dir: __dirname,
+      concurrentDb: true, // WAL mode: readers no longer block behind the per-request session touch write
     }),
     secret: process.env.SESSION_SECRET || 'stellaris-build-secret-change-in-production',
     resave: false,
@@ -1846,39 +1854,6 @@ app.get('/api/feedback', (req, res) => {
       f.id, f.type, f.description, f.screenshot_path, f.page_url,
       f.status, f.created_at,
       u.username, u.avatar
-    FROM feedback f
-    LEFT JOIN users u ON f.user_id = u.id
-  `;
-
-  const params = [];
-
-  if (status && ['new', 'in_progress', 'resolved'].includes(status)) {
-    query += ' WHERE f.status = ?';
-    params.push(status);
-  }
-
-  query += ' ORDER BY f.created_at DESC';
-
-  db.all(query, params, (err, rows) => {
-    if (err) {
-      console.error('Error fetching feedback:', err);
-      return res.status(500).json({ error: 'Failed to fetch feedback' });
-    }
-
-    res.json(rows);
-  });
-});
-
-// Get all feedback (admin only)
-app.get('/api/admin/feedback', isAdmin, (req, res) => {
-  const { status } = req.query;
-
-  let query = `
-    SELECT
-      f.*,
-      u.username,
-      u.email,
-      u.avatar
     FROM feedback f
     LEFT JOIN users u ON f.user_id = u.id
   `;
