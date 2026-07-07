@@ -1877,39 +1877,6 @@ app.get('/api/feedback', (req, res) => {
   });
 });
 
-// Get all feedback (admin only)
-app.get('/api/admin/feedback', isAdmin, (req, res) => {
-  const { status } = req.query;
-
-  let query = `
-    SELECT
-      f.*,
-      u.username,
-      u.email,
-      u.avatar
-    FROM feedback f
-    LEFT JOIN users u ON f.user_id = u.id
-  `;
-
-  const params = [];
-
-  if (status && ['new', 'in_progress', 'resolved'].includes(status)) {
-    query += ' WHERE f.status = ?';
-    params.push(status);
-  }
-
-  query += ' ORDER BY f.created_at DESC';
-
-  db.all(query, params, (err, rows) => {
-    if (err) {
-      console.error('Error fetching feedback:', err);
-      return res.status(500).json({ error: 'Failed to fetch feedback' });
-    }
-
-    res.json(rows);
-  });
-});
-
 // Update feedback status (admin only)
 app.patch('/api/admin/feedback/:id', isAdmin, (req, res) => {
   const { id } = req.params;

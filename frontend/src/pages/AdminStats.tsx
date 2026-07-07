@@ -25,9 +25,13 @@ export default function AdminStats() {
     // Wait for auth to load
     if (authLoading) return;
 
-    // Redirect if not logged in
+    // Redirect if not logged in, or logged in but not an admin
     if (!user) {
       navigate('/login');
+      return;
+    }
+    if (user.is_admin !== 1) {
+      navigate('/');
       return;
     }
 
