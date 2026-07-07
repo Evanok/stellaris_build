@@ -82,6 +82,7 @@ app.use(
     store: new SQLiteStore({
       db: 'sessions.db',
       dir: __dirname,
+      concurrentDb: true, // WAL mode: readers no longer block behind the per-request session touch write
     }),
     secret: process.env.SESSION_SECRET || 'stellaris-build-secret-change-in-production',
     resave: false,
