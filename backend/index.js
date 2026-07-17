@@ -710,6 +710,52 @@ app.get('/api/resources', (req, res) => {
   });
 });
 
+// Get the build finder decision tree (questions + hardcoded build ids at leaves)
+app.get('/api/build-finder-tree', (req, res) => {
+  fs.readFile('./data/build_finder_tree.json', 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json({ error: "Could not read build finder tree data." });
+      return;
+    }
+    res.json(JSON.parse(data));
+  });
+});
+
+// Resolve a list of build ids into enriched builds for the finder result screen.
+// Preserves the requested order and silently drops missing/deleted builds.
+app.get('/api/finder/builds', (req, res) => {
+  const ids = String(req.query.ids || '')
+    .split(',')
+    .map(s => parseInt(s.trim(), 10))
+    .filter(n => Number.isInteger(n) && n > 0);
+
+  if (ids.length === 0) {
+    res.json({ builds: [] });
+    return;
+  }
+
+  const placeholders = ids.map(() => '?').join(',');
+  const sql = `
+    SELECT
+      builds.*,
+      COALESCE(users.display_name, users.username) as author_username,
+      users.avatar as author_avatar
+    FROM builds
+    LEFT JOIN users ON builds.author_id = users.id
+    WHERE builds.id IN (${placeholders}) AND builds.deleted = 0
+  `;
+  db.all(sql, ids, (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    const byId = {};
+    rows.forEach(row => { byId[row.id] = enrichBuild(row); });
+    const builds = ids.map(id => byId[id]).filter(Boolean);
+    res.json({ builds });
+  });
+});
+
 app.get('/api/ark-types', (req, res) => {
   fs.readFile('./data/ark_types.json', 'utf8', (err, data) => {
     if (err) {

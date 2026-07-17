@@ -33,6 +33,11 @@ export const Navbar: React.FC = () => {
               </Link>
             </li>
             <li className="nav-item">
+              <Link className="nav-link" to="/finder">
+                Find a Build
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link className="nav-link" to="/resources">
                 Resources
               </Link>

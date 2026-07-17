@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "root": "q_fantasy",
+  "nodes": {
+    "q_fantasy": {
+      "type": "question",
+      "question": "What kind of empire do you want to play?",
+      "subtitle": "Pick the fantasy that speaks to you the most.",
+      "options": [
+        { "label": "Machines & robots", "description": "A gestalt of synthetic minds, no biological pops.", "next": "leaf_machines" },
+        { "label": "Hive mind", "description": "A single collective consciousness spanning the galaxy.", "next": "leaf_hive" },
+        { "label": "Megacorp & trade", "description": "Profit-driven empire built on economy and branch offices.", "next": "leaf_megacorp" },
+        { "label": "A classic biological empire", "description": "Regular species, free to pick any ethics and playstyle.", "next": "q_playstyle" }
+      ]
+    },
+    "q_playstyle": {
+      "type": "question",
+      "question": "How do you want to win?",
+      "subtitle": "Your path to galactic dominance.",
+      "options": [
+        { "label": "Military conquest", "description": "Crush your rivals with fleets and boots on the ground.", "next": "q_experience_mil" },
+        { "label": "Technological supremacy", "description": "Out-research everyone and win with superior tech.", "next": "leaf_tech" },
+        { "label": "Roleplay / themed empire", "description": "Recreate a faction from your favorite universe.", "next": "leaf_roleplay" }
+      ]
+    },
+    "q_experience_mil": {
+      "type": "question",
+      "question": "How comfortable are you with Stellaris?",
+      "subtitle": "So we match the complexity of the build.",
+      "options": [
+        { "label": "I'm still learning", "description": "Forgiving builds that are simple to pilot.", "next": "leaf_mil_beginner" },
+        { "label": "I know what I'm doing", "description": "Stronger, min-maxed builds.", "next": "leaf_mil_advanced" }
+      ]
+    },
+    "leaf_machines": {
+      "type": "result",
+      "title": "Synthetic empires",
+      "blurb": "Cold, efficient and relentless. Here are machine and robot builds to command.",
+      "build_ids": [20, 44, 45]
+    },
+    "leaf_hive": {
+      "type": "result",
+      "title": "Hive mind empires",
+      "blurb": "One mind, many bodies. These collective consciousness builds should fit.",
+      "build_ids": [39, 23, 21]
+    },
+    "leaf_megacorp": {
+      "type": "result",
+      "title": "Corporate empires",
+      "blurb": "Turn the galaxy into a balance sheet. Trade and branch-office focused builds.",
+      "build_ids": [12, 32, 48]
+    },
+    "leaf_tech": {
+      "type": "result",
+      "title": "Tech rush empires",
+      "blurb": "Win through raw research output. These builds snowball hard on technology.",
+      "build_ids": [4, 2, 42]
+    },
+    "leaf_roleplay": {
+      "type": "result",
+      "title": "Themed empires",
+      "blurb": "Bring a fiction to life. Fan-favorite roleplay builds.",
+      "build_ids": [13, 36, 46]
+    },
+    "leaf_mil_beginner": {
+      "type": "result",
+      "title": "Beginner-friendly militarists",
+      "blurb": "Aggressive but forgiving. Good picks to learn how to wage war.",
+      "build_ids": [37, 49]
+    },
+    "leaf_mil_advanced": {
+      "type": "result",
+      "title": "Advanced war machines",
+      "blurb": "For players who want maximum military power and can micro their economy.",
+      "build_ids": [50, 41]
+    }
+  }
+}
