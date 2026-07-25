@@ -133,6 +133,7 @@ export const Home: React.FC = () => {
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState<string>('');
   const [versionFilter, setVersionFilter] = useState<string>('');
+  const [nomadicFilter, setNomadicFilter] = useState(false);
   const [sortBy, setSortBy] = useState<string>('newest');
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -170,6 +171,7 @@ export const Home: React.FC = () => {
     if (debouncedSearch) params.set('search', debouncedSearch);
     if (difficultyFilter) params.set('difficulty', difficultyFilter);
     if (versionFilter) params.set('version', versionFilter);
+    if (nomadicFilter) params.set('nomadic', 'true');
 
     fetch(`/api/builds?${params}`)
       .then(r => r.json())
@@ -186,7 +188,7 @@ export const Home: React.FC = () => {
       });
 
     return () => { cancelled = true; };
-  }, [currentPage, debouncedSearch, difficultyFilter, versionFilter, sortBy]);
+  }, [currentPage, debouncedSearch, difficultyFilter, versionFilter, nomadicFilter, sortBy]);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -328,7 +330,7 @@ export const Home: React.FC = () => {
 
         {/* Search and Filters */}
         <div className="row mb-4">
-          <div className="col-md-6 mb-3 mb-md-0">
+          <div className="col-md-4 mb-3 mb-md-0">
             <input
               type="text"
               className="form-control form-control-lg bg-secondary text-white border-secondary"
@@ -371,6 +373,20 @@ export const Home: React.FC = () => {
               ))}
             </select>
           </div>
+          <div className="col-md-2 mb-3 mb-md-0">
+            <select
+              aria-label="Filter by empire type"
+              className="form-select form-select-lg bg-secondary text-white border-secondary"
+              value={nomadicFilter ? 'nomadic' : ''}
+              onChange={(e) => {
+                setNomadicFilter(e.target.value === 'nomadic');
+                setCurrentPage(1);
+              }}
+            >
+              <option value="">All Empires</option>
+              <option value="nomadic">Nomadic Only</option>
+            </select>
+          </div>
           <div className="col-md-2">
             <select
               aria-label="Sort builds"
@@ -393,7 +409,7 @@ export const Home: React.FC = () => {
           <div className="col-12">
             <p className="text-muted">
               Showing {pagedBuilds.length} of {total} builds
-              {(debouncedSearch || difficultyFilter || versionFilter) && ` (filtered)`}
+              {(debouncedSearch || difficultyFilter || versionFilter || nomadicFilter) && ` (filtered)`}
             </p>
           </div>
         </div>

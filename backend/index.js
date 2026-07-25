@@ -729,6 +729,7 @@ app.get('/api/builds', (req, res) => {
   const diff    = req.query.difficulty?.trim() || null;
   const verDisp = req.query.version?.trim()    || null;
   const sort    = req.query.sort               || 'newest';
+  const nomadic = req.query.nomadic === 'true';
 
   const conditions = ['builds.deleted = 0'];
   const params = [];
@@ -746,6 +747,9 @@ app.get('/api/builds', (req, res) => {
     const rawVersions = _versionGroups[verDisp] || [verDisp];
     conditions.push(`builds.game_version IN (${rawVersions.map(() => '?').join(',')})`);
     params.push(...rawVersions);
+  }
+  if (nomadic) {
+    conditions.push('builds.is_nomadic = 1');
   }
 
   const where = `WHERE ${conditions.join(' AND ')}`;
