@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
 import RatingStars from '../components/RatingStars';
 import { WhatsNewBanner, NewsItem } from '../components/WhatsNewBanner';
+import { LATEST_GAME_VERSION } from '../utils/gameVersion';
 import './Home.css';
 
 const VERSION_NAMES: Record<string, string> = {
@@ -133,6 +134,7 @@ export const Home: React.FC = () => {
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState<string>('');
   const [versionFilter, setVersionFilter] = useState<string>('');
+  const [nomadicFilter, setNomadicFilter] = useState(false);
   const [sortBy, setSortBy] = useState<string>('newest');
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -170,6 +172,7 @@ export const Home: React.FC = () => {
     if (debouncedSearch) params.set('search', debouncedSearch);
     if (difficultyFilter) params.set('difficulty', difficultyFilter);
     if (versionFilter) params.set('version', versionFilter);
+    if (nomadicFilter) params.set('nomadic', 'true');
 
     fetch(`/api/builds?${params}`)
       .then(r => r.json())
@@ -186,7 +189,7 @@ export const Home: React.FC = () => {
       });
 
     return () => { cancelled = true; };
-  }, [currentPage, debouncedSearch, difficultyFilter, versionFilter, sortBy]);
+  }, [currentPage, debouncedSearch, difficultyFilter, versionFilter, nomadicFilter, sortBy]);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -249,9 +252,17 @@ export const Home: React.FC = () => {
               <h1 className="display-5 fw-bold text-white mb-2">
                 Stellaris Build Archive
               </h1>
-              <p className="text-light mb-0">
+              <p className="text-light mb-2">
                 Discover, share, and master powerful empire builds from the community
               </p>
+              <span
+                className="badge d-inline-flex align-items-center gap-1"
+                style={{ background: 'rgba(46, 204, 113, 0.15)', color: '#2ecc71', border: '1px solid rgba(46, 204, 113, 0.4)' }}
+                title={`Game data updated for Stellaris ${LATEST_GAME_VERSION.patch} "${LATEST_GAME_VERSION.name}"`}
+              >
+                <i className="bi bi-check-circle-fill"></i>
+                Up to date with Stellaris {LATEST_GAME_VERSION.patch} &quot;{LATEST_GAME_VERSION.name}&quot;
+              </span>
             </div>
             <div className="col-md-4 text-end">
               <div className="d-inline-block p-2 rounded" style={{ background: 'rgba(255, 255, 255, 0.1)' }}>
@@ -328,7 +339,7 @@ export const Home: React.FC = () => {
 
         {/* Search and Filters */}
         <div className="row mb-4">
-          <div className="col-md-6 mb-3 mb-md-0">
+          <div className="col-md-4 mb-3 mb-md-0">
             <input
               type="text"
               className="form-control form-control-lg bg-secondary text-white border-secondary"
@@ -371,6 +382,20 @@ export const Home: React.FC = () => {
               ))}
             </select>
           </div>
+          <div className="col-md-2 mb-3 mb-md-0">
+            <select
+              aria-label="Filter by empire type"
+              className="form-select form-select-lg bg-secondary text-white border-secondary"
+              value={nomadicFilter ? 'nomadic' : ''}
+              onChange={(e) => {
+                setNomadicFilter(e.target.value === 'nomadic');
+                setCurrentPage(1);
+              }}
+            >
+              <option value="">All Empires</option>
+              <option value="nomadic">Nomadic Only</option>
+            </select>
+          </div>
           <div className="col-md-2">
             <select
               aria-label="Sort builds"
@@ -393,7 +418,7 @@ export const Home: React.FC = () => {
           <div className="col-12">
             <p className="text-muted">
               Showing {pagedBuilds.length} of {total} builds
-              {(debouncedSearch || difficultyFilter || versionFilter) && ` (filtered)`}
+              {(debouncedSearch || difficultyFilter || versionFilter || nomadicFilter) && ` (filtered)`}
             </p>
           </div>
         </div>

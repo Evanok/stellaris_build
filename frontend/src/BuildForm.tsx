@@ -340,6 +340,10 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const { user, refreshUser } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
 
+  // Warn on submit if the description is empty (create mode only)
+  const [showDescriptionWarning, setShowDescriptionWarning] = useState(false);
+  const skipDescriptionWarningRef = useRef(false);
+
   // Track whether the user manually changed the version (vs initial load or initialData population)
   const userChangedVersion = useRef(false);
 
@@ -995,6 +999,19 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     }, 100);
   };
 
+  const handleConfirmSubmitWithoutDescription = () => {
+    setShowDescriptionWarning(false);
+    skipDescriptionWarningRef.current = true;
+    setTimeout(() => {
+      document.getElementById('build-form')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    }, 100);
+  };
+
+  const handleBackToDescription = () => {
+    setShowDescriptionWarning(false);
+    document.getElementById('buildDescription')?.focus();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -1035,6 +1052,13 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
+
+    // Warn if description is empty (create mode only), unless the user already confirmed
+    if (!isEditMode && !description.trim() && !skipDescriptionWarningRef.current) {
+      setShowDescriptionWarning(true);
+      return;
+    }
+    skipDescriptionWarningRef.current = false;
 
     setSubmitting(true);
 
@@ -2229,6 +2253,42 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         onClose={() => setShowAuthModal(false)}
         onSuccess={handleAuthSuccess}
       />
+
+      {/* Description Warning Modal */}
+      {showDescriptionWarning && (
+        <div
+          className="modal show d-block"
+          tabIndex={-1}
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+          onClick={(e) => { if (e.target === e.currentTarget) handleBackToDescription(); }}
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content bg-dark text-white border-secondary">
+              <div className="modal-header border-secondary">
+                <h5 className="modal-title">
+                  <i className="bi bi-exclamation-triangle text-warning me-2"></i>
+                  No Description Yet
+                </h5>
+                <button type="button" className="btn-close btn-close-white" onClick={handleBackToDescription}></button>
+              </div>
+              <div className="modal-body">
+                <p className="mb-0">
+                  Your build doesn't have a description. Adding one helps other players quickly understand its
+                  theme and playstyle. Do you want to go back and add one, or submit as is?
+                </p>
+              </div>
+              <div className="modal-footer border-secondary">
+                <button type="button" className="btn btn-secondary" onClick={handleBackToDescription}>
+                  Go Back &amp; Add Description
+                </button>
+                <button type="button" className="btn btn-warning" onClick={handleConfirmSubmitWithoutDescription}>
+                  Submit Anyway
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
