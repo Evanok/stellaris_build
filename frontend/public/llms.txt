@@ -1,6 +1,6 @@
 # stellaris-build.com
 
-> A community platform for sharing, discovering, and optimizing Stellaris empire builds. Covers all game elements: species traits, origins, ethics, authorities, civics, ascension perks, and tradition trees. Supports Stellaris versions 4.2 "Corvus" and 4.3 "Cetus".
+> A community platform for sharing, discovering, and optimizing Stellaris empire builds. Covers all game elements: species traits, origins, ethics, authorities, civics, ascension perks, and tradition trees. Supports Stellaris versions 4.2 "Corvus", 4.3 "Cetus", and 4.4 "Pegasus".
 
 ## About
 
@@ -22,7 +22,8 @@ A "build" in Stellaris is a complete empire configuration optimized for a partic
 
 ## Supported Game Versions
 
-- Stellaris 4.3 "Cetus" (latest)
+- Stellaris 4.4 "Pegasus" (latest)
+- Stellaris 4.3 "Cetus"
 - Stellaris 4.2 "Corvus"
 
 ## Features
@@ -39,7 +40,7 @@ A "build" in Stellaris is a complete empire configuration optimized for a partic
 - https://stellaris-build.com/create — Create a new build (requires login)
 - https://stellaris-build.com/resources — Curated Stellaris community resources
 
-## Data Coverage (Stellaris 4.3)
+## Data Coverage (Stellaris 4.4)
 
 - 349 species traits
 - 55 playable origins
