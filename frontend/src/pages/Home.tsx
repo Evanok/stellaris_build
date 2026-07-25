@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
 import RatingStars from '../components/RatingStars';
 import { WhatsNewBanner, NewsItem } from '../components/WhatsNewBanner';
+import { LATEST_GAME_VERSION } from '../utils/gameVersion';
 import './Home.css';
 
 const VERSION_NAMES: Record<string, string> = {
@@ -251,9 +252,17 @@ export const Home: React.FC = () => {
               <h1 className="display-5 fw-bold text-white mb-2">
                 Stellaris Build Archive
               </h1>
-              <p className="text-light mb-0">
+              <p className="text-light mb-2">
                 Discover, share, and master powerful empire builds from the community
               </p>
+              <span
+                className="badge d-inline-flex align-items-center gap-1"
+                style={{ background: 'rgba(46, 204, 113, 0.15)', color: '#2ecc71', border: '1px solid rgba(46, 204, 113, 0.4)' }}
+                title={`Game data updated for Stellaris ${LATEST_GAME_VERSION.patch} "${LATEST_GAME_VERSION.name}"`}
+              >
+                <i className="bi bi-check-circle-fill"></i>
+                Up to date with Stellaris {LATEST_GAME_VERSION.patch} &quot;{LATEST_GAME_VERSION.name}&quot;
+              </span>
             </div>
             <div className="col-md-4 text-end">
               <div className="d-inline-block p-2 rounded" style={{ background: 'rgba(255, 255, 255, 0.1)' }}>
