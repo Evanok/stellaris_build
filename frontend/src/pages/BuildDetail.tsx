@@ -1301,16 +1301,13 @@ export const BuildDetail: React.FC = () => {
                     <strong>Experimental.</strong> Stellaris requires a fully-filled-out empire
                     (name, ruler, homeworld, flag...) to save one, so fields this site doesn't
                     track are filled with generic placeholders below - edit them as you like once
-                    pasted in. Ascension perks and tradition trees aren't part of the empire
-                    creation file, so they aren't included here; check the rest of this page for
-                    those.
+                    pasted in.
                   </div>
                   <ol className="mb-3">
                     <li>Copy the text below.</li>
                     <li>
                       Open (or create){' '}
-                      <code>Documents\Paradox Interactive\Stellaris\user_empire_designs_v3.4.txt</code>{' '}
-                      (<code>~/.local/share/Paradox Interactive/Stellaris/</code> on Linux).
+                      <code>Documents\Paradox Interactive\Stellaris\user_empire_designs_v3.4.txt</code>.
                     </li>
                     <li>Paste it at the end of the file and save.</li>
                     <li>Your build will appear as a custom empire in the game's empire selection screen.</li>
