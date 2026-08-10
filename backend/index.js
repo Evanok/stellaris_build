@@ -45,6 +45,7 @@ const path = require('path');
 const multer = require('multer');
 const { spawn } = require('child_process');
 const { setupDatabase, db } = require('./database');
+const { renderBuildOgImage } = require('./ogImage');
 const passport = require('./auth');
 const { apiLimiter, createBuildLimiter, validateBuildData, sanitizeBuildData } = require('./security');
 const app = express();
@@ -2133,6 +2134,7 @@ function buildPreviewMeta(build, url) {
     socialDescription: truncateText(previewText, 280),
     url,
     type: 'article',
+    image: ogImageUrl(build),
   };
 }
 
@@ -2141,6 +2143,103 @@ function sendIndexHtml(res, html) {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.send(html);
 }
+
+// Columns needed by both the meta injection and the preview image
+const SOCIAL_BUILD_SQL = `
+  SELECT builds.id, builds.name, builds.description, builds.game_version,
+         builds.origin, builds.authority, builds.ethics, builds.portrait,
+         COALESCE(users.display_name, users.username) as author_username
+  FROM builds
+  LEFT JOIN users ON builds.author_id = users.id
+  WHERE builds.id = ? AND builds.deleted = 0
+`;
+
+// --- Per-build preview image ------------------------------------------------
+// Rendering costs ~80ms locally (more on a 2-core box), so images are cached on
+// disk. The filename carries a fingerprint of the fields the image is drawn from,
+// and og:image points at that exact filename: editing a build yields a new URL,
+// which is the only reliable way to invalidate the aggressive caches Slack,
+// Facebook and friends keep per image URL.
+
+const OG_CACHE_DIR = path.join(__dirname, 'cache', 'og');
+fs.mkdirSync(OG_CACHE_DIR, { recursive: true });
+
+// Description is deliberately excluded: it appears in the text tags, not in the
+// image, so rewording it must not invalidate the rendered file.
+function ogFingerprint(row) {
+  const material = [
+    row.name, row.origin, row.authority, row.ethics,
+    row.game_version, row.portrait, row.author_username,
+  ].map(v => v == null ? '' : String(v)).join(' ');
+  return crypto.createHash('sha1').update(material).digest('hex').slice(0, 10);
+}
+
+function ogImageUrl(row) {
+  return `${SITE_URL}/og/build/${row.id}-${ogFingerprint(row)}.jpg`;
+}
+
+// Concurrent crawlers hitting a cold build would otherwise each start a render
+let _ogRenders = new Map();
+
+function renderAndCacheOgImage(row, file) {
+  if (_ogRenders.has(file)) return _ogRenders.get(file);
+
+  const pending = (async () => {
+    const enriched = enrichBuild(row);
+    const buffer = await renderBuildOgImage({
+      id: row.id,
+      name: row.name ? decodeStoredEntities(row.name) : '',
+      originName: enriched.origin_name,
+      authorityName: enriched.authority_name,
+      ethicsNames: Object.values(enriched.ethics_names || {}).filter(Boolean),
+      gameVersion: row.game_version ? decodeStoredEntities(row.game_version) : '',
+      author: row.author_username || null,
+      portrait: row.portrait || null,
+      origin: row.origin || null,
+    });
+
+    // Write then rename so a crawler can never read a half-written file
+    const temp = `${file}.${process.pid}.tmp`;
+    await fs.promises.writeFile(temp, buffer);
+    await fs.promises.rename(temp, file);
+
+    // Drop stale renders of the same build (previous fingerprints)
+    const keep = path.basename(file);
+    for (const entry of await fs.promises.readdir(OG_CACHE_DIR)) {
+      if (entry.startsWith(`${row.id}-`) && entry !== keep) {
+        await fs.promises.unlink(path.join(OG_CACHE_DIR, entry)).catch(() => {});
+      }
+    }
+    return file;
+  })().finally(() => _ogRenders.delete(file));
+
+  _ogRenders.set(file, pending);
+  return pending;
+}
+
+app.get('/og/build/:file', (req, res) => {
+  // The fingerprint in the URL is only a cache-buster; the current build always wins
+  const match = String(req.params.file).match(/^(\d+)(?:-[a-f0-9]+)?\.jpg$/);
+  if (!match) return res.redirect(302, '/og-image.jpg');
+
+  db.get(SOCIAL_BUILD_SQL, [match[1]], async (err, row) => {
+    // A crawler must always end up with a valid image, so every failure path
+    // falls back to the static site-wide one.
+    if (err || !row) return res.redirect(302, '/og-image.jpg');
+
+    const file = path.join(OG_CACHE_DIR, `${row.id}-${ogFingerprint(row)}.jpg`);
+    try {
+      if (!fs.existsSync(file)) await renderAndCacheOgImage(row, file);
+      res.setHeader('Content-Type', 'image/jpeg');
+      // Safe to cache hard: a change to the build changes the filename
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      res.sendFile(file);
+    } catch (renderErr) {
+      console.error(`OG image render failed for build ${row.id}:`, renderErr.message);
+      res.redirect(302, '/og-image.jpg');
+    }
+  });
+});
 
 // Serve React app for all other routes (must be after API routes)
 app.use((req, res) => {
@@ -2156,15 +2255,7 @@ app.use((req, res) => {
     res.sendFile(INDEX_HTML_PATH);
   };
 
-  const sql = `
-    SELECT builds.id, builds.name, builds.description, builds.game_version,
-           builds.origin, builds.authority, builds.ethics,
-           COALESCE(users.display_name, users.username) as author_username
-    FROM builds
-    LEFT JOIN users ON builds.author_id = users.id
-    WHERE builds.id = ? AND builds.deleted = 0
-  `;
-  db.get(sql, [buildMatch[1]], (err, row) => {
+  db.get(SOCIAL_BUILD_SQL, [buildMatch[1]], (err, row) => {
     if (err || !row) return serveDefault();
     try {
       const url = `${SITE_URL}/build/${row.id}`;
