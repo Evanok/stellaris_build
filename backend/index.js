@@ -45,6 +45,7 @@ const path = require('path');
 const multer = require('multer');
 const { spawn } = require('child_process');
 const { setupDatabase, db } = require('./database');
+const { renderBuildOgImage } = require('./ogImage');
 const passport = require('./auth');
 const { apiLimiter, createBuildLimiter, validateBuildData, sanitizeBuildData } = require('./security');
 const app = express();
@@ -2011,10 +2012,260 @@ app.delete('/api/chat/:id', isAdmin, (req, res) => {
   );
 });
 
+// --- Social link previews (Open Graph / Twitter Cards) ----------------------
+// Link-preview crawlers (Slack, Discord, Facebook, Twitter, WhatsApp) do not run
+// JavaScript, so the per-build tags that BuildDetail.tsx sets through
+// react-helmet-async are invisible to them: they only ever see the site-wide tags
+// baked into index.html. For /build/:id we therefore rewrite those tags in the HTML
+// before sending it. React still hydrates normally and re-applies its own tags.
+
+const INDEX_HTML_PATH = path.join(__dirname, '../frontend/dist/index.html');
+const SITE_URL = (process.env.SITE_URL || 'https://stellaris-build.com').replace(/\/$/, '');
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+
+// index.html is read once and re-read only after a frontend rebuild (mtime change),
+// so link previews don't add a disk read to every page request.
+let _indexHtmlCache = { mtimeMs: 0, html: null };
+function readIndexHtml() {
+  const { mtimeMs } = fs.statSync(INDEX_HTML_PATH);
+  if (_indexHtmlCache.mtimeMs !== mtimeMs) {
+    _indexHtmlCache = { mtimeMs, html: fs.readFileSync(INDEX_HTML_PATH, 'utf8') };
+  }
+  return _indexHtmlCache.html;
+}
+
+function escapeHtmlAttr(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Build name/description/game_version are stored HTML-escaped by sanitizeString()
+// in security.js. They have to be decoded back to plain text before being re-escaped
+// into a meta attribute, otherwise a quote in a description reaches the crawler as
+// the literal "&amp;quot;". Decoding "&amp;" last avoids double-decoding.
+function decodeStoredEntities(value) {
+  return String(value)
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;/gi, "'")
+    .replace(/&#39;/g, "'")
+    .replace(/&#x2F;/gi, '/')
+    .replace(/&amp;/g, '&');
+}
+
+function truncateText(value, maxLength) {
+  const collapsed = String(value).replace(/\s+/g, ' ').trim();
+  if (collapsed.length <= maxLength) return collapsed;
+  return collapsed.slice(0, maxLength - 3).trimEnd() + '...';
+}
+
+// Replaces the site-wide title/description/og/twitter tags with page-specific ones.
+// Tags are stripped by pattern rather than by exact string so reordering or editing
+// index.html can't silently leave a stale duplicate behind.
+function injectSocialMeta(html, meta) {
+  const stripped = html
+    .replace(/[ \t]*<title>[\s\S]*?<\/title>\n?/i, '')
+    .replace(/[ \t]*<meta\s+name="(?:title|description)"[^>]*>\n?/gi, '')
+    .replace(/[ \t]*<meta\s+property="(?:og|twitter):[^"]*"[^>]*>\n?/gi, '')
+    // Section comments whose tags were just removed would be left dangling
+    .replace(/[ \t]*<!--\s*(?:Open Graph \/ Facebook|Twitter)\s*-->\n?/gi, '');
+
+  const image = meta.image || DEFAULT_OG_IMAGE;
+  const tags = [
+    `<!-- Page meta (rendered server-side so link-preview crawlers can read it) -->`,
+    `<title>${escapeHtmlAttr(meta.title)}</title>`,
+    `<meta name="title" content="${escapeHtmlAttr(meta.title)}" />`,
+    `<meta name="description" content="${escapeHtmlAttr(meta.seoDescription)}" />`,
+    `<link rel="canonical" href="${escapeHtmlAttr(meta.url)}" />`,
+    `<meta property="og:type" content="${escapeHtmlAttr(meta.type || 'website')}" />`,
+    `<meta property="og:url" content="${escapeHtmlAttr(meta.url)}" />`,
+    `<meta property="og:title" content="${escapeHtmlAttr(meta.title)}" />`,
+    `<meta property="og:description" content="${escapeHtmlAttr(meta.socialDescription)}" />`,
+    `<meta property="og:image" content="${escapeHtmlAttr(image)}" />`,
+    `<meta property="og:image:width" content="1200" />`,
+    `<meta property="og:image:height" content="630" />`,
+    `<meta property="og:site_name" content="Stellaris Build Sharing" />`,
+    `<meta property="twitter:card" content="summary_large_image" />`,
+    `<meta property="twitter:url" content="${escapeHtmlAttr(meta.url)}" />`,
+    `<meta property="twitter:title" content="${escapeHtmlAttr(meta.title)}" />`,
+    `<meta property="twitter:description" content="${escapeHtmlAttr(meta.socialDescription)}" />`,
+    `<meta property="twitter:image" content="${escapeHtmlAttr(image)}" />`,
+  ].join('\n    ');
+
+  return stripped.replace('</head>', `${tags}\n  </head>`);
+}
+
+// Turns a build row into preview text: a fact line (origin, authority, ethics,
+// version) plus the author's own description when there is one.
+function buildPreviewMeta(build, url) {
+  const enriched = enrichBuild(build);
+  const ethicsNames = Object.values(enriched.ethics_names || {}).filter(Boolean);
+
+  const name = build.name ? decodeStoredEntities(build.name) : '';
+  const description = build.description ? decodeStoredEntities(build.description) : '';
+  const gameVersion = build.game_version ? decodeStoredEntities(build.game_version) : '';
+
+  const facts = [
+    enriched.origin_name && `${enriched.origin_name} origin`,
+    enriched.authority_name,
+    ethicsNames.join(', ') || null,
+    gameVersion ? `Stellaris ${gameVersion}` : null,
+  ].filter(Boolean).join(' - ');
+
+  const segments = [];
+  if (facts) segments.push(facts);
+  if (description) segments.push(truncateText(description, 150));
+  if (!segments.length) {
+    segments.push('Stellaris empire build with species traits, civics, ethics, ascension perks and traditions.');
+  }
+  if (build.author_username) segments.push(`Shared by ${build.author_username}`);
+  const previewText = segments.join(' | ');
+
+  return {
+    // Same format as BuildDetail.tsx so the pre-hydration and post-hydration
+    // titles match and Google sees a single consistent title.
+    title: name ? `${name} - Stellaris Build` : 'Stellaris Build',
+    seoDescription: truncateText(previewText, 160),
+    socialDescription: truncateText(previewText, 280),
+    url,
+    type: 'article',
+    image: ogImageUrl(build),
+  };
+}
+
+function sendIndexHtml(res, html) {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.send(html);
+}
+
+// Columns needed by both the meta injection and the preview image
+const SOCIAL_BUILD_SQL = `
+  SELECT builds.id, builds.name, builds.description, builds.game_version,
+         builds.origin, builds.authority, builds.ethics, builds.portrait,
+         COALESCE(users.display_name, users.username) as author_username
+  FROM builds
+  LEFT JOIN users ON builds.author_id = users.id
+  WHERE builds.id = ? AND builds.deleted = 0
+`;
+
+// --- Per-build preview image ------------------------------------------------
+// Rendering costs ~80ms locally (more on a 2-core box), so images are cached on
+// disk. The filename carries a fingerprint of the fields the image is drawn from,
+// and og:image points at that exact filename: editing a build yields a new URL,
+// which is the only reliable way to invalidate the aggressive caches Slack,
+// Facebook and friends keep per image URL.
+
+const OG_CACHE_DIR = path.join(__dirname, 'cache', 'og');
+fs.mkdirSync(OG_CACHE_DIR, { recursive: true });
+
+// Description is deliberately excluded: it appears in the text tags, not in the
+// image, so rewording it must not invalidate the rendered file.
+function ogFingerprint(row) {
+  const material = [
+    row.name, row.origin, row.authority, row.ethics,
+    row.game_version, row.portrait, row.author_username,
+  ].map(v => v == null ? '' : String(v)).join(' ');
+  return crypto.createHash('sha1').update(material).digest('hex').slice(0, 10);
+}
+
+function ogImageUrl(row) {
+  return `${SITE_URL}/og/build/${row.id}-${ogFingerprint(row)}.jpg`;
+}
+
+// Concurrent crawlers hitting a cold build would otherwise each start a render
+let _ogRenders = new Map();
+
+function renderAndCacheOgImage(row, file) {
+  if (_ogRenders.has(file)) return _ogRenders.get(file);
+
+  const pending = (async () => {
+    const enriched = enrichBuild(row);
+    const buffer = await renderBuildOgImage({
+      id: row.id,
+      name: row.name ? decodeStoredEntities(row.name) : '',
+      originName: enriched.origin_name,
+      authorityName: enriched.authority_name,
+      ethicsNames: Object.values(enriched.ethics_names || {}).filter(Boolean),
+      gameVersion: row.game_version ? decodeStoredEntities(row.game_version) : '',
+      author: row.author_username || null,
+      portrait: row.portrait || null,
+      origin: row.origin || null,
+    });
+
+    // Write then rename so a crawler can never read a half-written file
+    const temp = `${file}.${process.pid}.tmp`;
+    await fs.promises.writeFile(temp, buffer);
+    await fs.promises.rename(temp, file);
+
+    // Drop stale renders of the same build (previous fingerprints)
+    const keep = path.basename(file);
+    for (const entry of await fs.promises.readdir(OG_CACHE_DIR)) {
+      if (entry.startsWith(`${row.id}-`) && entry !== keep) {
+        await fs.promises.unlink(path.join(OG_CACHE_DIR, entry)).catch(() => {});
+      }
+    }
+    return file;
+  })().finally(() => _ogRenders.delete(file));
+
+  _ogRenders.set(file, pending);
+  return pending;
+}
+
+app.get('/og/build/:file', (req, res) => {
+  // The fingerprint in the URL is only a cache-buster; the current build always wins
+  const match = String(req.params.file).match(/^(\d+)(?:-[a-f0-9]+)?\.jpg$/);
+  if (!match) return res.redirect(302, '/og-image.jpg');
+
+  db.get(SOCIAL_BUILD_SQL, [match[1]], async (err, row) => {
+    // A crawler must always end up with a valid image, so every failure path
+    // falls back to the static site-wide one.
+    if (err || !row) return res.redirect(302, '/og-image.jpg');
+
+    const file = path.join(OG_CACHE_DIR, `${row.id}-${ogFingerprint(row)}.jpg`);
+    try {
+      if (!fs.existsSync(file)) await renderAndCacheOgImage(row, file);
+      res.setHeader('Content-Type', 'image/jpeg');
+      // Safe to cache hard: a change to the build changes the filename
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      res.sendFile(file);
+    } catch (renderErr) {
+      console.error(`OG image render failed for build ${row.id}:`, renderErr.message);
+      res.redirect(302, '/og-image.jpg');
+    }
+  });
+});
+
 // Serve React app for all other routes (must be after API routes)
 app.use((req, res) => {
-  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+  const buildMatch = req.path.match(/^\/build\/(\d+)\/?$/);
+  if (!buildMatch) {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    return res.sendFile(INDEX_HTML_PATH);
+  }
+
+  // Any failure here must still serve the app, just with the site-wide tags.
+  const serveDefault = () => {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.sendFile(INDEX_HTML_PATH);
+  };
+
+  db.get(SOCIAL_BUILD_SQL, [buildMatch[1]], (err, row) => {
+    if (err || !row) return serveDefault();
+    try {
+      const url = `${SITE_URL}/build/${row.id}`;
+      const html = injectSocialMeta(readIndexHtml(), buildPreviewMeta(row, url));
+      sendIndexHtml(res, html);
+    } catch (injectErr) {
+      console.error('Social meta injection failed:', injectErr.message);
+      serveDefault();
+    }
+  });
 });
 
 app.listen(port, () => {
