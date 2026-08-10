@@ -376,7 +376,6 @@ export const BuildDetail: React.FC = () => {
     const speciesClass = b.species_class || 'HUM';
     const portrait = b.portrait || 'human';
     const speciesClassData = getSpeciesClassData(speciesClass);
-    const speciesLabel = (speciesClassData?.name || 'Custom').replace(/"/g, "'");
     const ethics = parseList(b.ethics);
     const civics = parseList(b.civics);
 
@@ -387,6 +386,15 @@ export const BuildDetail: React.FC = () => {
 
     const literalBlock = (text: string, indent: string): string =>
       `${indent}{\n${indent}\tkey="${text}"\n${indent}\tliteral=yes\n${indent}}`;
+
+    // Unlike name/species_name/planet_name/system_name, adjective fields don't accept a flat
+    // literal block - the game expects a "%ADJ%"/"%ADJECTIVE%" template with a nested variables
+    // substitution (confirmed against a real in-game-saved design using this exact structure).
+    const adjectiveBlock = (text: string, adjKeyword: string, indent: string): string =>
+      `${indent}{\n${indent}\tkey="${adjKeyword}"\n${indent}\tvariables=\n${indent}\t{\n` +
+      `${indent}\t\t{\n${indent}\t\t\tkey="adjective"\n${indent}\t\t\tvalue=\n` +
+      `${indent}\t\t\t{\n${indent}\t\t\t\tkey="${text}"\n${indent}\t\t\t\tliteral=yes\n${indent}\t\t\t}\n` +
+      `${indent}\t\t}\n${indent}\t}\n${indent}}`;
 
     const lines: string[] = [];
     lines.push(`"${empireName}"=`);
@@ -401,11 +409,11 @@ export const BuildDetail: React.FC = () => {
     lines.push(`\t\tclass="${speciesClass}"`);
     lines.push(`\t\tportrait="${portrait}"`);
     lines.push('\t\tspecies_name=');
-    lines.push(literalBlock(`${speciesLabel} Species`, '\t\t'));
+    lines.push(literalBlock('Fix Me', '\t\t'));
     lines.push('\t\tspecies_plural=');
-    lines.push(literalBlock(`${speciesLabel} Species`, '\t\t'));
+    lines.push(literalBlock('Fix Me', '\t\t'));
     lines.push('\t\tspecies_adjective=');
-    lines.push(literalBlock(speciesLabel, '\t\t'));
+    lines.push(adjectiveBlock('Fix Me', '%ADJECTIVE%', '\t\t'));
     lines.push('\t\tname_list="HUM1"');
     lines.push('\t\tgender=not_set');
     traits.forEach(t => lines.push(`\t\ttrait="${t}"`));
@@ -413,13 +421,17 @@ export const BuildDetail: React.FC = () => {
     lines.push('\tname=');
     lines.push(literalBlock(empireName, '\t'));
     lines.push('\tadjective=');
-    lines.push(literalBlock(empireName, '\t'));
+    lines.push(adjectiveBlock(empireName, '%ADJ%', '\t'));
     if (b.authority) lines.push(`\tauthority="${b.authority}"`);
+    lines.push('\tgovernment="gov_fallback"');
+    const OCEAN_HOMEWORLD_CIVICS = ['civic_anglers', 'civic_corporate_anglers', 'civic_machine_anglers', 'civic_corporate_machine_anglers'];
+    const planetClass = b.is_nomadic ? 'pc_ark' : (civics.some(c => OCEAN_HOMEWORLD_CIVICS.includes(c)) ? 'pc_ocean' : 'pc_continental');
     lines.push('\tplanet_name=');
-    lines.push(literalBlock('Homeworld', '\t'));
-    lines.push('\tplanet_class="pc_continental"');
+    lines.push(literalBlock('Fix Me', '\t'));
+    lines.push(`\tplanet_class="${planetClass}"`);
+    if (b.is_nomadic) lines.push(`\tship_size="${b.ark_type || 'civilian_arkship'}_tier_1"`);
     lines.push('\tsystem_name=');
-    lines.push(literalBlock('Home System', '\t'));
+    lines.push(literalBlock('Fix Me', '\t'));
     lines.push('\tinitializer=""');
     lines.push('\tgraphical_culture="humanoid_01"');
     lines.push('\tcity_graphical_culture="humanoid_01"');
@@ -446,6 +458,12 @@ export const BuildDetail: React.FC = () => {
     lines.push('\truler=');
     lines.push('\t{');
     lines.push('\t\tgender=male');
+    lines.push('\t\tname=');
+    lines.push('\t\t{');
+    lines.push('\t\t\tfull_names=');
+    lines.push(literalBlock('Fix Me', '\t\t\t'));
+    lines.push('\t\t\tuse_full_regnal_name=yes');
+    lines.push('\t\t}');
     lines.push(`\t\tportrait="${portrait}"`);
     lines.push('\t\ttexture=0');
     lines.push('\t\tevolution_mask=0');
