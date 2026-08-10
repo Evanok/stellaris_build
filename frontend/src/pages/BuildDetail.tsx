@@ -187,6 +187,10 @@ export const BuildDetail: React.FC = () => {
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
+  // Stellaris custom empire export
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [exportCopied, setExportCopied] = useState(false);
+
   // Rating state
   const [averageRating, setAverageRating] = useState<number>(0);
   const [ratingCount, setRatingCount] = useState<number>(0);
@@ -322,6 +326,169 @@ export const BuildDetail: React.FC = () => {
   const getTraditionData = (treeId: string) => allTraditionTrees.find(t => t.name === treeId);
   const getRulerTraitData = (traitId: string) => allRulerTraits.find(t => t.id === traitId);
 
+  // Stellaris silently assigns each species a hidden class trait (e.g. trait_organic,
+  // trait_lithoid) and some origins require their own hidden trait (e.g. origin_cybernetic_creed
+  // needs trait_cyborg_ritualistic_implants) - normally added automatically, but a custom empire
+  // design file must list them explicitly or the design is rejected as invalid. Table extracted
+  // from common/governments/civics/00_origins.txt ("traits"/"soft_traits" blocks).
+  const ORIGIN_MANDATORY_TRAITS: Record<string, string[]> = {
+    origin_clone_army: ['trait_clone_soldier_infertile'],
+    origin_cybernetic_creed: ['trait_cyborg_ritualistic_implants'],
+    origin_evolutionary_predators: ['trait_malleable_genes'],
+    origin_legendary_leader: ['trait_perfected_genes'],
+    origin_legendary_leader_death: ['trait_perfected_genes'],
+    origin_legendary_leader_dictatorial: ['trait_perfected_genes'],
+    origin_legendary_leader_imperial: ['trait_perfected_genes'],
+    origin_necrophage: ['trait_necrophage'],
+    origin_ocean_machines: ['trait_robot_aquatic'],
+    origin_ocean_paradise: ['trait_aquatic'],
+    origin_post_apocalyptic: ['trait_survivor'],
+    origin_post_apocalyptic_machines: ['trait_robot_survivor'],
+    origin_shroudwalker_apprentice: ['trait_latent_psionic'],
+    origin_subterranean: ['trait_cave_dweller'],
+    origin_subterranean_machines: ['trait_robot_cave_dweller'],
+    origin_syncretic_evolution: ['trait_syncretic_proles'],
+    origin_synthetic_fertility: ['trait_pathogenic_genes'],
+    origin_unplugged: ['trait_unplugged_cybernetic_positives_3', 'trait_unplugged_cybernetic_negatives_3'],
+    origin_void_dwellers: ['trait_void_dweller_1'],
+    origin_void_machines: ['trait_void_dweller_2'],
+    origin_wilderness: ['trait_wilderness'],
+  };
+
+  // From common/species_classes/*.txt: every class carries one baseline trait (usually
+  // trait_organic, overridden per-archetype/class), and AQUATIC additionally requires
+  // trait_aquatic on top of its baseline (confirmed via the game's own error.log).
+  const getClassMandatoryTraits = (speciesClass: string, archetype: string | undefined): string[] => {
+    if (speciesClass === 'INF') return ['trait_infernal'];
+    if (speciesClass === 'AQUATIC') return ['trait_organic', 'trait_aquatic'];
+    if (archetype === 'LITHOID') return ['trait_lithoid'];
+    if (archetype === 'MACHINE') return ['trait_machine_unit'];
+    return ['trait_organic'];
+  };
+
+  // Generates a Stellaris custom empire design block (user_empire_designs_v3.4.txt format).
+  // Fields our data model doesn't capture (ruler name/portrait details, planet/system name,
+  // flag, name_list) are filled with fixed placeholders - Stellaris's empire creation screen
+  // won't let you save a design without them, so an empty/omitted value isn't a valid option.
+  const buildEmpireDesignText = (): string => {
+    const b = build!;
+    const empireName = (decodeHtmlEntities(b.name) || 'Custom Empire').replace(/"/g, "'");
+    const speciesClass = b.species_class || 'HUM';
+    const portrait = b.portrait || 'human';
+    const speciesClassData = getSpeciesClassData(speciesClass);
+    const speciesLabel = (speciesClassData?.name || 'Custom').replace(/"/g, "'");
+    const ethics = parseList(b.ethics);
+    const civics = parseList(b.civics);
+
+    const mandatoryTraits = getClassMandatoryTraits(speciesClass, speciesClassData?.archetype);
+    if (b.authority === 'auth_hive_mind') mandatoryTraits.push('trait_hive_mind');
+    if (b.origin && ORIGIN_MANDATORY_TRAITS[b.origin]) mandatoryTraits.push(...ORIGIN_MANDATORY_TRAITS[b.origin]);
+    const traits = [...new Set([...mandatoryTraits, ...parseList(b.traits)])];
+
+    const literalBlock = (text: string, indent: string): string =>
+      `${indent}{\n${indent}\tkey="${text}"\n${indent}\tliteral=yes\n${indent}}`;
+
+    const lines: string[] = [];
+    lines.push(`"${empireName}"=`);
+    lines.push('{');
+    lines.push(`\tkey="${empireName}"`);
+    lines.push('\tship_prefix=');
+    lines.push('\t{');
+    lines.push('\t\tkey="ISS"');
+    lines.push('\t}');
+    lines.push('\tspecies=');
+    lines.push('\t{');
+    lines.push(`\t\tclass="${speciesClass}"`);
+    lines.push(`\t\tportrait="${portrait}"`);
+    lines.push('\t\tspecies_name=');
+    lines.push(literalBlock(`${speciesLabel} Species`, '\t\t'));
+    lines.push('\t\tspecies_plural=');
+    lines.push(literalBlock(`${speciesLabel} Species`, '\t\t'));
+    lines.push('\t\tspecies_adjective=');
+    lines.push(literalBlock(speciesLabel, '\t\t'));
+    lines.push('\t\tname_list="HUM1"');
+    lines.push('\t\tgender=not_set');
+    traits.forEach(t => lines.push(`\t\ttrait="${t}"`));
+    lines.push('\t}');
+    lines.push('\tname=');
+    lines.push(literalBlock(empireName, '\t'));
+    lines.push('\tadjective=');
+    lines.push(literalBlock(empireName, '\t'));
+    if (b.authority) lines.push(`\tauthority="${b.authority}"`);
+    lines.push('\tplanet_name=');
+    lines.push(literalBlock('Homeworld', '\t'));
+    lines.push('\tplanet_class="pc_continental"');
+    lines.push('\tsystem_name=');
+    lines.push(literalBlock('Home System', '\t'));
+    lines.push('\tinitializer=""');
+    lines.push('\tgraphical_culture="humanoid_01"');
+    lines.push('\tcity_graphical_culture="humanoid_01"');
+    lines.push('\tempire_flag=');
+    lines.push('\t{');
+    lines.push('\t\ticon=');
+    lines.push('\t\t{');
+    lines.push('\t\t\tcategory="zoological"');
+    lines.push('\t\t\tfile="flag_zoological_10.dds"');
+    lines.push('\t\t}');
+    lines.push('\t\tbackground=');
+    lines.push('\t\t{');
+    lines.push('\t\t\tcategory="backgrounds"');
+    lines.push('\t\t\tfile="flag_BG_24.dds"');
+    lines.push('\t\t}');
+    lines.push('\t\tcolors=');
+    lines.push('\t\t{');
+    lines.push('\t\t\t"intense_red"');
+    lines.push('\t\t\t"intense_orange"');
+    lines.push('\t\t\t"black"');
+    lines.push('\t\t\t"null"');
+    lines.push('\t\t}');
+    lines.push('\t}');
+    lines.push('\truler=');
+    lines.push('\t{');
+    lines.push('\t\tgender=male');
+    lines.push(`\t\tportrait="${portrait}"`);
+    lines.push('\t\ttexture=0');
+    lines.push('\t\tevolution_mask=0');
+    lines.push('\t\tattachment=0');
+    lines.push('\t\tclothes=0');
+    if (b.ruler_trait) lines.push(`\t\ttrait="${b.ruler_trait}"`);
+    lines.push('\t\tleader_class="official"');
+    lines.push('\t}');
+    lines.push('\tspawn_as_fallen=no');
+    lines.push('\tignore_portrait_duplication=no');
+    lines.push('\troom="default_room"');
+    lines.push('\tspawn_enabled=yes');
+    ethics.forEach(e => lines.push(`\tethic="${e}"`));
+    if (civics.length) {
+      lines.push('\tcivics=');
+      lines.push('\t{');
+      civics.forEach(c => lines.push(`\t\t"${c}"`));
+      lines.push('\t}');
+    }
+    if (b.origin) lines.push(`\torigin="${b.origin}"`);
+    lines.push(`\tis_nomadic=${b.is_nomadic ? 'yes' : 'no'}`);
+    lines.push('}');
+    return lines.join('\n');
+  };
+
+  const handleCopyExport = async () => {
+    const text = buildEmpireDesignText();
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
+    setExportCopied(true);
+    setTimeout(() => setExportCopied(false), 2000);
+  };
+
   const handleDelete = async () => {
     if (!window.confirm('Are you sure you want to delete this build? This action cannot be undone.')) {
       return;
@@ -426,9 +593,9 @@ export const BuildDetail: React.FC = () => {
       <div className="container mt-4">
         {/* Header */}
         <div className="row mb-4">
-        <div className="col-12">
+        <div className="col-12 d-flex justify-content-between align-items-start flex-wrap gap-2">
           <nav aria-label="breadcrumb">
-            <ol className="breadcrumb">
+            <ol className="breadcrumb mb-0">
               <li className="breadcrumb-item">
                 <Link to="/" className="text-decoration-none">Home</Link>
               </li>
@@ -437,6 +604,13 @@ export const BuildDetail: React.FC = () => {
               </li>
             </ol>
           </nav>
+          <button
+            className="btn btn-outline-info btn-sm"
+            onClick={() => setShowExportModal(true)}
+          >
+            <i className="bi bi-box-arrow-up-right me-1"></i>
+            Export to Stellaris
+          </button>
         </div>
       </div>
 
@@ -1081,6 +1255,75 @@ export const BuildDetail: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Export to Stellaris Modal */}
+      {showExportModal && (
+        <>
+          <div
+            className="modal-backdrop fade show"
+            onClick={() => setShowExportModal(false)}
+            style={{ zIndex: 1040 }}
+          ></div>
+          <div className="modal fade show d-block" tabIndex={-1} style={{ zIndex: 1050 }} role="dialog">
+            <div className="modal-dialog modal-dialog-centered modal-lg">
+              <div className="modal-content bg-dark text-white border-secondary">
+                <div className="modal-header border-secondary">
+                  <h5 className="modal-title">
+                    <i className="bi bi-box-arrow-up-right me-2"></i>
+                    Export to Stellaris (Experimental)
+                  </h5>
+                  <button
+                    type="button"
+                    className="btn-close btn-close-white"
+                    onClick={() => setShowExportModal(false)}
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <div className="alert alert-warning">
+                    <strong>Experimental.</strong> Stellaris requires a fully-filled-out empire
+                    (name, ruler, homeworld, flag...) to save one, so fields this site doesn't
+                    track are filled with generic placeholders below - edit them as you like once
+                    pasted in. Ascension perks and tradition trees aren't part of the empire
+                    creation file, so they aren't included here; check the rest of this page for
+                    those.
+                  </div>
+                  <ol className="mb-3">
+                    <li>Copy the text below.</li>
+                    <li>
+                      Open (or create){' '}
+                      <code>Documents\Paradox Interactive\Stellaris\user_empire_designs_v3.4.txt</code>{' '}
+                      (<code>~/.local/share/Paradox Interactive/Stellaris/</code> on Linux).
+                    </li>
+                    <li>Paste it at the end of the file and save.</li>
+                    <li>Your build will appear as a custom empire in the game's empire selection screen.</li>
+                  </ol>
+                  <textarea
+                    readOnly
+                    className="form-control bg-secondary text-white border-secondary"
+                    style={{ fontFamily: 'monospace', fontSize: '0.85rem' }}
+                    rows={12}
+                    value={buildEmpireDesignText()}
+                    onClick={(e) => (e.target as HTMLTextAreaElement).select()}
+                  />
+                </div>
+                <div className="modal-footer border-secondary">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setShowExportModal(false)}
+                  >
+                    Close
+                  </button>
+                  <button type="button" className="btn btn-info" onClick={handleCopyExport}>
+                    <i className={`bi ${exportCopied ? 'bi-check2' : 'bi-clipboard'} me-2`}></i>
+                    {exportCopied ? 'Copied!' : 'Copy to Clipboard'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
     </>
   );
