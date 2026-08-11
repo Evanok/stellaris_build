@@ -539,6 +539,12 @@ export const BuildDetail: React.FC = () => {
       );
     };
 
+    // GOVERNMENT_CIVIC_POINTS_BASE in common/defines/00_defines.txt - 2 civics
+    // max at creation, confirmed in-game. Mirrors BuildForm.tsx's MAX_CIVIC_SLOTS.
+    if (civics.length > 2) {
+      warnings.push(`Civics: ${civics.length} selected, but the game only allows 2 at empire creation`);
+    }
+
     if (speciesArchetype) {
       const budget = speciesArchetypeBudgets[speciesArchetype];
       if (budget && budget.trait_points != null && budget.max_traits != null) {

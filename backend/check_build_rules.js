@@ -80,6 +80,13 @@ function checkBuild(build) {
   const ctx = contextFromBuild(build, archetypeByClass);
   const issues = [];
 
+  // GOVERNMENT_CIVIC_POINTS_BASE in common/defines/00_defines.txt - 2 civics
+  // max at creation, confirmed in-game. BuildForm.tsx used to allow 3
+  // (MAX_CIVIC_SLOTS) until 2026-08-10 - about 40% of existing builds have 3.
+  if (ctx.civics.length > 2) {
+    issues.push(`civics: ${ctx.civics.length} selected, but the game only allows 2 at empire creation`);
+  }
+
   // Trait point/pick budget differs per archetype (e.g. MACHINE: 1 point/5
   // traits, ROBOT: 0 points/4 traits) - double-checked here independently of
   // BuildForm.tsx's live enforcement.

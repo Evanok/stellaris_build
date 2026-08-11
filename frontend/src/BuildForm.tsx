@@ -247,7 +247,12 @@ interface SpeciesClass {
 const BASE_MAX_TRAIT_POINTS = 2;
 const BASE_MAX_TRAIT_COUNT = 5;
 const MAX_ETHICS_POINTS = 3;
-const MAX_CIVIC_SLOTS = 3;
+// GOVERNMENT_CIVIC_POINTS_BASE in common/defines/00_defines.txt - confirmed
+// in-game. A handful of narrative/mid-game civics (Great Khan's Vision,
+// Galactic Sovereign, Psionic Sovereign) grant +1 via
+// country_government_civic_points_add, but those aren't real creation-time
+// picks, so this stays a flat 2.
+const MAX_CIVIC_SLOTS = 2;
 
 // Nomads DLC was introduced in 4.4 "Pegasus"
 const supportsNomadic = (version: string) => parseFloat(version) >= 4.4;
@@ -1071,6 +1076,13 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         warnings.push(`${label} requires ${describePredicateHuman(failing, resolveRuleLabel)}`)
       );
     };
+
+    // Double-check civic count independently of the live MAX_CIVIC_SLOTS
+    // disable - matters for edit mode, where a build published before this
+    // was fixed (2026-08-10, was flat 3) can still have 3 loaded in.
+    if (selectedCivics.length > MAX_CIVIC_SLOTS) {
+      warnings.push(`Civics: ${selectedCivics.length} selected, but the game only allows ${MAX_CIVIC_SLOTS} at empire creation`);
+    }
 
     // Double-check the archetype trait budget independently of the live
     // hasInvalidTraits button-disable, in case the two ever drift apart.
