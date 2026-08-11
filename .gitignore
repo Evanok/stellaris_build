@@ -16,6 +16,9 @@ test-results/
 backend/test-results/
 playwright-report/
 
+# Generated social preview images (rebuilt on demand)
+backend/cache/
+
 # Environment files
 .env
 .env.local

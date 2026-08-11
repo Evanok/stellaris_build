@@ -212,6 +212,7 @@ The project uses npm workspaces with three main parts:
 - `GET /api/chat` - Returns last 100 non-deleted chat messages (oldest first)
 - `POST /api/chat` - Posts a chat message (logged-in or guest with pseudo); rate-limited 5 msg/5 min per IP or user_id
 - `DELETE /api/chat/:id` - Soft-deletes a chat message (admin only)
+- `GET /og/build/:id-:fingerprint.jpg` - Per-build social preview image, 1200x630 (generated on demand, cached on disk). Not under `/api`. Any failure redirects to the static `/og-image.jpg`
 
 **Static Data Files (backend/data/versions/):**
 Game data is versioned by Stellaris patch. Each folder maps to a game version:
@@ -438,6 +439,9 @@ All extracted data must be:
 **Issue**: Backend doesn't pick up data changes
 **Solution**: Nodemon only watches .js files. Manually restart: `killall node && npm run dev -w backend`
 
+**Issue**: Server starts fine but the site shows zero builds, and a `stellaris_builds.db` appears at the repo root
+**Solution**: `database.js` opens `./stellaris_builds.db` — a path relative to the **current working directory**, not to the file. Launching with `node backend/index.js` from the repo root silently creates a fresh empty DB there instead of using `backend/stellaris_builds.db`. Always start from the backend folder (`cd backend && node index.js`) or via `npm run dev -w backend`. Delete the stray root DB if one was created. PM2 sets its own cwd, so prod is unaffected.
+
 ## Testing
 
 After making changes to game data:
@@ -503,6 +507,35 @@ Planned features (not yet implemented):
 ---
 
 ## Recent Completions
+
+### Social Link Previews (2026-08-10)
+Pasting a build URL into Slack/Discord/Reddit showed the generic site title, the generic description, and **no image at all**. Two independent bugs:
+
+1. **Per-build tags were invisible to crawlers.** `BuildDetail.tsx` sets `og:title`/`og:description` through `react-helmet-async`, i.e. in the browser. The SPA fallback serves raw `index.html`, and link-preview crawlers do not execute JavaScript, so they only ever saw the site-wide tags. This did not show up in Search Console because Google *does* run JS.
+2. **`og-image.jpg` did not exist.** `index.html` referenced `https://stellaris-build.com/og-image.jpg`; the file was in neither `frontend/public/` nor `frontend/dist/` — a 404 on every page.
+
+**Fixes, in three parts:**
+
+**1. Static OG image** — `frontend/public/og-image.jpg` (1200x630). Regenerate with `python3 scripts/make_og_image.py <loading_screen.webp> frontend/public/og-image.jpg` (requires Pillow). Needs `npm run build -w frontend` to reach `dist/`.
+
+**2. Server-side meta injection** (`backend/index.js`) — the catch-all now branches on `/build/:id` (numeric only): it queries the build, rewrites `<title>`, `description`, canonical and all `og:`/`twitter:` tags in the HTML, then sends it. React still hydrates and re-applies its own tags. Everything else keeps the previous `sendFile` behaviour untouched.
+- `index.html` is memoized and re-read only when its mtime changes (frontend rebuild), so this adds no per-request disk read
+- Build `name`/`description`/`game_version` are stored **HTML-escaped** by `sanitizeString()` in `security.js`, so `decodeStoredEntities()` decodes them before they are re-escaped into attributes — otherwise a quote reaches the crawler as `&amp;quot;`
+- Every failure path (missing build, soft-deleted build, DB error, injection error) falls back to the untouched `index.html`
+
+**3. Per-build generated image** (`backend/ogImage.js`, needs `sharp`) — 1200x630 JPEG: darkened loading screen background (picked deterministically by build id), build name, origin, authority, ethics, version, author, and a round medallion on the right.
+- Text goes through sharp's `text` input (**Pango**), not SVG `<text>`: real word wrapping, and the rendered height comes back so blocks stack without guessing glyph widths
+- **Medallion cascade:** species portrait -> origin illustration (`icons/origin_original/`) -> nothing. Only 6 of 49 builds have a portrait set, so the origin fallback is what most previews show; all origins in use have an icon, so every build gets a visual. Both sources are opaque rectangles, hence the circular mask
+- **Cache:** `backend/cache/og/{id}-{fingerprint}.jpg` (gitignored). The fingerprint is a sha1 of the fields *drawn in the image* — `description` is excluded on purpose so rewording it does not churn the cache. `og:image` points at that exact filename, which is the only reliable way to bust the per-URL caches Slack/Facebook keep. Editing a build yields a new URL; the stale file is deleted on the next render
+- Generation is **lazy** (first request for the image URL), not at submit/edit: no backfill needed, builds that are never shared cost nothing, and a render failure can never break build creation. Cold ~80ms locally, warm 2ms. Concurrent crawlers on a cold build are deduped via an in-flight Map; writes go to a temp file then `rename` so no crawler reads a partial file
+
+**Prod requirement:** text rendering needs fontconfig to find a font. `fc-list | grep -ci dejavu` must be > 0, else `sudo apt install fonts-dejavu-core`. Without it, images render **without text and without erroring**. Also needs `npm install` after pull (sharp ships ~28MB of native binaries).
+
+**Already-shared links** keep showing the old preview until the platform's cache expires; force revalidation via https://www.opengraph.xyz/ or Facebook's Sharing Debugger.
+
+**Also fixed:** the stale `Browse 12+ builds` claim in `index.html` (both `description` and `og:description`), and the meta description shortened from ~250 to 159 chars so Google stops truncating it.
+
+**Key files:** `backend/ogImage.js`, `backend/index.js`, `scripts/make_og_image.py`, `frontend/public/og-image.jpg`, `frontend/index.html`, `.gitignore`
 
 ### Server Perf + Public Repo Hardening (2026-07-07)
 Diagnosed intermittent home page freezes (site fully unresponsive while loading, images popping in one by one). Root cause: prod is a single 2-core box where SQLite session writes and static asset serving both compete for Node's 4-slot libuv threadpool.
