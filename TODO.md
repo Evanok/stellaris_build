@@ -6,7 +6,7 @@ from any checkout.
 
 ---
 
-## 1. DONE (4.4 only) - `OR`/`NOR` requirements were extracted as `NOT`
+## 1. DONE (4.4 and 4.3) - `OR`/`NOR` requirements were extracted as `NOT`
 
 Fixed in `extract_civics_and_origins.py`. `extract_trigger_info()` now emits a
 structured predicate tree (`{"all"/"any"/"not"/"always"/"field"}`) instead of flat
@@ -14,12 +14,17 @@ strings, covering all 16 predicate forms (was 5). Re-extracted and verified agai
 the wiki for the 26 previously-known-wrong origins, zero `"unsupported"` shapes across
 the whole civics/origins dataset.
 
-**Remaining:** 4.2 and 4.3 still have the old, wrong flat-string format.
-`backend/data/versions/{4.2,4.3}/{civics,origins}.json` need re-extraction, which
-needs those game versions checked out (Steam > Properties > Betas, any past patch is
-selectable directly). The evaluator treats the old format as always-satisfied rather
-than misfiring, so it under-enforces on those versions rather than giving wrong
-verdicts - not a correctness bug, just missing coverage.
+4.3 re-extracted 2026-08-10 after switching the Steam beta to 4.3.0 - same structured
+format confirmed correct (spot-checked `origin_hegemon`, `origin_syncretic_evolution`),
+authority rules and species archetype budgets identical to 4.4 (not just assumed -
+actually re-extracted and diffed; only civics/origins/authorities.json changed,
+traits/ethics/traditions/ascension_perks/species_archetypes were byte-identical to
+what was already there).
+
+**Remaining:** 4.2 still has the old, wrong flat-string format. Needs that game
+version checked out (Steam > Properties > Betas). The evaluator treats the old format
+as always-satisfied rather than misfiring, so it under-enforces on 4.2 rather than
+giving wrong verdicts - not a correctness bug, just missing coverage.
 
 ---
 

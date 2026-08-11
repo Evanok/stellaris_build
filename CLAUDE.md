@@ -632,12 +632,29 @@ file very early during load (errors appear in `error.log` seconds after mod-load
 messages, well before the empire selection screen) - reaching the main menu and
 quitting is enough to trigger validation.
 
+**9. Re-extracted 4.3 after switching the Steam beta branch** - confirmed the fixed
+extractor produces the same correct structured format there too (spot-checked
+`origin_hegemon`/`origin_syncretic_evolution`), and that authority rules and species
+archetype trait budgets are identical to 4.4 (previously only assumed/copied - now
+actually verified). Only `civics.json`/`origins.json`/`authorities.json` changed;
+`traits`/`ethics`/`traditions`/`ascension_perks`/`species_archetypes` came back
+byte-identical. 4.2 still not done (needs that version checked out separately).
+
+**10. Bug in the new trait/archetype check itself:** builds with no `species_class`
+set (13 of 65 - mostly the site's earliest builds, October 2025, predating the
+Species Portrait System feature from 2026-06-07) got every archetype-restricted trait
+flagged as a false violation, because an unmapped species class resolves to
+`species_archetype: undefined`, and `undefined` trivially fails `allowed.includes(...)`
+for any non-empty restriction list. Fixed by only running the trait/archetype check
+when the archetype is actually known, in both `check_build_rules.js` and
+`BuildForm.tsx` (`BuildDetail.tsx`'s export check was already correctly guarded).
+
 **Key files:** `data-extractor/extract_civics_and_origins.py`,
 `data-extractor/extract_authority_rules.py`, `data-extractor/extract_species_archetypes.py`,
 `data-extractor/extract_all.py`, `frontend/src/utils/ruleEvaluator.ts`,
 `backend/rules/predicateEvaluator.js`, `backend/check_build_rules.js`,
 `frontend/src/BuildForm.tsx`, `frontend/src/pages/BuildDetail.tsx`,
-`backend/data/versions/4.4/{civics,origins,authorities,species_archetypes}.json`
+`backend/data/versions/{4.3,4.4}/{civics,origins,authorities,species_archetypes}.json`
 
 ### Social Link Previews (2026-08-10)
 Pasting a build URL into Slack/Discord/Reddit showed the generic site title, the generic description, and **no image at all**. Two independent bugs:
