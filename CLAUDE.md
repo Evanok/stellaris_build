@@ -230,6 +230,7 @@ Each version folder contains the same set of files:
 - `traditions.json` - tradition trees with adopt/finish/individual traditions
 - `ruler_traits.json` - ruler/leader traits for starting leaders
 - `species_classes.json` - species classes with portrait IDs (18 categories from portrait_categories)
+- `species_archetypes.json` - trait point/pick budget per archetype (BIOLOGICAL/ROBOT/MACHINE/LITHOID/PRESAPIENT/OTHER) - extracted by `extract_species_archetypes.py`, included in `extract_all.py`
 
 Non-versioned files (still in `backend/data/`):
 - `resources.json` - Curated community resources (not game data)
@@ -291,6 +292,7 @@ VERSION=4.5
 mkdir -p ../backend/data/versions/$VERSION
 cp ../backend/data/versions/4.4/authorities.json ../backend/data/versions/$VERSION/  # if unchanged
 python3 extract_authority_rules.py "<stellaris_path>" ../backend/data/versions/$VERSION/authorities.json  # refresh potential/possible
+cp output/versions/$VERSION/species_archetypes.json ../backend/data/versions/$VERSION/
 cp output/versions/$VERSION/traits.json ../backend/data/versions/$VERSION/
 cp output/versions/$VERSION/civics_civics_only.json ../backend/data/versions/$VERSION/civics.json
 cp output/versions/$VERSION/civics_origins_only.json ../backend/data/versions/$VERSION/origins.json

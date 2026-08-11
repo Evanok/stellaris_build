@@ -47,11 +47,26 @@ function loadVersionData(dataVersion) {
   const origins = JSON.parse(fs.readFileSync(path.join(dir, 'origins.json'), 'utf8'));
   const speciesClasses = JSON.parse(fs.readFileSync(path.join(dir, 'species_classes.json'), 'utf8'));
   const authorities = JSON.parse(fs.readFileSync(path.join(dir, 'authorities.json'), 'utf8'));
+  const traits = JSON.parse(fs.readFileSync(path.join(dir, 'traits.json'), 'utf8'));
+  const archetypeBudgets = JSON.parse(fs.readFileSync(path.join(dir, 'species_archetypes.json'), 'utf8'));
   return {
     civicById: Object.fromEntries(civics.map(c => [c.id, c])),
     originById: Object.fromEntries(origins.map(o => [o.id, o])),
     archetypeByClass: Object.fromEntries(speciesClasses.map(c => [c.id, c.archetype])),
     authorityById: Object.fromEntries(authorities.map(a => [a.id, a])),
+    costByTraitId: Object.fromEntries(traits.map(t => [t.id, t.cost])),
+    archetypeBudgets,
+  };
+}
+
+// Mirrors BuildForm.tsx's getOriginTraitBonuses(): an origin's `modifier` can
+// grant `<ARCHETYPE>_species_trait_points_add` / `_picks_add` (e.g. Shroud
+// Forged grants ROBOT +1/+1).
+function getOriginTraitBonus(origin, speciesArchetype) {
+  const modifier = (origin && origin.modifier) || {};
+  return {
+    pointsBonus: modifier[`${speciesArchetype}_species_trait_points_add`] || 0,
+    picksBonus: modifier[`${speciesArchetype}_species_trait_picks_add`] || 0,
   };
 }
 
@@ -61,9 +76,28 @@ function loadVersionData(dataVersion) {
 function checkBuild(build) {
   const dataVersion = getDataVersion(build.game_version);
   const verified = FIXED_VERSIONS.has(dataVersion);
-  const { civicById, originById, archetypeByClass, authorityById } = loadVersionData(dataVersion);
+  const { civicById, originById, archetypeByClass, authorityById, costByTraitId, archetypeBudgets } = loadVersionData(dataVersion);
   const ctx = contextFromBuild(build, archetypeByClass);
   const issues = [];
+
+  // Trait point/pick budget differs per archetype (e.g. MACHINE: 1 point/5
+  // traits, ROBOT: 0 points/4 traits) - double-checked here independently of
+  // BuildForm.tsx's live enforcement.
+  const budget = archetypeBudgets[ctx.species_archetype];
+  if (budget && budget.trait_points != null && budget.max_traits != null) {
+    const origin = build.origin ? originById[build.origin] : null;
+    const { pointsBonus, picksBonus } = getOriginTraitBonus(origin, ctx.species_archetype);
+    const maxPoints = budget.trait_points + pointsBonus;
+    const maxCount = budget.max_traits + picksBonus;
+    const traitPoints = ctx.traits.reduce((sum, id) => sum + (costByTraitId[id] || 0), 0);
+    const traitCount = ctx.traits.filter(id => (costByTraitId[id] || 0) !== 0).length;
+    if (traitPoints > maxPoints) {
+      issues.push(`species traits: ${traitPoints} trait points spent, but ${ctx.species_archetype} allows only ${maxPoints}`);
+    }
+    if (traitCount > maxCount) {
+      issues.push(`species traits: ${traitCount} traits selected, but ${ctx.species_archetype} allows only ${maxCount}`);
+    }
+  }
 
   if (build.authority) {
     const authority = authorityById[build.authority];

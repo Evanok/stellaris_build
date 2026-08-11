@@ -333,6 +333,11 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const [selectedSpeciesClass, setSelectedSpeciesClass] = useState<string>('');
   const [selectedPortrait, setSelectedPortrait] = useState<string>('');
 
+  // Trait point/pick budget per archetype (BIOLOGICAL/ROBOT/MACHINE/LITHOID/PRESAPIENT) -
+  // differs per archetype (e.g. MACHINE: 1 point/5 traits, ROBOT: 0 points/4 traits),
+  // unlike the old flat BASE_MAX_TRAIT_POINTS/BASE_MAX_TRAIT_COUNT constants.
+  const [speciesArchetypeBudgets, setSpeciesArchetypeBudgets] = useState<Record<string, { trait_points: number | null; max_traits: number | null }>>({});
+
   // UI state
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -407,7 +412,9 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       fetch(`/api/traditions${qs}`).then(res => res.json()),
       fetch(`/api/ruler-traits${qs}`).then(res => res.json()),
       fetch(`/api/species-classes${qs}`).then(res => res.json()),
-    ]).then(([originsRaw, perksRaw, ethicsRaw, authoritiesRaw, civicsRaw, traditionsRaw, rulerTraitsRaw, classesRaw]) => {
+      fetch(`/api/species-archetypes${qs}`).then(res => res.json()),
+    ]).then(([originsRaw, perksRaw, ethicsRaw, authoritiesRaw, civicsRaw, traditionsRaw, rulerTraitsRaw, classesRaw, archetypeBudgetsRaw]) => {
+      setSpeciesArchetypeBudgets(archetypeBudgetsRaw && typeof archetypeBudgetsRaw === 'object' ? archetypeBudgetsRaw : {});
       const originsArray = Array.isArray(originsRaw) ? originsRaw : (originsRaw.origins || []);
       const sanitizedOrigins = originsArray
         .filter((o: any) => o.pickable_at_start && o.is_origin)
@@ -586,8 +593,11 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   };
 
   const { pointsBonus, picksBonus } = getOriginTraitBonuses();
-  const MAX_TRAIT_POINTS = BASE_MAX_TRAIT_POINTS + pointsBonus;
-  const MAX_TRAIT_COUNT = BASE_MAX_TRAIT_COUNT + picksBonus;
+  const archetypeBudget = speciesArchetypeBudgets[getSpeciesArchetype(selectedSpeciesClass)];
+  const baseMaxTraitPoints = archetypeBudget?.trait_points ?? BASE_MAX_TRAIT_POINTS;
+  const baseMaxTraitCount = archetypeBudget?.max_traits ?? BASE_MAX_TRAIT_COUNT;
+  const MAX_TRAIT_POINTS = baseMaxTraitPoints + pointsBonus;
+  const MAX_TRAIT_COUNT = baseMaxTraitCount + picksBonus;
 
   // Calculate current trait points
   const calculateTraitPoints = (): number => {
@@ -1042,6 +1052,15 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
     const warnings: string[] = [];
 
+    // Double-check the archetype trait budget independently of the live
+    // hasInvalidTraits button-disable, in case the two ever drift apart.
+    if (currentTraitPoints > MAX_TRAIT_POINTS) {
+      warnings.push(`Species traits: ${currentTraitPoints} trait points spent, but ${ctx.species_archetype} allows only ${MAX_TRAIT_POINTS}`);
+    }
+    if (currentTraitCount > MAX_TRAIT_COUNT) {
+      warnings.push(`Species traits: ${currentTraitCount} traits selected, but ${ctx.species_archetype} allows only ${MAX_TRAIT_COUNT}`);
+    }
+
     if (selectedAuthority) {
       const authority = allAuthorities.find(a => a.id === selectedAuthority);
       if (authority) {
@@ -1408,7 +1427,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                 {pointsBonus > 0 && <span className="ms-2">+{pointsBonus} trait points</span>}
                 {picksBonus > 0 && <span className="ms-2">+{picksBonus} trait pick{picksBonus > 1 ? 's' : ''}</span>}
                 <small className="d-block mt-1">
-                  Base limits: {BASE_MAX_TRAIT_COUNT} traits, {BASE_MAX_TRAIT_POINTS} points
+                  Base limits: {baseMaxTraitCount} traits, {baseMaxTraitPoints} points
                 </small>
               </div>
             )}

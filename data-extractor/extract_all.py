@@ -16,6 +16,7 @@ from extract_ethics import extract_all_ethics
 from extract_traditions import extract_all_traditions
 from extract_ascension_perks import extract_all_ascension_perks
 from extract_authority_rules import extract_authority_rules, merge_into_authorities_json
+from extract_species_archetypes import extract_species_archetypes
 
 
 def detect_game_version(stellaris_path: str) -> str | None:
@@ -97,6 +98,15 @@ def main():
         print("  copied from the previous version (see 'Process for a new Stellaris version' in CLAUDE.md):")
         print(f"    python3 extract_authority_rules.py \"{stellaris_path}\" ../backend/data/versions/{game_version or 'X.Y'}/authorities.json")
 
+    print("\n--- Extracting Species Archetype Trait Budgets ---")
+    species_archetypes = extract_species_archetypes(stellaris_path)
+    species_archetypes_path = os.path.join(output_dir, "species_archetypes.json")
+    with open(species_archetypes_path, "w", encoding="utf-8") as f:
+        json.dump(species_archetypes, f, indent=2, ensure_ascii=False)
+    for name, budget in species_archetypes.items():
+        print(f"  {name}: {budget['trait_points']} points, {budget['max_traits']} max traits")
+    print(f"  -> {species_archetypes_path}")
+
     print("\n" + "=" * 70)
     print("EXTRACTION COMPLETE!")
     print("=" * 70)
@@ -110,8 +120,10 @@ def main():
     print("  - traditions_by_tree.json")
     print("  - ascension_perks.json")
     print("  - authority_rules.json (potential/possible only - authorities.json itself is hand-maintained)")
+    print("  - species_archetypes.json")
     if game_version:
         print(f"\nTo deploy, copy to backend/data/versions/{game_version}/")
+        print(f"  cp {output_dir}/species_archetypes.json ../backend/data/versions/{game_version}/")
         print(f"  cp {output_dir}/traits.json ../backend/data/versions/{game_version}/traits.json")
         print(f"  cp {output_dir}/civics_civics_only.json ../backend/data/versions/{game_version}/civics.json")
         print(f"  cp {output_dir}/civics_origins_only.json ../backend/data/versions/{game_version}/origins.json")
