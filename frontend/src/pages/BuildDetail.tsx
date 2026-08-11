@@ -110,6 +110,7 @@ interface RulerTrait {
   description: string;
   effects: string;
   icon?: string;
+  leader_class?: string[];
 }
 
 interface SpeciesClass {
@@ -480,8 +481,13 @@ export const BuildDetail: React.FC = () => {
     lines.push('\t\tevolution_mask=0');
     lines.push('\t\tattachment=0');
     lines.push('\t\tclothes=0');
+    // The ruler's leader_class must match the chosen trait's allowed class(es)
+    // (e.g. trait_ruler_warlike is commander-only) - a fixed "official" here
+    // caused a mismatch for any trait not valid for that class.
+    const rulerTraitData = b.ruler_trait ? getRulerTraitData(b.ruler_trait) : undefined;
+    const rulerLeaderClass = rulerTraitData?.leader_class?.[0] || 'official';
     if (b.ruler_trait) lines.push(`\t\ttrait="${b.ruler_trait}"`);
-    lines.push('\t\tleader_class="official"');
+    lines.push(`\t\tleader_class="${rulerLeaderClass}"`);
     lines.push('\t}');
     lines.push('\tspawn_as_fallen=no');
     lines.push('\tignore_portrait_duplication=no');
