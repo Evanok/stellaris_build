@@ -927,7 +927,7 @@ export const BuildDetail: React.FC = () => {
                     <div key={idx} className="mb-3 pb-3 border-bottom border-secondary">
                       <div className="d-flex align-items-start">
                         <GameIcon type="traits" id={traitId} size={48} />
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
                           <h5 className="text-white mb-1">
                             {trait?.name || traitId}
                             <span className={`badge ms-2 ${trait && getTraitCost(trait.cost) > 0 ? 'bg-success' : 'bg-danger'}`}>
@@ -967,7 +967,7 @@ export const BuildDetail: React.FC = () => {
                     <div key={idx} className="mb-3 pb-3 border-bottom border-secondary">
                       <div className="d-flex align-items-start">
                         <GameIcon type="traits" id={traitId} size={48} />
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
                           <h5 className="text-white mb-1">
                             {trait?.name || traitId}
                             <span className={`badge ms-2 ${trait && getTraitCost(trait.cost) > 0 ? 'bg-success' : 'bg-danger'}`}>
@@ -1027,7 +1027,7 @@ export const BuildDetail: React.FC = () => {
 
                       <div className="d-flex align-items-start">
                         <GameIcon type="origin_mini" id={build.origin} size={64} />
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
                           <h4 className="text-primary mb-2">{origin?.name || build.origin}</h4>
                           {origin?.description && (
                             <p className="text-light mb-2">{origin.description}</p>
@@ -1072,7 +1072,7 @@ export const BuildDetail: React.FC = () => {
                           }}
                         />
                       )}
-                      <div className="flex-grow-1">
+                      <div className="flex-grow-1" style={{ minWidth: 0 }}>
                         <h5 className="text-warning mb-2">{trait?.name || build.ruler_trait}</h5>
                         {trait?.description && (
                           <p className="text-light mb-2">{trait.description}</p>
@@ -1106,7 +1106,7 @@ export const BuildDetail: React.FC = () => {
                     <div key={idx} className="mb-3 pb-3 border-bottom border-secondary">
                       <div className="d-flex align-items-start">
                         <GameIcon type="ethics" id={ethicId} size={48} />
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
                           <h5 className="text-warning mb-1">
                             {ethic?.name || ethicId}
                             <span className={`badge ms-2 ${ethic?.cost === 3 ? 'bg-danger' : ethic?.cost === 2 ? 'bg-warning text-dark' : 'bg-info'}`}>
@@ -1176,7 +1176,7 @@ export const BuildDetail: React.FC = () => {
                   return (
                     <div className="d-flex align-items-start">
                       <GameIcon type="authorities" id={build.authority} size={64} />
-                      <div className="flex-grow-1">
+                      <div className="flex-grow-1" style={{ minWidth: 0 }}>
                         <h4 className="text-success mb-2">{authority?.name || build.authority}</h4>
                         {authority?.description && (
                           <p className="text-light mb-2">{authority.description}</p>
@@ -1211,7 +1211,7 @@ export const BuildDetail: React.FC = () => {
                     <div key={idx} className="mb-3 pb-3 border-bottom border-secondary">
                       <div className="d-flex align-items-start">
                         <GameIcon type="civics" id={civicId} size={48} />
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
                           <h5 className="text-info mb-1">{civic?.name || civicId}</h5>
                           {civic?.description && (
                             <p className="text-light mb-2">{civic.description}</p>
@@ -1252,7 +1252,7 @@ export const BuildDetail: React.FC = () => {
                           #{idx + 1}
                         </span>
                         <GameIcon type="ascension_perks" id={perkId} size={48} />
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
                           <h5 className="text-white mb-1">{perk?.name || perkId}</h5>
                           {perk?.description && (
                             <p className="text-light mb-2">{perk.description}</p>
@@ -1290,7 +1290,7 @@ export const BuildDetail: React.FC = () => {
                           #{idx + 1}
                         </span>
                         <GameIcon type="traditions" id={treeId} size={48} />
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
                           <h5 className="text-white mb-1">{tree?.adopt?.name || treeId}</h5>
                           {tree?.adopt?.description && (
                             <p className="text-light mb-0">{tree.adopt.description}</p>

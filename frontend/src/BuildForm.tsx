@@ -1956,7 +1956,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
               <div className="card-body p-3">
                 <div className="d-flex align-items-center gap-3">
                   <img src="/icons/nomad_toggle.png" width={64} height={64} alt="Nomadic Empire" style={{ flexShrink: 0 }} />
-                  <div className="flex-grow-1">
+                  <div className="flex-grow-1" style={{ minWidth: 0 }}>
                     <div className="d-flex align-items-center gap-2 mb-1">
                       <input
                         type="checkbox"
