@@ -82,7 +82,7 @@ export const WhatsNewBanner: React.FC<WhatsNewBannerProps> = ({ news }) => {
           </div>
           {newsItem.description && (
             <div
-              className="text-white-50"
+              className="text-white"
               style={{ fontSize: '0.78rem', lineHeight: '1.35', marginTop: '0.2rem' }}
             >
               {newsItem.description}
