@@ -836,12 +836,8 @@
             "num_ascension_perks": 2
           },
           "NOR": {
-            "has_ethic": [
-              "ethic_xenophile",
-              "ethic_fanatic_xenophile",
-              "ethic_pacifist",
-              "ethic_fanatic_pacifist"
-            ],
+            "is_xenophile": true,
+            "is_pacifist": true,
             "has_civic": "civic_machine_servitor",
             "has_valid_civic": "civic_hive_familiar_face"
           }
@@ -940,14 +936,8 @@
             "country_uses_bio_ships": true
           }
         ],
-        "NOR": {
-          "has_ethic": [
-            "ethic_xenophile",
-            "ethic_fanatic_xenophile",
-            "ethic_pacifist",
-            "ethic_fanatic_pacifist"
-          ]
-        }
+        "is_xenophile": false,
+        "is_pacifist": false
       },
       "prerequisites": [],
       "effects": "",
@@ -996,12 +986,8 @@
           }
         ],
         "NOR": {
-          "has_ethic": [
-            "ethic_xenophile",
-            "ethic_fanatic_xenophile",
-            "ethic_pacifist",
-            "ethic_fanatic_pacifist"
-          ],
+          "is_xenophile": true,
+          "is_pacifist": true,
           "has_valid_civic": "civic_hive_familiar_face"
         }
       },
@@ -1019,7 +1005,6 @@
             "origin_slavers",
             "origin_endbringers"
           ],
-          "is_machine_empire": true,
           "is_wilderness_empire": true
         }
       },
@@ -2889,12 +2874,8 @@
             "num_ascension_perks": 2
           },
           "NOR": {
-            "has_ethic": [
-              "ethic_xenophile",
-              "ethic_fanatic_xenophile",
-              "ethic_pacifist",
-              "ethic_fanatic_pacifist"
-            ],
+            "is_xenophile": true,
+            "is_pacifist": true,
             "has_civic": "civic_machine_servitor",
             "has_valid_civic": "civic_hive_familiar_face"
           }
@@ -2993,14 +2974,8 @@
             "country_uses_bio_ships": true
           }
         ],
-        "NOR": {
-          "has_ethic": [
-            "ethic_xenophile",
-            "ethic_fanatic_xenophile",
-            "ethic_pacifist",
-            "ethic_fanatic_pacifist"
-          ]
-        }
+        "is_xenophile": false,
+        "is_pacifist": false
       },
       "prerequisites": [],
       "effects": "",
@@ -3049,12 +3024,8 @@
           }
         ],
         "NOR": {
-          "has_ethic": [
-            "ethic_xenophile",
-            "ethic_fanatic_xenophile",
-            "ethic_pacifist",
-            "ethic_fanatic_pacifist"
-          ],
+          "is_xenophile": true,
+          "is_pacifist": true,
           "has_valid_civic": "civic_hive_familiar_face"
         }
       },
@@ -3072,7 +3043,6 @@
             "origin_slavers",
             "origin_endbringers"
           ],
-          "is_machine_empire": true,
           "is_wilderness_empire": true
         }
       },
