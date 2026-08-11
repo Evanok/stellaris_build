@@ -17,7 +17,7 @@ function evaluateField(field, value, ctx) {
     case 'is_nomadic': return !!ctx.is_nomadic === !!value;
     case 'preferred_planet_class': return ctx.preferred_planet_class === value;
     case 'graphical_culture': return ctx.graphical_culture === value;
-    case 'country_type': return true; // NPC-only civics/origins already filtered at extraction time
+    case 'country_type': return value === 'default'; // player empires are always country_type "default"
     case 'host_has_dlc': return true; // can't know which DLC a build's author owns
     default: return true;
   }

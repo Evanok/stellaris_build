@@ -46,10 +46,12 @@ function loadVersionData(dataVersion) {
   const civics = JSON.parse(fs.readFileSync(path.join(dir, 'civics.json'), 'utf8'));
   const origins = JSON.parse(fs.readFileSync(path.join(dir, 'origins.json'), 'utf8'));
   const speciesClasses = JSON.parse(fs.readFileSync(path.join(dir, 'species_classes.json'), 'utf8'));
+  const authorities = JSON.parse(fs.readFileSync(path.join(dir, 'authorities.json'), 'utf8'));
   return {
     civicById: Object.fromEntries(civics.map(c => [c.id, c])),
     originById: Object.fromEntries(origins.map(o => [o.id, o])),
     archetypeByClass: Object.fromEntries(speciesClasses.map(c => [c.id, c.archetype])),
+    authorityById: Object.fromEntries(authorities.map(a => [a.id, a])),
   };
 }
 
@@ -59,9 +61,19 @@ function loadVersionData(dataVersion) {
 function checkBuild(build) {
   const dataVersion = getDataVersion(build.game_version);
   const verified = FIXED_VERSIONS.has(dataVersion);
-  const { civicById, originById, archetypeByClass } = loadVersionData(dataVersion);
+  const { civicById, originById, archetypeByClass, authorityById } = loadVersionData(dataVersion);
   const ctx = contextFromBuild(build, archetypeByClass);
   const issues = [];
+
+  if (build.authority) {
+    const authority = authorityById[build.authority];
+    if (!authority) {
+      issues.push(`authority "${build.authority}" not found in ${dataVersion} data (removed/renamed?)`);
+    } else {
+      getFailingConditions(authority.possible, ctx).forEach(r => issues.push(`authority "${build.authority}" possible violated: ${r}`));
+      getFailingConditions(authority.potential, ctx).forEach(r => issues.push(`authority "${build.authority}" potential violated: ${r}`));
+    }
+  }
 
   if (build.origin) {
     const origin = originById[build.origin];
