@@ -739,7 +739,7 @@ export const BuildDetail: React.FC = () => {
             </ol>
           </nav>
           <button
-            className="btn btn-outline-info btn-sm"
+            className="btn btn-info"
             onClick={() => setShowExportModal(true)}
           >
             <i className="bi bi-box-arrow-up-right me-1"></i>
@@ -1363,6 +1363,13 @@ export const BuildDetail: React.FC = () => {
             <i className="bi bi-arrow-left me-2"></i>
             Back to Builds
           </Link>
+          <button
+            className="btn btn-info btn-lg me-3"
+            onClick={() => setShowExportModal(true)}
+          >
+            <i className="bi bi-box-arrow-up-right me-2"></i>
+            Export to Stellaris
+          </button>
           {user && build.author_id === user.id && (
             <>
               <Link
