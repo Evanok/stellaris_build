@@ -108,14 +108,19 @@ function checkBuild(build) {
   }
 
   // Traits are restricted to specific archetypes both ways (e.g. Very Strong
-  // is BIOLOGICAL/LITHOID only, Machine Unit is MACHINE/ROBOT only).
-  ctx.traits.forEach(id => {
-    const trait = traitById[id];
-    const allowed = trait && trait.allowed_archetypes;
-    if (Array.isArray(allowed) && allowed.length > 0 && !allowed.includes(ctx.species_archetype)) {
-      issues.push(`trait "${id}" is not allowed for ${ctx.species_archetype} species`);
-    }
-  });
+  // is BIOLOGICAL/LITHOID only, Machine Unit is MACHINE/ROBOT only). Only check
+  // when we actually know the archetype - an unset/unmapped species_class must
+  // not be treated as "matches no archetype" (that would flag every restricted
+  // trait as violated).
+  if (ctx.species_archetype) {
+    ctx.traits.forEach(id => {
+      const trait = traitById[id];
+      const allowed = trait && trait.allowed_archetypes;
+      if (Array.isArray(allowed) && allowed.length > 0 && !allowed.includes(ctx.species_archetype)) {
+        issues.push(`trait "${id}" is not allowed for ${ctx.species_archetype} species`);
+      }
+    });
+  }
 
   if (build.authority) {
     const authority = authorityById[build.authority];

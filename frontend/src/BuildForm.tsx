@@ -1098,13 +1098,17 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     // Double-check trait/archetype compatibility independently of the live
     // filteredTraits list - matters for edit mode on a build saved before
     // this filter existed (e.g. biological-only traits on a Machine species).
-    selectedTraits.forEach(traitId => {
-      const trait = allTraits.find(t => t.id === traitId);
-      const allowed = trait?.allowed_archetypes;
-      if (Array.isArray(allowed) && allowed.length > 0 && !allowed.includes(ctx.species_archetype)) {
-        warnings.push(`Trait "${trait?.name || traitId}" is not allowed for ${resolveRuleLabel('species_archetype', ctx.species_archetype)} species`);
-      }
-    });
+    // Only when the archetype is actually known - an unset species class must
+    // not be treated as "matches no archetype".
+    if (ctx.species_archetype) {
+      selectedTraits.forEach(traitId => {
+        const trait = allTraits.find(t => t.id === traitId);
+        const allowed = trait?.allowed_archetypes;
+        if (Array.isArray(allowed) && allowed.length > 0 && !allowed.includes(ctx.species_archetype)) {
+          warnings.push(`Trait "${trait?.name || traitId}" is not allowed for ${resolveRuleLabel('species_archetype', ctx.species_archetype)} species`);
+        }
+      });
+    }
 
     if (selectedAuthority) {
       const authority = allAuthorities.find(a => a.id === selectedAuthority);
