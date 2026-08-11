@@ -207,4 +207,20 @@ user_empire_designs_v3.4.txt`). Workflow: paste N generated designs into the fil
 launch the game to the empire selection screen, quit, read `error.log`. That validates
 N builds in a single pass and is the only access we have to the real validator.
 
+**Confirmed empirically (2026-08-10):** the file is parsed very early during game
+load - errors show up in `error.log` seconds after the mod-loading messages, well
+before the empire selection screen. Launching to the main menu and quitting is
+enough; no need to click through to empire creation. This makes full automation
+plausible (launch via Steam URI, sleep N seconds, kill process, read log) instead
+of manually clicking through the UI each time - see the CWTools discussion earlier
+in this project's history for a lighter-weight *syntax-only* pre-check that needs
+no game launch at all.
+
+**Gotcha hit in practice:** `user_empire_designs_v3.4.txt` can already contain many
+vanilla/prescripted empire blocks (`key="PRESCRIPTED_..."` placeholders, real
+`government`/`room`/`leader_class` values) that look superficially similar to our
+generated ones. Don't assume line numbers in an error alone identify *our* export -
+confirm by grepping for markers unique to our generator (`"Fix Me"`, `gov_fallback`)
+or the exact build name before diagnosing an error as ours.
+
 Useful as a regression test for the export once 3c is done.
