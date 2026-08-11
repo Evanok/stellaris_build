@@ -1428,7 +1428,10 @@ export const BuildDetail: React.FC = () => {
                         <div className="mt-1">
                           This build might not be valid in-game, based on rules we extract from the
                           game files. This check is new and may have false positives or miss real
-                          conflicts - use it as a hint, not a guarantee. You can still export and try it.
+                          conflicts - use it as a hint, not a guarantee. You can still import it -
+                          the design file is more permissive than the empire creator, so it will
+                          load even with conflicts. You'll just need to fix the flagged picks
+                          directly in the empire creation screen before you can play it.
                         </div>
                         <ul className="mb-0 mt-2">
                           {exportWarnings.map((warning, idx) => (
