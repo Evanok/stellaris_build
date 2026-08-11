@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { AuthModal } from './components/AuthModal';
 import { decodeHtmlEntities } from './utils/htmlDecode';
-import { PredicateNode, findFieldOccurrences, getFailingConditions } from './utils/ruleEvaluator';
+import { PredicateNode, findFieldOccurrences, getFailingNodes, describePredicateHuman } from './utils/ruleEvaluator';
 
 interface BuildFormProps {
   onBuildCreated: (newBuild: any) => void;
@@ -1035,6 +1035,21 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     document.getElementById('buildDescription')?.focus();
   };
 
+  // Resolves a raw predicate field/value (e.g. ethics="ethic_authoritarian")
+  // to a human-readable label ("Authoritarian") using the game data already
+  // loaded for this form, for use in the rule-warning messages below.
+  const resolveRuleLabel = (field: string, value: unknown): string => {
+    const id = String(value);
+    switch (field) {
+      case 'ethics': return allEthics.find(e => e.id === id)?.name || id;
+      case 'civics': return allCivics.find(c => c.id === id)?.name || id;
+      case 'authority': return allAuthorities.find(a => a.id === id)?.name || id;
+      case 'origin': return allOrigins.find(o => o.id === id)?.name || id;
+      case 'species_archetype': return id.charAt(0) + id.slice(1).toLowerCase();
+      default: return id;
+    }
+  };
+
   // Experimental: check the completed build against the rules we can extract
   // from the game files. Only run once every relevant field is filled in
   // (submit time) - checking mid-form would misfire on fields the user
@@ -1051,43 +1066,42 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     };
 
     const warnings: string[] = [];
+    const addWarnings = (label: string, node: PredicateNode | undefined) => {
+      getFailingNodes(node, ctx).forEach(failing =>
+        warnings.push(`${label} requires ${describePredicateHuman(failing, resolveRuleLabel)}`)
+      );
+    };
 
     // Double-check the archetype trait budget independently of the live
     // hasInvalidTraits button-disable, in case the two ever drift apart.
     if (currentTraitPoints > MAX_TRAIT_POINTS) {
-      warnings.push(`Species traits: ${currentTraitPoints} trait points spent, but ${ctx.species_archetype} allows only ${MAX_TRAIT_POINTS}`);
+      warnings.push(`Species traits: ${currentTraitPoints} trait points spent, but ${resolveRuleLabel('species_archetype', ctx.species_archetype)} species allow only ${MAX_TRAIT_POINTS}`);
     }
     if (currentTraitCount > MAX_TRAIT_COUNT) {
-      warnings.push(`Species traits: ${currentTraitCount} traits selected, but ${ctx.species_archetype} allows only ${MAX_TRAIT_COUNT}`);
+      warnings.push(`Species traits: ${currentTraitCount} traits selected, but ${resolveRuleLabel('species_archetype', ctx.species_archetype)} species allow only ${MAX_TRAIT_COUNT}`);
     }
 
     if (selectedAuthority) {
       const authority = allAuthorities.find(a => a.id === selectedAuthority);
       if (authority) {
-        getFailingConditions(authority.possible, ctx).forEach(reason =>
-          warnings.push(`Authority "${authority.name}": ${reason}`)
-        );
-        getFailingConditions(authority.potential, ctx).forEach(reason =>
-          warnings.push(`Authority "${authority.name}": ${reason}`)
-        );
+        addWarnings(`Authority "${authority.name}"`, authority.possible);
+        addWarnings(`Authority "${authority.name}"`, authority.potential);
       }
     }
 
     if (selectedOrigin) {
       const origin = allOrigins.find(o => o.id === selectedOrigin);
       if (origin) {
-        getFailingConditions(origin.possible, ctx).forEach(reason =>
-          warnings.push(`Origin "${origin.name}": ${reason}`)
-        );
+        addWarnings(`Origin "${origin.name}"`, origin.possible);
+        addWarnings(`Origin "${origin.name}"`, origin.potential);
       }
     }
 
     for (const civicId of selectedCivics) {
       const civic = allCivics.find(c => c.id === civicId);
       if (!civic) continue;
-      getFailingConditions(civic.possible, ctx).forEach(reason =>
-        warnings.push(`Civic "${civic.name}": ${reason}`)
-      );
+      addWarnings(`Civic "${civic.name}"`, civic.possible);
+      addWarnings(`Civic "${civic.name}"`, civic.potential);
     }
 
     return warnings;
