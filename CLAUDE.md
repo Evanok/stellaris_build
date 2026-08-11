@@ -547,27 +547,40 @@ BuildForm.tsx's `MAX_TRAIT_POINTS`/`MAX_TRAIT_COUNT` are now computed from the
 selected species' actual archetype. Caught a real pre-existing invalid build on first
 audit run (a Machine-species build spending 2 points against a 1-point budget).
 
-**4. All three integrated into the real `extract_all.py` pipeline**, not one-off
-scripts - re-running `extract_all.py` on a fresh checkout regenerates everything
-including the authority rules and archetype budgets (authority rules auto-merge into
-the backend's `authorities.json` if it already exists there; for a brand-new version,
-prints the manual merge command since `authorities.json` doesn't exist yet at that
-point in the version-upgrade process - see "Process for a new Stellaris version" above).
+**4. Civic count was flat-out wrong: `MAX_CIVIC_SLOTS = 3` in `BuildForm.tsx`, but
+`GOVERNMENT_CIVIC_POINTS_BASE = 2` in `common/defines/00_defines.txt` (confirmed
+in-game by trying to select a 3-civic build in the empire selector - it's invalid).
+Found by testing an actual export in-game, not by static analysis. **26 of 65
+published builds (40%) have 3 civics** and are technically invalid. Fixed
+`MAX_CIVIC_SLOTS` to 2 (a handful of narrative/mid-game-only civics - Great Khan's
+Vision, Galactic Sovereign, Psionic Sovereign - grant +1 via
+`country_government_civic_points_add`, but those aren't real creation-time picks, so
+this stays a flat constant rather than dynamic like the trait budget). Existing
+3-civic builds are not retroactively modified - the fix only prevents new ones and
+surfaces a warning (see point 6) when viewing/editing/exporting an old one.
 
-**5. Non-blocking "Possible Rule Conflict" warning**, both at `BuildForm.tsx` submit
+**5. All extraction pieces integrated into the real `extract_all.py` pipeline**, not
+one-off scripts - re-running `extract_all.py` on a fresh checkout regenerates
+everything including the authority rules and archetype budgets (authority rules
+auto-merge into the backend's `authorities.json` if it already exists there; for a
+brand-new version, prints the manual merge command since `authorities.json` doesn't
+exist yet at that point in the version-upgrade process - see "Process for a new
+Stellaris version" above).
+
+**6. Non-blocking "Possible Rule Conflict" warning**, both at `BuildForm.tsx` submit
 and in `BuildDetail.tsx`'s export modal (same check, re-run independently since export
 is a separate action from submit). Evaluates the completed build's origin/authority/
-civics (`possible` AND `potential`) plus the trait budget against a shared evaluator
-(`frontend/src/utils/ruleEvaluator.ts`), shown as plain-English messages (e.g. `Authority
-"Democratic" requires none of: ethic "Gestalt Consciousness", ethic "Authoritarian",
-ethic "Fanatic Authoritarian"`) resolved from already-loaded game data, not raw ids.
-Only checked once the whole build is filled in (submit/export time) - origin is picked
-*before* ethics/authority/civics in the form, so a full evaluation against a partial
-build would misfire on fields not chosen yet; the live origin/civic filters use a
-narrower `findFieldOccurrences()` helper instead (existence/polarity check, no full
-context needed).
+civics (`possible` AND `potential`), civic count, and trait budget against a shared
+evaluator (`frontend/src/utils/ruleEvaluator.ts`), shown as plain-English messages
+(e.g. `Authority "Democratic" requires none of: ethic "Gestalt Consciousness", ethic
+"Authoritarian", ethic "Fanatic Authoritarian"`) resolved from already-loaded game
+data, not raw ids. Only checked once the whole build is filled in (submit/export
+time) - origin is picked *before* ethics/authority/civics in the form, so a full
+evaluation against a partial build would misfire on fields not chosen yet; the live
+origin/civic filters use a narrower `findFieldOccurrences()` helper instead
+(existence/polarity check, no full context needed).
 
-**6. Standalone-ish CLI** `backend/check_build_rules.js` (`check <build.json>` /
+**7. Standalone-ish CLI** `backend/check_build_rules.js` (`check <build.json>` /
 `check-id <id>` / `audit`) - a Node script sharing `backend/rules/predicateEvaluator.js`
 with the audit tooling, not a true compiled binary (deliberately not pursued further -
 see git history if reconsidering). Reads `GET /api/builds/:id`'s `{build: {...}}`
