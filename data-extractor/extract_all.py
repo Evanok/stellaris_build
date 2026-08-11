@@ -15,6 +15,7 @@ from extract_civics_and_origins import extract_all_civics
 from extract_ethics import extract_all_ethics
 from extract_traditions import extract_all_traditions
 from extract_ascension_perks import extract_all_ascension_perks
+from extract_authority_rules import extract_authority_rules, merge_into_authorities_json
 
 
 def detect_game_version(stellaris_path: str) -> str | None:
@@ -71,6 +72,31 @@ def main():
     print("\n--- Extracting Ascension Perks ---")
     extract_all_ascension_perks(stellaris_path, os.path.join(output_dir, "ascension_perks.json"))
 
+    print("\n--- Extracting Authority Rules (potential/possible) ---")
+    # authorities.json itself has no full extractor (most fields are
+    # hand-maintained, copied from the previous version - see CLAUDE.md).
+    # We only extract the potential/possible predicates here, same DSL as
+    # civics/origins, and merge them into whichever authorities.json already
+    # exists for this version (backend copy if present, else just the raw
+    # rules file so a later manual merge is possible).
+    authority_rules = extract_authority_rules(stellaris_path)
+    authority_rules_path = os.path.join(output_dir, "authority_rules.json")
+    with open(authority_rules_path, "w", encoding="utf-8") as f:
+        json.dump(authority_rules, f, indent=2, ensure_ascii=False)
+    print(f"  Extracted rules for {len(authority_rules)} authority entries -> {authority_rules_path}")
+
+    backend_authorities_path = None
+    if game_version:
+        candidate = os.path.join("..", "backend", "data", "versions", game_version, "authorities.json")
+        if os.path.isfile(candidate):
+            backend_authorities_path = candidate
+    if backend_authorities_path:
+        merge_into_authorities_json(authority_rules, backend_authorities_path)
+    else:
+        print("  No existing backend authorities.json for this version yet - merge manually once it's")
+        print("  copied from the previous version (see 'Process for a new Stellaris version' in CLAUDE.md):")
+        print(f"    python3 extract_authority_rules.py \"{stellaris_path}\" ../backend/data/versions/{game_version or 'X.Y'}/authorities.json")
+
     print("\n" + "=" * 70)
     print("EXTRACTION COMPLETE!")
     print("=" * 70)
@@ -83,6 +109,7 @@ def main():
     print("  - traditions.json")
     print("  - traditions_by_tree.json")
     print("  - ascension_perks.json")
+    print("  - authority_rules.json (potential/possible only - authorities.json itself is hand-maintained)")
     if game_version:
         print(f"\nTo deploy, copy to backend/data/versions/{game_version}/")
         print(f"  cp {output_dir}/traits.json ../backend/data/versions/{game_version}/traits.json")
@@ -91,6 +118,9 @@ def main():
         print(f"  cp {output_dir}/ethics.json ../backend/data/versions/{game_version}/")
         print(f"  cp {output_dir}/traditions_by_tree.json ../backend/data/versions/{game_version}/traditions.json")
         print(f"  cp {output_dir}/ascension_perks.json ../backend/data/versions/{game_version}/")
+        if not backend_authorities_path:
+            print(f"  cp ../backend/data/versions/<previous_version>/authorities.json ../backend/data/versions/{game_version}/  # if unchanged")
+            print(f"  python3 extract_authority_rules.py \"{stellaris_path}\" ../backend/data/versions/{game_version}/authorities.json")
 
 
 if __name__ == "__main__":

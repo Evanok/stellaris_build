@@ -289,6 +289,7 @@ cp output/species_classes.json output/versions/4.5/species_classes.json
 VERSION=4.5
 mkdir -p ../backend/data/versions/$VERSION
 cp ../backend/data/versions/4.4/authorities.json ../backend/data/versions/$VERSION/  # if unchanged
+python3 extract_authority_rules.py "<stellaris_path>" ../backend/data/versions/$VERSION/authorities.json  # refresh potential/possible
 cp output/versions/$VERSION/traits.json ../backend/data/versions/$VERSION/
 cp output/versions/$VERSION/civics_civics_only.json ../backend/data/versions/$VERSION/civics.json
 cp output/versions/$VERSION/civics_origins_only.json ../backend/data/versions/$VERSION/origins.json
@@ -309,7 +310,7 @@ cp output/versions/$VERSION/species_classes.json ../backend/data/versions/$VERSI
 3. Localization updates (text changes)
 4. Bug fixes in game files
 
-**Note:** `authorities.json` is not extracted by `extract_all.py` (rarely changes). Copy from previous version if unchanged.
+**Note:** `authorities.json`'s core fields (election rules, tags, modifiers) are not extracted by `extract_all.py` and are hand-maintained - copy from the previous version if unchanged. Its `potential`/`possible` fields (the same requirement DSL as civics/origins, e.g. Machine Intelligence requiring `species_archetype: MACHINE`) ARE extracted, by `extract_authority_rules.py`, and `extract_all.py` auto-merges them into `backend/data/versions/<X.Y>/authorities.json` if that file already exists at extraction time. For a brand-new version, `authorities.json` doesn't exist yet when `extract_all.py` runs (see step 4), so run `extract_authority_rules.py` manually right after copying it from the previous version.
 
 ### Key Technical Details
 

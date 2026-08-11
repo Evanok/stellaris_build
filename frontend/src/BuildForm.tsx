@@ -191,6 +191,8 @@ interface Authority {
   required_ethics: string[];
   blocked_ethics: string[];
   required_dlc?: string;
+  potential?: PredicateNode;
+  possible?: PredicateNode;
 }
 
 interface Civic {
@@ -1039,6 +1041,18 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     };
 
     const warnings: string[] = [];
+
+    if (selectedAuthority) {
+      const authority = allAuthorities.find(a => a.id === selectedAuthority);
+      if (authority) {
+        getFailingConditions(authority.possible, ctx).forEach(reason =>
+          warnings.push(`Authority "${authority.name}": ${reason}`)
+        );
+        getFailingConditions(authority.potential, ctx).forEach(reason =>
+          warnings.push(`Authority "${authority.name}": ${reason}`)
+        );
+      }
+    }
 
     if (selectedOrigin) {
       const origin = allOrigins.find(o => o.id === selectedOrigin);

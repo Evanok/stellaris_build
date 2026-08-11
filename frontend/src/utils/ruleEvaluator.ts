@@ -51,10 +51,8 @@ function evaluateField(field: string, value: unknown, ctx: BuildContext): boolea
     case 'graphical_culture':
       return ctx.graphical_culture === value;
     case 'country_type':
-      // Civics/origins with a non-default country_type (NPC-only) are already
-      // dropped at extraction time - any survivor is a `default` check, which
-      // always holds for a player-created build.
-      return true;
+      // Player-created builds are always country_type "default".
+      return value === 'default';
     case 'host_has_dlc':
       // We have no way to know which DLC a hypothetical build's author owns -
       // assume available rather than block on something we can't check.
