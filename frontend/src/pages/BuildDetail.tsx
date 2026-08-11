@@ -6,6 +6,7 @@ import { useAuth } from '../AuthContext';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
 import RatingStars from '../components/RatingStars';
 import { invalidateBuildsCache } from './Home';
+import { PredicateNode, getFailingNodes, describePredicateHuman } from '../utils/ruleEvaluator';
 
 interface Build {
   id: number;
@@ -50,6 +51,9 @@ interface Origin {
   name: string;
   description: string;
   effects: string;
+  potential?: PredicateNode;
+  possible?: PredicateNode;
+  modifier?: Record<string, number>;
 }
 
 interface Ethic {
@@ -65,6 +69,8 @@ interface Authority {
   name: string;
   description: string;
   effects: string;
+  potential?: PredicateNode;
+  possible?: PredicateNode;
 }
 
 interface Civic {
@@ -73,6 +79,8 @@ interface Civic {
   description: string;
   effects: string;
   tooltip?: string;
+  potential?: PredicateNode;
+  possible?: PredicateNode;
 }
 
 interface AscensionPerk {
@@ -179,6 +187,7 @@ export const BuildDetail: React.FC = () => {
   const [allAscensionPerks, setAllAscensionPerks] = useState<AscensionPerk[]>([]);
   const [allTraditionTrees, setAllTraditionTrees] = useState<TraditionTree[]>([]);
   const [allRulerTraits, setAllRulerTraits] = useState<RulerTrait[]>([]);
+  const [speciesArchetypeBudgets, setSpeciesArchetypeBudgets] = useState<Record<string, { trait_points: number | null; max_traits: number | null }>>({});
 
   // Image error states
   const [originImageError, setOriginImageError] = useState(false);
@@ -220,8 +229,10 @@ export const BuildDetail: React.FC = () => {
           fetch(`/api/ascension-perks${qs}`).then(res => res.json()),
           fetch(`/api/traditions${qs}`).then(res => res.json()),
           fetch(`/api/ruler-traits${qs}`).then(res => res.json()),
-        ]).then(([speciesClasses, traits, origins, ethics, authorities, civics, perks, traditions, rulerTraits]) => {
+          fetch(`/api/species-archetypes${qs}`).then(res => res.json()),
+        ]).then(([speciesClasses, traits, origins, ethics, authorities, civics, perks, traditions, rulerTraits, archetypeBudgets]) => {
           setAllSpeciesClasses(speciesClasses);
+          setSpeciesArchetypeBudgets(archetypeBudgets && typeof archetypeBudgets === 'object' ? archetypeBudgets : {});
           setAllTraits(traits);
           setAllOrigins(Array.isArray(origins) ? origins : (origins.origins || []));
           setAllEthics(ethics);
@@ -487,6 +498,90 @@ export const BuildDetail: React.FC = () => {
     lines.push(`\tis_nomadic=${b.is_nomadic ? 'yes' : 'no'}`);
     lines.push('}');
     return lines.join('\n');
+  };
+
+  const resolveExportRuleLabel = (field: string, value: unknown): string => {
+    const id = String(value);
+    switch (field) {
+      case 'ethics': return getEthicData(id)?.name || id;
+      case 'civics': return getCivicData(id)?.name || id;
+      case 'authority': return getAuthorityData(id)?.name || id;
+      case 'origin': return getOriginData(id)?.name || id;
+      case 'species_archetype': return id.charAt(0) + id.slice(1).toLowerCase();
+      default: return id;
+    }
+  };
+
+  // Same rule check as BuildForm.tsx's submit-time warning (non-blocking) -
+  // re-run here since a build can be edited/re-extracted after creation, and
+  // the export is a separate action from submit.
+  const getExportRuleWarnings = (): string[] => {
+    const b = build!;
+    const ethics = parseList(b.ethics);
+    const civics = parseList(b.civics);
+    const traits = parseList(b.traits);
+    const speciesArchetype = getSpeciesClassData(b.species_class || '')?.archetype;
+
+    const ctx = {
+      ethics,
+      authority: b.authority || undefined,
+      civics,
+      origin: b.origin || undefined,
+      species_archetype: speciesArchetype,
+      traits,
+      is_nomadic: !!b.is_nomadic,
+    };
+
+    const warnings: string[] = [];
+    const addWarnings = (label: string, node: PredicateNode | undefined) => {
+      getFailingNodes(node, ctx).forEach(failing =>
+        warnings.push(`${label} requires ${describePredicateHuman(failing, resolveExportRuleLabel)}`)
+      );
+    };
+
+    if (speciesArchetype) {
+      const budget = speciesArchetypeBudgets[speciesArchetype];
+      if (budget && budget.trait_points != null && budget.max_traits != null) {
+        const originModifier = (b.origin && getOriginData(b.origin)?.modifier) || {};
+        const pointsBonus = originModifier[`${speciesArchetype}_species_trait_points_add`] || 0;
+        const picksBonus = originModifier[`${speciesArchetype}_species_trait_picks_add`] || 0;
+        const maxPoints = budget.trait_points + pointsBonus;
+        const maxCount = budget.max_traits + picksBonus;
+        const traitPoints = traits.reduce((sum, tId) => sum + getTraitCost(getTraitData(tId)?.cost), 0);
+        const traitCount = traits.filter(tId => getTraitCost(getTraitData(tId)?.cost) !== 0).length;
+        if (traitPoints > maxPoints) {
+          warnings.push(`Species traits: ${traitPoints} trait points spent, but ${resolveExportRuleLabel('species_archetype', speciesArchetype)} species allow only ${maxPoints}`);
+        }
+        if (traitCount > maxCount) {
+          warnings.push(`Species traits: ${traitCount} traits selected, but ${resolveExportRuleLabel('species_archetype', speciesArchetype)} species allow only ${maxCount}`);
+        }
+      }
+    }
+
+    if (b.authority) {
+      const authority = getAuthorityData(b.authority);
+      if (authority) {
+        addWarnings(`Authority "${authority.name}"`, authority.possible);
+        addWarnings(`Authority "${authority.name}"`, authority.potential);
+      }
+    }
+
+    if (b.origin) {
+      const origin = getOriginData(b.origin);
+      if (origin) {
+        addWarnings(`Origin "${origin.name}"`, origin.possible);
+        addWarnings(`Origin "${origin.name}"`, origin.potential);
+      }
+    }
+
+    for (const civicId of civics) {
+      const civic = getCivicData(civicId);
+      if (!civic) continue;
+      addWarnings(`Civic "${civic.name}"`, civic.possible);
+      addWarnings(`Civic "${civic.name}"`, civic.potential);
+    }
+
+    return warnings;
   };
 
   const handleCopyExport = async () => {
@@ -1303,6 +1398,25 @@ export const BuildDetail: React.FC = () => {
                     track are filled with generic placeholders below - edit them as you like once
                     pasted in.
                   </div>
+                  {(() => {
+                    const exportWarnings = getExportRuleWarnings();
+                    if (exportWarnings.length === 0) return null;
+                    return (
+                      <div className="alert alert-danger">
+                        <strong><i className="bi bi-exclamation-triangle me-2"></i>Possible Rule Conflict</strong>
+                        <div className="mt-1">
+                          This build might not be valid in-game, based on rules we extract from the
+                          game files. This check is new and may have false positives or miss real
+                          conflicts - use it as a hint, not a guarantee. You can still export and try it.
+                        </div>
+                        <ul className="mb-0 mt-2">
+                          {exportWarnings.map((warning, idx) => (
+                            <li key={idx}><code className="text-warning-emphasis">{warning}</code></li>
+                          ))}
+                        </ul>
+                      </div>
+                    );
+                  })()}
                   <ol className="mb-3">
                     <li>Copy the text below.</li>
                     <li>
