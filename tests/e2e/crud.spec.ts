@@ -1,5 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import { loginAsTestUser, logout } from '../helpers/auth';
+import { submitBuildForm } from '../helpers/submit';
 
 /**
  * CRUD Tests for Build Management
@@ -50,10 +51,8 @@ async function createSimpleBuild(page: Page, buildName: string) {
   await validTrait.scrollIntoViewIfNeeded();
   await validTrait.click();
 
-  // Submit - scroll to button first
-  const submitButton = page.locator('button:has-text("Submit Build")');
-  await submitButton.scrollIntoViewIfNeeded();
-  await submitButton.click();
+  // Submit - scroll to button first, dismiss any non-blocking rule/description warning
+  await submitBuildForm(page);
   await page.waitForURL('/', { timeout: 10000 });
 }
 
@@ -109,7 +108,7 @@ test.describe('Build Creation - Valid Builds', () => {
     await trait1.scrollIntoViewIfNeeded();
     await trait1.click();
 
-    await page.click('button:has-text("Submit Build")');
+    await submitBuildForm(page);
     await page.waitForURL('/');
 
     const buildCard = page.locator('.card').filter({ hasText: buildName });
@@ -150,7 +149,7 @@ test.describe('Build Creation - Valid Builds', () => {
     await lithoidTrait.scrollIntoViewIfNeeded();
     await lithoidTrait.click();
 
-    await page.click('button:has-text("Submit Build")');
+    await submitBuildForm(page);
     await page.waitForURL('/');
 
     const buildCard = page.locator('.card').filter({ hasText: buildName });
@@ -358,7 +357,7 @@ test.describe('Build Permissions', () => {
 
     // Button should still be enabled after name change
     await expect(updateButton).toBeEnabled();
-    await updateButton.click();
+    await submitBuildForm(page, 'Update Build');
 
     // Should redirect to build detail
     await page.waitForURL(/\/build\/\d+/);
