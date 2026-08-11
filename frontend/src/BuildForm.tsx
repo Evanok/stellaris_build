@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { AuthModal } from './components/AuthModal';
 import { decodeHtmlEntities } from './utils/htmlDecode';
+import { PredicateNode, findFieldOccurrences, getFailingConditions } from './utils/ruleEvaluator';
 
 interface BuildFormProps {
   onBuildCreated: (newBuild: any) => void;
@@ -124,8 +125,8 @@ interface Origin {
   name: string;
   description: string;
   effects: string;
-  potential: any[]; // Conditions that filter visibility (e.g., species_archetype)
-  possible: any[];
+  potential: PredicateNode; // Conditions that filter visibility (e.g., species_archetype)
+  possible: PredicateNode;
   playable_conditions?: string;
   is_origin: boolean;
   pickable_at_start: boolean;
@@ -199,8 +200,8 @@ interface Civic {
   playable: boolean;
   pickable_at_start: boolean;
   description: string;
-  potential: any[]; // Conditions that filter visibility
-  possible: any[]; // Requirements that must be met
+  potential: PredicateNode; // Conditions that filter visibility
+  possible: PredicateNode; // Requirements that must be met
   effects: string;
   modifier?: {
     [key: string]: number;
@@ -344,6 +345,12 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const [showDescriptionWarning, setShowDescriptionWarning] = useState(false);
   const skipDescriptionWarningRef = useRef(false);
 
+  // Warn on submit if the completed build violates a game rule we can check
+  // (experimental - see ruleWarnings computation in handleSubmit)
+  const [showRuleWarning, setShowRuleWarning] = useState(false);
+  const [ruleWarnings, setRuleWarnings] = useState<string[]>([]);
+  const skipRuleWarningRef = useRef(false);
+
   // Track whether the user manually changed the version (vs initial load or initialData population)
   const userChangedVersion = useRef(false);
 
@@ -428,7 +435,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       const civicsArray = Array.isArray(civicsRaw) ? civicsRaw : (civicsRaw.civics || []);
       const sanitizedCivics = civicsArray
         .filter((c: any) => c.pickable_at_start && !c.is_origin)
-        .map((c: any) => ({ ...c, description: typeof c.description === 'string' ? c.description : '', effects: typeof c.effects === 'string' ? c.effects : '', potential: Array.isArray(c.potential) ? c.potential : [], possible: Array.isArray(c.possible) ? c.possible : [] }))
+        .map((c: any) => ({ ...c, description: typeof c.description === 'string' ? c.description : '', effects: typeof c.effects === 'string' ? c.effects : '', potential: c.potential && typeof c.potential === 'object' ? c.potential : { all: [] }, possible: c.possible && typeof c.possible === 'object' ? c.possible : { all: [] } }))
         .sort((a: any, b: any) => a.id.localeCompare(b.id));
       setAllCivics(sanitizedCivics);
 
@@ -646,18 +653,17 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       return false;
     }
 
-    const potential = civic.potential || [];
-
-    // Check if civic requires a specific origin
-    for (const condition of potential) {
-      if (typeof condition === 'string' && condition.startsWith('origin:')) {
-        const requiredOrigin = condition.replace('origin:', '').trim();
-        // Check if the required origin exists in our available origins list
-        const originExists = allOrigins.some(o => o.id === requiredOrigin);
-        if (!originExists) {
-          return false; // Filter out this civic
-        }
-      }
+    // Check if civic requires a specific origin that isn't offered at empire
+    // creation (negated occurrences don't count - "NOT origin X" can't make an
+    // origin unavailable, only a positive "origin == X" requirement can).
+    const requiredOrigins = findFieldOccurrences(civic.potential, 'origin')
+      .filter(o => !o.negated)
+      .map(o => o.value as string);
+    const hasUnavailableRequiredOrigin = requiredOrigins.some(
+      requiredOrigin => !allOrigins.some(o => o.id === requiredOrigin)
+    );
+    if (hasUnavailableRequiredOrigin) {
+      return false;
     }
     return true;
   });
@@ -712,10 +718,15 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
   // Filter origins only by search query - no species archetype restrictions
   const filteredOrigins = allOrigins.filter(origin => {
-    // Filter by species type (MACHINE vs NOT MACHINE)
-    const possible = origin.possible || [];
-    const requiresMachine = possible.includes('species_archetype:MACHINE');
-    const requiresNotMachine = possible.includes('NOT species_archetype:MACHINE');
+    // Filter by species type (MACHINE vs NOT MACHINE). Origin is picked before
+    // ethics/authority/civics in this form, so we deliberately only check the
+    // species_archetype occurrences here rather than running the full
+    // evaluator against `possible` - a full evaluation would read those
+    // as-yet-unselected fields as "not chosen" and wrongly hide origins that
+    // require a specific authority/ethic the user just hasn't picked yet.
+    const speciesArchetypeOccurrences = findFieldOccurrences(origin.possible, 'species_archetype');
+    const requiresMachine = speciesArchetypeOccurrences.some(o => !o.negated && o.value === 'MACHINE');
+    const requiresNotMachine = speciesArchetypeOccurrences.some(o => o.negated && o.value === 'MACHINE');
 
     const speciesArchetype = getSpeciesArchetype(selectedSpeciesClass);
     const isMachineSpecies = speciesArchetype === 'MACHINE' || speciesArchetype === 'ROBOT';
@@ -1012,6 +1023,55 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     document.getElementById('buildDescription')?.focus();
   };
 
+  // Experimental: check the completed build against the rules we can extract
+  // from the game files. Only run once every relevant field is filled in
+  // (submit time) - checking mid-form would misfire on fields the user
+  // hasn't reached yet (origin is picked before ethics/authority/civics).
+  const getRuleWarnings = (): string[] => {
+    const ctx = {
+      ethics: selectedEthics,
+      authority: selectedAuthority,
+      civics: selectedCivics,
+      origin: selectedOrigin || undefined,
+      species_archetype: getSpeciesArchetype(selectedSpeciesClass),
+      traits: selectedTraits,
+      is_nomadic: isNomadic,
+    };
+
+    const warnings: string[] = [];
+
+    if (selectedOrigin) {
+      const origin = allOrigins.find(o => o.id === selectedOrigin);
+      if (origin) {
+        getFailingConditions(origin.possible, ctx).forEach(reason =>
+          warnings.push(`Origin "${origin.name}": ${reason}`)
+        );
+      }
+    }
+
+    for (const civicId of selectedCivics) {
+      const civic = allCivics.find(c => c.id === civicId);
+      if (!civic) continue;
+      getFailingConditions(civic.possible, ctx).forEach(reason =>
+        warnings.push(`Civic "${civic.name}": ${reason}`)
+      );
+    }
+
+    return warnings;
+  };
+
+  const handleConfirmSubmitWithRuleWarning = () => {
+    setShowRuleWarning(false);
+    skipRuleWarningRef.current = true;
+    setTimeout(() => {
+      document.getElementById('build-form')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    }, 100);
+  };
+
+  const handleBackToEditFromRuleWarning = () => {
+    setShowRuleWarning(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -1059,6 +1119,18 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       return;
     }
     skipDescriptionWarningRef.current = false;
+
+    // Experimental non-blocking check against extracted game rules (origin +
+    // civics only for now). See TODO.md section 3b for the full plan.
+    if (!skipRuleWarningRef.current) {
+      const warnings = getRuleWarnings();
+      if (warnings.length > 0) {
+        setRuleWarnings(warnings);
+        setShowRuleWarning(true);
+        return;
+      }
+    }
+    skipRuleWarningRef.current = false;
 
     setSubmitting(true);
 
@@ -2282,6 +2354,49 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                   Go Back &amp; Add Description
                 </button>
                 <button type="button" className="btn btn-warning" onClick={handleConfirmSubmitWithoutDescription}>
+                  Submit Anyway
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Rule Violation Warning Modal (experimental) */}
+      {showRuleWarning && (
+        <div
+          className="modal show d-block"
+          tabIndex={-1}
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+          onClick={(e) => { if (e.target === e.currentTarget) handleBackToEditFromRuleWarning(); }}
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content bg-dark text-white border-secondary">
+              <div className="modal-header border-secondary">
+                <h5 className="modal-title">
+                  <i className="bi bi-exclamation-triangle text-warning me-2"></i>
+                  Possible Rule Conflict
+                </h5>
+                <button type="button" className="btn-close btn-close-white" onClick={handleBackToEditFromRuleWarning}></button>
+              </div>
+              <div className="modal-body">
+                <p>
+                  <span className="badge bg-secondary me-2">Experimental</span>
+                  This build combination might not be valid in-game, based on rules we extract from the game
+                  files. This check is new and may have false positives or miss real conflicts - use it as a hint,
+                  not a guarantee.
+                </p>
+                <ul className="mb-0">
+                  {ruleWarnings.map((warning, idx) => (
+                    <li key={idx}><code className="text-warning-emphasis">{warning}</code></li>
+                  ))}
+                </ul>
+              </div>
+              <div className="modal-footer border-secondary">
+                <button type="button" className="btn btn-secondary" onClick={handleBackToEditFromRuleWarning}>
+                  Go Back &amp; Edit
+                </button>
+                <button type="button" className="btn btn-warning" onClick={handleConfirmSubmitWithRuleWarning}>
                   Submit Anyway
                 </button>
               </div>
