@@ -6,7 +6,7 @@ import { useAuth } from '../AuthContext';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
 import RatingStars from '../components/RatingStars';
 import { invalidateBuildsCache } from './Home';
-import { PredicateNode, getFailingNodes, describePredicateHuman } from '../utils/ruleEvaluator';
+import { PredicateNode, BuildContext, evaluatePredicate, getFailingNodes, describePredicateHuman } from '../utils/ruleEvaluator';
 
 interface Build {
   id: number;
@@ -201,6 +201,10 @@ export const BuildDetail: React.FC = () => {
   // Stellaris custom empire export
   const [showExportModal, setShowExportModal] = useState(false);
   const [exportCopied, setExportCopied] = useState(false);
+  // Only used when the build has >2 civics (game allows 2 at creation) - lets
+  // the viewer pick which to include, pre-filled with a rule-valid pair when
+  // one exists. null means "use the computed default", not "none selected".
+  const [selectedExportCivics, setSelectedExportCivics] = useState<string[] | null>(null);
 
   // Rating state
   const [averageRating, setAverageRating] = useState<number>(0);
@@ -210,6 +214,8 @@ export const BuildDetail: React.FC = () => {
 
   useEffect(() => {
     if (!id) return;
+
+    setSelectedExportCivics(null);
 
     // First fetch the build to know its game version, then load matching game data
     fetch(`/api/builds/${id}`)
@@ -379,6 +385,55 @@ export const BuildDetail: React.FC = () => {
     return ['trait_organic'];
   };
 
+  // Shared context (ethics/authority/origin/species archetype/traits/nomadic) for
+  // evaluating civic possible/potential against the rest of the build's picks.
+  // Does not include `civics` - callers fill that in per candidate pair.
+  const getBaseRuleContext = (): Omit<BuildContext, 'civics'> => {
+    const b = build!;
+    return {
+      ethics: parseList(b.ethics),
+      authority: b.authority || undefined,
+      origin: b.origin || undefined,
+      species_archetype: getSpeciesClassData(b.species_class || '')?.archetype,
+      traits: parseList(b.traits),
+      is_nomadic: !!b.is_nomadic,
+    };
+  };
+
+  // GOVERNMENT_CIVIC_POINTS_BASE in common/defines/00_defines.txt - 2 civics max
+  // at creation. When a build has more, default the export to a pair whose own
+  // possible/potential both hold given the rest of the build - falls back to
+  // the first 2 (in stored order) if every pair is equally valid (or none is).
+  const pickDefaultExportCivics = (civicIds: string[]): string[] => {
+    if (civicIds.length <= 2) return civicIds;
+    const baseCtx = getBaseRuleContext();
+    for (let i = 0; i < civicIds.length; i++) {
+      for (let j = i + 1; j < civicIds.length; j++) {
+        const pair = [civicIds[i], civicIds[j]];
+        const ctx: BuildContext = { ...baseCtx, civics: pair };
+        const valid = pair.every(cid => {
+          const c = getCivicData(cid);
+          return !!c && evaluatePredicate(c.possible, ctx) && evaluatePredicate(c.potential, ctx);
+        });
+        if (valid) return pair;
+      }
+    }
+    return civicIds.slice(0, 2);
+  };
+
+  const fullExportCivics = build ? parseList(build.civics) : [];
+  const effectiveExportCivics = fullExportCivics.length > 2
+    ? (selectedExportCivics || pickDefaultExportCivics(fullExportCivics))
+    : fullExportCivics;
+
+  const toggleExportCivic = (civicId: string) => {
+    if (effectiveExportCivics.includes(civicId)) {
+      setSelectedExportCivics(effectiveExportCivics.filter(c => c !== civicId));
+    } else if (effectiveExportCivics.length < 2) {
+      setSelectedExportCivics([...effectiveExportCivics, civicId]);
+    }
+  };
+
   // Generates a Stellaris custom empire design block (user_empire_designs_v3.4.txt format).
   // Fields our data model doesn't capture (ruler name/portrait details, planet/system name,
   // flag, name_list) are filled with fixed placeholders - Stellaris's empire creation screen
@@ -390,12 +445,14 @@ export const BuildDetail: React.FC = () => {
     const portrait = b.portrait || 'human';
     const speciesClassData = getSpeciesClassData(speciesClass);
     const ethics = parseList(b.ethics);
-    const civics = parseList(b.civics);
+    const civics = effectiveExportCivics;
 
     const mandatoryTraits = getClassMandatoryTraits(speciesClass, speciesClassData?.archetype);
     if (b.authority === 'auth_hive_mind') mandatoryTraits.push('trait_hive_mind');
     if (b.origin && ORIGIN_MANDATORY_TRAITS[b.origin]) mandatoryTraits.push(...ORIGIN_MANDATORY_TRAITS[b.origin]);
     const traits = [...new Set([...mandatoryTraits, ...parseList(b.traits)])];
+    // Civics are capped to 2 for export (see effectiveExportCivics) even if the
+    // build itself lists more - the design file would otherwise be rejected in-game.
 
     const literalBlock = (text: string, indent: string): string =>
       `${indent}{\n${indent}\tkey="${text}"\n${indent}\tliteral=yes\n${indent}}`;
@@ -525,7 +582,9 @@ export const BuildDetail: React.FC = () => {
   const getExportRuleWarnings = (): string[] => {
     const b = build!;
     const ethics = parseList(b.ethics);
-    const civics = parseList(b.civics);
+    // The exported design is always capped to 2 civics (see effectiveExportCivics) -
+    // check against what will actually be exported, not the build's full list.
+    const civics = effectiveExportCivics;
     const traits = parseList(b.traits);
     const speciesArchetype = getSpeciesClassData(b.species_class || '')?.archetype;
 
@@ -545,12 +604,6 @@ export const BuildDetail: React.FC = () => {
         warnings.push(`${label} requires ${describePredicateHuman(failing, resolveExportRuleLabel)}`)
       );
     };
-
-    // GOVERNMENT_CIVIC_POINTS_BASE in common/defines/00_defines.txt - 2 civics
-    // max at creation, confirmed in-game. Mirrors BuildForm.tsx's MAX_CIVIC_SLOTS.
-    if (civics.length > 2) {
-      warnings.push(`Civics: ${civics.length} selected, but the game only allows 2 at empire creation`);
-    }
 
     if (speciesArchetype) {
       const budget = speciesArchetypeBudgets[speciesArchetype];
@@ -1426,6 +1479,44 @@ export const BuildDetail: React.FC = () => {
                     track are filled with generic placeholders below - edit them as you like once
                     pasted in.
                   </div>
+                  {fullExportCivics.length > 2 && (
+                    <div className="alert alert-secondary bg-secondary text-white border-secondary">
+                      <strong>
+                        <i className="bi bi-gear me-2"></i>
+                        This build has {fullExportCivics.length} civics, but Stellaris only allows 2 at
+                        empire creation.
+                      </strong>
+                      <div className="mt-1 mb-2">
+                        Pick which 2 to include in the export (pre-selected with a rule-valid pair
+                        when one exists):
+                      </div>
+                      <div className="d-flex flex-column gap-2">
+                        {fullExportCivics.map(civicId => {
+                          const civic = getCivicData(civicId);
+                          const checked = effectiveExportCivics.includes(civicId);
+                          const disabled = !checked && effectiveExportCivics.length >= 2;
+                          return (
+                            <div className="form-check" key={civicId}>
+                              <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id={`export-civic-${civicId}`}
+                                checked={checked}
+                                disabled={disabled}
+                                onChange={() => toggleExportCivic(civicId)}
+                              />
+                              <label
+                                className={`form-check-label ${disabled ? 'text-muted' : ''}`}
+                                htmlFor={`export-civic-${civicId}`}
+                              >
+                                {civic?.name || civicId}
+                              </label>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                   {(() => {
                     const exportWarnings = getExportRuleWarnings();
                     if (exportWarnings.length === 0) return null;
