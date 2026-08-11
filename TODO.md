@@ -6,7 +6,7 @@ from any checkout.
 
 ---
 
-## 1. DONE (4.4 and 4.3) - `OR`/`NOR` requirements were extracted as `NOT`
+## 1. DONE (4.2, 4.3, 4.4 - all versions) - `OR`/`NOR` requirements were extracted as `NOT`
 
 Fixed in `extract_civics_and_origins.py`. `extract_trigger_info()` now emits a
 structured predicate tree (`{"all"/"any"/"not"/"always"/"field"}`) instead of flat
@@ -14,17 +14,17 @@ strings, covering all 16 predicate forms (was 5). Re-extracted and verified agai
 the wiki for the 26 previously-known-wrong origins, zero `"unsupported"` shapes across
 the whole civics/origins dataset.
 
-4.3 re-extracted 2026-08-10 after switching the Steam beta to 4.3.0 - same structured
-format confirmed correct (spot-checked `origin_hegemon`, `origin_syncretic_evolution`),
-authority rules and species archetype budgets identical to 4.4 (not just assumed -
-actually re-extracted and diffed; only civics/origins/authorities.json changed,
-traits/ethics/traditions/ascension_perks/species_archetypes were byte-identical to
-what was already there).
+Re-extracted for 4.3 and then 4.2 (2026-08-10) by switching the Steam beta branch
+(Properties > Betas - any past patch level is directly selectable, no special key
+needed; patch-level differences like 4.2.4 vs 4.2.0 don't matter, the site only
+tracks major.minor). Same structured format confirmed correct on both (spot-checked
+`origin_hegemon`, `origin_syncretic_evolution` - note the civics referenced by that
+origin's anti-genocidal check are *different* per version, real historical content
+drift, not a copy-paste). Species archetype trait budgets confirmed identical across
+all three versions (actually re-extracted each time, not assumed).
 
-**Remaining:** 4.2 still has the old, wrong flat-string format. Needs that game
-version checked out (Steam > Properties > Betas). The evaluator treats the old format
-as always-satisfied rather than misfiring, so it under-enforces on 4.2 rather than
-giving wrong verdicts - not a correctness bug, just missing coverage.
+All three versions now audit cleanly with the fixed format - `backend/check_build_rules.js
+audit` checks the whole DB with no more "unverified data" caveat on any build.
 
 ---
 
