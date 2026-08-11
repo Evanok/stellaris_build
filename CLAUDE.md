@@ -230,6 +230,7 @@ Each version folder contains the same set of files:
 - `traditions.json` - tradition trees with adopt/finish/individual traditions
 - `ruler_traits.json` - ruler/leader traits for starting leaders
 - `species_classes.json` - species classes with portrait IDs (18 categories from portrait_categories)
+- `species_archetypes.json` - trait point/pick budget per archetype (BIOLOGICAL/ROBOT/MACHINE/LITHOID/PRESAPIENT/OTHER) - extracted by `extract_species_archetypes.py`, included in `extract_all.py`
 
 Non-versioned files (still in `backend/data/`):
 - `resources.json` - Curated community resources (not game data)
@@ -290,6 +291,8 @@ cp output/species_classes.json output/versions/4.5/species_classes.json
 VERSION=4.5
 mkdir -p ../backend/data/versions/$VERSION
 cp ../backend/data/versions/4.4/authorities.json ../backend/data/versions/$VERSION/  # if unchanged
+python3 extract_authority_rules.py "<stellaris_path>" ../backend/data/versions/$VERSION/authorities.json  # refresh potential/possible
+cp output/versions/$VERSION/species_archetypes.json ../backend/data/versions/$VERSION/
 cp output/versions/$VERSION/traits.json ../backend/data/versions/$VERSION/
 cp output/versions/$VERSION/civics_civics_only.json ../backend/data/versions/$VERSION/civics.json
 cp output/versions/$VERSION/civics_origins_only.json ../backend/data/versions/$VERSION/origins.json
@@ -310,7 +313,7 @@ cp output/versions/$VERSION/species_classes.json ../backend/data/versions/$VERSI
 3. Localization updates (text changes)
 4. Bug fixes in game files
 
-**Note:** `authorities.json` is not extracted by `extract_all.py` (rarely changes). Copy from previous version if unchanged.
+**Note:** `authorities.json`'s core fields (election rules, tags, modifiers) are not extracted by `extract_all.py` and are hand-maintained - copy from the previous version if unchanged. Its `potential`/`possible` fields (the same requirement DSL as civics/origins, e.g. Machine Intelligence requiring `species_archetype: MACHINE`) ARE extracted, by `extract_authority_rules.py`, and `extract_all.py` auto-merges them into `backend/data/versions/<X.Y>/authorities.json` if that file already exists at extraction time. For a brand-new version, `authorities.json` doesn't exist yet when `extract_all.py` runs (see step 4), so run `extract_authority_rules.py` manually right after copying it from the previous version.
 
 ### Key Technical Details
 
@@ -506,6 +509,152 @@ Planned features (not yet implemented):
 ---
 
 ## Recent Completions
+
+### Structured Rule Extraction + Trait Budget Fix + Export Warnings (2026-08-10)
+Civics/origins requirement extraction had a real bug: `extract_civics_and_origins.py`'s
+`extract_trigger_info()` handled only 5 of the 16 predicate forms in the government
+trigger DSL (see `cwtools-stellaris-config` `config/common/governments.cwt`), and
+collapsed `OR`/`NOR` into `NOT` - inverting the meaning for 148 predicates across 115
+civics/origins (confirmed against the wiki: Sacred Path was extracted as requiring
+*not* Spiritualist, when it actually requires it).
+
+**1. Rewrote the extractor** to emit a structured predicate tree instead of flat
+strings: `{"all"/"any"/"not"/"always"/"field"}` nodes, covering all 16 predicate
+forms. Root is always `{"all": [...]}` for a consistent shape. Unrecognized shapes
+are marked `{"unsupported": ...}` rather than silently dropped or mis-encoded.
+Re-extracted `backend/data/versions/4.4/{civics,origins}.json` (4.2/4.3 NOT
+re-extracted yet - old flat-string format there, evaluator treats it as always-satisfied
+since it doesn't match any node shape, i.e. under-enforces rather than misfires).
+Also extracts 3 previously-missing origin fields: `starting_colony`,
+`habitability_preference`, `soft_traits`.
+
+**2. Authorities have the same rule DSL** (`common/governments/authorities/00_authorities.txt`
+uses an identical `possible`/`potential` structure) but had **no extractor at all** -
+`authorities.json` was hand-maintained and its `required_ethics`/`blocked_ethics`
+fields didn't match the real rules (e.g. Democratic's actual rule is "NOT gestalt,
+NOT authoritarian, NOT fanatic_authoritarian", not "requires Egalitarian"). New
+`extract_authority_rules.py` extracts just `potential`/`possible` and merges them into
+the existing hand-maintained `authorities.json` (every other field untouched).
+Confirmed the archetype-authority link exists in-game after all: Machine Intelligence
+requires `species_archetype: MACHINE`, Hive Mind requires `NOT MACHINE`.
+
+**3. Species archetype trait budgets were wrong for MACHINE/ROBOT.** BuildForm.tsx
+hardcoded 2 trait points / 5 max traits for every species. Real budgets (from
+`common/species_archetypes/00_species_archetypes.txt`, confirmed in-game): BIOLOGICAL/
+LITHOID/PRESAPIENT 2/5, **MACHINE 1/5, ROBOT 0/4**. New `extract_species_archetypes.py`,
+new `species_archetypes.json` per version, new `GET /api/species-archetypes`.
+BuildForm.tsx's `MAX_TRAIT_POINTS`/`MAX_TRAIT_COUNT` are now computed from the
+selected species' actual archetype. Caught a real pre-existing invalid build on first
+audit run (a Machine-species build spending 2 points against a 1-point budget).
+
+**4. Civic count was flat-out wrong: `MAX_CIVIC_SLOTS = 3` in `BuildForm.tsx`, but
+`GOVERNMENT_CIVIC_POINTS_BASE = 2` in `common/defines/00_defines.txt` (confirmed
+in-game by trying to select a 3-civic build in the empire selector - it's invalid).
+Found by testing an actual export in-game, not by static analysis. **26 of 65
+published builds (40%) have 3 civics** and are technically invalid. Fixed
+`MAX_CIVIC_SLOTS` to 2 (a handful of narrative/mid-game-only civics - Great Khan's
+Vision, Galactic Sovereign, Psionic Sovereign - grant +1 via
+`country_government_civic_points_add`, but those aren't real creation-time picks, so
+this stays a flat constant rather than dynamic like the trait budget). Existing
+3-civic builds are not retroactively modified - the fix only prevents new ones and
+surfaces a warning (see point 6) when viewing/editing/exporting an old one.
+
+**5. All extraction pieces integrated into the real `extract_all.py` pipeline**, not
+one-off scripts - re-running `extract_all.py` on a fresh checkout regenerates
+everything including the authority rules and archetype budgets (authority rules
+auto-merge into the backend's `authorities.json` if it already exists there; for a
+brand-new version, prints the manual merge command since `authorities.json` doesn't
+exist yet at that point in the version-upgrade process - see "Process for a new
+Stellaris version" above).
+
+**6. Non-blocking "Possible Rule Conflict" warning**, both at `BuildForm.tsx` submit
+and in `BuildDetail.tsx`'s export modal (same check, re-run independently since export
+is a separate action from submit). Evaluates the completed build's origin/authority/
+civics (`possible` AND `potential`), civic count, and trait budget against a shared
+evaluator (`frontend/src/utils/ruleEvaluator.ts`), shown as plain-English messages
+(e.g. `Authority "Democratic" requires none of: ethic "Gestalt Consciousness", ethic
+"Authoritarian", ethic "Fanatic Authoritarian"`) resolved from already-loaded game
+data, not raw ids. Only checked once the whole build is filled in (submit/export
+time) - origin is picked *before* ethics/authority/civics in the form, so a full
+evaluation against a partial build would misfire on fields not chosen yet; the live
+origin/civic filters use a narrower `findFieldOccurrences()` helper instead
+(existence/polarity check, no full context needed).
+
+**7. Standalone-ish CLI** `backend/check_build_rules.js` (`check <build.json>` /
+`check-id <id>` / `audit`) - a Node script sharing `backend/rules/predicateEvaluator.js`
+with the audit tooling, not a true compiled binary (deliberately not pursued further -
+see git history if reconsidering). Reads `GET /api/builds/:id`'s `{build: {...}}`
+wrapper, `GET /api/builds`'s `{builds: [...]}` wrapper, or a bare build object.
+
+**8. Two more bugs found by actually testing exports in-game** (not by static
+analysis - see the export-testing gotcha below for how):
+- **Ruler `leader_class` was hardcoded to `"official"`** regardless of the chosen
+  ruler trait. Each of the 3 leader classes (official/commander/scientist) has its
+  own allowed traits (`leader_class` field, already extracted in `ruler_traits.json`) -
+  e.g. `trait_ruler_warlike` (Warlike) is commander-only, so a build using it exported
+  with a class/trait mismatch. Fixed: `BuildDetail.tsx`'s export now reads the selected
+  ruler trait's actual `leader_class` and uses that (falls back to `"official"` only
+  when no ruler trait is set - a ruler still needs some class to exist).
+- **Species traits were only filtered one-way for archetype compatibility.**
+  `BuildForm.tsx`'s trait list checked "hide MACHINE-tagged traits from non-machine
+  species" but never the reverse, so BIOLOGICAL/LITHOID-only traits (e.g. Very Strong,
+  Solitary) stayed selectable - and selected - for a MACHINE species build,
+  confirmed invalid in-game (empire creator flags "portrait conflicts with selected
+  traits"). Fixed: `filteredTraits` now checks the trait's real `allowed_archetypes`
+  both ways (empty list = universal, only 1 vanilla trait is like that). Same
+  double-check pattern added to the submit/export warnings and `check_build_rules.js`.
+
+**Known limitations, not yet fixed:**
+- `origin_legendary_leader`'s 3 late-game story variants (`_death`/`_imperial`/
+  `_dictatorial`) are correctly excluded from `origins.json` (self-referential
+  `potential`, `random_weight = 0` - not real creation-time choices), but authority
+  rules that reference those specific ids by name (e.g. Democratic's origin exclusion
+  list) can never match our merged generic id. Narrow, rare edge case.
+- `host_has_dlc` and `country_type` beyond `"default"` are not meaningfully checked
+  (assumed true) - no way to know which DLC a build's author owns.
+- `limit`-scoped sub-triggers (scope changes, e.g. planet/pop scope) are marked
+  unsupported and treated as satisfied rather than evaluated.
+- 4.2/4.3 still have the old flat-string predicate format - re-extraction needs
+  those game versions checked out via Steam (Properties > Betas), not done this session.
+- Secondary species traits (`filteredSecondaryTraits` in `BuildForm.tsx`, for origins
+  like Necrophage/Syncretic Evolution) aren't filtered by archetype at all yet - no
+  secondary species class selector exists to know which archetype to filter against
+  (pre-existing TODO, not addressed this session).
+
+**Export-file testing gotcha:** `user_empire_designs_v3.4.txt` accumulates real
+Stellaris design blocks over time and can already contain many vanilla/prescripted
+empires (`key="PRESCRIPTED_..."` placeholders, real `government`/`room`/`leader_class`
+values) that look superficially similar to what this site generates. When checking
+`error.log` for a specific build's export, don't trust a line number alone - confirm
+the block belongs to *this* export by grepping for markers unique to our generator
+(`"Fix Me"`, `gov_fallback`) or the exact build name. Confirmed the game parses this
+file very early during load (errors appear in `error.log` seconds after mod-loading
+messages, well before the empire selection screen) - reaching the main menu and
+quitting is enough to trigger validation.
+
+**9. Re-extracted 4.3 after switching the Steam beta branch** - confirmed the fixed
+extractor produces the same correct structured format there too (spot-checked
+`origin_hegemon`/`origin_syncretic_evolution`), and that authority rules and species
+archetype trait budgets are identical to 4.4 (previously only assumed/copied - now
+actually verified). Only `civics.json`/`origins.json`/`authorities.json` changed;
+`traits`/`ethics`/`traditions`/`ascension_perks`/`species_archetypes` came back
+byte-identical. 4.2 still not done (needs that version checked out separately).
+
+**10. Bug in the new trait/archetype check itself:** builds with no `species_class`
+set (13 of 65 - mostly the site's earliest builds, October 2025, predating the
+Species Portrait System feature from 2026-06-07) got every archetype-restricted trait
+flagged as a false violation, because an unmapped species class resolves to
+`species_archetype: undefined`, and `undefined` trivially fails `allowed.includes(...)`
+for any non-empty restriction list. Fixed by only running the trait/archetype check
+when the archetype is actually known, in both `check_build_rules.js` and
+`BuildForm.tsx` (`BuildDetail.tsx`'s export check was already correctly guarded).
+
+**Key files:** `data-extractor/extract_civics_and_origins.py`,
+`data-extractor/extract_authority_rules.py`, `data-extractor/extract_species_archetypes.py`,
+`data-extractor/extract_all.py`, `frontend/src/utils/ruleEvaluator.ts`,
+`backend/rules/predicateEvaluator.js`, `backend/check_build_rules.js`,
+`frontend/src/BuildForm.tsx`, `frontend/src/pages/BuildDetail.tsx`,
+`backend/data/versions/{4.3,4.4}/{civics,origins,authorities,species_archetypes}.json`
 
 ### Social Link Previews (2026-08-10)
 Pasting a build URL into Slack/Discord/Reddit showed the generic site title, the generic description, and **no image at all**. Two independent bugs:

@@ -6,6 +6,7 @@ import { useAuth } from '../AuthContext';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
 import RatingStars from '../components/RatingStars';
 import { invalidateBuildsCache } from './Home';
+import { PredicateNode, getFailingNodes, describePredicateHuman } from '../utils/ruleEvaluator';
 
 interface Build {
   id: number;
@@ -43,6 +44,7 @@ interface Trait {
   description: string;
   cost: number;
   effects: string;
+  allowed_archetypes?: string[];
 }
 
 interface Origin {
@@ -50,6 +52,9 @@ interface Origin {
   name: string;
   description: string;
   effects: string;
+  potential?: PredicateNode;
+  possible?: PredicateNode;
+  modifier?: Record<string, number>;
 }
 
 interface Ethic {
@@ -65,6 +70,8 @@ interface Authority {
   name: string;
   description: string;
   effects: string;
+  potential?: PredicateNode;
+  possible?: PredicateNode;
 }
 
 interface Civic {
@@ -73,6 +80,8 @@ interface Civic {
   description: string;
   effects: string;
   tooltip?: string;
+  potential?: PredicateNode;
+  possible?: PredicateNode;
 }
 
 interface AscensionPerk {
@@ -102,6 +111,7 @@ interface RulerTrait {
   description: string;
   effects: string;
   icon?: string;
+  leader_class?: string[];
 }
 
 interface SpeciesClass {
@@ -179,6 +189,7 @@ export const BuildDetail: React.FC = () => {
   const [allAscensionPerks, setAllAscensionPerks] = useState<AscensionPerk[]>([]);
   const [allTraditionTrees, setAllTraditionTrees] = useState<TraditionTree[]>([]);
   const [allRulerTraits, setAllRulerTraits] = useState<RulerTrait[]>([]);
+  const [speciesArchetypeBudgets, setSpeciesArchetypeBudgets] = useState<Record<string, { trait_points: number | null; max_traits: number | null }>>({});
 
   // Image error states
   const [originImageError, setOriginImageError] = useState(false);
@@ -186,6 +197,10 @@ export const BuildDetail: React.FC = () => {
   // Delete state
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  // Stellaris custom empire export
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [exportCopied, setExportCopied] = useState(false);
 
   // Rating state
   const [averageRating, setAverageRating] = useState<number>(0);
@@ -216,8 +231,10 @@ export const BuildDetail: React.FC = () => {
           fetch(`/api/ascension-perks${qs}`).then(res => res.json()),
           fetch(`/api/traditions${qs}`).then(res => res.json()),
           fetch(`/api/ruler-traits${qs}`).then(res => res.json()),
-        ]).then(([speciesClasses, traits, origins, ethics, authorities, civics, perks, traditions, rulerTraits]) => {
+          fetch(`/api/species-archetypes${qs}`).then(res => res.json()),
+        ]).then(([speciesClasses, traits, origins, ethics, authorities, civics, perks, traditions, rulerTraits, archetypeBudgets]) => {
           setAllSpeciesClasses(speciesClasses);
+          setSpeciesArchetypeBudgets(archetypeBudgets && typeof archetypeBudgets === 'object' ? archetypeBudgets : {});
           setAllTraits(traits);
           setAllOrigins(Array.isArray(origins) ? origins : (origins.origins || []));
           setAllEthics(ethics);
@@ -321,6 +338,290 @@ export const BuildDetail: React.FC = () => {
   const getAscensionPerkData = (perkId: string) => allAscensionPerks.find(p => p.id === perkId);
   const getTraditionData = (treeId: string) => allTraditionTrees.find(t => t.name === treeId);
   const getRulerTraitData = (traitId: string) => allRulerTraits.find(t => t.id === traitId);
+
+  // Stellaris silently assigns each species a hidden class trait (e.g. trait_organic,
+  // trait_lithoid) and some origins require their own hidden trait (e.g. origin_cybernetic_creed
+  // needs trait_cyborg_ritualistic_implants) - normally added automatically, but a custom empire
+  // design file must list them explicitly or the design is rejected as invalid. Table extracted
+  // from common/governments/civics/00_origins.txt ("traits"/"soft_traits" blocks).
+  const ORIGIN_MANDATORY_TRAITS: Record<string, string[]> = {
+    origin_clone_army: ['trait_clone_soldier_infertile'],
+    origin_cybernetic_creed: ['trait_cyborg_ritualistic_implants'],
+    origin_evolutionary_predators: ['trait_malleable_genes'],
+    origin_legendary_leader: ['trait_perfected_genes'],
+    origin_legendary_leader_death: ['trait_perfected_genes'],
+    origin_legendary_leader_dictatorial: ['trait_perfected_genes'],
+    origin_legendary_leader_imperial: ['trait_perfected_genes'],
+    origin_necrophage: ['trait_necrophage'],
+    origin_ocean_machines: ['trait_robot_aquatic'],
+    origin_ocean_paradise: ['trait_aquatic'],
+    origin_post_apocalyptic: ['trait_survivor'],
+    origin_post_apocalyptic_machines: ['trait_robot_survivor'],
+    origin_shroudwalker_apprentice: ['trait_latent_psionic'],
+    origin_subterranean: ['trait_cave_dweller'],
+    origin_subterranean_machines: ['trait_robot_cave_dweller'],
+    origin_syncretic_evolution: ['trait_syncretic_proles'],
+    origin_synthetic_fertility: ['trait_pathogenic_genes'],
+    origin_unplugged: ['trait_unplugged_cybernetic_positives_3', 'trait_unplugged_cybernetic_negatives_3'],
+    origin_void_dwellers: ['trait_void_dweller_1'],
+    origin_void_machines: ['trait_void_dweller_2'],
+    origin_wilderness: ['trait_wilderness'],
+  };
+
+  // From common/species_classes/*.txt: every class carries one baseline trait (usually
+  // trait_organic, overridden per-archetype/class), and AQUATIC additionally requires
+  // trait_aquatic on top of its baseline (confirmed via the game's own error.log).
+  const getClassMandatoryTraits = (speciesClass: string, archetype: string | undefined): string[] => {
+    if (speciesClass === 'INF') return ['trait_infernal'];
+    if (speciesClass === 'AQUATIC') return ['trait_organic', 'trait_aquatic'];
+    if (archetype === 'LITHOID') return ['trait_lithoid'];
+    if (archetype === 'MACHINE') return ['trait_machine_unit'];
+    return ['trait_organic'];
+  };
+
+  // Generates a Stellaris custom empire design block (user_empire_designs_v3.4.txt format).
+  // Fields our data model doesn't capture (ruler name/portrait details, planet/system name,
+  // flag, name_list) are filled with fixed placeholders - Stellaris's empire creation screen
+  // won't let you save a design without them, so an empty/omitted value isn't a valid option.
+  const buildEmpireDesignText = (): string => {
+    const b = build!;
+    const empireName = (decodeHtmlEntities(b.name) || 'Custom Empire').replace(/"/g, "'");
+    const speciesClass = b.species_class || 'HUM';
+    const portrait = b.portrait || 'human';
+    const speciesClassData = getSpeciesClassData(speciesClass);
+    const ethics = parseList(b.ethics);
+    const civics = parseList(b.civics);
+
+    const mandatoryTraits = getClassMandatoryTraits(speciesClass, speciesClassData?.archetype);
+    if (b.authority === 'auth_hive_mind') mandatoryTraits.push('trait_hive_mind');
+    if (b.origin && ORIGIN_MANDATORY_TRAITS[b.origin]) mandatoryTraits.push(...ORIGIN_MANDATORY_TRAITS[b.origin]);
+    const traits = [...new Set([...mandatoryTraits, ...parseList(b.traits)])];
+
+    const literalBlock = (text: string, indent: string): string =>
+      `${indent}{\n${indent}\tkey="${text}"\n${indent}\tliteral=yes\n${indent}}`;
+
+    // Unlike name/species_name/planet_name/system_name, adjective fields don't accept a flat
+    // literal block - the game expects a "%ADJ%"/"%ADJECTIVE%" template with a nested variables
+    // substitution (confirmed against a real in-game-saved design using this exact structure).
+    const adjectiveBlock = (text: string, adjKeyword: string, indent: string): string =>
+      `${indent}{\n${indent}\tkey="${adjKeyword}"\n${indent}\tvariables=\n${indent}\t{\n` +
+      `${indent}\t\t{\n${indent}\t\t\tkey="adjective"\n${indent}\t\t\tvalue=\n` +
+      `${indent}\t\t\t{\n${indent}\t\t\t\tkey="${text}"\n${indent}\t\t\t\tliteral=yes\n${indent}\t\t\t}\n` +
+      `${indent}\t\t}\n${indent}\t}\n${indent}}`;
+
+    const lines: string[] = [];
+    lines.push(`"${empireName}"=`);
+    lines.push('{');
+    lines.push(`\tkey="${empireName}"`);
+    lines.push('\tship_prefix=');
+    lines.push('\t{');
+    lines.push('\t\tkey="ISS"');
+    lines.push('\t}');
+    lines.push('\tspecies=');
+    lines.push('\t{');
+    lines.push(`\t\tclass="${speciesClass}"`);
+    lines.push(`\t\tportrait="${portrait}"`);
+    lines.push('\t\tspecies_name=');
+    lines.push(literalBlock('Fix Me', '\t\t'));
+    lines.push('\t\tspecies_plural=');
+    lines.push(literalBlock('Fix Me', '\t\t'));
+    lines.push('\t\tspecies_adjective=');
+    lines.push(adjectiveBlock('Fix Me', '%ADJECTIVE%', '\t\t'));
+    lines.push('\t\tname_list="HUM1"');
+    lines.push('\t\tgender=not_set');
+    traits.forEach(t => lines.push(`\t\ttrait="${t}"`));
+    lines.push('\t}');
+    lines.push('\tname=');
+    lines.push(literalBlock(empireName, '\t'));
+    lines.push('\tadjective=');
+    lines.push(adjectiveBlock(empireName, '%ADJ%', '\t'));
+    if (b.authority) lines.push(`\tauthority="${b.authority}"`);
+    lines.push('\tgovernment="gov_fallback"');
+    const OCEAN_HOMEWORLD_CIVICS = ['civic_anglers', 'civic_corporate_anglers', 'civic_machine_anglers', 'civic_corporate_machine_anglers'];
+    const planetClass = b.is_nomadic ? 'pc_ark' : (civics.some(c => OCEAN_HOMEWORLD_CIVICS.includes(c)) ? 'pc_ocean' : 'pc_continental');
+    lines.push('\tplanet_name=');
+    lines.push(literalBlock('Fix Me', '\t'));
+    lines.push(`\tplanet_class="${planetClass}"`);
+    if (b.is_nomadic) lines.push(`\tship_size="${b.ark_type || 'civilian_arkship'}_tier_1"`);
+    lines.push('\tsystem_name=');
+    lines.push(literalBlock('Fix Me', '\t'));
+    lines.push('\tinitializer=""');
+    lines.push('\tgraphical_culture="humanoid_01"');
+    lines.push('\tcity_graphical_culture="humanoid_01"');
+    lines.push('\tempire_flag=');
+    lines.push('\t{');
+    lines.push('\t\ticon=');
+    lines.push('\t\t{');
+    lines.push('\t\t\tcategory="zoological"');
+    lines.push('\t\t\tfile="flag_zoological_10.dds"');
+    lines.push('\t\t}');
+    lines.push('\t\tbackground=');
+    lines.push('\t\t{');
+    lines.push('\t\t\tcategory="backgrounds"');
+    lines.push('\t\t\tfile="flag_BG_24.dds"');
+    lines.push('\t\t}');
+    lines.push('\t\tcolors=');
+    lines.push('\t\t{');
+    lines.push('\t\t\t"intense_red"');
+    lines.push('\t\t\t"intense_orange"');
+    lines.push('\t\t\t"black"');
+    lines.push('\t\t\t"null"');
+    lines.push('\t\t}');
+    lines.push('\t}');
+    lines.push('\truler=');
+    lines.push('\t{');
+    lines.push('\t\tgender=male');
+    lines.push('\t\tname=');
+    lines.push('\t\t{');
+    lines.push('\t\t\tfull_names=');
+    lines.push(literalBlock('Fix Me', '\t\t\t'));
+    lines.push('\t\t\tuse_full_regnal_name=yes');
+    lines.push('\t\t}');
+    lines.push(`\t\tportrait="${portrait}"`);
+    lines.push('\t\ttexture=0');
+    lines.push('\t\tevolution_mask=0');
+    lines.push('\t\tattachment=0');
+    lines.push('\t\tclothes=0');
+    // The ruler's leader_class must match the chosen trait's allowed class(es)
+    // (e.g. trait_ruler_warlike is commander-only) - a fixed "official" here
+    // caused a mismatch for any trait not valid for that class.
+    const rulerTraitData = b.ruler_trait ? getRulerTraitData(b.ruler_trait) : undefined;
+    const rulerLeaderClass = rulerTraitData?.leader_class?.[0] || 'official';
+    if (b.ruler_trait) lines.push(`\t\ttrait="${b.ruler_trait}"`);
+    lines.push(`\t\tleader_class="${rulerLeaderClass}"`);
+    lines.push('\t}');
+    lines.push('\tspawn_as_fallen=no');
+    lines.push('\tignore_portrait_duplication=no');
+    lines.push('\troom="default_room"');
+    lines.push('\tspawn_enabled=yes');
+    ethics.forEach(e => lines.push(`\tethic="${e}"`));
+    if (civics.length) {
+      lines.push('\tcivics=');
+      lines.push('\t{');
+      civics.forEach(c => lines.push(`\t\t"${c}"`));
+      lines.push('\t}');
+    }
+    if (b.origin) lines.push(`\torigin="${b.origin}"`);
+    lines.push(`\tis_nomadic=${b.is_nomadic ? 'yes' : 'no'}`);
+    lines.push('}');
+    return lines.join('\n');
+  };
+
+  const resolveExportRuleLabel = (field: string, value: unknown): string => {
+    const id = String(value);
+    switch (field) {
+      case 'ethics': return getEthicData(id)?.name || id;
+      case 'civics': return getCivicData(id)?.name || id;
+      case 'authority': return getAuthorityData(id)?.name || id;
+      case 'origin': return getOriginData(id)?.name || id;
+      case 'species_archetype': return id.charAt(0) + id.slice(1).toLowerCase();
+      default: return id;
+    }
+  };
+
+  // Same rule check as BuildForm.tsx's submit-time warning (non-blocking) -
+  // re-run here since a build can be edited/re-extracted after creation, and
+  // the export is a separate action from submit.
+  const getExportRuleWarnings = (): string[] => {
+    const b = build!;
+    const ethics = parseList(b.ethics);
+    const civics = parseList(b.civics);
+    const traits = parseList(b.traits);
+    const speciesArchetype = getSpeciesClassData(b.species_class || '')?.archetype;
+
+    const ctx = {
+      ethics,
+      authority: b.authority || undefined,
+      civics,
+      origin: b.origin || undefined,
+      species_archetype: speciesArchetype,
+      traits,
+      is_nomadic: !!b.is_nomadic,
+    };
+
+    const warnings: string[] = [];
+    const addWarnings = (label: string, node: PredicateNode | undefined) => {
+      getFailingNodes(node, ctx).forEach(failing =>
+        warnings.push(`${label} requires ${describePredicateHuman(failing, resolveExportRuleLabel)}`)
+      );
+    };
+
+    // GOVERNMENT_CIVIC_POINTS_BASE in common/defines/00_defines.txt - 2 civics
+    // max at creation, confirmed in-game. Mirrors BuildForm.tsx's MAX_CIVIC_SLOTS.
+    if (civics.length > 2) {
+      warnings.push(`Civics: ${civics.length} selected, but the game only allows 2 at empire creation`);
+    }
+
+    if (speciesArchetype) {
+      const budget = speciesArchetypeBudgets[speciesArchetype];
+      if (budget && budget.trait_points != null && budget.max_traits != null) {
+        const originModifier = (b.origin && getOriginData(b.origin)?.modifier) || {};
+        const pointsBonus = originModifier[`${speciesArchetype}_species_trait_points_add`] || 0;
+        const picksBonus = originModifier[`${speciesArchetype}_species_trait_picks_add`] || 0;
+        const maxPoints = budget.trait_points + pointsBonus;
+        const maxCount = budget.max_traits + picksBonus;
+        const traitPoints = traits.reduce((sum, tId) => sum + getTraitCost(getTraitData(tId)?.cost), 0);
+        const traitCount = traits.filter(tId => getTraitCost(getTraitData(tId)?.cost) !== 0).length;
+        if (traitPoints > maxPoints) {
+          warnings.push(`Species traits: ${traitPoints} trait points spent, but ${resolveExportRuleLabel('species_archetype', speciesArchetype)} species allow only ${maxPoints}`);
+        }
+        if (traitCount > maxCount) {
+          warnings.push(`Species traits: ${traitCount} traits selected, but ${resolveExportRuleLabel('species_archetype', speciesArchetype)} species allow only ${maxCount}`);
+        }
+      }
+
+      traits.forEach(traitId => {
+        const trait = getTraitData(traitId);
+        const allowed = trait?.allowed_archetypes;
+        if (Array.isArray(allowed) && allowed.length > 0 && !allowed.includes(speciesArchetype)) {
+          warnings.push(`Trait "${trait?.name || traitId}" is not allowed for ${resolveExportRuleLabel('species_archetype', speciesArchetype)} species`);
+        }
+      });
+    }
+
+    if (b.authority) {
+      const authority = getAuthorityData(b.authority);
+      if (authority) {
+        addWarnings(`Authority "${authority.name}"`, authority.possible);
+        addWarnings(`Authority "${authority.name}"`, authority.potential);
+      }
+    }
+
+    if (b.origin) {
+      const origin = getOriginData(b.origin);
+      if (origin) {
+        addWarnings(`Origin "${origin.name}"`, origin.possible);
+        addWarnings(`Origin "${origin.name}"`, origin.potential);
+      }
+    }
+
+    for (const civicId of civics) {
+      const civic = getCivicData(civicId);
+      if (!civic) continue;
+      addWarnings(`Civic "${civic.name}"`, civic.possible);
+      addWarnings(`Civic "${civic.name}"`, civic.potential);
+    }
+
+    return warnings;
+  };
+
+  const handleCopyExport = async () => {
+    const text = buildEmpireDesignText();
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
+    setExportCopied(true);
+    setTimeout(() => setExportCopied(false), 2000);
+  };
 
   const handleDelete = async () => {
     if (!window.confirm('Are you sure you want to delete this build? This action cannot be undone.')) {
@@ -426,9 +727,9 @@ export const BuildDetail: React.FC = () => {
       <div className="container mt-4">
         {/* Header */}
         <div className="row mb-4">
-        <div className="col-12">
+        <div className="col-12 d-flex justify-content-between align-items-start flex-wrap gap-2">
           <nav aria-label="breadcrumb">
-            <ol className="breadcrumb">
+            <ol className="breadcrumb mb-0">
               <li className="breadcrumb-item">
                 <Link to="/" className="text-decoration-none">Home</Link>
               </li>
@@ -437,6 +738,13 @@ export const BuildDetail: React.FC = () => {
               </li>
             </ol>
           </nav>
+          <button
+            className="btn btn-info"
+            onClick={() => setShowExportModal(true)}
+          >
+            <i className="bi bi-box-arrow-up-right me-1"></i>
+            Export to Stellaris
+          </button>
         </div>
       </div>
 
@@ -619,7 +927,7 @@ export const BuildDetail: React.FC = () => {
                     <div key={idx} className="mb-3 pb-3 border-bottom border-secondary">
                       <div className="d-flex align-items-start">
                         <GameIcon type="traits" id={traitId} size={48} />
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
                           <h5 className="text-white mb-1">
                             {trait?.name || traitId}
                             <span className={`badge ms-2 ${trait && getTraitCost(trait.cost) > 0 ? 'bg-success' : 'bg-danger'}`}>
@@ -659,7 +967,7 @@ export const BuildDetail: React.FC = () => {
                     <div key={idx} className="mb-3 pb-3 border-bottom border-secondary">
                       <div className="d-flex align-items-start">
                         <GameIcon type="traits" id={traitId} size={48} />
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
                           <h5 className="text-white mb-1">
                             {trait?.name || traitId}
                             <span className={`badge ms-2 ${trait && getTraitCost(trait.cost) > 0 ? 'bg-success' : 'bg-danger'}`}>
@@ -719,7 +1027,7 @@ export const BuildDetail: React.FC = () => {
 
                       <div className="d-flex align-items-start">
                         <GameIcon type="origin_mini" id={build.origin} size={64} />
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
                           <h4 className="text-primary mb-2">{origin?.name || build.origin}</h4>
                           {origin?.description && (
                             <p className="text-light mb-2">{origin.description}</p>
@@ -764,7 +1072,7 @@ export const BuildDetail: React.FC = () => {
                           }}
                         />
                       )}
-                      <div className="flex-grow-1">
+                      <div className="flex-grow-1" style={{ minWidth: 0 }}>
                         <h5 className="text-warning mb-2">{trait?.name || build.ruler_trait}</h5>
                         {trait?.description && (
                           <p className="text-light mb-2">{trait.description}</p>
@@ -798,7 +1106,7 @@ export const BuildDetail: React.FC = () => {
                     <div key={idx} className="mb-3 pb-3 border-bottom border-secondary">
                       <div className="d-flex align-items-start">
                         <GameIcon type="ethics" id={ethicId} size={48} />
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
                           <h5 className="text-warning mb-1">
                             {ethic?.name || ethicId}
                             <span className={`badge ms-2 ${ethic?.cost === 3 ? 'bg-danger' : ethic?.cost === 2 ? 'bg-warning text-dark' : 'bg-info'}`}>
@@ -868,7 +1176,7 @@ export const BuildDetail: React.FC = () => {
                   return (
                     <div className="d-flex align-items-start">
                       <GameIcon type="authorities" id={build.authority} size={64} />
-                      <div className="flex-grow-1">
+                      <div className="flex-grow-1" style={{ minWidth: 0 }}>
                         <h4 className="text-success mb-2">{authority?.name || build.authority}</h4>
                         {authority?.description && (
                           <p className="text-light mb-2">{authority.description}</p>
@@ -903,7 +1211,7 @@ export const BuildDetail: React.FC = () => {
                     <div key={idx} className="mb-3 pb-3 border-bottom border-secondary">
                       <div className="d-flex align-items-start">
                         <GameIcon type="civics" id={civicId} size={48} />
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
                           <h5 className="text-info mb-1">{civic?.name || civicId}</h5>
                           {civic?.description && (
                             <p className="text-light mb-2">{civic.description}</p>
@@ -944,7 +1252,7 @@ export const BuildDetail: React.FC = () => {
                           #{idx + 1}
                         </span>
                         <GameIcon type="ascension_perks" id={perkId} size={48} />
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
                           <h5 className="text-white mb-1">{perk?.name || perkId}</h5>
                           {perk?.description && (
                             <p className="text-light mb-2">{perk.description}</p>
@@ -982,7 +1290,7 @@ export const BuildDetail: React.FC = () => {
                           #{idx + 1}
                         </span>
                         <GameIcon type="traditions" id={treeId} size={48} />
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
                           <h5 className="text-white mb-1">{tree?.adopt?.name || treeId}</h5>
                           {tree?.adopt?.description && (
                             <p className="text-light mb-0">{tree.adopt.description}</p>
@@ -1055,6 +1363,13 @@ export const BuildDetail: React.FC = () => {
             <i className="bi bi-arrow-left me-2"></i>
             Back to Builds
           </Link>
+          <button
+            className="btn btn-info btn-lg me-3"
+            onClick={() => setShowExportModal(true)}
+          >
+            <i className="bi bi-box-arrow-up-right me-2"></i>
+            Export to Stellaris
+          </button>
           {user && build.author_id === user.id && (
             <>
               <Link
@@ -1081,6 +1396,94 @@ export const BuildDetail: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Export to Stellaris Modal */}
+      {showExportModal && (
+        <>
+          <div
+            className="modal-backdrop fade show"
+            onClick={() => setShowExportModal(false)}
+            style={{ zIndex: 1040 }}
+          ></div>
+          <div className="modal fade show d-block" tabIndex={-1} style={{ zIndex: 1050 }} role="dialog">
+            <div className="modal-dialog modal-dialog-centered modal-lg">
+              <div className="modal-content bg-dark text-white border-secondary">
+                <div className="modal-header border-secondary">
+                  <h5 className="modal-title">
+                    <i className="bi bi-box-arrow-up-right me-2"></i>
+                    Export to Stellaris (Experimental)
+                  </h5>
+                  <button
+                    type="button"
+                    className="btn-close btn-close-white"
+                    onClick={() => setShowExportModal(false)}
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <div className="alert alert-warning">
+                    <strong>Experimental.</strong> Stellaris requires a fully-filled-out empire
+                    (name, ruler, homeworld, flag...) to save one, so fields this site doesn't
+                    track are filled with generic placeholders below - edit them as you like once
+                    pasted in.
+                  </div>
+                  {(() => {
+                    const exportWarnings = getExportRuleWarnings();
+                    if (exportWarnings.length === 0) return null;
+                    return (
+                      <div className="alert alert-danger">
+                        <strong><i className="bi bi-exclamation-triangle me-2"></i>Possible Rule Conflict</strong>
+                        <div className="mt-1">
+                          This build might not be valid in-game, based on rules we extract from the
+                          game files. This check is new and may have false positives or miss real
+                          conflicts - use it as a hint, not a guarantee. You can still import it -
+                          the design file is more permissive than the empire creator, so it will
+                          load even with conflicts. You'll just need to fix the flagged picks
+                          directly in the empire creation screen before you can play it.
+                        </div>
+                        <ul className="mb-0 mt-2">
+                          {exportWarnings.map((warning, idx) => (
+                            <li key={idx}><code className="text-warning-emphasis">{warning}</code></li>
+                          ))}
+                        </ul>
+                      </div>
+                    );
+                  })()}
+                  <ol className="mb-3">
+                    <li>Copy the text below.</li>
+                    <li>
+                      Open (or create){' '}
+                      <code>Documents\Paradox Interactive\Stellaris\user_empire_designs_v3.4.txt</code>.
+                    </li>
+                    <li>Paste it at the end of the file and save.</li>
+                    <li>Your build will appear as a custom empire in the game's empire selection screen.</li>
+                  </ol>
+                  <textarea
+                    readOnly
+                    className="form-control bg-secondary text-white border-secondary"
+                    style={{ fontFamily: 'monospace', fontSize: '0.85rem' }}
+                    rows={12}
+                    value={buildEmpireDesignText()}
+                    onClick={(e) => (e.target as HTMLTextAreaElement).select()}
+                  />
+                </div>
+                <div className="modal-footer border-secondary">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setShowExportModal(false)}
+                  >
+                    Close
+                  </button>
+                  <button type="button" className="btn btn-info" onClick={handleCopyExport}>
+                    <i className={`bi ${exportCopied ? 'bi-check2' : 'bi-clipboard'} me-2`}></i>
+                    {exportCopied ? 'Copied!' : 'Copy to Clipboard'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
     </>
   );

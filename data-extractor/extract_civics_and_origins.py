@@ -51,59 +51,157 @@ def parse_origin_gfx_file(gfx_file_path: str) -> Dict[str, str]:
     return mapping
 
 
-def extract_trigger_info(trigger_data: Any) -> List[str]:
+# The 16 predicate forms of the government requirement DSL, per
+# https://github.com/cwtools/cwtools-stellaris-config config/common/governments.cwt
+# (alias[government_trigger:*]). Each of these fields accepts a bare `value`, or
+# `value` wrapped in OR / NOT / NOR / AND. `always`, `text`, `limit` and
+# `host_has_dlc` are handled separately below (not per-field predicates).
+LEAF_PREDICATE_FIELDS = {
+    'authority', 'country_type', 'ethics', 'civics', 'traits',
+    'preferred_planet_class', 'graphical_culture', 'origin', 'species_class',
+    'species_archetype', 'host_has_dlc',
+    # Not in the .cwt schema (it may lag behind newer patches - see TODO.md
+    # section 2) but confirmed present in 4.4 Nomads-era files.
+    'is_nomadic',
+}
+
+TOPLEVEL_OPERATORS = {'OR', 'AND', 'NOT', 'NOR'}
+
+
+def _leaves_from_raw_values(field: str, raw_values: Any) -> List[Dict[str, Any]]:
+    if isinstance(raw_values, list):
+        return [{"field": field, "value": v} for v in raw_values]
+    return [{"field": field, "value": raw_values}]
+
+
+def _normalize_operator_block(field: str, operator: str, block: Any) -> Dict[str, Any]:
     """
-    Extract trigger/requirement information
+    Normalize a single OR/AND/NOT/NOR block for one field, e.g. the
+    `{"text": ..., "value": [...]}"` that follows `ethics = { OR = ... }`.
+    """
+    if isinstance(block, dict) and 'value' in block:
+        tooltip = block.get('text')
+        leaves = _leaves_from_raw_values(field, block['value'])
+    elif isinstance(block, dict):
+        # No 'value' key - unrecognized shape, surface it rather than guessing.
+        return {"field": field, "unsupported": block}
+    else:
+        tooltip = None
+        leaves = _leaves_from_raw_values(field, block)
+
+    if operator == 'OR':
+        node = {"any": leaves}
+    elif operator == 'AND':
+        node = {"all": leaves}
+    elif operator == 'NOT':
+        node = {"not": leaves[0] if len(leaves) == 1 else {"all": leaves}}
+    else:  # NOR
+        node = {"not": {"any": leaves}}
+    if tooltip:
+        node["tooltip"] = tooltip
+    return node
+
+
+def _normalize_field_value(field: str, value: Any) -> List[Dict[str, Any]]:
+    """
+    Normalize everything that can follow `field = ...` for one of the leaf
+    predicate fields (ethics, authority, civics, ...) into one or more
+    structured condition nodes. Multiple occurrences of the same field within
+    one block (parsed as a list) are implicitly AND-ed, matching the repeated-key
+    convention used elsewhere in Paradox script.
+    """
+    if isinstance(value, list):
+        return [node for item in value for node in _normalize_field_value(field, item)]
+
+    if isinstance(value, dict):
+        operator = next((op for op in TOPLEVEL_OPERATORS if op in value), None)
+        if operator:
+            inner = value[operator]
+            # A field can carry several separate OR/NOT/NOR blocks (parsed as a
+            # list when the same operator key repeats under one field) - each is
+            # its own constraint, AND-ed together.
+            if isinstance(inner, list):
+                return [_normalize_operator_block(field, operator, block) for block in inner]
+            return [_normalize_operator_block(field, operator, inner)]
+
+        if 'value' in value:
+            leaves = _leaves_from_raw_values(field, value['value'])
+            tooltip = value.get('text')
+            node = leaves[0] if len(leaves) == 1 else {"all": leaves}
+            if tooltip:
+                node["tooltip"] = tooltip
+            return [node]
+
+        # Unrecognized shape for this field - surface it instead of silently
+        # dropping or mis-encoding it (see TODO.md section 1, Bug B).
+        return [{"field": field, "unsupported": value}]
+
+    # Bare scalar, e.g. is_nomadic = no
+    return [{"field": field, "value": value}]
+
+
+def _normalize_toplevel_operator(operator: str, inner: Any) -> Dict[str, Any]:
+    """Normalize a top-level OR/AND/NOT/NOR that combines whole predicate
+    blocks (possibly of different types), e.g. `OR = { authority = {...} civics = {...} }`."""
+    children = _gather_children(inner) if isinstance(inner, dict) else [{"unsupported": inner}]
+    if operator == 'OR':
+        return {"any": children}
+    if operator == 'AND':
+        return {"all": children}
+    if operator == 'NOT':
+        return {"not": children[0] if len(children) == 1 else {"all": children}}
+    # NOR
+    return {"not": {"any": children}}
+
+
+def _gather_children(trigger_dict: Dict[str, Any]) -> List[Dict[str, Any]]:
+    children: List[Dict[str, Any]] = []
+    for key, value in trigger_dict.items():
+        if key in TOPLEVEL_OPERATORS:
+            children.append(_normalize_toplevel_operator(key, value))
+        elif key == 'always':
+            children.append({"always": bool(value)})
+        elif key == 'text':
+            continue  # tooltip override key, not a condition by itself
+        elif key == 'limit':
+            # `limit` scopes a sub-trigger to a different context (e.g. planet/pop
+            # scope) that this extractor cannot evaluate without simulating the
+            # game's scope changes. Surface it rather than silently ignoring it.
+            children.append({"unsupported_limit": value})
+        elif key in LEAF_PREDICATE_FIELDS:
+            children.extend(_normalize_field_value(key, value))
+        else:
+            children.append({"field": key, "unsupported": value})
+    return children
+
+
+def extract_trigger_info(trigger_data: Any) -> Dict[str, Any]:
+    """
+    Convert a raw `potential`/`possible` trigger block into a structured
+    predicate tree that preserves OR/AND/NOT/NOR semantics.
+
+    Node shapes:
+        {"all": [node, ...]}                 - every child must hold
+        {"any": [node, ...]}                 - at least one child must hold
+        {"not": node}                        - child must not hold
+        {"always": true|false}
+        {"field": <name>, "value": <value>}  - leaf equality check
+        {"field": <name>, "unsupported": ...} - shape not recognized; do not
+            silently treat as satisfied/unsatisfied, flag it for review instead.
+
+    The root is always an {"all": [...]} node (possibly empty, meaning no
+    constraints), so every consumer can rely on a single consistent shape.
 
     Args:
-        trigger_data: The trigger object
+        trigger_data: The raw parsed `potential` or `possible` block.
 
     Returns:
-        List of requirement strings
+        A structured predicate tree, rooted at "all".
     """
     if not trigger_data or not isinstance(trigger_data, dict):
-        return []
+        return {"all": []}
 
-    requirements = []
-
-    for key, value in trigger_data.items():
-        if key == 'species_archetype':
-            # Handle species archetype requirements (for origins)
-            if isinstance(value, dict):
-                if 'NOT' in value:
-                    not_val = value['NOT']
-                    if isinstance(not_val, dict) and 'value' in not_val:
-                        requirements.append(f"NOT species_archetype:{not_val['value']}")
-                elif 'value' in value:
-                    requirements.append(f"species_archetype:{value['value']}")
-        elif key == 'ethics':
-            if isinstance(value, dict):
-                for ethic_key, ethic_val in value.items():
-                    if ethic_key in ['NOT', 'NOR', 'OR', 'AND']:
-                        # Handle logical operators
-                        if isinstance(ethic_val, dict) and 'value' in ethic_val:
-                            requirements.append(f"NOT {ethic_val['value']}")
-                    elif 'value' in value:
-                        requirements.append(value['value'])
-        elif key == 'authority':
-            if isinstance(value, dict):
-                for auth_key, auth_val in value.items():
-                    if auth_key in ['NOT', 'NOR']:
-                        if isinstance(auth_val, dict) and 'value' in auth_val:
-                            requirements.append(f"NOT {auth_val['value']}")
-                    elif 'value' in value:
-                        requirements.append(value['value'])
-        elif key == 'civics':
-            if isinstance(value, dict):
-                for civic_key, civic_val in value.items():
-                    if civic_key in ['NOT', 'NOR']:
-                        if isinstance(civic_val, dict) and 'value' in civic_val:
-                            requirements.append(f"NOT {civic_val['value']}")
-        elif key == 'origin':
-            if isinstance(value, dict) and 'value' in value:
-                requirements.append(f"origin: {value['value']}")
-
-    return requirements
+    return {"all": _gather_children(trigger_data)}
 
 
 def extract_modifier_effects(modifier_data: Any) -> str:
@@ -245,6 +343,26 @@ def extract_civic_data(civic_key: str, civic_data: Dict[str, Any], localizations
     # Extract possible (selection requirements)
     possible = civic_data.get("possible", {})
     civic["possible"] = extract_trigger_info(possible)
+
+    # Extract homeworld-related rules (origins only - forced/preferred planet class)
+    starting_colony = civic_data.get("starting_colony")
+    if isinstance(starting_colony, str) and starting_colony:
+        civic["starting_colony"] = starting_colony
+
+    habitability_preference = civic_data.get("habitability_preference")
+    if isinstance(habitability_preference, str) and habitability_preference:
+        civic["habitability_preference"] = habitability_preference
+
+    # Extract soft traits (enforced but removable, unlike enforced_traits below)
+    soft_traits_raw = civic_data.get("soft_traits")
+    if isinstance(soft_traits_raw, dict):
+        if "trait" in soft_traits_raw:
+            trait_val = soft_traits_raw["trait"]
+            civic["soft_traits"] = trait_val if isinstance(trait_val, list) else [trait_val]
+        elif soft_traits_raw:
+            civic["soft_traits"] = list(soft_traits_raw.values())
+    elif isinstance(soft_traits_raw, list) and soft_traits_raw:
+        civic["soft_traits"] = soft_traits_raw
 
     # Extract modification rules
     modification = civic_data.get("modification", True)

@@ -60,9 +60,7 @@
     "initial": true,
     "randomized": true,
     "modification_species_add": true,
-    "opposites": [
-      "trait_infernal"
-    ],
+    "opposites": [],
     "prerequisites": [],
     "allowed_archetypes": [
       "BIOLOGICAL",
@@ -150,9 +148,7 @@
     "initial": false,
     "randomized": true,
     "modification_species_add": true,
-    "opposites": [
-      "trait_infernal"
-    ],
+    "opposites": [],
     "prerequisites": [],
     "allowed_archetypes": [
       "BIOLOGICAL",
@@ -1848,7 +1844,8 @@
       "trait_uncanny_intuition",
       "trait_cranial_hypertrophy",
       "trait_cranial_megatrophy",
-      "trait_shell_slag"
+      "trait_shell_slag",
+      "trait_unbreakable_resolve"
     ],
     "prerequisites": [],
     "allowed_archetypes": [
@@ -2696,8 +2693,8 @@
     "modifier": {
       "bureaucrat_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "Amenities from Jobs: +20% | bureaucrat_jobs_bonus_workforce_mult: +15.0%",
-    "custom_tooltip": "TRAIT_CHARISMATIC_EFFECT",
+    "effects": "bureaucrat_jobs_bonus_workforce_mult: +15.0%",
+    "custom_tooltip": "",
     "slave_cost": {
       "energy": 750
     }
@@ -5141,9 +5138,10 @@
     "modifier": {
       "planet_pops_organics_food_upkeep_mult": 0.15,
       "planet_pops_organics_minerals_upkeep_mult": 0.15,
+      "planet_pops_organics_alloys_upkeep_mult": 0.15,
       "leader_lifespan_add": -30
     },
-    "effects": "Pop Growth Speed: +30%  - Pop Housing Usage: -10% | planet_pops_organics_food_upkeep_mult: +15.0%; planet_pops_organics_minerals_upkeep_mult: +15.0%; leader_lifespan_add: -30 | Triggered: logistic_growth_mult: +30.0%; logistic_growth_mult: +60.0%",
+    "effects": "Pop Growth Speed: +30%  - Pop Housing Usage: -10% | planet_pops_organics_food_upkeep_mult: +15.0%; planet_pops_organics_minerals_upkeep_mult: +15.0%; planet_pops_organics_alloys_upkeep_mult: +15.0%; leader_lifespan_add: -30 | Triggered: logistic_growth_mult: +30.0%; logistic_growth_mult: +60.0%",
     "custom_tooltip": "preplanned_growth_tooltip",
     "slave_cost": {
       "energy": 2000

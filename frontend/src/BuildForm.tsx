@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { AuthModal } from './components/AuthModal';
 import { decodeHtmlEntities } from './utils/htmlDecode';
+import { PredicateNode, findFieldOccurrences, getFailingNodes, describePredicateHuman } from './utils/ruleEvaluator';
 
 interface BuildFormProps {
   onBuildCreated: (newBuild: any) => void;
@@ -117,6 +118,7 @@ interface Trait {
   tags: any[];
   opposites: any[];
   category: string;
+  allowed_archetypes?: string[];
 }
 
 interface Origin {
@@ -124,8 +126,8 @@ interface Origin {
   name: string;
   description: string;
   effects: string;
-  potential: any[]; // Conditions that filter visibility (e.g., species_archetype)
-  possible: any[];
+  potential: PredicateNode; // Conditions that filter visibility (e.g., species_archetype)
+  possible: PredicateNode;
   playable_conditions?: string;
   is_origin: boolean;
   pickable_at_start: boolean;
@@ -190,6 +192,8 @@ interface Authority {
   required_ethics: string[];
   blocked_ethics: string[];
   required_dlc?: string;
+  potential?: PredicateNode;
+  possible?: PredicateNode;
 }
 
 interface Civic {
@@ -199,8 +203,8 @@ interface Civic {
   playable: boolean;
   pickable_at_start: boolean;
   description: string;
-  potential: any[]; // Conditions that filter visibility
-  possible: any[]; // Requirements that must be met
+  potential: PredicateNode; // Conditions that filter visibility
+  possible: PredicateNode; // Requirements that must be met
   effects: string;
   modifier?: {
     [key: string]: number;
@@ -244,7 +248,12 @@ interface SpeciesClass {
 const BASE_MAX_TRAIT_POINTS = 2;
 const BASE_MAX_TRAIT_COUNT = 5;
 const MAX_ETHICS_POINTS = 3;
-const MAX_CIVIC_SLOTS = 3;
+// GOVERNMENT_CIVIC_POINTS_BASE in common/defines/00_defines.txt - confirmed
+// in-game. A handful of narrative/mid-game civics (Great Khan's Vision,
+// Galactic Sovereign, Psionic Sovereign) grant +1 via
+// country_government_civic_points_add, but those aren't real creation-time
+// picks, so this stays a flat 2.
+const MAX_CIVIC_SLOTS = 2;
 
 // Nomads DLC was introduced in 4.4 "Pegasus"
 const supportsNomadic = (version: string) => parseFloat(version) >= 4.4;
@@ -330,6 +339,11 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const [selectedSpeciesClass, setSelectedSpeciesClass] = useState<string>('');
   const [selectedPortrait, setSelectedPortrait] = useState<string>('');
 
+  // Trait point/pick budget per archetype (BIOLOGICAL/ROBOT/MACHINE/LITHOID/PRESAPIENT) -
+  // differs per archetype (e.g. MACHINE: 1 point/5 traits, ROBOT: 0 points/4 traits),
+  // unlike the old flat BASE_MAX_TRAIT_POINTS/BASE_MAX_TRAIT_COUNT constants.
+  const [speciesArchetypeBudgets, setSpeciesArchetypeBudgets] = useState<Record<string, { trait_points: number | null; max_traits: number | null }>>({});
+
   // UI state
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -343,6 +357,12 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   // Warn on submit if the description is empty (create mode only)
   const [showDescriptionWarning, setShowDescriptionWarning] = useState(false);
   const skipDescriptionWarningRef = useRef(false);
+
+  // Warn on submit if the completed build violates a game rule we can check
+  // (experimental - see ruleWarnings computation in handleSubmit)
+  const [showRuleWarning, setShowRuleWarning] = useState(false);
+  const [ruleWarnings, setRuleWarnings] = useState<string[]>([]);
+  const skipRuleWarningRef = useRef(false);
 
   // Track whether the user manually changed the version (vs initial load or initialData population)
   const userChangedVersion = useRef(false);
@@ -398,7 +418,9 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       fetch(`/api/traditions${qs}`).then(res => res.json()),
       fetch(`/api/ruler-traits${qs}`).then(res => res.json()),
       fetch(`/api/species-classes${qs}`).then(res => res.json()),
-    ]).then(([originsRaw, perksRaw, ethicsRaw, authoritiesRaw, civicsRaw, traditionsRaw, rulerTraitsRaw, classesRaw]) => {
+      fetch(`/api/species-archetypes${qs}`).then(res => res.json()),
+    ]).then(([originsRaw, perksRaw, ethicsRaw, authoritiesRaw, civicsRaw, traditionsRaw, rulerTraitsRaw, classesRaw, archetypeBudgetsRaw]) => {
+      setSpeciesArchetypeBudgets(archetypeBudgetsRaw && typeof archetypeBudgetsRaw === 'object' ? archetypeBudgetsRaw : {});
       const originsArray = Array.isArray(originsRaw) ? originsRaw : (originsRaw.origins || []);
       const sanitizedOrigins = originsArray
         .filter((o: any) => o.pickable_at_start && o.is_origin)
@@ -428,7 +450,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       const civicsArray = Array.isArray(civicsRaw) ? civicsRaw : (civicsRaw.civics || []);
       const sanitizedCivics = civicsArray
         .filter((c: any) => c.pickable_at_start && !c.is_origin)
-        .map((c: any) => ({ ...c, description: typeof c.description === 'string' ? c.description : '', effects: typeof c.effects === 'string' ? c.effects : '', potential: Array.isArray(c.potential) ? c.potential : [], possible: Array.isArray(c.possible) ? c.possible : [] }))
+        .map((c: any) => ({ ...c, description: typeof c.description === 'string' ? c.description : '', effects: typeof c.effects === 'string' ? c.effects : '', potential: c.potential && typeof c.potential === 'object' ? c.potential : { all: [] }, possible: c.possible && typeof c.possible === 'object' ? c.possible : { all: [] } }))
         .sort((a: any, b: any) => a.id.localeCompare(b.id));
       setAllCivics(sanitizedCivics);
 
@@ -577,8 +599,11 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   };
 
   const { pointsBonus, picksBonus } = getOriginTraitBonuses();
-  const MAX_TRAIT_POINTS = BASE_MAX_TRAIT_POINTS + pointsBonus;
-  const MAX_TRAIT_COUNT = BASE_MAX_TRAIT_COUNT + picksBonus;
+  const archetypeBudget = speciesArchetypeBudgets[getSpeciesArchetype(selectedSpeciesClass)];
+  const baseMaxTraitPoints = archetypeBudget?.trait_points ?? BASE_MAX_TRAIT_POINTS;
+  const baseMaxTraitCount = archetypeBudget?.max_traits ?? BASE_MAX_TRAIT_COUNT;
+  const MAX_TRAIT_POINTS = baseMaxTraitPoints + pointsBonus;
+  const MAX_TRAIT_COUNT = baseMaxTraitCount + picksBonus;
 
   // Calculate current trait points
   const calculateTraitPoints = (): number => {
@@ -646,18 +671,17 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       return false;
     }
 
-    const potential = civic.potential || [];
-
-    // Check if civic requires a specific origin
-    for (const condition of potential) {
-      if (typeof condition === 'string' && condition.startsWith('origin:')) {
-        const requiredOrigin = condition.replace('origin:', '').trim();
-        // Check if the required origin exists in our available origins list
-        const originExists = allOrigins.some(o => o.id === requiredOrigin);
-        if (!originExists) {
-          return false; // Filter out this civic
-        }
-      }
+    // Check if civic requires a specific origin that isn't offered at empire
+    // creation (negated occurrences don't count - "NOT origin X" can't make an
+    // origin unavailable, only a positive "origin == X" requirement can).
+    const requiredOrigins = findFieldOccurrences(civic.potential, 'origin')
+      .filter(o => !o.negated)
+      .map(o => o.value as string);
+    const hasUnavailableRequiredOrigin = requiredOrigins.some(
+      requiredOrigin => !allOrigins.some(o => o.id === requiredOrigin)
+    );
+    if (hasUnavailableRequiredOrigin) {
+      return false;
     }
     return true;
   });
@@ -682,11 +706,12 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
   // Filter traits by species type and search query
   const filteredTraits = allTraits.filter(trait => {
-    // Filter machine-only traits (only for MACHINE/ROBOT species)
+    // Traits are restricted to specific archetypes both ways (e.g. Very Strong
+    // is BIOLOGICAL/LITHOID only, Machine Unit is MACHINE/ROBOT only) - an
+    // empty/missing list means no restriction (only 1 vanilla trait is like this).
     const speciesArchetype = getSpeciesArchetype(selectedSpeciesClass);
-    const isMachineSpecies = speciesArchetype === 'MACHINE' || speciesArchetype === 'ROBOT';
-    const hasMachineTag = Array.isArray(trait.tags) && trait.tags.includes('machine');
-    if (hasMachineTag && !isMachineSpecies) {
+    const allowedArchetypes = Array.isArray(trait.allowed_archetypes) ? trait.allowed_archetypes : [];
+    if (allowedArchetypes.length > 0 && !allowedArchetypes.includes(speciesArchetype)) {
       return false;
     }
 
@@ -712,10 +737,15 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
   // Filter origins only by search query - no species archetype restrictions
   const filteredOrigins = allOrigins.filter(origin => {
-    // Filter by species type (MACHINE vs NOT MACHINE)
-    const possible = origin.possible || [];
-    const requiresMachine = possible.includes('species_archetype:MACHINE');
-    const requiresNotMachine = possible.includes('NOT species_archetype:MACHINE');
+    // Filter by species type (MACHINE vs NOT MACHINE). Origin is picked before
+    // ethics/authority/civics in this form, so we deliberately only check the
+    // species_archetype occurrences here rather than running the full
+    // evaluator against `possible` - a full evaluation would read those
+    // as-yet-unselected fields as "not chosen" and wrongly hide origins that
+    // require a specific authority/ethic the user just hasn't picked yet.
+    const speciesArchetypeOccurrences = findFieldOccurrences(origin.possible, 'species_archetype');
+    const requiresMachine = speciesArchetypeOccurrences.some(o => !o.negated && o.value === 'MACHINE');
+    const requiresNotMachine = speciesArchetypeOccurrences.some(o => o.negated && o.value === 'MACHINE');
 
     const speciesArchetype = getSpeciesArchetype(selectedSpeciesClass);
     const isMachineSpecies = speciesArchetype === 'MACHINE' || speciesArchetype === 'ROBOT';
@@ -1012,6 +1042,112 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     document.getElementById('buildDescription')?.focus();
   };
 
+  // Resolves a raw predicate field/value (e.g. ethics="ethic_authoritarian")
+  // to a human-readable label ("Authoritarian") using the game data already
+  // loaded for this form, for use in the rule-warning messages below.
+  const resolveRuleLabel = (field: string, value: unknown): string => {
+    const id = String(value);
+    switch (field) {
+      case 'ethics': return allEthics.find(e => e.id === id)?.name || id;
+      case 'civics': return allCivics.find(c => c.id === id)?.name || id;
+      case 'authority': return allAuthorities.find(a => a.id === id)?.name || id;
+      case 'origin': return allOrigins.find(o => o.id === id)?.name || id;
+      case 'species_archetype': return id.charAt(0) + id.slice(1).toLowerCase();
+      default: return id;
+    }
+  };
+
+  // Experimental: check the completed build against the rules we can extract
+  // from the game files. Only run once every relevant field is filled in
+  // (submit time) - checking mid-form would misfire on fields the user
+  // hasn't reached yet (origin is picked before ethics/authority/civics).
+  const getRuleWarnings = (): string[] => {
+    const ctx = {
+      ethics: selectedEthics,
+      authority: selectedAuthority,
+      civics: selectedCivics,
+      origin: selectedOrigin || undefined,
+      species_archetype: getSpeciesArchetype(selectedSpeciesClass),
+      traits: selectedTraits,
+      is_nomadic: isNomadic,
+    };
+
+    const warnings: string[] = [];
+    const addWarnings = (label: string, node: PredicateNode | undefined) => {
+      getFailingNodes(node, ctx).forEach(failing =>
+        warnings.push(`${label} requires ${describePredicateHuman(failing, resolveRuleLabel)}`)
+      );
+    };
+
+    // Double-check civic count independently of the live MAX_CIVIC_SLOTS
+    // disable - matters for edit mode, where a build published before this
+    // was fixed (2026-08-10, was flat 3) can still have 3 loaded in.
+    if (selectedCivics.length > MAX_CIVIC_SLOTS) {
+      warnings.push(`Civics: ${selectedCivics.length} selected, but the game only allows ${MAX_CIVIC_SLOTS} at empire creation`);
+    }
+
+    // Double-check the archetype trait budget independently of the live
+    // hasInvalidTraits button-disable, in case the two ever drift apart.
+    if (currentTraitPoints > MAX_TRAIT_POINTS) {
+      warnings.push(`Species traits: ${currentTraitPoints} trait points spent, but ${resolveRuleLabel('species_archetype', ctx.species_archetype)} species allow only ${MAX_TRAIT_POINTS}`);
+    }
+    if (currentTraitCount > MAX_TRAIT_COUNT) {
+      warnings.push(`Species traits: ${currentTraitCount} traits selected, but ${resolveRuleLabel('species_archetype', ctx.species_archetype)} species allow only ${MAX_TRAIT_COUNT}`);
+    }
+
+    // Double-check trait/archetype compatibility independently of the live
+    // filteredTraits list - matters for edit mode on a build saved before
+    // this filter existed (e.g. biological-only traits on a Machine species).
+    // Only when the archetype is actually known - an unset species class must
+    // not be treated as "matches no archetype".
+    if (ctx.species_archetype) {
+      selectedTraits.forEach(traitId => {
+        const trait = allTraits.find(t => t.id === traitId);
+        const allowed = trait?.allowed_archetypes;
+        if (Array.isArray(allowed) && allowed.length > 0 && !allowed.includes(ctx.species_archetype)) {
+          warnings.push(`Trait "${trait?.name || traitId}" is not allowed for ${resolveRuleLabel('species_archetype', ctx.species_archetype)} species`);
+        }
+      });
+    }
+
+    if (selectedAuthority) {
+      const authority = allAuthorities.find(a => a.id === selectedAuthority);
+      if (authority) {
+        addWarnings(`Authority "${authority.name}"`, authority.possible);
+        addWarnings(`Authority "${authority.name}"`, authority.potential);
+      }
+    }
+
+    if (selectedOrigin) {
+      const origin = allOrigins.find(o => o.id === selectedOrigin);
+      if (origin) {
+        addWarnings(`Origin "${origin.name}"`, origin.possible);
+        addWarnings(`Origin "${origin.name}"`, origin.potential);
+      }
+    }
+
+    for (const civicId of selectedCivics) {
+      const civic = allCivics.find(c => c.id === civicId);
+      if (!civic) continue;
+      addWarnings(`Civic "${civic.name}"`, civic.possible);
+      addWarnings(`Civic "${civic.name}"`, civic.potential);
+    }
+
+    return warnings;
+  };
+
+  const handleConfirmSubmitWithRuleWarning = () => {
+    setShowRuleWarning(false);
+    skipRuleWarningRef.current = true;
+    setTimeout(() => {
+      document.getElementById('build-form')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    }, 100);
+  };
+
+  const handleBackToEditFromRuleWarning = () => {
+    setShowRuleWarning(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -1059,6 +1195,18 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       return;
     }
     skipDescriptionWarningRef.current = false;
+
+    // Experimental non-blocking check against extracted game rules (origin +
+    // civics only for now). See TODO.md section 3b for the full plan.
+    if (!skipRuleWarningRef.current) {
+      const warnings = getRuleWarnings();
+      if (warnings.length > 0) {
+        setRuleWarnings(warnings);
+        setShowRuleWarning(true);
+        return;
+      }
+    }
+    skipRuleWarningRef.current = false;
 
     setSubmitting(true);
 
@@ -1322,7 +1470,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                 {pointsBonus > 0 && <span className="ms-2">+{pointsBonus} trait points</span>}
                 {picksBonus > 0 && <span className="ms-2">+{picksBonus} trait pick{picksBonus > 1 ? 's' : ''}</span>}
                 <small className="d-block mt-1">
-                  Base limits: {BASE_MAX_TRAIT_COUNT} traits, {BASE_MAX_TRAIT_POINTS} points
+                  Base limits: {baseMaxTraitCount} traits, {baseMaxTraitPoints} points
                 </small>
               </div>
             )}
@@ -1808,7 +1956,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
               <div className="card-body p-3">
                 <div className="d-flex align-items-center gap-3">
                   <img src="/icons/nomad_toggle.png" width={64} height={64} alt="Nomadic Empire" style={{ flexShrink: 0 }} />
-                  <div className="flex-grow-1">
+                  <div className="flex-grow-1" style={{ minWidth: 0 }}>
                     <div className="d-flex align-items-center gap-2 mb-1">
                       <input
                         type="checkbox"
@@ -2282,6 +2430,49 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                   Go Back &amp; Add Description
                 </button>
                 <button type="button" className="btn btn-warning" onClick={handleConfirmSubmitWithoutDescription}>
+                  Submit Anyway
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Rule Violation Warning Modal (experimental) */}
+      {showRuleWarning && (
+        <div
+          className="modal show d-block"
+          tabIndex={-1}
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+          onClick={(e) => { if (e.target === e.currentTarget) handleBackToEditFromRuleWarning(); }}
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content bg-dark text-white border-secondary">
+              <div className="modal-header border-secondary">
+                <h5 className="modal-title">
+                  <i className="bi bi-exclamation-triangle text-warning me-2"></i>
+                  Possible Rule Conflict
+                </h5>
+                <button type="button" className="btn-close btn-close-white" onClick={handleBackToEditFromRuleWarning}></button>
+              </div>
+              <div className="modal-body">
+                <p>
+                  <span className="badge bg-secondary me-2">Experimental</span>
+                  This build combination might not be valid in-game, based on rules we extract from the game
+                  files. This check is new and may have false positives or miss real conflicts - use it as a hint,
+                  not a guarantee.
+                </p>
+                <ul className="mb-0">
+                  {ruleWarnings.map((warning, idx) => (
+                    <li key={idx}><code className="text-warning-emphasis">{warning}</code></li>
+                  ))}
+                </ul>
+              </div>
+              <div className="modal-footer border-secondary">
+                <button type="button" className="btn btn-secondary" onClick={handleBackToEditFromRuleWarning}>
+                  Go Back &amp; Edit
+                </button>
+                <button type="button" className="btn btn-warning" onClick={handleConfirmSubmitWithRuleWarning}>
                   Submit Anyway
                 </button>
               </div>

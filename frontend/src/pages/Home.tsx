@@ -141,15 +141,9 @@ export const Home: React.FC = () => {
   // What's New data
   const latestNews: NewsItem[] = [
     {
-      date: '15 Jun 2026',
-      title: 'Stellaris 4.4 "Pegasus" Support',
-      description: 'Build data updated for game version 4.4 "Pegasus". New traits, civics, origins and traditions extracted from the latest patch.',
-      type: 'update'
-    },
-    {
-      date: '07 Jun 2026',
-      title: 'Species Portraits & Card Redesign',
-      description: 'Build cards now display species portraits, with icons for civics, traits, origin, ethics and authority. Portrait selector added to the build form.',
+      date: '11 Aug 2026',
+      title: 'Real Rule Checking + Stellaris Export',
+      description: 'New: export any build straight to Stellaris as a custom empire design. Every build is now also checked against rules parsed directly from the game\'s own files - not hardcoded - covering civics, traits, ethics and authority compatibility. About 57% of existing builds have at least one flagged conflict; you\'ll get a non-blocking heads-up when creating, editing, or exporting a build.',
       type: 'feature'
     }
   ];

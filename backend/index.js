@@ -700,6 +700,11 @@ app.get('/api/species-classes', (req, res) => {
   readVersionedData(req.query.version, 'species_classes.json', res, 'Could not read species classes data.');
 });
 
+// Get trait point/pick budget per species archetype (BIOLOGICAL/ROBOT/MACHINE/LITHOID/PRESAPIENT/OTHER)
+app.get('/api/species-archetypes', (req, res) => {
+  readVersionedData(req.query.version, 'species_archetypes.json', res, 'Could not read species archetypes data.');
+});
+
 // Get all community resources (guides, tools, videos, etc.)
 app.get('/api/resources', (req, res) => {
   fs.readFile('./data/resources.json', 'utf8', (err, data) => {

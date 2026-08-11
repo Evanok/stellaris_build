@@ -67,19 +67,27 @@ export const WhatsNewBanner: React.FC<WhatsNewBannerProps> = ({ news }) => {
       </div>
 
       {recentNews.map((newsItem, index) => (
-        <div key={index} className={index < recentNews.length - 1 ? 'mb-1' : ''}>
-          <div className="d-flex align-items-center">
-            <span className="me-2" style={{ fontSize: '1.1rem' }}>{getIcon(newsItem.type)}</span>
-            <time className="badge bg-light text-dark small me-2" dateTime={newsItem.date} style={{ flexShrink: 0 }}>
+        <div key={index} className={index < recentNews.length - 1 ? 'mb-2' : ''}>
+          <div className="d-flex align-items-center flex-wrap" style={{ gap: '0.25rem' }}>
+            <span className="me-1" style={{ fontSize: '1.1rem' }}>{getIcon(newsItem.type)}</span>
+            <time className="badge bg-light text-dark small me-1" dateTime={newsItem.date} style={{ flexShrink: 0 }}>
               {newsItem.date}
             </time>
             {isNew(newsItem.date) && (
-              <span className="badge bg-danger small me-2" style={{ flexShrink: 0 }}>NEW</span>
+              <span className="badge bg-danger small me-1" style={{ flexShrink: 0 }}>NEW</span>
             )}
             <span className="text-white fw-bold" style={{ fontSize: '0.85rem', lineHeight: '1.2' }}>
               {newsItem.title}
             </span>
           </div>
+          {newsItem.description && (
+            <div
+              className="text-white"
+              style={{ fontSize: '0.78rem', lineHeight: '1.35', marginTop: '0.2rem' }}
+            >
+              {newsItem.description}
+            </div>
+          )}
         </div>
       ))}
     </div>

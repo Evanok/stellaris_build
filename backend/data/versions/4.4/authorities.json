@@ -13,9 +13,54 @@
       }
     },
     "has_agendas": true,
-    "tags": ["ETHIC_ONLY_DEMOCRACY"],
-    "required_ethics": ["ethic_egalitarian", "ethic_fanatic_egalitarian"],
-    "blocked_ethics": []
+    "tags": [
+      "ETHIC_ONLY_DEMOCRACY"
+    ],
+    "required_ethics": [
+      "ethic_egalitarian",
+      "ethic_fanatic_egalitarian"
+    ],
+    "blocked_ethics": [],
+    "potential": {
+      "all": []
+    },
+    "possible": {
+      "all": [
+        {
+          "not": {
+            "any": [
+              {
+                "field": "origin",
+                "value": "origin_legendary_leader_dictatorial"
+              },
+              {
+                "field": "origin",
+                "value": "origin_legendary_leader_imperial"
+              }
+            ]
+          },
+          "tooltip": "origin_legendary_leader_no_gov_change"
+        },
+        {
+          "not": {
+            "any": [
+              {
+                "field": "ethics",
+                "value": "ethic_gestalt_consciousness"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_authoritarian"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_fanatic_authoritarian"
+              }
+            ]
+          }
+        }
+      ]
+    }
   },
   {
     "id": "auth_oligarchic",
@@ -28,7 +73,47 @@
     "has_agendas": true,
     "tags": [],
     "required_ethics": [],
-    "blocked_ethics": []
+    "blocked_ethics": [],
+    "potential": {
+      "all": []
+    },
+    "possible": {
+      "all": [
+        {
+          "not": {
+            "any": [
+              {
+                "field": "origin",
+                "value": "origin_legendary_leader_dictatorial"
+              },
+              {
+                "field": "origin",
+                "value": "origin_legendary_leader_imperial"
+              }
+            ]
+          },
+          "tooltip": "origin_legendary_leader_no_gov_change"
+        },
+        {
+          "not": {
+            "any": [
+              {
+                "field": "ethics",
+                "value": "ethic_gestalt_consciousness"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_fanatic_egalitarian"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_fanatic_authoritarian"
+              }
+            ]
+          }
+        }
+      ]
+    }
   },
   {
     "id": "auth_dictatorial",
@@ -39,9 +124,46 @@
     "election_type": "dictatorial",
     "max_election_candidates": 2,
     "has_agendas": true,
-    "tags": ["ETHIC_NEVER_DEMOCRACY"],
+    "tags": [
+      "ETHIC_NEVER_DEMOCRACY"
+    ],
     "required_ethics": [],
-    "blocked_ethics": ["ethic_egalitarian", "ethic_fanatic_egalitarian"]
+    "blocked_ethics": [
+      "ethic_egalitarian",
+      "ethic_fanatic_egalitarian"
+    ],
+    "potential": {
+      "all": []
+    },
+    "possible": {
+      "all": [
+        {
+          "not": {
+            "field": "origin",
+            "value": "origin_legendary_leader_imperial"
+          },
+          "tooltip": "origin_legendary_leader_no_gov_change"
+        },
+        {
+          "not": {
+            "any": [
+              {
+                "field": "ethics",
+                "value": "ethic_gestalt_consciousness"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_egalitarian"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_fanatic_egalitarian"
+              }
+            ]
+          }
+        }
+      ]
+    }
   },
   {
     "id": "auth_imperial",
@@ -52,9 +174,46 @@
     "election_type": "hereditary",
     "has_heir": true,
     "has_agendas": true,
-    "tags": ["ETHIC_NEVER_DEMOCRACY"],
+    "tags": [
+      "ETHIC_NEVER_DEMOCRACY"
+    ],
     "required_ethics": [],
-    "blocked_ethics": ["ethic_egalitarian", "ethic_fanatic_egalitarian"]
+    "blocked_ethics": [
+      "ethic_egalitarian",
+      "ethic_fanatic_egalitarian"
+    ],
+    "potential": {
+      "all": []
+    },
+    "possible": {
+      "all": [
+        {
+          "not": {
+            "field": "origin",
+            "value": "origin_legendary_leader_dictatorial"
+          },
+          "tooltip": "origin_legendary_leader_no_gov_change"
+        },
+        {
+          "not": {
+            "any": [
+              {
+                "field": "ethics",
+                "value": "ethic_gestalt_consciousness"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_egalitarian"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_fanatic_egalitarian"
+              }
+            ]
+          }
+        }
+      ]
+    }
   },
   {
     "id": "auth_corporate",
@@ -65,10 +224,61 @@
     "election_type": "corporate",
     "max_election_candidates": 4,
     "has_agendas": false,
-    "tags": ["CORPORATE"],
+    "tags": [
+      "CORPORATE"
+    ],
     "required_ethics": [],
-    "blocked_ethics": ["ethic_gestalt_consciousness"],
-    "required_dlc": "Megacorp"
+    "blocked_ethics": [
+      "ethic_gestalt_consciousness"
+    ],
+    "required_dlc": "Megacorp",
+    "potential": {
+      "all": [
+        {
+          "not": {
+            "field": "country_type",
+            "value": "primitive"
+          }
+        }
+      ]
+    },
+    "possible": {
+      "all": [
+        {
+          "not": {
+            "any": [
+              {
+                "field": "origin",
+                "value": "origin_legendary_leader_dictatorial"
+              },
+              {
+                "field": "origin",
+                "value": "origin_legendary_leader_imperial"
+              }
+            ]
+          },
+          "tooltip": "origin_legendary_leader_no_gov_change"
+        },
+        {
+          "not": {
+            "any": [
+              {
+                "field": "ethics",
+                "value": "ethic_gestalt_consciousness"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_fanatic_egalitarian"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_fanatic_authoritarian"
+              }
+            ]
+          }
+        }
+      ]
+    }
   },
   {
     "id": "auth_hive_mind",
@@ -79,9 +289,32 @@
     "election_type": "none",
     "has_heir": false,
     "has_agendas": false,
-    "tags": ["ETHIC_GESTALT_CONSCIOUSNESS_AUTHORITY", "GESTALT", "HIVE_MIND"],
-    "required_ethics": ["ethic_gestalt_consciousness"],
-    "blocked_ethics": []
+    "tags": [
+      "ETHIC_GESTALT_CONSCIOUSNESS_AUTHORITY",
+      "GESTALT",
+      "HIVE_MIND"
+    ],
+    "required_ethics": [
+      "ethic_gestalt_consciousness"
+    ],
+    "blocked_ethics": [],
+    "potential": {
+      "all": []
+    },
+    "possible": {
+      "all": [
+        {
+          "field": "ethics",
+          "value": "ethic_gestalt_consciousness"
+        },
+        {
+          "not": {
+            "field": "species_archetype",
+            "value": "MACHINE"
+          }
+        }
+      ]
+    }
   },
   {
     "id": "auth_machine_intelligence",
@@ -92,8 +325,29 @@
     "election_type": "none",
     "has_heir": false,
     "has_agendas": false,
-    "tags": ["ETHIC_GESTALT_CONSCIOUSNESS_AUTHORITY", "GESTALT", "MACHINE_INTELLIGENCE"],
-    "required_ethics": ["ethic_gestalt_consciousness"],
-    "blocked_ethics": []
+    "tags": [
+      "ETHIC_GESTALT_CONSCIOUSNESS_AUTHORITY",
+      "GESTALT",
+      "MACHINE_INTELLIGENCE"
+    ],
+    "required_ethics": [
+      "ethic_gestalt_consciousness"
+    ],
+    "blocked_ethics": [],
+    "potential": {
+      "all": []
+    },
+    "possible": {
+      "all": [
+        {
+          "field": "ethics",
+          "value": "ethic_gestalt_consciousness"
+        },
+        {
+          "field": "species_archetype",
+          "value": "MACHINE"
+        }
+      ]
+    }
   }
 ]
