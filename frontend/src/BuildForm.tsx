@@ -118,6 +118,7 @@ interface Trait {
   tags: any[];
   opposites: any[];
   category: string;
+  allowed_archetypes?: string[];
 }
 
 interface Origin {
@@ -705,11 +706,12 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
   // Filter traits by species type and search query
   const filteredTraits = allTraits.filter(trait => {
-    // Filter machine-only traits (only for MACHINE/ROBOT species)
+    // Traits are restricted to specific archetypes both ways (e.g. Very Strong
+    // is BIOLOGICAL/LITHOID only, Machine Unit is MACHINE/ROBOT only) - an
+    // empty/missing list means no restriction (only 1 vanilla trait is like this).
     const speciesArchetype = getSpeciesArchetype(selectedSpeciesClass);
-    const isMachineSpecies = speciesArchetype === 'MACHINE' || speciesArchetype === 'ROBOT';
-    const hasMachineTag = Array.isArray(trait.tags) && trait.tags.includes('machine');
-    if (hasMachineTag && !isMachineSpecies) {
+    const allowedArchetypes = Array.isArray(trait.allowed_archetypes) ? trait.allowed_archetypes : [];
+    if (allowedArchetypes.length > 0 && !allowedArchetypes.includes(speciesArchetype)) {
       return false;
     }
 
@@ -1092,6 +1094,17 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     if (currentTraitCount > MAX_TRAIT_COUNT) {
       warnings.push(`Species traits: ${currentTraitCount} traits selected, but ${resolveRuleLabel('species_archetype', ctx.species_archetype)} species allow only ${MAX_TRAIT_COUNT}`);
     }
+
+    // Double-check trait/archetype compatibility independently of the live
+    // filteredTraits list - matters for edit mode on a build saved before
+    // this filter existed (e.g. biological-only traits on a Machine species).
+    selectedTraits.forEach(traitId => {
+      const trait = allTraits.find(t => t.id === traitId);
+      const allowed = trait?.allowed_archetypes;
+      if (Array.isArray(allowed) && allowed.length > 0 && !allowed.includes(ctx.species_archetype)) {
+        warnings.push(`Trait "${trait?.name || traitId}" is not allowed for ${resolveRuleLabel('species_archetype', ctx.species_archetype)} species`);
+      }
+    });
 
     if (selectedAuthority) {
       const authority = allAuthorities.find(a => a.id === selectedAuthority);

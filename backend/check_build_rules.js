@@ -55,6 +55,7 @@ function loadVersionData(dataVersion) {
     archetypeByClass: Object.fromEntries(speciesClasses.map(c => [c.id, c.archetype])),
     authorityById: Object.fromEntries(authorities.map(a => [a.id, a])),
     costByTraitId: Object.fromEntries(traits.map(t => [t.id, t.cost])),
+    traitById: Object.fromEntries(traits.map(t => [t.id, t])),
     archetypeBudgets,
   };
 }
@@ -76,7 +77,7 @@ function getOriginTraitBonus(origin, speciesArchetype) {
 function checkBuild(build) {
   const dataVersion = getDataVersion(build.game_version);
   const verified = FIXED_VERSIONS.has(dataVersion);
-  const { civicById, originById, archetypeByClass, authorityById, costByTraitId, archetypeBudgets } = loadVersionData(dataVersion);
+  const { civicById, originById, archetypeByClass, authorityById, costByTraitId, traitById, archetypeBudgets } = loadVersionData(dataVersion);
   const ctx = contextFromBuild(build, archetypeByClass);
   const issues = [];
 
@@ -105,6 +106,16 @@ function checkBuild(build) {
       issues.push(`species traits: ${traitCount} traits selected, but ${ctx.species_archetype} allows only ${maxCount}`);
     }
   }
+
+  // Traits are restricted to specific archetypes both ways (e.g. Very Strong
+  // is BIOLOGICAL/LITHOID only, Machine Unit is MACHINE/ROBOT only).
+  ctx.traits.forEach(id => {
+    const trait = traitById[id];
+    const allowed = trait && trait.allowed_archetypes;
+    if (Array.isArray(allowed) && allowed.length > 0 && !allowed.includes(ctx.species_archetype)) {
+      issues.push(`trait "${id}" is not allowed for ${ctx.species_archetype} species`);
+    }
+  });
 
   if (build.authority) {
     const authority = authorityById[build.authority];

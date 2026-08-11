@@ -44,6 +44,7 @@ interface Trait {
   description: string;
   cost: number;
   effects: string;
+  allowed_archetypes?: string[];
 }
 
 interface Origin {
@@ -568,6 +569,14 @@ export const BuildDetail: React.FC = () => {
           warnings.push(`Species traits: ${traitCount} traits selected, but ${resolveExportRuleLabel('species_archetype', speciesArchetype)} species allow only ${maxCount}`);
         }
       }
+
+      traits.forEach(traitId => {
+        const trait = getTraitData(traitId);
+        const allowed = trait?.allowed_archetypes;
+        if (Array.isArray(allowed) && allowed.length > 0 && !allowed.includes(speciesArchetype)) {
+          warnings.push(`Trait "${trait?.name || traitId}" is not allowed for ${resolveExportRuleLabel('species_archetype', speciesArchetype)} species`);
+        }
+      });
     }
 
     if (b.authority) {

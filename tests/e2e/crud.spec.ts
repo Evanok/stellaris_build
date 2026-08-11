@@ -100,11 +100,11 @@ test.describe('Build Creation - Valid Builds', () => {
     await civics.nth(0).click();
     await civics.nth(1).click();
 
-    // Select traits with negative costs to ensure total ≤2
+    // Select a MACHINE-allowed trait, cost within the MACHINE archetype's 1-point budget
     await page.waitForSelector('input[type="checkbox"][id^="trait-"]', { timeout: 10000 });
 
-    // Select Slow Learners (cost -1)
-    const trait1 = page.locator('input[type="checkbox"][id="trait-trait_slow_learners"]');
+    // Select Double-Jointed (cost 1, MACHINE/ROBOT only)
+    const trait1 = page.locator('input[type="checkbox"][id="trait-trait_robot_double_jointed"]');
     await trait1.scrollIntoViewIfNeeded();
     await trait1.click();
 
@@ -143,9 +143,9 @@ test.describe('Build Creation - Valid Builds', () => {
     await civics.nth(0).click();
     await civics.nth(1).click();
 
-    // Select a trait with valid cost (use Nonadaptive with cost -2 for lithoid)
+    // Select a LITHOID-allowed trait with valid cost (Nonadaptive is BIOLOGICAL-only, not LITHOID)
     await page.waitForSelector('input[type="checkbox"][id^="trait-"]', { timeout: 10000 });
-    const lithoidTrait = page.locator('input[type="checkbox"][id="trait-trait_nonadaptive"]');
+    const lithoidTrait = page.locator('input[type="checkbox"][id="trait-trait_slow_learners"]');
     await lithoidTrait.scrollIntoViewIfNeeded();
     await lithoidTrait.click();
 

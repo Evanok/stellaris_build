@@ -586,6 +586,24 @@ with the audit tooling, not a true compiled binary (deliberately not pursued fur
 see git history if reconsidering). Reads `GET /api/builds/:id`'s `{build: {...}}`
 wrapper, `GET /api/builds`'s `{builds: [...]}` wrapper, or a bare build object.
 
+**8. Two more bugs found by actually testing exports in-game** (not by static
+analysis - see the export-testing gotcha below for how):
+- **Ruler `leader_class` was hardcoded to `"official"`** regardless of the chosen
+  ruler trait. Each of the 3 leader classes (official/commander/scientist) has its
+  own allowed traits (`leader_class` field, already extracted in `ruler_traits.json`) -
+  e.g. `trait_ruler_warlike` (Warlike) is commander-only, so a build using it exported
+  with a class/trait mismatch. Fixed: `BuildDetail.tsx`'s export now reads the selected
+  ruler trait's actual `leader_class` and uses that (falls back to `"official"` only
+  when no ruler trait is set - a ruler still needs some class to exist).
+- **Species traits were only filtered one-way for archetype compatibility.**
+  `BuildForm.tsx`'s trait list checked "hide MACHINE-tagged traits from non-machine
+  species" but never the reverse, so BIOLOGICAL/LITHOID-only traits (e.g. Very Strong,
+  Solitary) stayed selectable - and selected - for a MACHINE species build,
+  confirmed invalid in-game (empire creator flags "portrait conflicts with selected
+  traits"). Fixed: `filteredTraits` now checks the trait's real `allowed_archetypes`
+  both ways (empty list = universal, only 1 vanilla trait is like that). Same
+  double-check pattern added to the submit/export warnings and `check_build_rules.js`.
+
 **Known limitations, not yet fixed:**
 - `origin_legendary_leader`'s 3 late-game story variants (`_death`/`_imperial`/
   `_dictatorial`) are correctly excluded from `origins.json` (self-referential
@@ -598,6 +616,10 @@ wrapper, `GET /api/builds`'s `{builds: [...]}` wrapper, or a bare build object.
   unsupported and treated as satisfied rather than evaluated.
 - 4.2/4.3 still have the old flat-string predicate format - re-extraction needs
   those game versions checked out via Steam (Properties > Betas), not done this session.
+- Secondary species traits (`filteredSecondaryTraits` in `BuildForm.tsx`, for origins
+  like Necrophage/Syncretic Evolution) aren't filtered by archetype at all yet - no
+  secondary species class selector exists to know which archetype to filter against
+  (pre-existing TODO, not addressed this session).
 
 **Export-file testing gotcha:** `user_empire_designs_v3.4.txt` accumulates real
 Stellaris design blocks over time and can already contain many vanilla/prescripted
