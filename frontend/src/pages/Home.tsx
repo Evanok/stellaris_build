@@ -136,6 +136,7 @@ export const Home: React.FC = () => {
   const [versionFilter, setVersionFilter] = useState<string>('');
   const [nomadicFilter, setNomadicFilter] = useState(false);
   const [sortBy, setSortBy] = useState<string>('newest');
+  const [gameDataStats, setGameDataStats] = useState<Record<string, number> | null>(null);
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // What's New data
@@ -184,6 +185,14 @@ export const Home: React.FC = () => {
 
     return () => { cancelled = true; };
   }, [currentPage, debouncedSearch, difficultyFilter, versionFilter, nomadicFilter, sortBy]);
+
+  // Static counts, independent of the builds list/filters above - fetched once.
+  useEffect(() => {
+    fetch('/api/game-data-stats')
+      .then(r => r.json())
+      .then(setGameDataStats)
+      .catch(() => {});
+  }, []);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -259,9 +268,44 @@ export const Home: React.FC = () => {
               </span>
             </div>
             <div className="col-md-4 text-end">
-              <div className="d-inline-block p-2 rounded" style={{ background: 'rgba(255, 255, 255, 0.1)' }}>
-                <h4 className="text-white mb-1">{total}</h4>
+              {/* Mobile: just the build counter, no grid overhead */}
+              <div
+                className="d-md-none d-inline-flex flex-column justify-content-center text-center p-2 rounded"
+                style={{ background: 'rgba(255, 255, 255, 0.1)', width: '96px', minHeight: '64px' }}
+              >
+                <h5 className="text-white mb-1">{total}</h5>
                 <p className="text-light mb-0 small">Community Builds</p>
+              </div>
+
+              {/* Desktop: fixed 3-column grid so the row split never depends on
+                  container width (flex-wrap's line break point moved around
+                  depending on viewport, leaving an unaligned partial row). */}
+              <div
+                className="d-none d-md-grid"
+                style={{ gridTemplateColumns: 'repeat(3, 96px)', gap: '0.5rem', justifyContent: 'end' }}
+              >
+                {[
+                  { label: 'Community Builds', value: total, highlight: true },
+                  ...(gameDataStats ? [
+                    { label: 'Traits', value: gameDataStats.traits },
+                    { label: 'Civics', value: gameDataStats.civics },
+                    { label: 'Authorities', value: gameDataStats.authorities },
+                    { label: 'Origins', value: gameDataStats.origins },
+                    { label: 'Ethics', value: gameDataStats.ethics },
+                  ] : []),
+                ].map(({ label, value, highlight }) => (
+                  <div
+                    key={label}
+                    className="text-center p-2 rounded d-flex flex-column justify-content-center"
+                    style={{
+                      background: highlight ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.06)',
+                      minHeight: '64px'
+                    }}
+                  >
+                    <h5 className="text-white mb-1">{value}</h5>
+                    <p className="text-light mb-0 small">{label}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

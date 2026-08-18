@@ -615,6 +615,42 @@ for (const v of AVAILABLE_DATA_VERSIONS) {
   };
 }
 
+// Lightweight counts for the home page banner - computed once at startup from
+// the same files /api/stats reads, but without that endpoint's per-request DB
+// aggregation queries (this is just static file lengths).
+const _gameDataCounts = (() => {
+  const latestVersionPath = path.join(__dirname, 'data', 'versions', LATEST_DATA_VERSION);
+  const countEntries = (file, arrayKey) => {
+    try {
+      const data = JSON.parse(fs.readFileSync(path.join(latestVersionPath, file), 'utf8'));
+      if (Array.isArray(data)) return data.length;
+      if (arrayKey && Array.isArray(data[arrayKey])) return data[arrayKey].length;
+      return Object.keys(data).length;
+    } catch {
+      return 0;
+    }
+  };
+  return {
+    traits: countEntries('traits.json'),
+    civics: countEntries('civics.json'),
+    origins: countEntries('origins.json'),
+    ethics: countEntries('ethics.json'),
+    authorities: countEntries('authorities.json'),
+    ascension_perks: countEntries('ascension_perks.json', 'all'),
+    // traditions.json has 2 keys per tree ("tr_xxx" with adopt/finish, and a
+    // bare-name alias holding the individual traditions list) - count only
+    // the tr_xxx entries, same filter BuildDetail.tsx uses to list trees.
+    traditions: (() => {
+      try {
+        const data = JSON.parse(fs.readFileSync(path.join(latestVersionPath, 'traditions.json'), 'utf8'));
+        return Object.values(data).filter(t => t && t.adopt && t.adopt.name).length;
+      } catch {
+        return 0;
+      }
+    })(),
+  };
+})();
+
 function enrichBuild(build) {
   const names = _nameCache[getDataVersion(build.game_version)] || {};
   return {
@@ -688,6 +724,12 @@ app.get('/api/authorities', (req, res) => {
 // Get all ascension perks
 app.get('/api/ascension-perks', (req, res) => {
   readVersionedData(req.query.version, 'ascension_perks.json', res, 'Could not read ascension perks data.');
+});
+
+// Item counts for the latest game data version (home page banner) - static,
+// no DB query, precomputed at startup.
+app.get('/api/game-data-stats', (req, res) => {
+  res.json(_gameDataCounts);
 });
 
 // Get all ruler traits
