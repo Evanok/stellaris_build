@@ -12,13 +12,47 @@ This is a community website for sharing Stellaris (game) builds. It's a monorepo
 
 **Live Site:** https://stellaris-build.com
 
-**Tech Stack:**
-- Frontend: React 18 + TypeScript + Vite + Bootstrap 5
-- Backend: Express 5 + SQLite3
-- Data Extraction: Python 3 (custom Paradox file parser)
-- Deployment: PM2 + nginx + Let's Encrypt SSL
-- Hosting: Scaleway Dedibox
-- Monorepo managed with npm workspaces
+## Tech Stack
+
+_Versions verified against the workspace `package.json` files on 2026-08-18._
+
+**Repo layout**
+- npm workspaces monorepo: `frontend/` + `backend/` are workspaces; `data-extractor/` (Python) sits outside them
+- Root scripts only orchestrate: `concurrently` 8 for dev, Playwright for tests
+
+**Frontend** (`frontend/`)
+- React 18.2 + TypeScript 5, built with Vite 4.4 + `@vitejs/plugin-react` 4
+- UI: Bootstrap 5.3 + `react-bootstrap` 2.10 + `bootstrap-icons` (no Tailwind)
+- Routing: `react-router-dom` 7.9
+- SEO/meta: `react-helmet-async` 2
+- Markdown rendering: `react-markdown` 10
+- Charts: `recharts` 3.3 (Stats page)
+- CSS trimming: `@fullhuman/postcss-purgecss` 8
+- Lint: ESLint (`npm run lint -w frontend`)
+
+**Backend** (`backend/`)
+- Node + Express 5.1, **CommonJS** (`require`, not ESM)
+- Database: `sqlite3` 5.1 — `stellaris_builds.db`, tables auto-created on startup (`database.js`)
+- Sessions: `express-session` 1.18 + **`connect-sqlite3`** 0.9 → `sessions.db`
+- Auth: `passport` 0.7 with `passport-google-oauth20`, `passport-steam`, `passport-local`; `bcrypt` 6 for local accounts
+- Rate limiting: `express-rate-limit` 8, plus in-memory limiters in `security.js`
+- Uploads: `multer` 2 (`.sav` / `.txt`, 50 MB cap)
+- Images: `sharp` 0.35 (OG/social preview generation, `ogImage.js`)
+- Email: `nodemailer` 9 over SMTP (password reset)
+- Config: `dotenv`; dev runner: `nodemon` 3 (**watches `.js` only** — see Key Technical Details)
+
+**Data extraction** (`data-extractor/`)
+- Python 3.8, custom Paradox script parser (`paradox_parser.py`, `localization_parser.py`) — no parsing library
+- `Pillow` (PIL) for icon/image processing, and the **ImageMagick `convert` CLI** shelled out via `subprocess` for DDS→PNG/JPG
+- Note: `requirements.txt` still claims "no external dependencies" — inaccurate, Pillow + ImageMagick are required
+
+**Testing**
+- Playwright 1.56 at the repo root (`npm test`, specs in `tests/`)
+- No unit-test framework in either workspace (`npm test -w backend` is a stub that exits 1)
+
+**Deployment**
+- PM2 + nginx + Let's Encrypt SSL on a Scaleway Dedibox
+- Backend on :3001; the Vite dev server proxies `/api/*` to it locally
 
 ## Development Commands
 
@@ -461,7 +495,7 @@ After making changes to game data:
 - Passport.js handles OAuth flow and session management
 - `backend/auth.js` - Strategy configurations
 - `backend/index.js` - Auth routes and middleware
-- Sessions stored in SQLite (via `better-sqlite3-session-store`)
+- Sessions stored in SQLite (`sessions.db`, via `connect-sqlite3`)
 - `isAuthenticated` middleware protects routes requiring login
 - Custom display names: OAuth users can set unique display_name (3-30 chars, alphanumeric + underscore/dash)
 - Collision prevention: display_name uniqueness enforced across all users (both usernames and display_names)
