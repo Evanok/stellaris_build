@@ -14,26 +14,28 @@ This is a community website for sharing Stellaris (game) builds. It's a monorepo
 
 ## Tech Stack
 
-_Versions verified against the workspace `package.json` files on 2026-08-18._
+_Versions verified against the workspace `package.json` files on 2026-08-18 (major-version upgrade pass same day — see below)._
 
 **Repo layout**
 - npm workspaces monorepo: `frontend/` + `backend/` are workspaces; `data-extractor/` (Python) sits outside them
 - Root scripts only orchestrate: `concurrently` 8 for dev, Playwright for tests
+- Root `package.json` has an `overrides` block pinning `react`/`react-dom` to 19.2.x and `sqlite3` to 6.0.x tree-wide — **do not remove**. Without it, `react-bootstrap` → `@restart/ui` → `react-aria` pulls in its own nested `react-dom@18`, which crashes the entire app at runtime with "A React Element from an older version of React was rendered" (blank page, not a build error — `tsc`/`vite build` pass fine even when this is broken). If you ever bump these packages again, re-verify `npm ls react-dom` shows a single deduped version, and actually load the app in a browser, not just a type-check.
 
 **Frontend** (`frontend/`)
-- React 18.2 + TypeScript 5, built with Vite 4.4 + `@vitejs/plugin-react` 4
+- React 19.2 + TypeScript 7, built with Vite 8 + `@vitejs/plugin-react` 6
 - UI: Bootstrap 5.3 + `react-bootstrap` 2.10 + `bootstrap-icons` (no Tailwind)
 - Routing: `react-router-dom` 7.9
-- SEO/meta: `react-helmet-async` 2
+- SEO/meta: `react-helmet-async` 3
 - Markdown rendering: `react-markdown` 10
-- Charts: `recharts` 3.3 (Stats page)
+- Charts: `recharts` 3.10 (Stats page)
 - CSS trimming: `@fullhuman/postcss-purgecss` 8
-- Lint: ESLint (`npm run lint -w frontend`)
+- Lint: ESLint (`npm run lint -w frontend`) — **script present but `eslint` itself is not in `devDependencies`**, so `npm run lint -w frontend` currently fails with `eslint: not found`; pre-existing, not caused by the dependency upgrade
+- `src/vite-env.d.ts` (`/// <reference types="vite/client" />`) — required since TypeScript 7 for CSS side-effect imports (`import './index.css'`) to type-check; standard Vite scaffold file, just hadn't existed here before
 
 **Backend** (`backend/`)
 - Node + Express 5.1, **CommonJS** (`require`, not ESM)
-- Database: `sqlite3` 5.1 — `stellaris_builds.db`, tables auto-created on startup (`database.js`)
-- Sessions: `express-session` 1.18 + **`connect-sqlite3`** 0.9 → `sessions.db`
+- Database: `sqlite3` 6.0 — `stellaris_builds.db`, tables auto-created on startup (`database.js`). **No prebuilt binary compatible with prod's glibc** (Ubuntu 20.04, glibc 2.31; sqlite3 6's prebuild needs glibc 2.38+) — `backend/package.json`'s `postinstall` script auto-detects a failed `require('sqlite3')` and runs `npm rebuild sqlite3 --build-from-source` when needed, so a plain `npm install` self-heals on any machine. Needs `python3`/`make`/`g++` (already present on prod); if a rebuild ever fails there, install `build-essential`.
+- Sessions: `express-session` 1.18 + **`connect-sqlite3`** 0.9 → `sessions.db` (its own nested `sqlite3` dependency is pinned to 6.0.x too, via the root `overrides` — otherwise it'd carry its own vulnerable `sqlite3@5.1.7` + old `node-gyp`/`tar`)
 - Auth: `passport` 0.7 with `passport-google-oauth20`, `passport-steam`, `passport-local`; `bcrypt` 6 for local accounts
 - Rate limiting: `express-rate-limit` 8, plus in-memory limiters in `security.js`
 - Uploads: `multer` 2 (`.sav` / `.txt`, 50 MB cap)
@@ -528,6 +530,7 @@ After making changes to game data:
 ## Known Bugs / TODO
 
 - **Scripted variables not resolved in effects text**: Some civics/traits show raw Paradox variable references like `$@civic_tankbound_job_upkeep|0=-%$` instead of numeric values. Fix: `localization_parser.py` needs to load `common/scripted_variables/` and resolve `$@var|format$` syntax.
+- **`BuildForm.tsx` feels sluggish in dev mode since the React 19 upgrade (2026-08-18)**: measured click-to-render on a trait checkbox (442 checkboxes on the create-build page) at ~400ms in dev under React 19, vs ~125ms under React 18 and ~100ms in the production build — confirmed by directly A/B-swapping React versions locally, not just suspected. Root cause: React 19's dev build does more diagnostic work per render than React 18's, which compounds with `StrictMode`'s double-render and the fact that toggling one checkbox re-renders all ~442 (no memoization). **Production is unaffected** (dev-only diagnostics are stripped by `vite build`). Fix, if it's worth doing: memoize the trait/civic/ethic checkbox rows in `BuildForm.tsx` (`React.memo` + stable callbacks) so a single toggle doesn't re-render the whole list — would help both the dev experience and prod on slower devices, but it's a real refactor of a ~2500-line file, not attempted yet.
 
 ## Future Development
 

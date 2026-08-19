@@ -101,8 +101,8 @@ export default function Stats() {
               <Tooltip
                 contentStyle={{ backgroundColor: '#333', border: '1px solid #555' }}
                 labelStyle={{ color: '#fff' }}
-                formatter={(value: number, _name: string, props: any) => [
-                  `${value} (${props.payload.percentage}%)`,
+                formatter={(value, _name, props) => [
+                  `${value} (${(props.payload as any)?.percentage}%)`,
                   'Count'
                 ]}
               />
@@ -150,7 +150,7 @@ export default function Stats() {
                       <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} label={({ name, percent }: any) => `${name} ${((percent as number) * 100).toFixed(0)}%`} labelLine={false}>
                         {pieData.map((_entry, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                       </Pie>
-                      <Tooltip formatter={(value: number) => [`${value} builds`, '']} contentStyle={{ backgroundColor: '#333', border: '1px solid #555' }} />
+                      <Tooltip formatter={(value) => [`${value} builds`, '']} contentStyle={{ backgroundColor: '#333', border: '1px solid #555' }} />
                     </PieChart>
                   </ResponsiveContainer>
                 );

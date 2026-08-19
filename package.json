@@ -20,5 +20,13 @@
   "devDependencies": {
     "@playwright/test": "^1.56.1",
     "concurrently": "^8.2.2"
+  },
+  "overrides": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "sqlite3": "^6.0.1",
+    "connect-sqlite3": {
+      "sqlite3": "^6.0.1"
+    }
   }
 }
