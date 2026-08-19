@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "postinstall": "node -e \"try{require('sqlite3')}catch(e){process.exit(1)}\" || npm rebuild sqlite3 --build-from-source"
   },
   "keywords": [],
   "author": "",
