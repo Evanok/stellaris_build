@@ -530,6 +530,7 @@ After making changes to game data:
 ## Known Bugs / TODO
 
 - **Scripted variables not resolved in effects text**: Some civics/traits show raw Paradox variable references like `$@civic_tankbound_job_upkeep|0=-%$` instead of numeric values. Fix: `localization_parser.py` needs to load `common/scripted_variables/` and resolve `$@var|format$` syntax.
+- **`BuildForm.tsx` feels sluggish in dev mode since the React 19 upgrade (2026-08-18)**: measured click-to-render on a trait checkbox (442 checkboxes on the create-build page) at ~400ms in dev under React 19, vs ~125ms under React 18 and ~100ms in the production build — confirmed by directly A/B-swapping React versions locally, not just suspected. Root cause: React 19's dev build does more diagnostic work per render than React 18's, which compounds with `StrictMode`'s double-render and the fact that toggling one checkbox re-renders all ~442 (no memoization). **Production is unaffected** (dev-only diagnostics are stripped by `vite build`). Fix, if it's worth doing: memoize the trait/civic/ethic checkbox rows in `BuildForm.tsx` (`React.memo` + stable callbacks) so a single toggle doesn't re-render the whole list — would help both the dev experience and prod on slower devices, but it's a real refactor of a ~2500-line file, not attempted yet.
 
 ## Future Development
 
