@@ -255,6 +255,7 @@ Game data is versioned by Stellaris patch. Each folder maps to a game version:
 - `backend/data/versions/4.2/` - Stellaris 4.2 "Corvus" data
 - `backend/data/versions/4.3/` - Stellaris 4.3 "Cetus" data
 - `backend/data/versions/4.4/` - Stellaris 4.4 "Pegasus" data
+- `backend/data/versions/4.5/` - Stellaris 4.5 "Cygnus" data
 
 Each version folder contains the same set of files:
 - `traits.json` - species traits (filtered, no leader traits)
@@ -275,7 +276,7 @@ Non-versioned files (still in `backend/data/`):
 - All game data endpoints accept `?version=X.Y` query param
 - `getDataVersion(requestedVersion)` maps any version string to the nearest available data folder
 - Versions below the oldest available (4.2) fall back to 4.2
-- Versions above the latest available fall back to the latest (4.4)
+- Versions above the latest available fall back to the latest (4.5)
 - `AVAILABLE_DATA_VERSIONS` array must be updated when adding new version folders
 - `LATEST_DATA_VERSION` is auto-derived from the last element of that array
 
@@ -312,36 +313,97 @@ python3 extract_all.py "/mnt/c/Program Files (x86)/Steam/steamapps/common/Stella
 # Output goes to: output/versions/X.Y/ (created or updated automatically)
 ```
 
-**Process for a new Stellaris version (e.g. 4.5):**
-1. Run `extract_all.py` — it auto-detects the version and creates `output/versions/4.5/`
-2. Also run separately (not included in extract_all):
+**Process for a new Stellaris version (e.g. 4.6):**
+
+Full checklist, verified end-to-end on the 4.4 -> 4.5 "Cygnus" upgrade (2026-09-23). `NEW` = the
+new version, `PREV` = the previous one. Steps 5-9 are the "wire it into the site" half — easy to
+forget, and the data is invisible to users until they're all done.
+
+*Extraction*
+1. Confirm the game version: `launcher-settings.json` -> `modsCompatibilityVersion` (data folder
+   name, `X.Y`) and `rawVersion` (exact patch, `X.Y.Z` — needed in step 6).
+2. Check for new trait files — each DLC adds a new numbered file (e.g. `18_nomads_species_traits.txt`).
+   Diff `ls common/traits/` against the `species_trait_files` list in `extract_traits.py`, add any
+   missing `*_species_traits.txt` / `*_traits.txt` (species ones only, not `*_leader_traits.txt`).
+3. Run `extract_all.py "<stellaris_path>"` — auto-detects the version, creates `output/versions/NEW/`.
+4. Run the two extractors that are NOT in `extract_all.py`:
 ```bash
-python3 extract_ruler_traits.py "<stellaris_path>"   # output/ruler_traits.json
-python3 extract_species_classes.py "<stellaris_path>" # output/species_classes.json
-cp output/ruler_traits.json output/versions/4.5/ruler_traits.json
-cp output/species_classes.json output/versions/4.5/species_classes.json
+python3 extract_ruler_traits.py "<stellaris_path>"    # -> output/ruler_traits.json
+python3 extract_species_classes.py "<stellaris_path>" # -> output/species_classes.json
 ```
-3. Check for new trait files — each DLC adds a new numbered file (e.g. `18_nomads_species_traits.txt`). Add any new file to the `species_trait_files` list in `extract_traits.py` and re-run.
-4. Copy to backend:
+5. Copy to backend:
 ```bash
-VERSION=4.5
+VERSION=4.6; PREV=4.5
 mkdir -p ../backend/data/versions/$VERSION
-cp ../backend/data/versions/4.4/authorities.json ../backend/data/versions/$VERSION/  # if unchanged
-python3 extract_authority_rules.py "<stellaris_path>" ../backend/data/versions/$VERSION/authorities.json  # refresh potential/possible
-cp output/versions/$VERSION/species_archetypes.json ../backend/data/versions/$VERSION/
-cp output/versions/$VERSION/traits.json ../backend/data/versions/$VERSION/
-cp output/versions/$VERSION/civics_civics_only.json ../backend/data/versions/$VERSION/civics.json
-cp output/versions/$VERSION/civics_origins_only.json ../backend/data/versions/$VERSION/origins.json
-cp output/versions/$VERSION/ethics.json ../backend/data/versions/$VERSION/
-cp output/versions/$VERSION/traditions_by_tree.json ../backend/data/versions/$VERSION/traditions.json
-cp output/versions/$VERSION/ascension_perks.json ../backend/data/versions/$VERSION/
-cp output/versions/$VERSION/ruler_traits.json ../backend/data/versions/$VERSION/
-cp output/versions/$VERSION/species_classes.json ../backend/data/versions/$VERSION/
+cp output/versions/$VERSION/traits.json               ../backend/data/versions/$VERSION/
+cp output/versions/$VERSION/civics_civics_only.json   ../backend/data/versions/$VERSION/civics.json
+cp output/versions/$VERSION/civics_origins_only.json  ../backend/data/versions/$VERSION/origins.json
+cp output/versions/$VERSION/ethics.json               ../backend/data/versions/$VERSION/
+cp output/versions/$VERSION/traditions_by_tree.json   ../backend/data/versions/$VERSION/traditions.json
+cp output/versions/$VERSION/ascension_perks.json      ../backend/data/versions/$VERSION/
+cp output/versions/$VERSION/species_archetypes.json   ../backend/data/versions/$VERSION/
+cp output/ruler_traits.json                           ../backend/data/versions/$VERSION/ruler_traits.json
+cp output/species_classes.json                        ../backend/data/versions/$VERSION/species_classes.json
+cp ../backend/data/versions/$PREV/authorities.json    ../backend/data/versions/$VERSION/  # hand-maintained, copy then refresh:
+python3 extract_authority_rules.py "<stellaris_path>" ../backend/data/versions/$VERSION/authorities.json
 ```
-5. Update `AVAILABLE_DATA_VERSIONS` in `backend/index.js` to add `'4.5'`
-6. Add `4.5` to `GAME_VERSIONS` in `frontend/src/BuildForm.tsx` (mark as Latest, update previous)
-7. Update `latestNews` in `frontend/src/pages/Home.tsx`
-8. Rebuild frontend and restart backend
+
+**Gotcha — `ruler_traits.json` loses its `icon` field.** `extract_ruler_traits.py` does not emit
+`icon`; the field was added out-of-band and only survives in the already-deployed files. Copying
+the fresh `output/ruler_traits.json` over it silently drops all 10 icons (no error, icons just
+vanish from the UI). Re-inject them from the previous version after copying:
+```bash
+python3 - <<'EOF'
+import json
+prev, new = 'backend/data/versions/4.5/ruler_traits.json', 'backend/data/versions/4.6/ruler_traits.json'
+a = {x['id']: x for x in json.load(open(prev))}
+b = json.load(open(new))
+for t in b:
+    if 'icon' not in t and 'icon' in a.get(t['id'], {}):
+        t['icon'] = a[t['id']]['icon']
+json.dump(b, open(new, 'w'), indent=2, ensure_ascii=False)
+EOF
+```
+
+*Wiring it into the site* — all of these must be updated together:
+
+6. `frontend/src/utils/gameVersion.ts` — `LATEST_GAME_VERSION = { value, name, patch }`. This single
+   constant drives the **"Up to date with Stellaris X.Y.Z <Name>" badge on the home page hero**
+   (`Home.tsx`). `patch` is the exact `X.Y.Z` from step 1 — bump it on every hotfix, even when the
+   data folder itself doesn't change.
+7. **Version filters + default** (a new version is invisible in the UI until all of these are done):
+   - `backend/index.js` — add to `AVAILABLE_DATA_VERSIONS` (`LATEST_DATA_VERSION` is auto-derived
+     from the last element) **and** to `VERSION_NAMES_MAP` (`'4.6': '4.6 (Name)'`), which feeds the
+     home page's version filter dropdown.
+   - `backend/check_build_rules.js` — same `AVAILABLE_DATA_VERSIONS`, plus add the version to
+     `FIXED_VERSIONS` (versions extracted with the structured predicate format).
+   - `frontend/src/BuildForm.tsx` — add to `GAME_VERSIONS` (mark the new one `(Latest)`, drop the
+     `(Latest)` suffix from the previous), and make it **the default for new builds**: three
+     `setGameVersion`/`useState` call sites all carry the version literal (initial state, edit-load
+     fallback, post-submit reset). Grep the old version string in that file to catch all of them.
+   - `frontend/src/pages/Home.tsx` — `VERSION_NAMES` map (filter dropdown labels).
+   - `frontend/src/pages/Stats.tsx` — `VERSION_NAMES` map (the "Builds by Game Version" chart).
+8. `frontend/src/pages/Home.tsx` — add a `latestNews` entry (only the 2 most recent are shown).
+9. `frontend/public/llms.txt` — supported-versions list, the intro sentence, and the
+   "Data Coverage (Stellaris X.Y)" heading.
+
+*Verification*
+10. Diff the new data against the previous version before announcing anything — a patch that adds no
+    new IDs can still silently change rules (4.5 rewrote the ethics requirements of 7 civics without
+    adding a single new item). Compare **`backend/data/versions/PREV/`**, not `output/versions/PREV/`
+    — old output dumps predate the structured-predicate extractor rewrite and produce hundreds of
+    lines of phantom diff.
+11. `npm run build -w frontend`, then start the backend on a spare port
+    (`cd backend && PORT=3099 node index.js`) and curl every game-data endpoint with `?version=NEW`;
+    each must return a non-empty payload, and an out-of-range version (`?version=4.9`) must fall back
+    to the latest rather than 404.
+12. `cd backend && node check_build_rules.js audit` — the violation count should stay in line with the
+    previous run (~40/69); a sudden jump means the new rules broke the evaluator, not the builds.
+13. Icons: a patch with no new civics/traits/origins needs no icon run. If there ARE new IDs, run
+    `data-extractor/extract_icons.py` (generates both the 32px build-page PNGs and the 20px
+    `icons/home/*.webp` used by home cards). Sanity-check that every `icon` path in the new JSON
+    resolves under `frontend/public/`.
+14. Deploy: `npm run build -w frontend` then `pm2 restart stellaris-build` (see Production Deployment).
 
 **When to Re-Extract:**
 1. Stellaris major updates (new DLCs, patches)
@@ -441,7 +503,7 @@ const latestNews: NewsItem[] = [
   {
     date: '15 Feb 2026',  // Format: 'DD MMM YYYY'
     title: 'Your New Feature Title',
-    description: 'Brief description (not displayed in condensed format)',
+    description: 'Shown under the title. OPTIONAL - omit the field entirely for a title-only item.',
     type: 'feature'  // 'feature' (🎉), 'update' (✨), or 'fix' (🔧)
   },
   // Previous news items...
@@ -453,7 +515,7 @@ const latestNews: NewsItem[] = [
    - Rebuild frontend: `npm run build -w frontend`
    - Restart: `pm2 restart stellaris-build`
 
-**Note**: Only the 2 most recent items are displayed. The banner shows: icon + date + NEW badge (if <7 days) + title.
+**Note**: Only the 2 most recent items are displayed. The banner shows icon + date + NEW badge (if <7 days) + title, followed by the `description` on its own line **when the item has one** — `description` is optional (`description?: string`), so a short item can be title-only. Mixing both in the list is fine and intended.
 
 ## Data Quality Standards
 
@@ -546,6 +608,48 @@ Planned features (not yet implemented):
 ---
 
 ## Recent Completions
+
+### Stellaris 4.5 "Cygnus" Support (2026-09-23)
+Re-extracted all game data for 4.5 and wired it through the site (data folder, backend version
+constants, BuildForm default, home/stats filters, home badge, `llms.txt`, news item).
+
+**Cygnus is a pure balance patch — zero new content.** No new traits, civics, origins, ethics,
+ascension perks or authorities (counts identical to 4.4: 186 traits, 234 civics, 58 origins, 17
+ethics, 46 perks, 7 authorities); `species_classes.json`, `authorities.json` core fields and the
+species archetype trait budgets came back byte-identical. No new trait file to register in
+`extract_traits.py`, and no new icons needed.
+
+**What did change — rule rebalancing, which the site's filters and rule warnings enforce:**
+- **7 civics swapped a positive ethics requirement for a negative one** (from "requires X" to
+  "forbids Y"), i.e. they're now available to far more empires: Beacon of Liberty and Worker
+  Cooperative (were Egalitarian-only -> now just not-Xenophobe), Barbaric Despoilers and Void
+  Reavers (were Militarist/Authoritarian/Xenophobe -> now just not-Xenophile), Crusader Spirit and
+  Letters of Marque (-> not-Pacifist), Scorched World Heralds (was Xenophobe -> not-Pacifist).
+- **Hard Reset** (`origin_unplugged`): Militarist requirement dropped, replaced by NOT fanatic
+  Spiritualist / NOT fanatic Xenophile.
+- **Storm Chasers** and **Knights of the Toxic God** lost their `is_nomadic = false` restriction —
+  both are now playable by nomadic empires.
+- Cosmetic/text only: 1 ethic (`ethic_gestalt_consciousness` `use_for_pops` false -> true), 4 traits
+  (effect wording; Incubators gained two `opposites`), Ocean Paradise / Subaquatic Machines now
+  list their granted species trait, and one tradition's modifier is now extracted
+  (`leader_initial_traits_add +1`, `ascension_perks_add +1`).
+
+**Two maintenance bugs found and fixed while doing this:**
+- `extract_ruler_traits.py` doesn't emit the `icon` field, so copying its fresh output over
+  `ruler_traits.json` silently drops all 10 ruler-trait icons. Re-injected from 4.4; documented as
+  a gotcha in the version-upgrade process above.
+- `backend/index.js` contained a **literal NUL byte** (a raw `\0` separator inside the OG-image
+  fingerprint's `join()`), which made `grep` treat the whole file as binary and silently return no
+  matches — `grep -n AVAILABLE_DATA_VERSIONS backend/index.js` found nothing despite the constant
+  being right there. Replaced with the `'\u0000'` escape: identical at runtime (so no OG cache
+  churn), but the file is text again. Use `grep -a` if this ever recurs.
+
+**Also:** the 4.5 news item is deliberately title-only, so `NewsItem.description` became optional
+(`description?: string`) rather than being removed — existing items keep their description.
+
+**Key files:** `backend/data/versions/4.5/`, `backend/index.js`, `backend/check_build_rules.js`,
+`frontend/src/utils/gameVersion.ts`, `frontend/src/BuildForm.tsx`, `frontend/src/pages/Home.tsx`,
+`frontend/src/pages/Stats.tsx`, `frontend/public/llms.txt`
 
 ### Structured Rule Extraction + Trait Budget Fix + Export Warnings (2026-08-10)
 Civics/origins requirement extraction had a real bug: `extract_civics_and_origins.py`'s

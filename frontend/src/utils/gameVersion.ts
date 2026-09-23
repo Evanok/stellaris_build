@@ -2,4 +2,4 @@
 // AVAILABLE_DATA_VERSIONS in backend/index.js. `patch` is the exact game patch (major.minor.patch),
 // shown to reassure users the site tracks the current game build — update on every hotfix, even
 // when the data folder itself doesn't change.
-export const LATEST_GAME_VERSION = { value: '4.4', name: 'Pegasus', patch: '4.4.6' };
+export const LATEST_GAME_VERSION = { value: '4.5', name: 'Cygnus', patch: '4.5.0' };

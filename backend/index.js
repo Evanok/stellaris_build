@@ -583,11 +583,11 @@ app.post('/api/test/cleanup', (req, res) => {
 });
 
 // Versioned game data helpers
-const AVAILABLE_DATA_VERSIONS = ['4.2', '4.3', '4.4'];
+const AVAILABLE_DATA_VERSIONS = ['4.2', '4.3', '4.4', '4.5'];
 const LATEST_DATA_VERSION = AVAILABLE_DATA_VERSIONS[AVAILABLE_DATA_VERSIONS.length - 1];
 
 const VERSION_NAMES_MAP = {
-  '4.4': '4.4 (Pegasus)', '4.3': '4.3 (Cetus)', '4.2': '4.2 (Corvus)',
+  '4.5': '4.5 (Cygnus)', '4.4': '4.4 (Pegasus)', '4.3': '4.3 (Cetus)', '4.2': '4.2 (Corvus)',
   '4.1': '4.1 (Lyra)', '4.1+ (Shadows of the Shroud DLC)': '4.1 (Lyra)', '4.14': '4.1 (Lyra)',
   '4.0': '4.0 (Phoenix)', '4.0+': '4.0 (Phoenix)',
   '3.14': '3.14 (Circinus)', '3.13': '3.13 (Vela)',
@@ -2175,7 +2175,7 @@ function ogFingerprint(row) {
   const material = [
     row.name, row.origin, row.authority, row.ethics,
     row.game_version, row.portrait, row.author_username,
-  ].map(v => v == null ? '' : String(v)).join(' ');
+  ].map(v => v == null ? '' : String(v)).join('\u0000');
   return crypto.createHash('sha1').update(material).digest('hex').slice(0, 10);
 }
 
