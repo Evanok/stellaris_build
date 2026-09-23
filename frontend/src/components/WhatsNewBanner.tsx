@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 export interface NewsItem {
   date: string;
   title: string;
-  description: string;
+  /** Optional: omit it and the item renders as a single title line. */
+  description?: string;
   type: 'feature' | 'update' | 'fix';
 }
 

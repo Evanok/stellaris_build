@@ -14,7 +14,7 @@
 //   node check_build_rules.js audit                 Check every non-deleted build in
 //                                                    the local DB (TODO.md section 3a)
 //
-// Only game_version 4.4 has been re-extracted with the fixed predicate format
+// Only game_version 4.4 and 4.5 have been re-extracted with the fixed predicate format
 // (see TODO.md section 1) - builds on other versions are still checked, but
 // against unverified/older data, and are reported as such.
 
@@ -22,8 +22,8 @@ const path = require('path');
 const fs = require('fs');
 const { getFailingConditions, contextFromBuild } = require('./rules/predicateEvaluator');
 
-const AVAILABLE_DATA_VERSIONS = ['4.2', '4.3', '4.4'];
-const FIXED_VERSIONS = new Set(['4.4']); // versions re-extracted with the structured predicate format
+const AVAILABLE_DATA_VERSIONS = ['4.2', '4.3', '4.4', '4.5'];
+const FIXED_VERSIONS = new Set(['4.4', '4.5']); // versions re-extracted with the structured predicate format
 
 function getDataVersion(requestedVersion) {
   if (!requestedVersion) return AVAILABLE_DATA_VERSIONS[0];
@@ -156,7 +156,7 @@ function checkBuild(build) {
 }
 
 function printResult(label, result) {
-  const versionNote = result.verified ? '' : ' (unverified data - only 4.4 has the fixed predicate format)';
+  const versionNote = result.verified ? '' : ' (unverified data - only 4.4+ has the fixed predicate format)';
   console.log(`${label} [game_version -> ${result.dataVersion}${versionNote}]`);
   if (result.issues.length === 0) {
     console.log('  No rule violations found.');

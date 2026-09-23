@@ -30,6 +30,7 @@ interface StatsData {
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#a4de6c'];
 
 const VERSION_NAMES: Record<string, string> = {
+  '4.5': '4.5 "Cygnus"',
   '4.4': '4.4 "Pegasus"',
   '4.3': '4.3 "Cetus"',
   '4.2': '4.2 "Corvus"',

@@ -260,7 +260,8 @@ const supportsNomadic = (version: string) => parseFloat(version) >= 4.4;
 
 // Stellaris game versions
 const GAME_VERSIONS = [
-  { value: '4.4', label: '4.4 "Pegasus" (Latest)' },
+  { value: '4.5', label: '4.5 "Cygnus" (Latest)' },
+  { value: '4.4', label: '4.4 "Pegasus"' },
   { value: '4.3', label: '4.3 "Cetus"' },
   { value: '4.2', label: '4.2 "Corvus"' },
   { value: '4.1', label: '4.1 "Lyra"' },
@@ -283,7 +284,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   // Form fields state
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [game_version, setGameVersion] = useState('4.4');
+  const [game_version, setGameVersion] = useState('4.5');
   const [youtube_url, setYoutubeUrl] = useState('');
   const [source_url, setSourceUrl] = useState('');
   const [difficulty, setDifficulty] = useState<string>('');
@@ -990,7 +991,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         const formData = JSON.parse(savedData);
         setName(formData.name || '');
         setDescription(formData.description || '');
-        setGameVersion(formData.game_version || '4.4');
+        setGameVersion(formData.game_version || '4.5');
         setYoutubeUrl(formData.youtube_url || '');
         setSourceUrl(formData.source_url || '');
         setDifficulty(formData.difficulty || '');
@@ -1256,7 +1257,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       // Reset form
       setName('');
       setDescription('');
-      setGameVersion('4.4'); // Reset to latest version
+      setGameVersion('4.5'); // Reset to latest version
       setYoutubeUrl('');
       setSourceUrl('');
       setDifficulty('');
