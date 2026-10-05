@@ -29,6 +29,14 @@
           "featured": false
         },
         {
+          "title": "Stellaris Best Fleet Composition (4.5)",
+          "url": "https://gamerofpassion.com/stellaris-best-fleet-composition/",
+          "description": "Written guide to fleet composition for Stellaris 4.5 Cygnus: corvettes, cruisers, battleships and ship ratios, based on 4.5 hull values.",
+          "tags": ["fleet", "military", "guide", "4.5", "written"],
+          "era": "4.5+",
+          "featured": true
+        },
+        {
           "title": "How To Tech Rush In Stellaris 4.0",
           "url": "https://www.youtube.com/watch?v=rK6RstNJtXM&t=1524s",
           "description": "Complete guide to tech rushing strategies in Stellaris 4.0 for early game dominance.",
