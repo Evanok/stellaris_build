@@ -736,6 +736,7 @@ app.get('/api/builds', (req, res) => {
   const verDisp = req.query.version?.trim()    || null;
   const sort    = req.query.sort               || 'newest';
   const nomadic = req.query.nomadic === 'true';
+  const tag     = req.query.tag?.trim()        || null;
 
   const conditions = ['builds.deleted = 0'];
   const params = [];
@@ -756,6 +757,11 @@ app.get('/api/builds', (req, res) => {
   }
   if (nomadic) {
     conditions.push('builds.is_nomadic = 1');
+  }
+  if (tag) {
+    // tags is a comma-separated id list: wrap both sides in commas to match whole ids only
+    conditions.push("(',' || builds.tags || ',') LIKE ?");
+    params.push(`%,${tag},%`);
   }
 
   const where = `WHERE ${conditions.join(' AND ')}`;
@@ -981,12 +987,16 @@ app.post('/api/builds/:id/rating', isAuthenticated, (req, res) => {
   }
 
   // Check if build exists
-  db.get('SELECT id FROM builds WHERE id = ? AND deleted = 0', [id], (err, build) => {
+  db.get('SELECT id, author_id FROM builds WHERE id = ? AND deleted = 0', [id], (err, build) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
     if (!build) {
       return res.status(404).json({ error: 'Build not found' });
+    }
+    // Authors cannot rate their own builds (self-votes inflated single-vote averages)
+    if (build.author_id === userId) {
+      return res.status(403).json({ error: 'You cannot rate your own build' });
     }
 
     // Insert or update rating (UPSERT)
@@ -1685,13 +1695,13 @@ app.get('/api/stats', async (req, res) => {
       }));
     stats.topTraits = topTraits;
 
-    // 10. Top 5 Contributors
+    // 10. Top 5 Contributors (site admins excluded - they seed builds, not the community)
     const topContributors = await new Promise((resolve, reject) => {
       db.all(
-        `SELECT u.username, u.avatar, COUNT(b.id) as buildCount
+        `SELECT COALESCE(u.display_name, u.username) as username, u.avatar, COUNT(b.id) as buildCount
          FROM users u
          INNER JOIN builds b ON u.id = b.author_id
-         WHERE b.deleted = 0
+         WHERE b.deleted = 0 AND COALESCE(u.is_admin, 0) = 0
          GROUP BY u.id
          ORDER BY buildCount DESC
          LIMIT 5`,

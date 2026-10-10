@@ -5,6 +5,9 @@ import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../AuthContext';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
 import RatingStars from '../components/RatingStars';
+import { DifficultyBadge } from '../components/DifficultyBadge';
+import { BuildTagList } from '../components/BuildTags';
+import { parseBuildTags } from '../utils/buildTags';
 import { invalidateBuildsCache } from './Home';
 import { PredicateNode, getFailingNodes, describePredicateHuman } from '../utils/ruleEvaluator';
 
@@ -146,28 +149,6 @@ const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type,
       loading="lazy"
       onError={() => setHasError(true)}
     />
-  );
-};
-
-// Helper function to get difficulty badge styling
-const getDifficultyBadge = (difficulty: string | undefined) => {
-  if (!difficulty) return null;
-
-  const difficultyConfig: Record<string, { label: string; className: string }> = {
-    'overpowered': { label: 'Overpowered', className: 'bg-danger' },
-    'strong': { label: 'Strong', className: 'bg-warning text-dark' },
-    'balanced': { label: 'Balanced', className: 'bg-success' },
-    'challenging': { label: 'Challenging', className: 'bg-info text-dark' },
-    'extreme': { label: 'Extreme Challenge', className: 'bg-secondary' }
-  };
-
-  const config = difficultyConfig[difficulty];
-  if (!config) return null;
-
-  return (
-    <span className={`badge ${config.className} fs-6`}>
-      {config.label}
-    </span>
   );
 };
 
@@ -718,13 +699,13 @@ export const BuildDetail: React.FC = () => {
             "datePublished": build.created_at || new Date().toISOString(),
             "dateModified": build.updated_at || build.created_at || new Date().toISOString(),
             "version": build.game_version || "4.1",
-            "keywords": build.tags || "",
+            "keywords": parseBuildTags(build.tags).map(tag => tag.label).join(", "),
             "url": buildUrl
           })}
         </script>
       </Helmet>
 
-      <div className="container mt-4">
+      <div className="container container-wide mt-4">
         {/* Header */}
         <div className="row mb-4">
         <div className="col-12 d-flex justify-content-between align-items-start flex-wrap gap-2">
@@ -757,7 +738,8 @@ export const BuildDetail: React.FC = () => {
                 <ReactMarkdown>{decodeHtmlEntities(build.name)}</ReactMarkdown>
               </h1>
               {build.description && (
-                <div className="text-light fs-5">
+                // Capped line length: the page goes wide on large screens, but prose stays readable
+                <div className="text-light fs-5" style={{ maxWidth: '80ch' }}>
                   <ReactMarkdown>{decodeHtmlEntities(build.description)}</ReactMarkdown>
                 </div>
               )}
@@ -765,7 +747,7 @@ export const BuildDetail: React.FC = () => {
             <div className="col-md-4 text-end">
               <div className="mb-2">
                 <span className="badge bg-primary fs-6 me-2">{build.game_version}</span>
-                {getDifficultyBadge(build.difficulty)}
+                <DifficultyBadge difficulty={build.difficulty} className="fs-6" />
               </div>
               {build.species_class && (() => {
                 const speciesClass = getSpeciesClassData(build.species_class);
@@ -820,7 +802,15 @@ export const BuildDetail: React.FC = () => {
                 size="lg"
               />
             </div>
-            {user && (
+            {user && build.author_id === user.id && (
+              <div className="col-md-6 border-start border-secondary">
+                <p className="text-muted mb-0">
+                  <i className="bi bi-info-circle me-2"></i>
+                  You can't rate your own build
+                </p>
+              </div>
+            )}
+            {user && build.author_id !== user.id && (
               <div className="col-md-6 border-start border-secondary">
                 <h6 className="text-white mb-3">
                   {userRating !== null ? 'Your Rating' : 'Rate this Build'}
@@ -1334,7 +1324,7 @@ export const BuildDetail: React.FC = () => {
           )}
 
           {/* Tags */}
-          {build.tags && (
+          {parseBuildTags(build.tags).length > 0 && (
             <div className="card bg-dark border-secondary mb-4">
               <div className="card-header bg-secondary">
                 <h4 className="mb-0 text-white">
@@ -1343,13 +1333,12 @@ export const BuildDetail: React.FC = () => {
                 </h4>
               </div>
               <div className="card-body">
-                <div className="d-flex flex-wrap gap-2">
-                  {parseList(build.tags).map((tag, idx) => (
-                    <span key={idx} className="badge bg-secondary fs-6 px-3 py-2">
-                      {tag}
-                    </span>
+                <BuildTagList tags={build.tags} large />
+                <ul className="list-unstyled small text-white-50 mt-3 mb-0">
+                  {parseBuildTags(build.tags).map(tag => (
+                    <li key={tag.id}><span className="text-white">{tag.label}:</span> {tag.description}</li>
                   ))}
-                </div>
+                </ul>
               </div>
             </div>
           )}

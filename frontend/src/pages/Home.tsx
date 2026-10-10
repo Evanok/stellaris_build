@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
 import RatingStars from '../components/RatingStars';
+import { DifficultyBadge } from '../components/DifficultyBadge';
+import { DIFFICULTY_LEVELS } from '../utils/difficulty';
+import { BUILD_TAGS } from '../utils/buildTags';
+import { BuildTagList, BuildTagsHelpModal } from '../components/BuildTags';
 import { WhatsNewBanner, NewsItem } from '../components/WhatsNewBanner';
 import { LATEST_GAME_VERSION } from '../utils/gameVersion';
 import './Home.css';
@@ -57,28 +61,6 @@ const ORIGIN_PALETTE = [
 const hashOriginColor = (id: string): string => {
   const h = id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
   return ORIGIN_PALETTE[h % ORIGIN_PALETTE.length];
-};
-
-// Helper function to get difficulty badge styling
-const getDifficultyBadge = (difficulty: string | undefined) => {
-  if (!difficulty) return null;
-
-  const difficultyConfig: Record<string, { label: string; className: string }> = {
-    'overpowered': { label: 'Overpowered', className: 'bg-danger' },
-    'strong': { label: 'Strong', className: 'bg-warning text-dark' },
-    'balanced': { label: 'Balanced', className: 'bg-success' },
-    'challenging': { label: 'Challenging', className: 'bg-info text-dark' },
-    'extreme': { label: 'Extreme Challenge', className: 'bg-secondary' }
-  };
-
-  const config = difficultyConfig[difficulty];
-  if (!config) return null;
-
-  return (
-    <span className={`badge ${config.className}`}>
-      {config.label}
-    </span>
-  );
 };
 
 interface Build {
@@ -136,21 +118,22 @@ export const Home: React.FC = () => {
   const [difficultyFilter, setDifficultyFilter] = useState<string>('');
   const [versionFilter, setVersionFilter] = useState<string>('');
   const [nomadicFilter, setNomadicFilter] = useState(false);
+  const [tagFilter, setTagFilter] = useState('');
+  const [showTagsHelp, setShowTagsHelp] = useState(false);
   const [sortBy, setSortBy] = useState<string>('newest');
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // What's New data
   const latestNews: NewsItem[] = [
     {
+      date: '10 Oct 2026',
+      title: 'Build Tags + Clearer Difficulty Ratings',
+      type: 'feature'
+    },
+    {
       date: '23 Sep 2026',
       title: 'Stellaris 4.5 "Cygnus" Support',
       type: 'update'
-    },
-    {
-      date: '11 Aug 2026',
-      title: 'Real Rule Checking + Stellaris Export',
-      description: 'New: export any build straight to Stellaris as a custom empire design. Every build is now also checked against rules parsed directly from the game\'s own files - not hardcoded - covering civics, traits, ethics and authority compatibility. About 57% of existing builds have at least one flagged conflict; you\'ll get a non-blocking heads-up when creating, editing, or exporting a build.',
-      type: 'feature'
     }
   ];
 
@@ -164,6 +147,20 @@ export const Home: React.FC = () => {
     }, 300);
   };
 
+  const hasActiveFilters = !!(searchQuery || difficultyFilter || versionFilter || nomadicFilter || tagFilter);
+
+  // Clears the search and every filter; the sort order is a preference, not a filter, so it is kept
+  const resetFilters = () => {
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    setSearchQuery('');
+    setDebouncedSearch('');
+    setDifficultyFilter('');
+    setVersionFilter('');
+    setNomadicFilter(false);
+    setTagFilter('');
+    setCurrentPage(1);
+  };
+
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
@@ -173,6 +170,7 @@ export const Home: React.FC = () => {
     if (difficultyFilter) params.set('difficulty', difficultyFilter);
     if (versionFilter) params.set('version', versionFilter);
     if (nomadicFilter) params.set('nomadic', 'true');
+    if (tagFilter) params.set('tag', tagFilter);
 
     fetch(`/api/builds?${params}`)
       .then(r => r.json())
@@ -189,7 +187,7 @@ export const Home: React.FC = () => {
       });
 
     return () => { cancelled = true; };
-  }, [currentPage, debouncedSearch, difficultyFilter, versionFilter, nomadicFilter, sortBy]);
+  }, [currentPage, debouncedSearch, difficultyFilter, versionFilter, nomadicFilter, tagFilter, sortBy]);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -246,7 +244,7 @@ export const Home: React.FC = () => {
           borderBottom: '3px solid #e94560'
         }}
       >
-        <div className="container">
+        <div className="container container-wide">
           <div className="row align-items-center">
             <div className="col-md-8">
               <h1 className="display-5 fw-bold text-white mb-2">
@@ -274,7 +272,7 @@ export const Home: React.FC = () => {
         </div>
       </div>
 
-      <div className="container mt-4">
+      <div className="container container-wide mt-4">
         {/* Resources CTA and What's New - Side by Side */}
         <div className="row mb-4">
           {/* Resources Call-to-Action */}
@@ -338,20 +336,22 @@ export const Home: React.FC = () => {
         </div>
 
         {/* Search and Filters */}
-        <div className="row mb-4">
-          <div className="col-md-4 mb-3 mb-md-0">
+        <div className="row mb-2">
+          <div className="col-xl-3 mb-3 mb-xl-0">
             <input
               type="text"
-              className="form-control form-control-lg bg-secondary text-white border-secondary"
+              className="form-control bg-secondary text-white border-secondary"
               placeholder="Search builds by name, origin, ethics, tags..."
               value={searchQuery}
               onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
-          <div className="col-md-2 mb-3 mb-md-0">
+          <div className="col-xl-9">
+          <div className="row g-2">
+          <div className="col-6 col-md-4 col-xl">
             <select
               aria-label="Filter by difficulty"
-              className="form-select form-select-lg bg-secondary text-white border-secondary"
+              className="form-select bg-secondary text-white border-secondary"
               value={difficultyFilter}
               onChange={(e) => {
                 setDifficultyFilter(e.target.value);
@@ -359,17 +359,15 @@ export const Home: React.FC = () => {
               }}
             >
               <option value="">All Difficulties</option>
-              <option value="overpowered">Overpowered</option>
-              <option value="strong">Strong</option>
-              <option value="balanced">Balanced</option>
-              <option value="challenging">Challenging</option>
-              <option value="extreme">Extreme Challenge</option>
+              {DIFFICULTY_LEVELS.map(level => (
+                <option key={level.value} value={level.value}>{level.label}</option>
+              ))}
             </select>
           </div>
-          <div className="col-md-2 mb-3 mb-md-0">
+          <div className="col-6 col-md-4 col-xl">
             <select
               aria-label="Filter by game version"
-              className="form-select form-select-lg bg-secondary text-white border-secondary"
+              className="form-select bg-secondary text-white border-secondary"
               value={versionFilter}
               onChange={(e) => {
                 setVersionFilter(e.target.value);
@@ -382,10 +380,26 @@ export const Home: React.FC = () => {
               ))}
             </select>
           </div>
-          <div className="col-md-2 mb-3 mb-md-0">
+          <div className="col-6 col-md-4 col-xl">
+            <select
+              aria-label="Filter by tag"
+              className="form-select bg-secondary text-white border-secondary"
+              value={tagFilter}
+              onChange={(e) => {
+                setTagFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+            >
+              <option value="">All Tags</option>
+              {BUILD_TAGS.map(tag => (
+                <option key={tag.id} value={tag.id}>{tag.label}</option>
+              ))}
+            </select>
+          </div>
+          <div className="col-6 col-md-4 col-xl">
             <select
               aria-label="Filter by empire type"
-              className="form-select form-select-lg bg-secondary text-white border-secondary"
+              className="form-select bg-secondary text-white border-secondary"
               value={nomadicFilter ? 'nomadic' : ''}
               onChange={(e) => {
                 setNomadicFilter(e.target.value === 'nomadic');
@@ -396,10 +410,10 @@ export const Home: React.FC = () => {
               <option value="nomadic">Nomadic Only</option>
             </select>
           </div>
-          <div className="col-md-2">
+          <div className="col-12 col-md-4 col-xl">
             <select
               aria-label="Sort builds"
-              className="form-select form-select-lg bg-secondary text-white border-secondary"
+              className="form-select bg-secondary text-white border-secondary"
               value={sortBy}
               onChange={(e) => {
                 setSortBy(e.target.value);
@@ -411,14 +425,31 @@ export const Home: React.FC = () => {
               <option value="rating">Highest Rated</option>
             </select>
           </div>
+          </div>
+          </div>
         </div>
+        <div className="row mb-4">
+          <div className="col-12 text-end">
+            <button type="button" className="btn btn-link btn-sm text-white-50 p-0" onClick={() => setShowTagsHelp(true)}>
+              <i className="bi bi-question-circle me-1"></i>
+              What do the tags mean?
+            </button>
+          </div>
+        </div>
+        <BuildTagsHelpModal show={showTagsHelp} onHide={() => setShowTagsHelp(false)} />
 
         {/* Build Count */}
         <div className="row mb-3">
           <div className="col-12">
             <p className="text-muted">
               Showing {pagedBuilds.length} of {total} builds
-              {(debouncedSearch || difficultyFilter || versionFilter || nomadicFilter) && ` (filtered)`}
+              {(debouncedSearch || difficultyFilter || versionFilter || nomadicFilter || tagFilter) && ` (filtered)`}
+              {hasActiveFilters && (
+                <button type="button" className="btn btn-link btn-sm text-info p-0 ms-2 align-baseline" onClick={resetFilters}>
+                  <i className="bi bi-x-circle me-1"></i>
+                  Clear filters
+                </button>
+              )}
             </p>
           </div>
         </div>
@@ -426,11 +457,18 @@ export const Home: React.FC = () => {
         {/* Builds Grid */}
         {pagedBuilds.length === 0 ? (
           <div className="alert alert-info">
-            {searchQuery ? 'No builds match your search.' : 'No builds available yet. Be the first to create one!'}
+            {hasActiveFilters ? (
+              <>
+                No builds match your search and filters.
+                <button type="button" className="btn btn-link p-0 ms-2 align-baseline" onClick={resetFilters}>
+                  Clear filters
+                </button>
+              </>
+            ) : 'No builds available yet. Be the first to create one!'}
           </div>
         ) : (
           <>
-            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-wide-4 g-4">
               {pagedBuilds.map(build => (
                 <div key={build.id} className="col">
                   <Link to={`/build/${build.id}`} className="build-card-link">
@@ -464,7 +502,7 @@ export const Home: React.FC = () => {
                           </div>
                           <div>
                             <span className="badge bg-primary me-1">{VERSION_NAMES[build.game_version] ?? build.game_version ?? 'Unknown'}</span>
-                            {getDifficultyBadge(build.difficulty)}
+                            <DifficultyBadge difficulty={build.difficulty} />
                           </div>
                         </div>
 
@@ -549,23 +587,25 @@ export const Home: React.FC = () => {
                         {/* Tags */}
                         {build.tags && (
                           <div className="mt-2">
-                            {build.tags.split(',').slice(0, 3).map((tag, idx) => (
-                              <span key={idx} className="badge bg-secondary me-1">
-                                {tag.trim()}
-                              </span>
-                            ))}
+                            <BuildTagList tags={build.tags} />
                           </div>
                         )}
 
                         {/* Rating */}
                         {build.average_rating !== undefined && build.rating_count !== undefined && (
                           <div className="mt-3 pt-3 border-top border-secondary">
-                            <RatingStars
-                              rating={build.average_rating}
-                              ratingCount={build.rating_count}
-                              interactive={false}
-                              size="sm"
-                            />
+                            {/* Unrated builds keep the row's space (cards stay aligned) but hide the empty stars */}
+                            <div
+                              style={build.rating_count === 0 ? { visibility: 'hidden' } : undefined}
+                              aria-hidden={build.rating_count === 0}
+                            >
+                              <RatingStars
+                                rating={build.average_rating}
+                                ratingCount={build.rating_count}
+                                interactive={false}
+                                size="sm"
+                              />
+                            </div>
                           </div>
                         )}
                       </div>

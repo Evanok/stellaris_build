@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { AuthModal } from './components/AuthModal';
 import { decodeHtmlEntities } from './utils/htmlDecode';
+import { DIFFICULTY_LEVELS } from './utils/difficulty';
+import { normalizeBuildTags, serializeBuildTags, MAX_TAGS_PER_BUILD } from './utils/buildTags';
+import { BuildTagPicker } from './components/BuildTags';
 import { PredicateNode, findFieldOccurrences, getFailingNodes, describePredicateHuman } from './utils/ruleEvaluator';
 
 interface BuildFormProps {
@@ -512,7 +515,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       if (initialData.source_url) setSourceUrl(initialData.source_url);
       if (initialData.difficulty) setDifficulty(initialData.difficulty);
       if (initialData.dlcs) setDlcs(initialData.dlcs);
-      if (initialData.tags) setTags(initialData.tags);
+      if (initialData.tags) setTags(normalizeBuildTags(initialData.tags));
 
       // Set empire selections
       if (initialData.origin) setSelectedOrigin(initialData.origin);
@@ -996,7 +999,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setSourceUrl(formData.source_url || '');
         setDifficulty(formData.difficulty || '');
         setDlcs(formData.dlcs || '');
-        setTags(formData.tags || '');
+        setTags(normalizeBuildTags(formData.tags));
         setSelectedSpeciesClass(formData.selectedSpeciesClass || '');
         setSelectedTraits(formData.selectedTraits || []);
         setSelectedSecondaryTraits(formData.selectedSecondaryTraits || []);
@@ -1377,12 +1380,23 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
               onChange={(e) => setDifficulty(e.target.value)}
             >
               <option value="">-- Select Difficulty --</option>
-              <option value="overpowered">Overpowered</option>
-              <option value="strong">Strong</option>
-              <option value="balanced">Balanced</option>
-              <option value="challenging">Challenging</option>
-              <option value="extreme">Extreme Challenge</option>
+              {DIFFICULTY_LEVELS.map(level => (
+                <option key={level.value} value={level.value}>{level.label}</option>
+              ))}
             </select>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label mb-2">
+              Tags (Optional)
+              <small className="text-muted d-block">
+                Pick up to {MAX_TAGS_PER_BUILD} tags that describe how this build plays. Read each description - a wrong tag misleads players.
+              </small>
+            </label>
+            <BuildTagPicker
+              selected={tags ? tags.split(',') : []}
+              onChange={(ids) => setTags(serializeBuildTags(ids))}
+            />
           </div>
 
           {/* Species Class Selector */}
