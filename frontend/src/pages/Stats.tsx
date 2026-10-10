@@ -161,8 +161,9 @@ export default function Stats() {
                   .reduce((sum, v) => sum + v.count, 0);
                 const pieData = olderCount > 0 ? [...recentSlices, { name: 'Older', value: olderCount }] : recentSlices;
                 return (
-                  <ResponsiveContainer width="100%" height={200}>
-                    <PieChart>
+                  <ResponsiveContainer width="100%" height={240}>
+                    {/* Labels sit outside the pie: the vertical margin keeps the top/bottom ones from being clipped */}
+                    <PieChart margin={{ top: 20, right: 0, bottom: 20, left: 0 }}>
                       <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} label={({ name, percent }: any) => `${name} ${((percent as number) * 100).toFixed(0)}%`} labelLine={false}>
                         {pieData.map((_entry, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                       </Pie>
