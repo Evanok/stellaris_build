@@ -801,7 +801,15 @@ export const BuildDetail: React.FC = () => {
                 size="lg"
               />
             </div>
-            {user && (
+            {user && build.author_id === user.id && (
+              <div className="col-md-6 border-start border-secondary">
+                <p className="text-muted mb-0">
+                  <i className="bi bi-info-circle me-2"></i>
+                  You can't rate your own build
+                </p>
+              </div>
+            )}
+            {user && build.author_id !== user.id && (
               <div className="col-md-6 border-start border-secondary">
                 <h6 className="text-white mb-3">
                   {userRating !== null ? 'Your Rating' : 'Rate this Build'}

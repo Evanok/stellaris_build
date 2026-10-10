@@ -987,12 +987,16 @@ app.post('/api/builds/:id/rating', isAuthenticated, (req, res) => {
   }
 
   // Check if build exists
-  db.get('SELECT id FROM builds WHERE id = ? AND deleted = 0', [id], (err, build) => {
+  db.get('SELECT id, author_id FROM builds WHERE id = ? AND deleted = 0', [id], (err, build) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
     if (!build) {
       return res.status(404).json({ error: 'Build not found' });
+    }
+    // Authors cannot rate their own builds (self-votes inflated single-vote averages)
+    if (build.author_id === userId) {
+      return res.status(403).json({ error: 'You cannot rate your own build' });
     }
 
     // Insert or update rating (UPSERT)
