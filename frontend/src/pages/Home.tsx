@@ -126,15 +126,14 @@ export const Home: React.FC = () => {
   // What's New data
   const latestNews: NewsItem[] = [
     {
+      date: '10 Oct 2026',
+      title: 'Build Tags + Clearer Difficulty Ratings',
+      type: 'feature'
+    },
+    {
       date: '23 Sep 2026',
       title: 'Stellaris 4.5 "Cygnus" Support',
       type: 'update'
-    },
-    {
-      date: '11 Aug 2026',
-      title: 'Real Rule Checking + Stellaris Export',
-      description: 'New: export any build straight to Stellaris as a custom empire design. Every build is now also checked against rules parsed directly from the game\'s own files - not hardcoded - covering civics, traits, ethics and authority compatibility. About 57% of existing builds have at least one flagged conflict; you\'ll get a non-blocking heads-up when creating, editing, or exporting a build.',
-      type: 'feature'
     }
   ];
 
