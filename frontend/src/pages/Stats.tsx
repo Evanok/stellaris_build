@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Container, Card, Row, Col, Alert, Spinner, ListGroup } from 'react-bootstrap';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, Legend } from 'recharts';
 
 interface TopItem {
   name: string;
@@ -43,6 +43,8 @@ const VERSION_NAMES: Record<string, string> = {
 // The pie always shows the most recent game versions individually and lumps everything else into
 // "Older". Based on VERSION_NAMES (the game's release history), not on which versions have builds:
 // a recent version with no build yet is simply absent from the pie rather than shown as 0%.
+const NARROW_QUERY = '(max-width: 575.98px)';
+
 const RECENT_VERSION_COUNT = 4;
 const RECENT_VERSIONS = Object.keys(VERSION_NAMES)
   .sort((a, b) => {
@@ -56,6 +58,15 @@ export default function Stats() {
   const [stats, setStats] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // On phones the pie's outside labels get clipped at the card edges: use a legend there instead
+  const [isNarrow, setIsNarrow] = useState(() => window.matchMedia(NARROW_QUERY).matches);
+
+  useEffect(() => {
+    const query = window.matchMedia(NARROW_QUERY);
+    const onChange = (e: MediaQueryListEvent) => setIsNarrow(e.matches);
+    query.addEventListener('change', onChange);
+    return () => query.removeEventListener('change', onChange);
+  }, []);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -134,7 +145,7 @@ export default function Stats() {
   );
 
   return (
-    <Container className="py-5">
+    <Container className="container-wide py-5">
       <h1 className="text-white mb-4">Community Statistics</h1>
 
       {/* Overview */}
@@ -160,14 +171,16 @@ export default function Stats() {
                   .filter(v => !RECENT_VERSIONS.includes(v.name))
                   .reduce((sum, v) => sum + v.count, 0);
                 const pieData = olderCount > 0 ? [...recentSlices, { name: 'Older', value: olderCount }] : recentSlices;
+                const pieTotal = pieData.reduce((sum, d) => sum + d.value, 0);
                 return (
-                  <ResponsiveContainer width="100%" height={240}>
+                  <ResponsiveContainer width="100%" height={isNarrow ? 280 : 240}>
                     {/* Labels sit outside the pie: the vertical margin keeps the top/bottom ones from being clipped */}
                     <PieChart margin={{ top: 20, right: 0, bottom: 20, left: 0 }}>
-                      <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} label={({ name, percent }: any) => `${name} ${((percent as number) * 100).toFixed(0)}%`} labelLine={false}>
+                      <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} label={isNarrow ? false : ({ name, percent }: any) => `${name} ${((percent as number) * 100).toFixed(0)}%`} labelLine={false}>
                         {pieData.map((_entry, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                       </Pie>
                       <Tooltip formatter={(value) => [`${value} builds`, '']} contentStyle={{ backgroundColor: '#333', border: '1px solid #555' }} />
+                      {isNarrow && <Legend wrapperStyle={{ fontSize: '0.8rem' }} formatter={(value: string, entry: any) => `${value} ${Math.round((entry.payload.value / pieTotal) * 100)}%`} />}
                     </PieChart>
                   </ResponsiveContainer>
                 );

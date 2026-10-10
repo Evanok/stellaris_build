@@ -230,7 +230,7 @@ export const Home: React.FC = () => {
           borderBottom: '3px solid #e94560'
         }}
       >
-        <div className="container">
+        <div className="container container-wide">
           <div className="row align-items-center">
             <div className="col-md-8">
               <h1 className="display-5 fw-bold text-white mb-2">
@@ -258,7 +258,7 @@ export const Home: React.FC = () => {
         </div>
       </div>
 
-      <div className="container mt-4">
+      <div className="container container-wide mt-4">
         {/* Resources CTA and What's New - Side by Side */}
         <div className="row mb-4">
           {/* Resources Call-to-Action */}
@@ -323,21 +323,21 @@ export const Home: React.FC = () => {
 
         {/* Search and Filters */}
         <div className="row mb-2">
-          <div className="col-lg-4 mb-3 mb-lg-0">
+          <div className="col-xl-3 mb-3 mb-xl-0">
             <input
               type="text"
-              className="form-control form-control-lg bg-secondary text-white border-secondary"
+              className="form-control bg-secondary text-white border-secondary"
               placeholder="Search builds by name, origin, ethics, tags..."
               value={searchQuery}
               onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
-          <div className="col-lg-8">
+          <div className="col-xl-9">
           <div className="row g-2">
-          <div className="col-6 col-md">
+          <div className="col-6 col-md-4 col-xl">
             <select
               aria-label="Filter by difficulty"
-              className="form-select form-select-lg bg-secondary text-white border-secondary"
+              className="form-select bg-secondary text-white border-secondary"
               value={difficultyFilter}
               onChange={(e) => {
                 setDifficultyFilter(e.target.value);
@@ -350,10 +350,10 @@ export const Home: React.FC = () => {
               ))}
             </select>
           </div>
-          <div className="col-6 col-md">
+          <div className="col-6 col-md-4 col-xl">
             <select
               aria-label="Filter by game version"
-              className="form-select form-select-lg bg-secondary text-white border-secondary"
+              className="form-select bg-secondary text-white border-secondary"
               value={versionFilter}
               onChange={(e) => {
                 setVersionFilter(e.target.value);
@@ -366,10 +366,10 @@ export const Home: React.FC = () => {
               ))}
             </select>
           </div>
-          <div className="col-6 col-md">
+          <div className="col-6 col-md-4 col-xl">
             <select
               aria-label="Filter by tag"
-              className="form-select form-select-lg bg-secondary text-white border-secondary"
+              className="form-select bg-secondary text-white border-secondary"
               value={tagFilter}
               onChange={(e) => {
                 setTagFilter(e.target.value);
@@ -382,10 +382,10 @@ export const Home: React.FC = () => {
               ))}
             </select>
           </div>
-          <div className="col-6 col-md">
+          <div className="col-6 col-md-4 col-xl">
             <select
               aria-label="Filter by empire type"
-              className="form-select form-select-lg bg-secondary text-white border-secondary"
+              className="form-select bg-secondary text-white border-secondary"
               value={nomadicFilter ? 'nomadic' : ''}
               onChange={(e) => {
                 setNomadicFilter(e.target.value === 'nomadic');
@@ -396,10 +396,10 @@ export const Home: React.FC = () => {
               <option value="nomadic">Nomadic Only</option>
             </select>
           </div>
-          <div className="col-12 col-md">
+          <div className="col-12 col-md-4 col-xl">
             <select
               aria-label="Sort builds"
-              className="form-select form-select-lg bg-secondary text-white border-secondary"
+              className="form-select bg-secondary text-white border-secondary"
               value={sortBy}
               onChange={(e) => {
                 setSortBy(e.target.value);
@@ -441,7 +441,7 @@ export const Home: React.FC = () => {
           </div>
         ) : (
           <>
-            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-wide-4 g-4">
               {pagedBuilds.map(build => (
                 <div key={build.id} className="col">
                   <Link to={`/build/${build.id}`} className="build-card-link">

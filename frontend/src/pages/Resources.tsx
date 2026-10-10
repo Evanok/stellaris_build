@@ -136,7 +136,7 @@ export const Resources: React.FC = () => {
             borderBottom: '3px solid #e94560'
           }}
         >
-          <div className="container">
+          <div className="container container-wide">
             <div className="row align-items-center">
               <div className="col-md-8">
                 <h1 className="display-3 fw-bold text-white mb-3">
@@ -163,7 +163,7 @@ export const Resources: React.FC = () => {
           </div>
         </div>
 
-        <div className="container mt-4">
+        <div className="container container-wide mt-4">
           {/* Era Filter */}
           <div className="row mb-2">
             <div className="col-12">
@@ -275,7 +275,7 @@ export const Resources: React.FC = () => {
                   {category.resources.filter(r => r.featured).length > 0 && (
                     <h4 className="text-secondary mb-3 mt-4">More Resources</h4>
                   )}
-                  <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                  <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-wide-4 g-3">
                     {category.resources.filter(r => !r.featured).map((resource, idx) => (
                       <div key={idx} className="col">
                         <a
