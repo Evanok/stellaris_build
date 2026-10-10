@@ -95,7 +95,7 @@ const Feedback: React.FC = () => {
         <link rel="canonical" href="https://stellaris-build.com/feedback" />
       </Helmet>
 
-      <div className="container mt-4">
+      <div className="container container-wide mt-4">
         {/* Header — full width above both columns */}
         <div className="mb-3">
           <h2>

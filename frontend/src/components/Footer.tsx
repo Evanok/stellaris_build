@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="bg-dark text-light py-3 mt-5 border-top border-secondary">
-      <div className="container">
+      <div className="container container-wide">
         <div className="row">
           <div className="col-md-6">
             <p className="mb-0 text-muted">

@@ -705,7 +705,7 @@ export const BuildDetail: React.FC = () => {
         </script>
       </Helmet>
 
-      <div className="container mt-4">
+      <div className="container container-wide mt-4">
         {/* Header */}
         <div className="row mb-4">
         <div className="col-12 d-flex justify-content-between align-items-start flex-wrap gap-2">
@@ -738,7 +738,8 @@ export const BuildDetail: React.FC = () => {
                 <ReactMarkdown>{decodeHtmlEntities(build.name)}</ReactMarkdown>
               </h1>
               {build.description && (
-                <div className="text-light fs-5">
+                // Capped line length: the page goes wide on large screens, but prose stays readable
+                <div className="text-light fs-5" style={{ maxWidth: '80ch' }}>
                   <ReactMarkdown>{decodeHtmlEntities(build.description)}</ReactMarkdown>
                 </div>
               )}

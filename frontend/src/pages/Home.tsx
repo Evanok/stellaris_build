@@ -147,6 +147,20 @@ export const Home: React.FC = () => {
     }, 300);
   };
 
+  const hasActiveFilters = !!(searchQuery || difficultyFilter || versionFilter || nomadicFilter || tagFilter);
+
+  // Clears the search and every filter; the sort order is a preference, not a filter, so it is kept
+  const resetFilters = () => {
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    setSearchQuery('');
+    setDebouncedSearch('');
+    setDifficultyFilter('');
+    setVersionFilter('');
+    setNomadicFilter(false);
+    setTagFilter('');
+    setCurrentPage(1);
+  };
+
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
@@ -430,6 +444,12 @@ export const Home: React.FC = () => {
             <p className="text-muted">
               Showing {pagedBuilds.length} of {total} builds
               {(debouncedSearch || difficultyFilter || versionFilter || nomadicFilter || tagFilter) && ` (filtered)`}
+              {hasActiveFilters && (
+                <button type="button" className="btn btn-link btn-sm text-info p-0 ms-2 align-baseline" onClick={resetFilters}>
+                  <i className="bi bi-x-circle me-1"></i>
+                  Clear filters
+                </button>
+              )}
             </p>
           </div>
         </div>
@@ -437,7 +457,14 @@ export const Home: React.FC = () => {
         {/* Builds Grid */}
         {pagedBuilds.length === 0 ? (
           <div className="alert alert-info">
-            {searchQuery ? 'No builds match your search.' : 'No builds available yet. Be the first to create one!'}
+            {hasActiveFilters ? (
+              <>
+                No builds match your search and filters.
+                <button type="button" className="btn btn-link p-0 ms-2 align-baseline" onClick={resetFilters}>
+                  Clear filters
+                </button>
+              </>
+            ) : 'No builds available yet. Be the first to create one!'}
           </div>
         ) : (
           <>
