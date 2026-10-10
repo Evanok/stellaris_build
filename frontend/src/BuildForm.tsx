@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { AuthModal } from './components/AuthModal';
 import { decodeHtmlEntities } from './utils/htmlDecode';
+import { DIFFICULTY_LEVELS } from './utils/difficulty';
 import { PredicateNode, findFieldOccurrences, getFailingNodes, describePredicateHuman } from './utils/ruleEvaluator';
 
 interface BuildFormProps {
@@ -1377,11 +1378,9 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
               onChange={(e) => setDifficulty(e.target.value)}
             >
               <option value="">-- Select Difficulty --</option>
-              <option value="overpowered">Overpowered</option>
-              <option value="strong">Strong</option>
-              <option value="balanced">Balanced</option>
-              <option value="challenging">Challenging</option>
-              <option value="extreme">Extreme Challenge</option>
+              {DIFFICULTY_LEVELS.map(level => (
+                <option key={level.value} value={level.value}>{level.label}</option>
+              ))}
             </select>
           </div>
 

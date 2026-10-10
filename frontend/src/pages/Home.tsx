@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
 import RatingStars from '../components/RatingStars';
+import { DifficultyBadge } from '../components/DifficultyBadge';
+import { DIFFICULTY_LEVELS } from '../utils/difficulty';
 import { WhatsNewBanner, NewsItem } from '../components/WhatsNewBanner';
 import { LATEST_GAME_VERSION } from '../utils/gameVersion';
 import './Home.css';
@@ -57,28 +59,6 @@ const ORIGIN_PALETTE = [
 const hashOriginColor = (id: string): string => {
   const h = id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
   return ORIGIN_PALETTE[h % ORIGIN_PALETTE.length];
-};
-
-// Helper function to get difficulty badge styling
-const getDifficultyBadge = (difficulty: string | undefined) => {
-  if (!difficulty) return null;
-
-  const difficultyConfig: Record<string, { label: string; className: string }> = {
-    'overpowered': { label: 'Overpowered', className: 'bg-danger' },
-    'strong': { label: 'Strong', className: 'bg-warning text-dark' },
-    'balanced': { label: 'Balanced', className: 'bg-success' },
-    'challenging': { label: 'Challenging', className: 'bg-info text-dark' },
-    'extreme': { label: 'Extreme Challenge', className: 'bg-secondary' }
-  };
-
-  const config = difficultyConfig[difficulty];
-  if (!config) return null;
-
-  return (
-    <span className={`badge ${config.className}`}>
-      {config.label}
-    </span>
-  );
 };
 
 interface Build {
@@ -359,11 +339,9 @@ export const Home: React.FC = () => {
               }}
             >
               <option value="">All Difficulties</option>
-              <option value="overpowered">Overpowered</option>
-              <option value="strong">Strong</option>
-              <option value="balanced">Balanced</option>
-              <option value="challenging">Challenging</option>
-              <option value="extreme">Extreme Challenge</option>
+              {DIFFICULTY_LEVELS.map(level => (
+                <option key={level.value} value={level.value}>{level.label}</option>
+              ))}
             </select>
           </div>
           <div className="col-md-2 mb-3 mb-md-0">
@@ -464,7 +442,7 @@ export const Home: React.FC = () => {
                           </div>
                           <div>
                             <span className="badge bg-primary me-1">{VERSION_NAMES[build.game_version] ?? build.game_version ?? 'Unknown'}</span>
-                            {getDifficultyBadge(build.difficulty)}
+                            <DifficultyBadge difficulty={build.difficulty} />
                           </div>
                         </div>
 
