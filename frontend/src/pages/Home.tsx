@@ -568,12 +568,18 @@ export const Home: React.FC = () => {
                         {/* Rating */}
                         {build.average_rating !== undefined && build.rating_count !== undefined && (
                           <div className="mt-3 pt-3 border-top border-secondary">
-                            <RatingStars
-                              rating={build.average_rating}
-                              ratingCount={build.rating_count}
-                              interactive={false}
-                              size="sm"
-                            />
+                            {/* Unrated builds keep the row's space (cards stay aligned) but hide the empty stars */}
+                            <div
+                              style={build.rating_count === 0 ? { visibility: 'hidden' } : undefined}
+                              aria-hidden={build.rating_count === 0}
+                            >
+                              <RatingStars
+                                rating={build.average_rating}
+                                ratingCount={build.rating_count}
+                                interactive={false}
+                                size="sm"
+                              />
+                            </div>
                           </div>
                         )}
                       </div>
