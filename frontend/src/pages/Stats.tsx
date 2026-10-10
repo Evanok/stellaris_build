@@ -40,6 +40,18 @@ const VERSION_NAMES: Record<string, string> = {
   '3.13': '3.13 "Vela"',
 };
 
+// The pie always shows the most recent game versions individually and lumps everything else into
+// "Older". Based on VERSION_NAMES (the game's release history), not on which versions have builds:
+// a recent version with no build yet is simply absent from the pie rather than shown as 0%.
+const RECENT_VERSION_COUNT = 4;
+const RECENT_VERSIONS = Object.keys(VERSION_NAMES)
+  .sort((a, b) => {
+    const [aMajor, aMinor] = a.split('.').map(Number);
+    const [bMajor, bMinor] = b.split('.').map(Number);
+    return bMajor - aMajor || bMinor - aMinor;
+  })
+  .slice(0, RECENT_VERSION_COUNT);
+
 export default function Stats() {
   const [stats, setStats] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -140,11 +152,14 @@ export default function Stats() {
             <Card.Body>
               <Card.Title>Builds by Game Version</Card.Title>
               {(() => {
-                const top = stats.versionDistribution.slice(0, 5);
-                const otherCount = stats.versionDistribution.slice(5).reduce((s, v) => s + v.count, 0);
-                const pieData = otherCount > 0
-                  ? [...top.map(v => ({ name: VERSION_NAMES[v.name] || v.name, value: v.count })), { name: 'Other', value: otherCount }]
-                  : top.map(v => ({ name: VERSION_NAMES[v.name] || v.name, value: v.count }));
+                const countByVersion = new Map(stats.versionDistribution.map(v => [v.name, v.count]));
+                const recentSlices = RECENT_VERSIONS
+                  .filter(v => (countByVersion.get(v) || 0) > 0)
+                  .map(v => ({ name: VERSION_NAMES[v], value: countByVersion.get(v) as number }));
+                const olderCount = stats.versionDistribution
+                  .filter(v => !RECENT_VERSIONS.includes(v.name))
+                  .reduce((sum, v) => sum + v.count, 0);
+                const pieData = olderCount > 0 ? [...recentSlices, { name: 'Older', value: olderCount }] : recentSlices;
                 return (
                   <ResponsiveContainer width="100%" height={200}>
                     <PieChart>

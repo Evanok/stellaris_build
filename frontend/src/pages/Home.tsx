@@ -5,6 +5,8 @@ import { decodeHtmlEntities } from '../utils/htmlDecode';
 import RatingStars from '../components/RatingStars';
 import { DifficultyBadge } from '../components/DifficultyBadge';
 import { DIFFICULTY_LEVELS } from '../utils/difficulty';
+import { BUILD_TAGS } from '../utils/buildTags';
+import { BuildTagList, BuildTagsHelpModal } from '../components/BuildTags';
 import { WhatsNewBanner, NewsItem } from '../components/WhatsNewBanner';
 import { LATEST_GAME_VERSION } from '../utils/gameVersion';
 import './Home.css';
@@ -116,6 +118,8 @@ export const Home: React.FC = () => {
   const [difficultyFilter, setDifficultyFilter] = useState<string>('');
   const [versionFilter, setVersionFilter] = useState<string>('');
   const [nomadicFilter, setNomadicFilter] = useState(false);
+  const [tagFilter, setTagFilter] = useState('');
+  const [showTagsHelp, setShowTagsHelp] = useState(false);
   const [sortBy, setSortBy] = useState<string>('newest');
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -153,6 +157,7 @@ export const Home: React.FC = () => {
     if (difficultyFilter) params.set('difficulty', difficultyFilter);
     if (versionFilter) params.set('version', versionFilter);
     if (nomadicFilter) params.set('nomadic', 'true');
+    if (tagFilter) params.set('tag', tagFilter);
 
     fetch(`/api/builds?${params}`)
       .then(r => r.json())
@@ -169,7 +174,7 @@ export const Home: React.FC = () => {
       });
 
     return () => { cancelled = true; };
-  }, [currentPage, debouncedSearch, difficultyFilter, versionFilter, nomadicFilter, sortBy]);
+  }, [currentPage, debouncedSearch, difficultyFilter, versionFilter, nomadicFilter, tagFilter, sortBy]);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -318,8 +323,8 @@ export const Home: React.FC = () => {
         </div>
 
         {/* Search and Filters */}
-        <div className="row mb-4">
-          <div className="col-md-4 mb-3 mb-md-0">
+        <div className="row mb-2">
+          <div className="col-lg-4 mb-3 mb-lg-0">
             <input
               type="text"
               className="form-control form-control-lg bg-secondary text-white border-secondary"
@@ -328,7 +333,9 @@ export const Home: React.FC = () => {
               onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
-          <div className="col-md-2 mb-3 mb-md-0">
+          <div className="col-lg-8">
+          <div className="row g-2">
+          <div className="col-6 col-md">
             <select
               aria-label="Filter by difficulty"
               className="form-select form-select-lg bg-secondary text-white border-secondary"
@@ -344,7 +351,7 @@ export const Home: React.FC = () => {
               ))}
             </select>
           </div>
-          <div className="col-md-2 mb-3 mb-md-0">
+          <div className="col-6 col-md">
             <select
               aria-label="Filter by game version"
               className="form-select form-select-lg bg-secondary text-white border-secondary"
@@ -360,7 +367,23 @@ export const Home: React.FC = () => {
               ))}
             </select>
           </div>
-          <div className="col-md-2 mb-3 mb-md-0">
+          <div className="col-6 col-md">
+            <select
+              aria-label="Filter by tag"
+              className="form-select form-select-lg bg-secondary text-white border-secondary"
+              value={tagFilter}
+              onChange={(e) => {
+                setTagFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+            >
+              <option value="">All Tags</option>
+              {BUILD_TAGS.map(tag => (
+                <option key={tag.id} value={tag.id}>{tag.label}</option>
+              ))}
+            </select>
+          </div>
+          <div className="col-6 col-md">
             <select
               aria-label="Filter by empire type"
               className="form-select form-select-lg bg-secondary text-white border-secondary"
@@ -374,7 +397,7 @@ export const Home: React.FC = () => {
               <option value="nomadic">Nomadic Only</option>
             </select>
           </div>
-          <div className="col-md-2">
+          <div className="col-12 col-md">
             <select
               aria-label="Sort builds"
               className="form-select form-select-lg bg-secondary text-white border-secondary"
@@ -389,14 +412,25 @@ export const Home: React.FC = () => {
               <option value="rating">Highest Rated</option>
             </select>
           </div>
+          </div>
+          </div>
         </div>
+        <div className="row mb-4">
+          <div className="col-12 text-end">
+            <button type="button" className="btn btn-link btn-sm text-white-50 p-0" onClick={() => setShowTagsHelp(true)}>
+              <i className="bi bi-question-circle me-1"></i>
+              What do the tags mean?
+            </button>
+          </div>
+        </div>
+        <BuildTagsHelpModal show={showTagsHelp} onHide={() => setShowTagsHelp(false)} />
 
         {/* Build Count */}
         <div className="row mb-3">
           <div className="col-12">
             <p className="text-muted">
               Showing {pagedBuilds.length} of {total} builds
-              {(debouncedSearch || difficultyFilter || versionFilter || nomadicFilter) && ` (filtered)`}
+              {(debouncedSearch || difficultyFilter || versionFilter || nomadicFilter || tagFilter) && ` (filtered)`}
             </p>
           </div>
         </div>
@@ -527,11 +561,7 @@ export const Home: React.FC = () => {
                         {/* Tags */}
                         {build.tags && (
                           <div className="mt-2">
-                            {build.tags.split(',').slice(0, 3).map((tag, idx) => (
-                              <span key={idx} className="badge bg-secondary me-1">
-                                {tag.trim()}
-                              </span>
-                            ))}
+                            <BuildTagList tags={build.tags} />
                           </div>
                         )}
 

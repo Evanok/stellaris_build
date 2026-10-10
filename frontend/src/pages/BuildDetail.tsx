@@ -6,6 +6,8 @@ import { useAuth } from '../AuthContext';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
 import RatingStars from '../components/RatingStars';
 import { DifficultyBadge } from '../components/DifficultyBadge';
+import { BuildTagList } from '../components/BuildTags';
+import { parseBuildTags } from '../utils/buildTags';
 import { invalidateBuildsCache } from './Home';
 import { PredicateNode, getFailingNodes, describePredicateHuman } from '../utils/ruleEvaluator';
 
@@ -697,7 +699,7 @@ export const BuildDetail: React.FC = () => {
             "datePublished": build.created_at || new Date().toISOString(),
             "dateModified": build.updated_at || build.created_at || new Date().toISOString(),
             "version": build.game_version || "4.1",
-            "keywords": build.tags || "",
+            "keywords": parseBuildTags(build.tags).map(tag => tag.label).join(", "),
             "url": buildUrl
           })}
         </script>
@@ -1313,7 +1315,7 @@ export const BuildDetail: React.FC = () => {
           )}
 
           {/* Tags */}
-          {build.tags && (
+          {parseBuildTags(build.tags).length > 0 && (
             <div className="card bg-dark border-secondary mb-4">
               <div className="card-header bg-secondary">
                 <h4 className="mb-0 text-white">
@@ -1322,13 +1324,12 @@ export const BuildDetail: React.FC = () => {
                 </h4>
               </div>
               <div className="card-body">
-                <div className="d-flex flex-wrap gap-2">
-                  {parseList(build.tags).map((tag, idx) => (
-                    <span key={idx} className="badge bg-secondary fs-6 px-3 py-2">
-                      {tag}
-                    </span>
+                <BuildTagList tags={build.tags} large />
+                <ul className="list-unstyled small text-white-50 mt-3 mb-0">
+                  {parseBuildTags(build.tags).map(tag => (
+                    <li key={tag.id}><span className="text-white">{tag.label}:</span> {tag.description}</li>
                   ))}
-                </div>
+                </ul>
               </div>
             </div>
           )}

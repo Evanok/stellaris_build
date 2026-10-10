@@ -609,6 +609,28 @@ Planned features (not yet implemented):
 
 ## Recent Completions
 
+### Build Tags + Difficulty Rename + Stats Fixes (2026-10-10)
+Triggered by community feedback: the difficulty scale mixed build power (Overpowered/Strong/
+Balanced) with play difficulty (Challenging/Extreme).
+
+- **Difficulty**: relabelled to a single Very Easy -> Very Hard axis. DB values unchanged
+  (`overpowered`=Very Easy ... `extreme`=Very Hard). Labels/colors centralized in
+  `frontend/src/utils/difficulty.ts` + `components/DifficultyBadge.tsx`.
+- **Build tags**: 13 hardcoded tags, single source of truth `shared/build_tags.json` (ids,
+  labels, descriptions, groups, max 4 per build, mutually exclusive pairs). Backend
+  `security.js` whitelists ids on POST/PUT; frontend reads the same file via
+  `utils/buildTags.ts`. Stored as CSV of ids in the pre-existing `builds.tags` column (it had
+  existed since the initial scaffold but never had a form input - only the 7 seed builds #2-#8
+  had free-text tags). Never rename a tag id, only labels/descriptions.
+  `GET /api/builds?tag=<id>` filters; home has a tag filter + "What do the tags mean?" modal.
+- **Prod deploy step**: `cd backend && node migrate_build_tags.js` (dry run) then `--apply`
+  converts the legacy free-text tags of the seed builds. Idempotent.
+- **Stats**: top contributors exclude admins (`is_admin = 1`) and use `display_name`; the
+  version pie always shows the 4 most recent game versions (from `VERSION_NAMES` in `Stats.tsx`)
+  individually and lumps the rest into "Older"; a recent version with 0 builds is hidden rather
+  than shown as 0%. Previously it showed the 5 *most popular*, so 4.5 (5 builds) was hidden
+  inside "Other".
+
 ### Stellaris 4.5 "Cygnus" Support (2026-09-23)
 Re-extracted all game data for 4.5 and wired it through the site (data folder, backend version
 constants, BuildForm default, home/stats filters, home badge, `llms.txt`, news item).
