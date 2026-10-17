@@ -453,9 +453,18 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
     # re-derived from the game files)
     print(f"\nProcessing planets...")
     from extract_planet_classes import extract_planet_icons
-    planets_extracted = extract_planet_icons(stellaris_path, os.path.join(output_path, 'planets'))
+    planets_dir = os.path.join(output_path, 'planets')
+    planets_extracted = extract_planet_icons(stellaris_path, planets_dir)
     print(f"   ✓ Extracted: {planets_extracted}")
     stats['total_extracted'] += planets_extracted
+    # Home page build cards show the homeworld at 40px (same size as the portrait)
+    ensure_dir(home_dir)
+    planets_home = sum(
+        create_home_icon_webp(str(png), home_dir, png.stem, target_size=40)
+        for png in sorted(Path(planets_dir).glob('pc_*.png'))
+    )
+    if planets_home:
+        print(f"   ✓ Generated {planets_home} new home page planet icon(s) (40x40 webp)")
 
     print(f"\n" + "=" * 60)
     print(f"🎉 Extraction complete!")

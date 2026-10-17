@@ -608,17 +608,31 @@ for (const v of AVAILABLE_DATA_VERSIONS) {
       return map;
     } catch { return {}; }
   };
+  // Origins that force the homeworld (habitability_preference), e.g. Void Dwellers -> pc_habitat
+  let forcedPlanets = {};
+  try {
+    JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'versions', v, 'origins.json'), 'utf8'))
+      .forEach(o => { if (o.habitability_preference) forcedPlanets[o.id] = o.habitability_preference; });
+  } catch { forcedPlanets = {}; }
   _nameCache[v] = {
     origins: load('origins.json'),
     ethics: load('ethics.json'),
     authorities: load('authorities.json'),
+    planets: load('planet_classes.json'),
+    forcedPlanets,
   };
 }
 
 function enrichBuild(build) {
   const names = _nameCache[getDataVersion(build.game_version)] || {};
+  // Effective homeworld (mirrors frontend/src/utils/planetRules.ts): Nomadic -> Arkship,
+  // else the origin's forced planet, else the build's own pick - so builds saved before
+  // planet_class existed still show e.g. Void Dwellers' Habitat.
+  const homeworld = build.is_nomadic ? 'pc_ark' : (names.forcedPlanets?.[build.origin] || build.planet_class || null);
   return {
     ...build,
+    homeworld,
+    homeworld_name: homeworld ? (names.planets?.[homeworld] || null) : null,
     origin_name: names.origins?.[build.origin] || null,
     authority_name: names.authorities?.[build.authority] || null,
     ethics_names: build.ethics
