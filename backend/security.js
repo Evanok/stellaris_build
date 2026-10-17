@@ -214,6 +214,15 @@ const validateBuildData = (data) => {
     }
   });
 
+  // Homeworld planet class (optional): a game id like "pc_desert". Not checked
+  // against planet_classes.json - the rule evaluator handles game validity,
+  // this only keeps arbitrary strings out of the column.
+  if (data.planet_class !== undefined && data.planet_class !== null && data.planet_class !== '') {
+    if (typeof data.planet_class !== 'string' || !/^pc_[a-z0-9_]{1,60}$/.test(data.planet_class)) {
+      errors.push('Invalid planet class');
+    }
+  }
+
   return errors;
 };
 

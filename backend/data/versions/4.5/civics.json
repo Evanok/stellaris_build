@@ -167,6 +167,19 @@
           "value": "auth_democratic"
         },
         {
+          "any": [
+            {
+              "field": "ethics",
+              "value": "ethic_egalitarian"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_fanatic_egalitarian"
+            }
+          ],
+          "tooltip": "civic_tooltip_egalitarian"
+        },
+        {
           "not": {
             "any": [
               {
@@ -418,6 +431,12 @@
             }
           ],
           "tooltip": "civic_tooltip_militarist"
+        },
+        {
+          "not": {
+            "field": "ethics",
+            "value": "ethic_fanatic_xenophile"
+          }
         },
         {
           "any": [
@@ -717,6 +736,12 @@
         },
         {
           "not": {
+            "field": "civics",
+            "value": "civic_dystopian_society"
+          }
+        },
+        {
+          "not": {
             "any": [
               {
                 "field": "civics",
@@ -884,6 +909,12 @@
                 "value": "origin_fear_of_the_dark"
               }
             ]
+          }
+        },
+        {
+          "not": {
+            "field": "civics",
+            "value": "civic_pompous_purists"
           }
         },
         {
@@ -1842,6 +1873,10 @@
           "tooltip": "civic_tooltip_not_xenophobe"
         },
         {
+          "field": "ethics",
+          "value": "ethic_fanatic_egalitarian"
+        },
+        {
           "not": {
             "all": [
               {
@@ -1908,6 +1943,10 @@
               "value": "ethic_spiritualist"
             }
           ]
+        },
+        {
+          "field": "ethics",
+          "value": "ethic_fanatic_xenophobe"
         },
         {
           "not": {
@@ -2071,6 +2110,39 @@
     },
     "possible": {
       "all": [
+        {
+          "any": [
+            {
+              "field": "ethics",
+              "value": "ethic_fanatic_militarist"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_militarist"
+            }
+          ],
+          "tooltip": "civic_tooltip_militarist"
+        },
+        {
+          "any": [
+            {
+              "field": "ethics",
+              "value": "ethic_fanatic_authoritarian"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_authoritarian"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_fanatic_xenophobe"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_xenophobe"
+            }
+          ]
+        },
         {
           "not": {
             "any": [
@@ -2914,6 +2986,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_aquatic"
+    ],
     "can_add": true,
     "can_remove": true,
     "modifier": {
@@ -2989,6 +3064,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_robot_aquatic"
+    ],
     "can_modify": false,
     "modifier": {
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
@@ -3459,6 +3537,35 @@
     },
     "possible": {
       "all": [
+        {
+          "any": [
+            {
+              "field": "ethics",
+              "value": "ethic_militarist"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_fanatic_militarist"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_authoritarian"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_fanatic_authoritarian"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_spiritualist"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_fanatic_spiritualist"
+            }
+          ],
+          "tooltip": "civic_tooltip_authoritarian_or_militarist_or_spiritualist"
+        },
         {
           "not": {
             "any": [
@@ -4041,6 +4148,12 @@
         },
         {
           "not": {
+            "field": "civics",
+            "value": "civic_guided_sapience"
+          }
+        },
+        {
+          "not": {
             "any": [
               {
                 "field": "civics",
@@ -4615,6 +4728,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_storm_touched"
+    ],
     "can_add": true,
     "can_remove": true,
     "modifier": {
@@ -5395,9 +5511,10 @@
     },
     "can_modify": true,
     "modifier": {
+      "crime_experiment_engineer_bonus_workforce_mult": 0.1,
       "refugee_attraction": -0.15
     },
-    "effects": "Starts with Experimental Testing situation, which grants technology insight upon completion. Can construct and starts with: Experimentation Chambers. All non-Machine slaves get access to the Orderlies Slave Job. Access to Slave Army: Abominations | refugee_attraction: -0.15",
+    "effects": "Starts with Experimental Testing situation, which grants technology insight upon completion. Can construct and starts with: Experimentation Chambers. All non-Machine slaves get access to the Orderlies Slave Job. Access to Slave Army: Abominations | crime_experiment_engineer_bonus_workforce_mult: +10.0%; refugee_attraction: -0.15",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -5755,6 +5872,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_tankbound"
+    ],
     "can_add": true,
     "can_remove": true,
     "modifier": {
@@ -5804,6 +5924,19 @@
         {
           "field": "species_class",
           "value": "INF"
+        },
+        {
+          "any": [
+            {
+              "field": "ethics",
+              "value": "ethic_xenophobe"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_fanatic_xenophobe"
+            }
+          ],
+          "tooltip": "civic_tooltip_xenophobe"
         },
         {
           "not": {
@@ -6038,6 +6171,12 @@
         },
         {
           "not": {
+            "field": "civics",
+            "value": "civic_idyllic_bloom"
+          }
+        },
+        {
+          "not": {
             "any": [
               {
                 "field": "civics",
@@ -6094,7 +6233,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- Unity Job output increases proportionally with lower Habitability (Up to 500%). - The Scourge of the Volcano faction forms shortly after game start. - Replaces Priests with Fire Dancers. - Replaces Politicians with Fire Oracles on planets with Habitability lower than 50%. - Allows the recruitment of Ember Legion armies on planets with Habitability lower than 20%. - Grants access to the Blazing Scourge Colony Decision which creates Blazing Scourge Blockers. - Synergizes with Civics: Superstitious Beliefs, Exalted Priesthood, Death Cult, Aristocratic Elite, and Merchant Guilds.",
+    "tooltip": "- The Scourge of the Volcano faction forms shortly after game start. - Fire Cult Priesthood Jobs. - Allows the recruitment of Ember Legion armies on planets with Habitability $@inf_ember_legion_max_habitability|0%$ or less. - Grants access to the Blazing Scourge Colony Decision which creates Blazing Scourge Blockers. - Synergizes with Civics: Superstitious Beliefs, Exalted Priesthood, Death Cult, Aristocratic Elite, and Merchant Guilds.",
     "negative_tooltip": "",
     "playable_conditions": "{'has_infernals': True}",
     "potential": {
@@ -6155,8 +6294,10 @@
       ]
     },
     "can_modify": false,
-    "modifier": {},
-    "effects": "- Unity Job output increases proportionally with lower Habitability (Up to 500%). - The Scourge of the Volcano faction forms shortly after game start. - Replaces Priests with Fire Dancers. - Replaces Politicians with Fire Oracles on planets with Habitability lower than 50%. - Allows the recruitment of Ember Legion armies on planets with Habitability lower than 20%. - Grants access to the Blazing Scourge Colony Decision which creates Blazing Scourge Blockers. - Synergizes with Civics: Superstitious Beliefs, Exalted Priesthood, Death Cult, Aristocratic Elite, and Merchant Guilds.",
+    "modifier": {
+      "low_habitability_bureaucrat_bonus_workforce_mult": 0.25
+    },
+    "effects": "- The Scourge of the Volcano faction forms shortly after game start. - Fire Cult Priesthood Jobs. - Allows the recruitment of Ember Legion armies on planets with Habitability $@inf_ember_legion_max_habitability|0%$ or less. - Grants access to the Blazing Scourge Colony Decision which creates Blazing Scourge Blockers. - Synergizes with Civics: Superstitious Beliefs, Exalted Priesthood, Death Cult, Aristocratic Elite, and Merchant Guilds. | low_habitability_bureaucrat_bonus_workforce_mult: +25.0%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -6358,6 +6499,19 @@
         {
           "field": "is_nomadic",
           "value": true
+        },
+        {
+          "any": [
+            {
+              "field": "ethics",
+              "value": "ethic_fanatic_militarist"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_militarist"
+            }
+          ],
+          "tooltip": "civic_tooltip_militarist"
         },
         {
           "not": {
@@ -7591,6 +7745,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_stargazer"
+    ],
     "can_modify": false,
     "modifier": {
       "councilor_gestalt_legion_exp_gain": "@gestalt_civic_node_xp_rate",
@@ -7918,6 +8075,10 @@
               }
             ]
           }
+        },
+        {
+          "field": "authority",
+          "value": "auth_hive_mind"
         }
       ]
     },
@@ -8567,9 +8728,10 @@
     },
     "can_modify": true,
     "modifier": {
+      "crime_experiment_engineer_bonus_workforce_mult": 0.1,
       "councilor_gestalt_cognitive_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "Starts with Experimental Testing situation, which grants technology insight upon completion. Can construct and starts with: Experimentation Chambers.",
+    "effects": "Starts with Experimental Testing situation, which grants technology insight upon completion. Can construct and starts with: Experimentation Chambers. | crime_experiment_engineer_bonus_workforce_mult: +10.0%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -10268,6 +10430,10 @@
           }
         },
         {
+          "field": "authority",
+          "value": "auth_machine_intelligence"
+        },
+        {
           "field": "ethics",
           "value": "ethic_gestalt_consciousness"
         }
@@ -10970,7 +11136,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- Your Subjects cannot have the following Agreement Terms:  Expansion Prohibited  Limited Diplomacy  Independent Sensors - Available Holdings: Franchise Headquarters on Subject colonies - The Commercial Forum Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
+    "tooltip": "- Ignore Diplomatic Requirements when proposing Subjugation - Your Subjects cannot have the following Agreement Terms:  Expansion Prohibited  Limited Diplomacy  Independent Sensors - Available Holdings: Franchise Headquarters on Subject colonies - The Commercial Forum Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
     "negative_tooltip": "",
     "potential": {
       "all": [
@@ -10996,7 +11162,7 @@
       "divided_patrongage_max_subjects": 1,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Your Subjects cannot have the following Agreement Terms:  Expansion Prohibited  Limited Diplomacy  Independent Sensors - Available Holdings: Franchise Headquarters on Subject colonies - The Commercial Forum Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | divided_patrongage_max_subjects: +1",
+    "effects": "- Ignore Diplomatic Requirements when proposing Subjugation - Your Subjects cannot have the following Agreement Terms:  Expansion Prohibited  Limited Diplomacy  Independent Sensors - Available Holdings: Franchise Headquarters on Subject colonies - The Commercial Forum Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | divided_patrongage_max_subjects: +1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -11111,6 +11277,12 @@
                 "value": "civic_parliamentary_system"
               }
             ]
+          }
+        },
+        {
+          "not": {
+            "field": "civics",
+            "value": "civic_idealistic_foundation"
           }
         },
         {
@@ -12014,6 +12186,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_aquatic"
+    ],
     "can_add": true,
     "can_remove": true,
     "modifier": {
@@ -12089,6 +12264,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_robot_aquatic"
+    ],
     "can_modify": false,
     "modifier": {
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
@@ -12611,6 +12789,12 @@
         },
         {
           "not": {
+            "field": "civics",
+            "value": "civic_eager_explorers"
+          }
+        },
+        {
+          "not": {
             "any": [
               {
                 "field": "civics",
@@ -12880,6 +13064,27 @@
     "possible": {
       "all": [
         {
+          "any": [
+            {
+              "field": "ethics",
+              "value": "ethic_militarist"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_fanatic_militarist"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_authoritarian"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_fanatic_authoritarian"
+            }
+          ],
+          "tooltip": "civic_tooltip_authoritarian_or_militarist"
+        },
+        {
           "not": {
             "any": [
               {
@@ -13110,6 +13315,19 @@
     },
     "possible": {
       "all": [
+        {
+          "any": [
+            {
+              "field": "ethics",
+              "value": "ethic_egalitarian"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_fanatic_egalitarian"
+            }
+          ],
+          "tooltip": "civic_tooltip_egalitarian"
+        },
         {
           "not": {
             "any": [
@@ -13698,6 +13916,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_storm_touched"
+    ],
     "can_add": true,
     "can_remove": true,
     "modifier": {
@@ -14427,9 +14648,10 @@
     },
     "can_modify": true,
     "modifier": {
+      "crime_experiment_engineer_bonus_workforce_mult": 0.1,
       "refugee_attraction": -0.15
     },
-    "effects": "Starts with Experimental Testing situation, which grants technology insight upon completion. Can construct and starts with: Experimentation Chambers. Can construct Experimentation Offices Corporate Building. All non-Machine slaves get access to the Orderlies Slave Job. Access to Slave Army: Abominations | refugee_attraction: -0.15",
+    "effects": "Starts with Experimental Testing situation, which grants technology insight upon completion. Can construct and starts with: Experimentation Chambers. Can construct Experimentation Offices Corporate Building. All non-Machine slaves get access to the Orderlies Slave Job. Access to Slave Army: Abominations | crime_experiment_engineer_bonus_workforce_mult: +10.0%; refugee_attraction: -0.15",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -14765,6 +14987,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_tankbound"
+    ],
     "can_add": true,
     "can_remove": true,
     "modifier": {

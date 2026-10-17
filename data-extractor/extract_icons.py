@@ -448,6 +448,15 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
                 stats['total_extracted'] += extracted
                 stats['total_missing'] += missing
 
+    # Extract homeworld planet class icons (sliced from the game's sprite
+    # sheet, kept at native 76px - no JSON input needed, the class list is
+    # re-derived from the game files)
+    print(f"\nProcessing planets...")
+    from extract_planet_classes import extract_planet_icons
+    planets_extracted = extract_planet_icons(stellaris_path, os.path.join(output_path, 'planets'))
+    print(f"   ✓ Extracted: {planets_extracted}")
+    stats['total_extracted'] += planets_extracted
+
     print(f"\n" + "=" * 60)
     print(f"🎉 Extraction complete!")
     print(f"   Total extracted: {stats['total_extracted']}")

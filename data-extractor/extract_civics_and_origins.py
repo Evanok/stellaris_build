@@ -114,15 +114,23 @@ def _normalize_field_value(field: str, value: Any) -> List[Dict[str, Any]]:
         return [node for item in value for node in _normalize_field_value(field, item)]
 
     if isinstance(value, dict):
-        operator = next((op for op in TOPLEVEL_OPERATORS if op in value), None)
-        if operator:
-            inner = value[operator]
-            # A field can carry several separate OR/NOT/NOR blocks (parsed as a
-            # list when the same operator key repeats under one field) - each is
-            # its own constraint, AND-ed together.
-            if isinstance(inner, list):
-                return [_normalize_operator_block(field, operator, block) for block in inner]
-            return [_normalize_operator_block(field, operator, inner)]
+        # A field can carry several separate OR/NOT/NOR blocks, possibly mixing
+        # operators (e.g. Red Giant's `civics = { NOR = {...} NOT = {...} NOR = {...} }`
+        # in 4.5.2) - each is its own constraint, AND-ed together. Repeats of the
+        # same operator key are parsed as a list. Iterate the dict (insertion
+        # order), never TOPLEVEL_OPERATORS: picking just one operator from a set
+        # silently dropped the others, and which one survived depended on Python's
+        # per-process string hash seed.
+        nodes = []
+        for key, inner in value.items():
+            if key not in TOPLEVEL_OPERATORS:
+                continue
+            blocks = inner if isinstance(inner, list) else [inner]
+            nodes.extend(_normalize_operator_block(field, key, block) for block in blocks)
+        if nodes:
+            if 'value' in value:
+                nodes.extend(_leaves_from_raw_values(field, value['value']))
+            return nodes
 
         if 'value' in value:
             leaves = _leaves_from_raw_values(field, value['value'])
@@ -363,6 +371,17 @@ def extract_civic_data(civic_key: str, civic_data: Dict[str, Any], localizations
             civic["soft_traits"] = list(soft_traits_raw.values())
     elif isinstance(soft_traits_raw, list) and soft_traits_raw:
         civic["soft_traits"] = soft_traits_raw
+
+    # Extract traits granted to the founder species (`traits = { trait = X }`),
+    # e.g. Anglers / Ocean Paradise grant Aquatic - which in turn restricts the
+    # homeworld planet class through the trait's allowed_planet_classes.
+    granted_traits_raw = civic_data.get("traits")
+    if isinstance(granted_traits_raw, dict):
+        trait_val = granted_traits_raw.get("trait")
+        if isinstance(trait_val, str) and trait_val:
+            civic["granted_traits"] = [trait_val]
+        elif isinstance(trait_val, list) and trait_val:
+            civic["granted_traits"] = [t for t in trait_val if isinstance(t, str)]
 
     # Extract modification rules
     modification = civic_data.get("modification", True)

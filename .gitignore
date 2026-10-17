@@ -49,6 +49,12 @@ yarn-error.log*
 *.sqlite
 *.sqlite3
 stellaris_builds.db
+# SQLite WAL-mode runtime files (journal + shared-memory index), recreated while the backend runs
+*.db-wal
+*.db-shm
+*.db-journal
+# Manual database backups (e.g. stellaris_builds.db.backup-20260811-094038)
+*.db.backup*
 
 # Backups
 backups/

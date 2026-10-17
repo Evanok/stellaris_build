@@ -241,6 +241,7 @@ The project uses npm workspaces with three main parts:
 - `GET /api/ascension-perks` - Returns ascension perks (44 player-available)
 - `GET /api/traditions` - Returns tradition trees (32 trees)
 - `GET /api/ruler-traits` - Returns ruler traits filtered by origin/ethics compatibility
+- `GET /api/planet-classes` - Returns homeworld planet classes (10 selectable climates + origin-forced classes like Habitat/Gaia, with icons)
 - `GET /api/builds` - Returns all non-deleted builds ordered by created_at DESC
 - `POST /api/builds` - Creates new build (requires authentication, name, checks for duplicates)
 - `DELETE /api/builds/:id` - Soft deletes a build (sets deleted=1)
@@ -268,6 +269,7 @@ Each version folder contains the same set of files:
 - `ruler_traits.json` - ruler/leader traits for starting leaders
 - `species_classes.json` - species classes with portrait IDs (18 categories from portrait_categories)
 - `species_archetypes.json` - trait point/pick budget per archetype (BIOLOGICAL/ROBOT/MACHINE/LITHOID/PRESAPIENT/OTHER) - extracted by `extract_species_archetypes.py`, included in `extract_all.py`
+- `planet_classes.json` - homeworld planet classes (`selectable` = offered in the empire creator; others are only reachable through an origin or the Nomadic toggle) - extracted by `extract_planet_classes.py`, included in `extract_all.py`. 4.2-4.4 hold a copy of the 4.5 file (planet classes unchanged across those versions; only 4.5 was extracted)
 
 Non-versioned files (still in `backend/data/`):
 - `resources.json` - Curated community resources (not game data)
@@ -342,6 +344,7 @@ cp output/versions/$VERSION/ethics.json               ../backend/data/versions/$
 cp output/versions/$VERSION/traditions_by_tree.json   ../backend/data/versions/$VERSION/traditions.json
 cp output/versions/$VERSION/ascension_perks.json      ../backend/data/versions/$VERSION/
 cp output/versions/$VERSION/species_archetypes.json   ../backend/data/versions/$VERSION/
+cp output/versions/$VERSION/planet_classes.json       ../backend/data/versions/$VERSION/
 cp output/ruler_traits.json                           ../backend/data/versions/$VERSION/ruler_traits.json
 cp output/species_classes.json                        ../backend/data/versions/$VERSION/species_classes.json
 cp ../backend/data/versions/$PREV/authorities.json    ../backend/data/versions/$VERSION/  # hand-maintained, copy then refresh:
@@ -401,7 +404,7 @@ EOF
     previous run (~40/69); a sudden jump means the new rules broke the evaluator, not the builds.
 13. Icons: a patch with no new civics/traits/origins needs no icon run. If there ARE new IDs, run
     `data-extractor/extract_icons.py` (generates both the 32px build-page PNGs and the 20px
-    `icons/home/*.webp` used by home cards). Sanity-check that every `icon` path in the new JSON
+    `icons/home/*.webp` used by home cards, plus the planet icons in `icons/planets/`). Sanity-check that every `icon` path in the new JSON
     resolves under `frontend/public/`.
 14. Deploy: `npm run build -w frontend` then `pm2 restart stellaris-build` (see Production Deployment).
 
@@ -609,6 +612,38 @@ Planned features (not yet implemented):
 
 ## Recent Completions
 
+### Homeworld Planet Class + Predicate Extractor Fix + 4.5.2 Data (2026-10-17)
+Builds can now record their homeworld planet class (optional).
+
+- **Data**: new `data-extractor/extract_planet_classes.py` (in `extract_all.py`) -> `planet_classes.json`;
+  icons sliced from `planet_type_big_icons.dds` by `extract_icons.py` into `frontend/public/icons/planets/`
+  (76px). Traits gained `allowed_planet_classes` (Aquatic = ocean, nomad traits = ark), civics/origins
+  gained `granted_traits` (Anglers / Ocean Paradise grant Aquatic). Origins already had
+  `habitability_preference` (forced planet) and the `preferred_planet_class` predicate field.
+- **Rules** (`frontend/src/utils/planetRules.ts`, mirrored in `backend/rules/planetRules.js`):
+  effective planet = `pc_ark` if Nomadic, else the origin's `habitability_preference`, else the pick.
+  Unknown planet = no planet check at all. Species classes can add/remove pickable planets
+  (`common/species_classes/` `added_planet_types`/`removed_planet_types` -> `only_species_classes`/
+  `excluded_species_classes`): Volcanic is **Infernal-only** (not a DLC thing - the user owns all DLC
+  and never sees it otherwise), and Infernals lose the 3 cold worlds; the picker mirrors the game
+  (Volcanic column takes the Cold slot). Origin-forced planets bypass this (Red Giant -> Volcanic for
+  any species, grid shown locked like in-game). Checked live in `BuildForm.tsx` (incompatible planets
+  disabled with the reason as tooltip; incompatible traits/civics/origins hidden or disabled), at
+  submit, in the `BuildDetail.tsx` export warnings, and by `check_build_rules.js`.
+- **DB**: `builds.planet_class TEXT` (auto-migrated). Stores the effective planet. Export writes it as
+  `planet_class`, falling back to the previous ocean/continental default when unset.
+- **Extractor bug fixed** (`extract_civics_and_origins.py` `_normalize_field_value`): a field block
+  mixing operators (`civics = { NOR = {...} NOT = {...} }`) kept only ONE operator, picked from a Python
+  `set` - so which conditions survived changed with the per-process hash seed. Now all are kept, and
+  re-extraction is deterministic (verified with two different `PYTHONHASHSEED`). Example of what was
+  lost: Fanatic Purifiers' "requires Fanatic Xenophobe". **4.2-4.4 data still has this bug** - fixing
+  it needs those game versions checked out via Steam betas.
+- **4.5 data re-extracted from 4.5.2** (installed version). Besides the restored conditions, real hotfix
+  changes are text-only plus `ap_hydrocentric`'s potential (also accepts Wet Climate cyborg mods).
+  `LATEST_GAME_VERSION.patch` still says 4.5.0.
+- Known gap: `NOT = { value = A value = B }` (e.g. Syncretic Evolution) - the game README says NOT takes
+  a single value, so semantics are unclear; we keep the lenient NOT(A AND B) reading.
+
 ### Build Tags + Difficulty Rename + Stats Fixes (2026-10-10)
 Triggered by community feedback: the difficulty scale mixed build power (Overpowered/Strong/
 Balanced) with play difficulty (Challenging/Extreme).
@@ -642,6 +677,12 @@ species archetype trait budgets came back byte-identical. No new trait file to r
 `extract_traits.py`, and no new icons needed.
 
 **What did change — rule rebalancing, which the site's filters and rule warnings enforce:**
+
+> **Correction (2026-10-17):** the "7 civics swapped" claim below is WRONG - it was an artifact of an
+> extractor bug (see "Homeworld Planet Class" below): blocks mixing operators kept only one of them,
+> chosen at random. Beacon of Liberty, for instance, requires Egalitarian AND not Xenophobe. Only the
+> Hard Reset / Storm Chasers / Knights of the Toxic God points may be real; not re-verified.
+
 - **7 civics swapped a positive ethics requirement for a negative one** (from "requires X" to
   "forbids Y"), i.e. they're now available to far more empires: Beacon of Liberty and Worker
   Cooperative (were Egalitarian-only -> now just not-Xenophobe), Barbaric Despoilers and Void

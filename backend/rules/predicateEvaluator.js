@@ -72,6 +72,9 @@ function contextFromBuild(build, archetypeByClass) {
     species_class: build.species_class || undefined,
     traits: splitCsv(build.traits),
     is_nomadic: !!build.is_nomadic,
+    // Raw pick only - callers that know the origin should override with
+    // planetRules.getEffectivePlanetClass() (Nomadic / origin-forced planet).
+    preferred_planet_class: build.is_nomadic ? 'pc_ark' : (build.planet_class || undefined),
   };
 }
 

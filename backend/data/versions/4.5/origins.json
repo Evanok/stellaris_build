@@ -358,6 +358,12 @@
         },
         {
           "not": {
+            "field": "civics",
+            "value": "civic_agrarian_idyll"
+          }
+        },
+        {
+          "not": {
             "field": "traits",
             "value": "trait_aquatic"
           }
@@ -507,6 +513,12 @@
             ]
           },
           "tooltip": "civic_tooltip_not_beastmasters"
+        },
+        {
+          "not": {
+            "field": "civics",
+            "value": "civic_agrarian_idyll"
+          }
         },
         {
           "not": {
@@ -685,6 +697,12 @@
           "tooltip": "civic_tooltip_not_pacifist"
         },
         {
+          "not": {
+            "field": "ethics",
+            "value": "ethic_gestalt_consciousness"
+          }
+        },
+        {
           "field": "is_nomadic",
           "value": false
         }
@@ -738,6 +756,12 @@
         },
         {
           "not": {
+            "field": "ethics",
+            "value": "ethic_gestalt_consciousness"
+          }
+        },
+        {
+          "not": {
             "any": [
               {
                 "field": "civics",
@@ -754,6 +778,13 @@
             ]
           },
           "tooltip": "civic_tooltip_not_chosen"
+        },
+        {
+          "not": {
+            "field": "civics",
+            "value": "civic_natural_design"
+          },
+          "tooltip": "civic_tooltip_not_natural_design"
         },
         {
           "not": {
@@ -889,6 +920,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_malleable_genes"
+    ],
     "can_modify": true,
     "modifier": {
       "BIOLOGICAL_species_trait_picks_add": 1
@@ -1065,6 +1099,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_wilderness"
+    ],
     "can_modify": true,
     "modifier": {
       "planet_building_capacity_add": 5
@@ -1402,6 +1439,12 @@
       "all": [
         {
           "not": {
+            "field": "ethics",
+            "value": "ethic_gestalt_consciousness"
+          }
+        },
+        {
+          "not": {
             "any": [
               {
                 "field": "ethics",
@@ -1567,6 +1610,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_pathogenic_genes"
+    ],
     "can_modify": true,
     "modifier": {
       "category_computing_research_speed_mult": 0.15
@@ -1681,6 +1727,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_perfected_genes"
+    ],
     "can_modify": true,
     "modifier": {},
     "effects": "- Species Traits: Perfected Genes  - Ruler Traits: Luminary",
@@ -1828,6 +1877,12 @@
         {
           "field": "is_nomadic",
           "value": false
+        },
+        {
+          "not": {
+            "field": "ethics",
+            "value": "ethic_gestalt_consciousness"
+          }
         },
         {
           "not": {
@@ -2318,6 +2373,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_cave_dweller"
+    ],
     "can_modify": true,
     "modifier": {
       "mining_district_housing_add": 200,
@@ -2370,6 +2428,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_robot_cave_dweller"
+    ],
     "can_modify": true,
     "modifier": {
       "mining_district_housing_add": 200,
@@ -2662,6 +2723,12 @@
         },
         {
           "not": {
+            "field": "civics",
+            "value": "civic_pyrolatry"
+          }
+        },
+        {
+          "not": {
             "any": [
               {
                 "field": "civics",
@@ -2706,6 +2773,9 @@
     },
     "starting_colony": "pc_ocean",
     "habitability_preference": "pc_ocean",
+    "granted_traits": [
+      "trait_aquatic"
+    ],
     "can_modify": true,
     "modifier": {},
     "effects": "- Species Traits: Aquatic  - Homeworld:  - Ocean World (size: 30)  - Colony Modifiers: Ocean Paradise  - Planetary Features: Crystal Reef - Guaranteed Habitable Worlds: Replaced with Frozen Worlds",
@@ -2766,6 +2836,9 @@
     },
     "starting_colony": "pc_ocean",
     "habitability_preference": "pc_ocean",
+    "granted_traits": [
+      "trait_robot_aquatic"
+    ],
     "can_modify": true,
     "modifier": {},
     "effects": "- Species Traits: Waterproof  - Homeworld:  - Ocean World (size: 30)  - Colony Modifiers: Ocean Paradise  - Planetary Features: Crystal Reef - Guaranteed Habitable Worlds: Replaced with Frozen Worlds",
@@ -2882,6 +2955,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_necrophage"
+    ],
     "can_modify": true,
     "modifier": {
       "refugee_attraction": -0.25
@@ -2953,6 +3029,12 @@
     },
     "possible": {
       "all": [
+        {
+          "not": {
+            "field": "civics",
+            "value": "civic_agrarian_idyll"
+          }
+        },
         {
           "not": {
             "any": [
@@ -3063,6 +3145,12 @@
           "tooltip": "civic_tooltip_not_anglers"
         },
         {
+          "not": {
+            "field": "civics",
+            "value": "civic_agrarian_idyll"
+          }
+        },
+        {
           "field": "is_nomadic",
           "value": false
         }
@@ -3070,6 +3158,9 @@
     },
     "starting_colony": "pc_habitat",
     "habitability_preference": "pc_habitat",
+    "granted_traits": [
+      "trait_void_dweller_1"
+    ],
     "can_modify": true,
     "modifier": {
       "habitat_max_districts_add": 2,
@@ -3116,6 +3207,12 @@
         },
         {
           "not": {
+            "field": "civics",
+            "value": "civic_agrarian_idyll"
+          }
+        },
+        {
+          "not": {
             "any": [
               {
                 "field": "civics",
@@ -3145,6 +3242,9 @@
     },
     "starting_colony": "pc_habitat",
     "habitability_preference": "pc_habitat",
+    "granted_traits": [
+      "trait_void_dweller_2"
+    ],
     "can_modify": true,
     "modifier": {
       "habitat_max_districts_add": 2,
@@ -3402,6 +3502,12 @@
             ]
           },
           "tooltip": "civic_tooltip_not_egalitarian"
+        },
+        {
+          "not": {
+            "field": "civics",
+            "value": "civic_inwards_perfection"
+          }
         },
         {
           "not": {
@@ -3739,6 +3845,12 @@
         },
         {
           "not": {
+            "field": "civics",
+            "value": "civic_agrarian_idyll"
+          }
+        },
+        {
+          "not": {
             "any": [
               {
                 "field": "civics",
@@ -3767,6 +3879,9 @@
       ]
     },
     "starting_colony": "pc_nuked",
+    "granted_traits": [
+      "trait_survivor"
+    ],
     "can_modify": true,
     "modifier": {},
     "effects": "- Homeworld: Tomb World - Species Traits: Survivor",
@@ -3845,6 +3960,9 @@
       ]
     },
     "starting_colony": "pc_nuked",
+    "granted_traits": [
+      "trait_robot_survivor"
+    ],
     "can_modify": true,
     "modifier": {},
     "effects": "- Homeworld: Tomb World - Species Traits: Radiation Shields",
@@ -3916,6 +4034,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_clone_soldier_infertile"
+    ],
     "can_modify": true,
     "modifier": {},
     "effects": "- Homeworld: Ancient Clone Vat: +2  - Species Traits: Clone Soldier - Additional Starting Technologies:   - Cloning   - Gene Banks",
@@ -4023,6 +4144,19 @@
             "field": "species_archetype",
             "value": "MACHINE"
           }
+        },
+        {
+          "any": [
+            {
+              "field": "ethics",
+              "value": "ethic_militarist"
+            },
+            {
+              "field": "ethics",
+              "value": "ethic_fanatic_militarist"
+            }
+          ],
+          "tooltip": "civic_tooltip_militarist"
         },
         {
           "not": {
@@ -4233,6 +4367,10 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_unplugged_cybernetic_positives_3",
+      "trait_unplugged_cybernetic_negatives_3"
+    ],
     "can_modify": true,
     "modifier": {},
     "effects": "- Homeworld:  - Colony Modifiers: Battlefield Recoveries - Home System: Contains a Tomb World with an Archaeology Site related to a decimated Pre-FTL Civilization - Species Traits:  - Limited access to Cybernetic Traits  - Cyber Commandos  - Unplugged",
@@ -4264,6 +4402,12 @@
     },
     "possible": {
       "all": [
+        {
+          "not": {
+            "field": "ethics",
+            "value": "ethic_gestalt_consciousness"
+          }
+        },
         {
           "any": [
             {
@@ -4326,6 +4470,21 @@
             "field": "ethics",
             "value": "ethic_gestalt_consciousness"
           }
+        },
+        {
+          "not": {
+            "all": [
+              {
+                "field": "civics",
+                "value": "civic_fanatic_purifiers"
+              },
+              {
+                "field": "civics",
+                "value": "civic_scorched_earth"
+              }
+            ]
+          },
+          "tooltip": "civic_tooltip_not_genocidal"
         },
         {
           "not": {
