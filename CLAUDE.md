@@ -685,8 +685,9 @@ species archetype trait budgets came back byte-identical. No new trait file to r
 
 > **Correction (2026-10-17):** the "7 civics swapped" claim below is WRONG - it was an artifact of an
 > extractor bug (see "Homeworld Planet Class" below): blocks mixing operators kept only one of them,
-> chosen at random. Beacon of Liberty, for instance, requires Egalitarian AND not Xenophobe. Only the
-> Hard Reset / Storm Chasers / Knights of the Toxic God points may be real; not re-verified.
+> chosen at random. Beacon of Liberty, for instance, requires Egalitarian AND not Xenophobe. The Hard
+> Reset point is wrong too (it still requires Militarist). Only the Storm Chasers / Knights of the
+> Toxic God `is_nomadic` points may be real; not re-verified.
 
 - **7 civics swapped a positive ethics requirement for a negative one** (from "requires X" to
   "forbids Y"), i.e. they're now available to far more empires: Beacon of Liberty and Worker
