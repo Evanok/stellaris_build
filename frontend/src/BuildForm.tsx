@@ -6,6 +6,7 @@ import { DIFFICULTY_LEVELS } from './utils/difficulty';
 import { normalizeBuildTags, serializeBuildTags, MAX_TAGS_PER_BUILD } from './utils/buildTags';
 import { BuildTagPicker } from './components/BuildTags';
 import { PredicateNode, findFieldOccurrences, getFailingNodes, describePredicateHuman } from './utils/ruleEvaluator';
+import { ORIGIN_IMAGE_QUERY, iconQuery } from './utils/assetVersions';
 import { PlanetClass, PlanetRuleInput, getForcedPlanetClass, getEffectivePlanetClass, getPlanetConflicts, getTraitPlanetConflicts, isTraitBlockedByPlanet, getPlanetPickerColumns, getSpeciesPlanetConflict } from './utils/planetRules';
 
 interface BuildFormProps {
@@ -49,7 +50,7 @@ const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type,
   return (
     <img
       ref={imgRef}
-      src={isVisible ? `/icons/${type}/${id}.png` : undefined}
+      src={isVisible ? `/icons/${type}/${id}.png${iconQuery(type)}` : undefined}
       alt=""
       width={size}
       height={size}
@@ -74,7 +75,7 @@ const OriginCard: React.FC<{ originId: string; origin: Origin | undefined }> = (
         {!imageError && (
           <div className="col-md-4" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backgroundColor: '#1a1a1a' }}>
             <img
-              src={`/icons/origin_original/${originId}.png`}
+              src={`/icons/origin_original/${originId}.png${ORIGIN_IMAGE_QUERY}`}
               alt={origin?.name || originId}
               style={{
                 width: '100%',
@@ -1803,7 +1804,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                           }}
                         >
                           <img
-                            src={`/icons/origin_original/${origin.id}.png`}
+                            src={`/icons/origin_original/${origin.id}.png${ORIGIN_IMAGE_QUERY}`}
                             alt=""
                             width={48}
                             height={48}

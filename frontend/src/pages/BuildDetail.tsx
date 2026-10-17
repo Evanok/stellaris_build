@@ -10,6 +10,7 @@ import { BuildTagList } from '../components/BuildTags';
 import { parseBuildTags } from '../utils/buildTags';
 import { invalidateBuildsCache } from './Home';
 import { PredicateNode, getFailingNodes, describePredicateHuman } from '../utils/ruleEvaluator';
+import { ORIGIN_IMAGE_QUERY, iconQuery } from '../utils/assetVersions';
 import { PlanetClass, PlanetRuleInput, getEffectivePlanetClass, getForcedPlanetClass, getTraitPlanetConflicts, getSpeciesPlanetConflict } from '../utils/planetRules';
 
 interface Build {
@@ -148,7 +149,7 @@ const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type,
 
   return (
     <img
-      src={`/icons/${type}/${id}.png`}
+      src={`/icons/${type}/${id}.png${iconQuery(type)}`}
       alt=""
       width={size}
       height={size}
@@ -1041,7 +1042,7 @@ export const BuildDetail: React.FC = () => {
                       {!originImageError && (
                         <div className="mb-3 text-center" style={{ backgroundColor: '#1a1a1a', padding: '1rem', borderRadius: '8px' }}>
                           <img
-                            src={`/icons/origin_original/${build.origin}.png`}
+                            src={`/icons/origin_original/${build.origin}.png${ORIGIN_IMAGE_QUERY}`}
                             alt={origin?.name || build.origin}
                             style={{
                               width: '100%',

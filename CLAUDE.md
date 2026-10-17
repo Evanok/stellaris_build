@@ -635,6 +635,12 @@ Builds can now record their homeworld planet class (optional).
   `extract_icons.py` with the other home webps). `enrichBuild()` returns `homeworld`/`homeworld_name`
   = effective planet, so builds saved before `planet_class` existed still show their origin-forced
   planet (Void Dwellers, Red Giant...). Hidden for Nomadic builds (their ark icon already shows).
+- **Origin images were stretched**: the game's origin illustrations are 220x115, but `extract_icons.py`
+  forced them to 256x256. Now extracted at native size (`origin_original`), minis are 64px square center
+  crops (`origin_mini`). Same filenames + nginx's 30-day `immutable` cache on `/icons` -> URLs carry
+  `?v=2` (`frontend/src/utils/assetVersions.ts`, bump it when regenerating). **Prod deploy:** also
+  `rm backend/cache/og/*.jpg` - OG previews cached the stretched origin medallion, and the OG
+  fingerprint does not cover image content (lazy re-render, safe to delete).
 - **DB**: `builds.planet_class TEXT` (auto-migrated). Stores the effective planet. Export writes it as
   `planet_class`, falling back to the previous ocean/continental default when unset.
 - **Extractor bug fixed** (`extract_civics_and_origins.py` `_normalize_field_value`): a field block
