@@ -293,6 +293,7 @@ Non-versioned files (still in `backend/data/`):
 - `extract_species_classes.py` - Extracts 18 portrait categories from `portrait_categories` + `portrait_sets` (NOT species_classes.txt)
 - `download_wiki_portraits.py` - Downloads portrait PNGs from Stellaris wiki (requires browser cookies to bypass CDN)
 - Individual extractors: `extract_traits.py`, `extract_civics.py`, `extract_ethics.py`, etc.
+- `extract_planet_classes.py` - homeworld planet classes -> `planet_classes.json` (in `extract_all.py`); `extract_planet_icons()` slices the planet icons, called from `extract_icons.py`
 
 **Localization System:**
 - Loads 69,867 English localization entries from `localisation/english/*.yml`
@@ -401,7 +402,7 @@ EOF
     each must return a non-empty payload, and an out-of-range version (`?version=4.9`) must fall back
     to the latest rather than 404.
 12. `cd backend && node check_build_rules.js audit` — the violation count should stay in line with the
-    previous run (~40/69); a sudden jump means the new rules broke the evaluator, not the builds.
+    previous run (34/70 as of 2026-10-17, excluding throwaway test builds); a sudden jump means the new rules broke the evaluator, not the builds.
 13. Icons: a patch with no new civics/traits/origins needs no icon run. If there ARE new IDs, run
     `data-extractor/extract_icons.py` (generates both the 32px build-page PNGs and the 20px
     `icons/home/*.webp` used by home cards, plus the planet icons in `icons/planets/`). Sanity-check that every `icon` path in the new JSON

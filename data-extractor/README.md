@@ -78,6 +78,7 @@ python3 extract_traits.py [path]            # Traits
 python3 extract_civics.py [path]            # Civics & Origins
 python3 extract_traditions.py [path]        # Traditions
 python3 extract_ascension_perks.py [path]   # Ascension Perks
+python3 extract_planet_classes.py [path] [output] [--icons]  # Homeworld planet classes (+ icons)
 ```
 
 ### Default Path
@@ -204,6 +205,7 @@ Each tradition tree contains:
 - `extract_civics.py` - Civics and origins extractor
 - `extract_traditions.py` - Traditions extractor
 - `extract_ascension_perks.py` - Ascension perks extractor
+- `extract_planet_classes.py` - Homeworld planet classes (selectable climates, origin-forced classes, species-class availability) + icon slicing from the game sprite sheet
 
 ### Paradox Script Parser
 
