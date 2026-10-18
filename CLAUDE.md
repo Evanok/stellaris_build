@@ -85,16 +85,13 @@ npm run build -w frontend  # Runs TypeScript compiler + Vite build
 ```bash
 # On production server (stellaris-build.com)
 
-# 1. Update code
+# Standard deploy - always wrapped in the maintenance scripts (repo root):
 cd ~/work/stellaris_build
+./enable_maintenance.sh      # pm2 stop -> nginx serves maintenance.html (502 error_page)
 git pull
 npm install
-
-# 2. Rebuild frontend (REQUIRED for frontend changes)
-npm run build -w frontend
-
-# 3. Restart backend
-pm2 restart stellaris-build
+npm run build -w frontend    # REQUIRED for frontend changes
+./disable_maintenance.sh     # pm2 restart -> site live again
 
 # Useful commands:
 pm2 status                  # Check app status
