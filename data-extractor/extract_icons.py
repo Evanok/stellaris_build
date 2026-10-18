@@ -21,7 +21,7 @@ def ensure_dir(directory):
     """Create directory if it doesn't exist"""
     Path(directory).mkdir(parents=True, exist_ok=True)
 
-def copy_and_resize_icons(source_dir, dest_dir, target_size=32):
+def copy_and_resize_icons(source_dir, dest_dir, target_size=32, crop_to_square=False):
     """
     Copy all PNG icons from source_dir to dest_dir and resize them
 
@@ -29,6 +29,8 @@ def copy_and_resize_icons(source_dir, dest_dir, target_size=32):
         source_dir: Source directory with PNG files
         dest_dir: Destination directory for resized files
         target_size: Target size in pixels (square image)
+        crop_to_square: Center-crop non-square sources instead of squashing them
+            (origin illustrations are 220x115)
 
     Returns:
         Tuple of (copied_count, error_count)
@@ -51,7 +53,11 @@ def copy_and_resize_icons(source_dir, dest_dir, target_size=32):
             # Use PIL to resize
             from PIL import Image as PILImage
             with PILImage.open(png_file) as img:
-                resized = img.resize((target_size, target_size), PILImage.LANCZOS)
+                if crop_to_square:
+                    from PIL import ImageOps
+                    resized = ImageOps.fit(img, (target_size, target_size), PILImage.LANCZOS)
+                else:
+                    resized = img.resize((target_size, target_size), PILImage.LANCZOS)
                 resized.save(output_file, 'PNG', optimize=True)
 
             copied += 1
@@ -145,7 +151,7 @@ def extract_icons_for_type(stellaris_path, output_path, icon_type, ids_list, tar
     # Map icon types to their source directories
     source_dirs = {
         'civics': 'gfx/interface/icons/governments/civics',
-        'origin_original': 'gfx/event_pictures/origins',  # Large origin illustrations (256x256)
+        'origin_original': 'gfx/event_pictures/origins',  # Large origin illustrations (native 220x115)
         'traits': 'gfx/interface/icons/traits',
         'ethics': 'gfx/interface/icons/ethics',
         'authorities': 'gfx/interface/icons/governments/authorities',
@@ -263,8 +269,10 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
         'ascension_perks': 32,  # Displayed at 32px in BuildForm
         'traditions': 32,       # Displayed at 32px in BuildForm
         'authorities': 32,      # Displayed at 32px in BuildForm
-        'origin_original': 256, # Large origin illustrations (kept at high res)
-        'origin_mini': 32,      # Small origins for home page list
+        # Origin illustrations are 220x115 in the game files: keep them at native
+        # size (None = no resize). Forcing them square used to stretch them 2x.
+        'origin_original': None,
+        'origin_mini': 64,      # Square center crop, displayed at 48-64px (form card, build page)
     }
 
     stats = {
@@ -311,12 +319,12 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
             # Use image_file field if available (from GFX mapping), fallback to ID
             origin_image_files = [o.get('image_file', o['id']) for o in origins]
 
-            # Extract large origin illustrations (event pictures) at 256x256
+            # Extract large origin illustrations (event pictures) at native size
             # These are the source of truth for all origin icons
             # Using image_file names to match actual DDS filenames in Stellaris
             extracted_large, missing_large = extract_icons_for_type(
                 stellaris_path, output_path, 'origin_original', origin_image_files,
-                optimal_sizes.get('origin_original', 256)
+                optimal_sizes.get('origin_original')
             )
             stats['total_extracted'] += extracted_large
             stats['total_missing'] += missing_large
@@ -332,19 +340,20 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
                 if image_file != origin_id:
                     source_file = os.path.join(origin_original_dir, f"{image_file}.png")
                     dest_file = os.path.join(origin_original_dir, f"{origin_id}.png")
-                    if os.path.exists(source_file) and not os.path.exists(dest_file):
+                    # Always refresh: a stale copy would keep an old (e.g. stretched) render
+                    if os.path.exists(source_file):
                         import shutil
                         shutil.copy2(source_file, dest_file)
                         copy_count += 1
             if copy_count > 0:
                 print(f"  ✓ Created {copy_count} ID-named copies")
 
-            # Create smaller versions (32x32) for the home page list view
-            # by copying and resizing from origin_original to origin_mini
-            print("  Creating mini origin icons (32x32) from origin_original...")
+            # Square mini versions (center crop of the 220x115 illustration)
+            mini_size = optimal_sizes['origin_mini']
+            print(f"  Creating mini origin icons ({mini_size}x{mini_size}) from origin_original...")
             origin_mini_dir = os.path.join(output_path, 'origin_mini')
-            copied, errors = copy_and_resize_icons(origin_original_dir, origin_mini_dir, target_size=32)
-            print(f"  ✓ Created {copied} mini origin icons (32x32)")
+            copied, errors = copy_and_resize_icons(origin_original_dir, origin_mini_dir, target_size=mini_size, crop_to_square=True)
+            print(f"  ✓ Created {copied} mini origin icons ({mini_size}x{mini_size})")
             if errors > 0:
                 print(f"  ⚠ {errors} errors creating mini icons")
 
@@ -447,6 +456,31 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
 
                 stats['total_extracted'] += extracted
                 stats['total_missing'] += missing
+
+    # Extract homeworld planet class icons (sliced from the game's sprite
+    # sheet, kept at native 76px - no JSON input needed, the class list is
+    # re-derived from the game files)
+    print(f"\nProcessing planets...")
+    from extract_planet_classes import extract_planet_icons
+    planets_dir = os.path.join(output_path, 'planets')
+    planets_extracted = extract_planet_icons(stellaris_path, planets_dir)
+    print(f"   ✓ Extracted: {planets_extracted}")
+    stats['total_extracted'] += planets_extracted
+    # Home page build cards show the homeworld at 40px (same size as the portrait)
+    ensure_dir(home_dir)
+    planets_home = sum(
+        create_home_icon_webp(str(png), home_dir, png.stem, target_size=40)
+        for png in sorted(Path(planets_dir).glob('pc_*.png'))
+    )
+    if planets_home:
+        print(f"   ✓ Generated {planets_home} new home page planet icon(s) (40x40 webp)")
+
+    # Shipset previews, rendered from the game's 3D models (no 2D picture exists in-game)
+    print(f"\nRendering shipset previews (3D models, takes ~30s)...")
+    from extract_shipsets import extract_shipset_images
+    shipsets_rendered = extract_shipset_images(stellaris_path, os.path.join(output_path, 'shipsets'))
+    print(f"   ✓ Rendered: {shipsets_rendered}")
+    stats['total_extracted'] += shipsets_rendered
 
     print(f"\n" + "=" * 60)
     print(f"🎉 Extraction complete!")

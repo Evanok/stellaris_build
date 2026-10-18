@@ -82,6 +82,8 @@ interface Build {
   portrait?: string;
   is_nomadic?: number;
   ark_type?: string;
+  homeworld?: string | null; // effective homeworld planet class, resolved server-side (enrichBuild)
+  homeworld_name?: string | null;
   created_at: string;
   author_username?: string;
   author_avatar?: string;
@@ -483,6 +485,18 @@ export const Home: React.FC = () => {
                                 alt=""
                                 loading="lazy"
                                 style={{ width: '40px', height: '40px', objectFit: 'cover', objectPosition: 'top', borderRadius: '6px', border: '2px solid #0dcaf0', flexShrink: 0 }}
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                              />
+                            ) : null}
+                            {/* Homeworld (Nomadic builds already show their ark below) */}
+                            {build.homeworld && !build.is_nomadic ? (
+                              <img
+                                src={`/icons/home/${build.homeworld}.webp`}
+                                width={40}
+                                height={40}
+                                alt={build.homeworld_name || build.homeworld}
+                                title={`Homeworld: ${build.homeworld_name || build.homeworld}`}
+                                loading="lazy"
                                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                               />
                             ) : null}

@@ -78,6 +78,8 @@ python3 extract_traits.py [path]            # Traits
 python3 extract_civics.py [path]            # Civics & Origins
 python3 extract_traditions.py [path]        # Traditions
 python3 extract_ascension_perks.py [path]   # Ascension Perks
+python3 extract_planet_classes.py [path] [output] [--icons]  # Homeworld planet classes (+ icons)
+python3 extract_shipsets.py [path] [output] [--images]       # Shipsets (+ rendered 3D previews, needs numpy)
 ```
 
 ### Default Path
@@ -204,6 +206,9 @@ Each tradition tree contains:
 - `extract_civics.py` - Civics and origins extractor
 - `extract_traditions.py` - Traditions extractor
 - `extract_ascension_perks.py` - Ascension perks extractor
+- `extract_shipsets.py` - Shipsets as listed in the in-game ship model picker, with previews rendered from the 3D models
+- `pdx_mesh.py` - Reader for the game's binary `.mesh` 3D models + numpy software renderer
+- `extract_planet_classes.py` - Homeworld planet classes (selectable climates, origin-forced classes, species-class availability) + icon slicing from the game sprite sheet
 
 ### Paradox Script Parser
 

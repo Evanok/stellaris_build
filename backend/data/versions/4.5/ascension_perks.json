@@ -1104,6 +1104,7 @@
         "OR": {
           "has_trait": [
             "trait_pc_ocean_preference",
+            "trait_cyborg_climate_adjustment_wet",
             "trait_robot_aquatic",
             "trait_auto_hab_preference"
           ]
@@ -3121,6 +3122,7 @@
         "OR": {
           "has_trait": [
             "trait_pc_ocean_preference",
+            "trait_cyborg_climate_adjustment_wet",
             "trait_robot_aquatic",
             "trait_auto_hab_preference"
           ]

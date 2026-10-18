@@ -28,7 +28,14 @@ export interface BuildContext {
   graphical_culture?: string;
 }
 
-function evaluateField(field: string, value: unknown, ctx: BuildContext): boolean {
+// Optional build fields: when the build leaves one unset, a condition on it is
+// neither true nor false but unknown (see evaluateTriState). Without this,
+// "requires a Biological shipset" would fail on every build that simply did
+// not pick a shipset.
+const OPTIONAL_FIELDS: Array<keyof BuildContext> = ['preferred_planet_class', 'graphical_culture'];
+
+function evaluateField(field: string, value: unknown, ctx: BuildContext): boolean | null {
+  if ((OPTIONAL_FIELDS as string[]).includes(field) && !ctx[field as keyof BuildContext]) return null;
   switch (field) {
     case 'ethics':
       return (ctx.ethics || []).includes(value as string);
@@ -73,10 +80,29 @@ function evaluateField(field: string, value: unknown, ctx: BuildContext): boolea
  * something we cannot evaluate.
  */
 export function evaluatePredicate(node: PredicateNode | null | undefined, ctx: BuildContext): boolean {
+  return evaluateTriState(node, ctx) !== false;
+}
+
+/**
+ * Three-valued (Kleene) evaluation: null = unknown, because the condition
+ * reads an optional field the build left unset. all: any false -> false,
+ * else any unknown -> unknown; any: any true -> true, else any unknown ->
+ * unknown; not: unknown stays unknown. Unknown is treated as satisfied.
+ */
+function evaluateTriState(node: PredicateNode | null | undefined, ctx: BuildContext): boolean | null {
   if (!node) return true;
-  if (node.all) return node.all.every(child => evaluatePredicate(child, ctx));
-  if (node.any) return node.any.some(child => evaluatePredicate(child, ctx));
-  if (node.not) return !evaluatePredicate(node.not, ctx);
+  if (node.all) {
+    const results = node.all.map(child => evaluateTriState(child, ctx));
+    return results.includes(false) ? false : (results.includes(null) ? null : true);
+  }
+  if (node.any) {
+    const results = node.any.map(child => evaluateTriState(child, ctx));
+    return results.includes(true) ? true : (results.includes(null) ? null : false);
+  }
+  if (node.not) {
+    const inner = evaluateTriState(node.not, ctx);
+    return inner === null ? null : !inner;
+  }
   if ('always' in node) return !!node.always;
   if ('unsupported' in node || 'unsupported_limit' in node) return true;
   if (node.field) return evaluateField(node.field, node.value, ctx);
@@ -127,8 +153,8 @@ const FIELD_LABELS: Record<string, string> = {
   species_archetype: 'species type',
   species_class: 'species class',
   traits: 'trait',
-  graphical_culture: 'graphical culture',
-  preferred_planet_class: 'preferred planet class',
+  graphical_culture: 'ship appearance',
+  preferred_planet_class: 'homeworld',
 };
 
 /** Resolves a leaf field's raw id (e.g. "ethic_authoritarian") to a display name (e.g. "Authoritarian"). */

@@ -46,7 +46,7 @@ _Versions verified against the workspace `package.json` files on 2026-08-18 (maj
 **Data extraction** (`data-extractor/`)
 - Python 3.8, custom Paradox script parser (`paradox_parser.py`, `localization_parser.py`) — no parsing library
 - `Pillow` (PIL) for icon/image processing, and the **ImageMagick `convert` CLI** shelled out via `subprocess` for DDS→PNG/JPG
-- Note: `requirements.txt` still claims "no external dependencies" — inaccurate, Pillow + ImageMagick are required
+- `requirements.txt` lists Pillow + numpy (numpy: `pdx_mesh.py`, the 3D model renderer for shipset previews); ImageMagick `convert` is also needed
 
 **Testing**
 - Playwright 1.56 at the repo root (`npm test`, specs in `tests/`)
@@ -241,6 +241,8 @@ The project uses npm workspaces with three main parts:
 - `GET /api/ascension-perks` - Returns ascension perks (44 player-available)
 - `GET /api/traditions` - Returns tradition trees (32 trees)
 - `GET /api/ruler-traits` - Returns ruler traits filtered by origin/ethics compatibility
+- `GET /api/shipsets` - Returns the 20 shipsets (ship appearance) with names, category (biological/mechanical) and rendered preview images
+- `GET /api/planet-classes` - Returns homeworld planet classes (10 selectable climates + origin-forced classes like Habitat/Gaia, with icons)
 - `GET /api/builds` - Returns all non-deleted builds ordered by created_at DESC
 - `POST /api/builds` - Creates new build (requires authentication, name, checks for duplicates)
 - `DELETE /api/builds/:id` - Soft deletes a build (sets deleted=1)
@@ -268,6 +270,8 @@ Each version folder contains the same set of files:
 - `ruler_traits.json` - ruler/leader traits for starting leaders
 - `species_classes.json` - species classes with portrait IDs (18 categories from portrait_categories)
 - `species_archetypes.json` - trait point/pick budget per archetype (BIOLOGICAL/ROBOT/MACHINE/LITHOID/PRESAPIENT/OTHER) - extracted by `extract_species_archetypes.py`, included in `extract_all.py`
+- `shipsets.json` - shipsets as listed by the in-game "Ship models" picker (same 20 entries, order and names) - extracted by `extract_shipsets.py`, included in `extract_all.py`. 4.2-4.4 hold a copy of the 4.5 file
+- `planet_classes.json` - homeworld planet classes (`selectable` = offered in the empire creator; others are only reachable through an origin or the Nomadic toggle) - extracted by `extract_planet_classes.py`, included in `extract_all.py`. 4.2-4.4 hold a copy of the 4.5 file (planet classes unchanged across those versions; only 4.5 was extracted)
 
 Non-versioned files (still in `backend/data/`):
 - `resources.json` - Curated community resources (not game data)
@@ -291,6 +295,9 @@ Non-versioned files (still in `backend/data/`):
 - `extract_species_classes.py` - Extracts 18 portrait categories from `portrait_categories` + `portrait_sets` (NOT species_classes.txt)
 - `download_wiki_portraits.py` - Downloads portrait PNGs from Stellaris wiki (requires browser cookies to bypass CDN)
 - Individual extractors: `extract_traits.py`, `extract_civics.py`, `extract_ethics.py`, etc.
+- `extract_shipsets.py` - shipsets -> `shipsets.json` (in `extract_all.py`); `extract_shipset_images()` renders the previews (called from `extract_icons.py`, ~30s) with `pdx_mesh.py`
+- `pdx_mesh.py` - reader for the game's binary 3D models (`.mesh`, "@@b@" format) + numpy software renderer
+- `extract_planet_classes.py` - homeworld planet classes -> `planet_classes.json` (in `extract_all.py`); `extract_planet_icons()` slices the planet icons, called from `extract_icons.py`
 
 **Localization System:**
 - Loads 69,867 English localization entries from `localisation/english/*.yml`
@@ -342,6 +349,8 @@ cp output/versions/$VERSION/ethics.json               ../backend/data/versions/$
 cp output/versions/$VERSION/traditions_by_tree.json   ../backend/data/versions/$VERSION/traditions.json
 cp output/versions/$VERSION/ascension_perks.json      ../backend/data/versions/$VERSION/
 cp output/versions/$VERSION/species_archetypes.json   ../backend/data/versions/$VERSION/
+cp output/versions/$VERSION/planet_classes.json       ../backend/data/versions/$VERSION/
+cp output/versions/$VERSION/shipsets.json             ../backend/data/versions/$VERSION/
 cp output/ruler_traits.json                           ../backend/data/versions/$VERSION/ruler_traits.json
 cp output/species_classes.json                        ../backend/data/versions/$VERSION/species_classes.json
 cp ../backend/data/versions/$PREV/authorities.json    ../backend/data/versions/$VERSION/  # hand-maintained, copy then refresh:
@@ -398,10 +407,11 @@ EOF
     each must return a non-empty payload, and an out-of-range version (`?version=4.9`) must fall back
     to the latest rather than 404.
 12. `cd backend && node check_build_rules.js audit` — the violation count should stay in line with the
-    previous run (~40/69); a sudden jump means the new rules broke the evaluator, not the builds.
+    previous run (34/70 as of 2026-10-17, excluding throwaway test builds); a sudden jump means the new rules broke the evaluator, not the builds.
 13. Icons: a patch with no new civics/traits/origins needs no icon run. If there ARE new IDs, run
     `data-extractor/extract_icons.py` (generates both the 32px build-page PNGs and the 20px
-    `icons/home/*.webp` used by home cards). Sanity-check that every `icon` path in the new JSON
+    `icons/home/*.webp` used by home cards, plus the planet icons in `icons/planets/` and the shipset
+    previews in `icons/shipsets/` - re-render those when a patch adds a shipset). Sanity-check that every `icon` path in the new JSON
     resolves under `frontend/public/`.
 14. Deploy: `npm run build -w frontend` then `pm2 restart stellaris-build` (see Production Deployment).
 
@@ -609,6 +619,73 @@ Planned features (not yet implemented):
 
 ## Recent Completions
 
+### Ship Appearance / Shipsets (2026-10-17)
+Builds can record their ship appearance (`graphical_culture`, optional).
+
+- **No 2D picture exists in-game** (the shipset picker is a live 3D view), so previews are rendered
+  from the game's models: `data-extractor/pdx_mesh.py` reads the binary `.mesh` format and rasterizes
+  it with numpy (texture + one light, no empire color tint - each set encodes its color mask
+  differently, a tint attempt was unreliable). One ship per set: the corvette's default section
+  (`CORVETTE_MID_S3`) for mechanical sets, the Mauler for biological ones; 3/4 side view, bow left,
+  like the in-game thumbnails. 320x160 WebP, ~10 KB each, `frontend/public/icons/shipsets/`.
+- **List = the in-game picker, checked against screenshots**: graphical cultures of species classes
+  playable at creation, in species class file order, Biological sets first; only sets with their own
+  ships (Solarpunk/Wilderness borrow others via `fallback` and are hidden in-game too). Names are the
+  species class names (IMPERIAL -> "Imperial" for nemesis_01, MACHINE -> "Machine" for synthetics_01).
+  Model resolution: entity (`*_entities.asset`) -> pdxmesh -> `.mesh`, with `.gfx` `meshsettings`
+  overriding textures (Psionic/Mindwarden have no texture in the mesh itself).
+- **Rules**: only the existing `graphical_culture` predicates (Wilderness requires a Biological set,
+  Red Giant forbids them...). Both evaluators are now **three-valued**: a condition on an optional
+  field the build left unset (`graphical_culture`, `preferred_planet_class`) is unknown, not false -
+  this removed 3 false positives from the audit (Wilderness / Shared Genetics builds were flagged for
+  "requiring" a Biological set they had no way to pick). Live picker filtering in `BuildForm.tsx`
+  (`utils/shipsetRules.ts`), submit/export warnings, `check_build_rules.js`.
+- **Export**: `graphical_culture` = the pick (default `humanoid_01`), `city_graphical_culture` = the
+  same set unless it has no cities (Imperial, Mindwarden -> `humanoid_01`).
+- **DB**: `builds.graphical_culture TEXT` (auto-migrated). Not shown on home cards yet.
+
+### Homeworld Planet Class + Predicate Extractor Fix + 4.5.2 Data (2026-10-17)
+Builds can now record their homeworld planet class (optional).
+
+- **Data**: new `data-extractor/extract_planet_classes.py` (in `extract_all.py`) -> `planet_classes.json`;
+  icons sliced from `planet_type_big_icons.dds` by `extract_icons.py` into `frontend/public/icons/planets/`
+  (76px). Traits gained `allowed_planet_classes` (Aquatic = ocean, nomad traits = ark), civics/origins
+  gained `granted_traits` (Anglers / Ocean Paradise grant Aquatic). Origins already had
+  `habitability_preference` (forced planet) and the `preferred_planet_class` predicate field.
+- **Rules** (`frontend/src/utils/planetRules.ts`, mirrored in `backend/rules/planetRules.js`):
+  effective planet = `pc_ark` if Nomadic, else the origin's `habitability_preference`, else the pick.
+  Unknown planet = no planet check at all. Species classes can add/remove pickable planets
+  (`common/species_classes/` `added_planet_types`/`removed_planet_types` -> `only_species_classes`/
+  `excluded_species_classes`): Volcanic is **Infernal-only** (not a DLC thing - the user owns all DLC
+  and never sees it otherwise), and Infernals lose the 3 cold worlds; the picker mirrors the game
+  (Volcanic column takes the Cold slot). Origin-forced planets bypass this (Red Giant -> Volcanic for
+  any species, grid shown locked like in-game). Checked live in `BuildForm.tsx` (incompatible planets
+  disabled with the reason as tooltip; incompatible traits/civics/origins hidden or disabled), at
+  submit, in the `BuildDetail.tsx` export warnings, and by `check_build_rules.js`.
+- **Home cards**: 40px homeworld icon next to the portrait (`icons/home/pc_*.webp`, generated by
+  `extract_icons.py` with the other home webps). `enrichBuild()` returns `homeworld`/`homeworld_name`
+  = effective planet, so builds saved before `planet_class` existed still show their origin-forced
+  planet (Void Dwellers, Red Giant...). Hidden for Nomadic builds (their ark icon already shows).
+- **Origin images were stretched**: the game's origin illustrations are 220x115, but `extract_icons.py`
+  forced them to 256x256. Now extracted at native size (`origin_original`), minis are 64px square center
+  crops (`origin_mini`). Same filenames + nginx's 30-day `immutable` cache on `/icons` -> URLs carry
+  `?v=2` (`frontend/src/utils/assetVersions.ts`, bump it when regenerating). **Prod deploy:** also
+  `rm backend/cache/og/*.jpg` - OG previews cached the stretched origin medallion, and the OG
+  fingerprint does not cover image content (lazy re-render, safe to delete).
+- **DB**: `builds.planet_class TEXT` (auto-migrated). Stores the effective planet. Export writes it as
+  `planet_class`, falling back to the previous ocean/continental default when unset.
+- **Extractor bug fixed** (`extract_civics_and_origins.py` `_normalize_field_value`): a field block
+  mixing operators (`civics = { NOR = {...} NOT = {...} }`) kept only ONE operator, picked from a Python
+  `set` - so which conditions survived changed with the per-process hash seed. Now all are kept, and
+  re-extraction is deterministic (verified with two different `PYTHONHASHSEED`). Example of what was
+  lost: Fanatic Purifiers' "requires Fanatic Xenophobe". **4.2-4.4 data still has this bug** - fixing
+  it needs those game versions checked out via Steam betas.
+- **4.5 data re-extracted from 4.5.2** (installed version). Besides the restored conditions, real hotfix
+  changes are text-only plus `ap_hydrocentric`'s potential (also accepts Wet Climate cyborg mods).
+  `LATEST_GAME_VERSION.patch` still says 4.5.0.
+- Known gap: `NOT = { value = A value = B }` (e.g. Syncretic Evolution) - the game README says NOT takes
+  a single value, so semantics are unclear; we keep the lenient NOT(A AND B) reading.
+
 ### Build Tags + Difficulty Rename + Stats Fixes (2026-10-10)
 Triggered by community feedback: the difficulty scale mixed build power (Overpowered/Strong/
 Balanced) with play difficulty (Challenging/Extreme).
@@ -642,6 +719,13 @@ species archetype trait budgets came back byte-identical. No new trait file to r
 `extract_traits.py`, and no new icons needed.
 
 **What did change — rule rebalancing, which the site's filters and rule warnings enforce:**
+
+> **Correction (2026-10-17):** the "7 civics swapped" claim below is WRONG - it was an artifact of an
+> extractor bug (see "Homeworld Planet Class" below): blocks mixing operators kept only one of them,
+> chosen at random. Beacon of Liberty, for instance, requires Egalitarian AND not Xenophobe. The Hard
+> Reset point is wrong too (it still requires Militarist). Only the Storm Chasers / Knights of the
+> Toxic God `is_nomadic` points may be real; not re-verified.
+
 - **7 civics swapped a positive ethics requirement for a negative one** (from "requires X" to
   "forbids Y"), i.e. they're now available to far more empires: Beacon of Liberty and Worker
   Cooperative (were Egalitarian-only -> now just not-Xenophobe), Barbaric Despoilers and Void

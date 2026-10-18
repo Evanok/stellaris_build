@@ -423,7 +423,7 @@
       {
         "id": "tr_diplomacy_the_federation",
         "name": "The Federation",
-        "description": "Unlocks Diplomacy: Form Federation Available Envoys are increased by 1.",
+        "description": "Unlocks Diplomacy: Form Federation Envoy Capacity are increased by 1.",
         "custom_tooltip": "",
         "type": "tradition",
         "tree": "diplomacy",
