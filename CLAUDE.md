@@ -46,7 +46,7 @@ _Versions verified against the workspace `package.json` files on 2026-08-18 (maj
 **Data extraction** (`data-extractor/`)
 - Python 3.8, custom Paradox script parser (`paradox_parser.py`, `localization_parser.py`) — no parsing library
 - `Pillow` (PIL) for icon/image processing, and the **ImageMagick `convert` CLI** shelled out via `subprocess` for DDS→PNG/JPG
-- Note: `requirements.txt` still claims "no external dependencies" — inaccurate, Pillow + ImageMagick are required
+- `requirements.txt` lists Pillow + numpy (numpy: `pdx_mesh.py`, the 3D model renderer for shipset previews); ImageMagick `convert` is also needed
 
 **Testing**
 - Playwright 1.56 at the repo root (`npm test`, specs in `tests/`)
@@ -241,6 +241,7 @@ The project uses npm workspaces with three main parts:
 - `GET /api/ascension-perks` - Returns ascension perks (44 player-available)
 - `GET /api/traditions` - Returns tradition trees (32 trees)
 - `GET /api/ruler-traits` - Returns ruler traits filtered by origin/ethics compatibility
+- `GET /api/shipsets` - Returns the 20 shipsets (ship appearance) with names, category (biological/mechanical) and rendered preview images
 - `GET /api/planet-classes` - Returns homeworld planet classes (10 selectable climates + origin-forced classes like Habitat/Gaia, with icons)
 - `GET /api/builds` - Returns all non-deleted builds ordered by created_at DESC
 - `POST /api/builds` - Creates new build (requires authentication, name, checks for duplicates)
@@ -269,6 +270,7 @@ Each version folder contains the same set of files:
 - `ruler_traits.json` - ruler/leader traits for starting leaders
 - `species_classes.json` - species classes with portrait IDs (18 categories from portrait_categories)
 - `species_archetypes.json` - trait point/pick budget per archetype (BIOLOGICAL/ROBOT/MACHINE/LITHOID/PRESAPIENT/OTHER) - extracted by `extract_species_archetypes.py`, included in `extract_all.py`
+- `shipsets.json` - shipsets as listed by the in-game "Ship models" picker (same 20 entries, order and names) - extracted by `extract_shipsets.py`, included in `extract_all.py`. 4.2-4.4 hold a copy of the 4.5 file
 - `planet_classes.json` - homeworld planet classes (`selectable` = offered in the empire creator; others are only reachable through an origin or the Nomadic toggle) - extracted by `extract_planet_classes.py`, included in `extract_all.py`. 4.2-4.4 hold a copy of the 4.5 file (planet classes unchanged across those versions; only 4.5 was extracted)
 
 Non-versioned files (still in `backend/data/`):
@@ -293,6 +295,8 @@ Non-versioned files (still in `backend/data/`):
 - `extract_species_classes.py` - Extracts 18 portrait categories from `portrait_categories` + `portrait_sets` (NOT species_classes.txt)
 - `download_wiki_portraits.py` - Downloads portrait PNGs from Stellaris wiki (requires browser cookies to bypass CDN)
 - Individual extractors: `extract_traits.py`, `extract_civics.py`, `extract_ethics.py`, etc.
+- `extract_shipsets.py` - shipsets -> `shipsets.json` (in `extract_all.py`); `extract_shipset_images()` renders the previews (called from `extract_icons.py`, ~30s) with `pdx_mesh.py`
+- `pdx_mesh.py` - reader for the game's binary 3D models (`.mesh`, "@@b@" format) + numpy software renderer
 - `extract_planet_classes.py` - homeworld planet classes -> `planet_classes.json` (in `extract_all.py`); `extract_planet_icons()` slices the planet icons, called from `extract_icons.py`
 
 **Localization System:**
@@ -346,6 +350,7 @@ cp output/versions/$VERSION/traditions_by_tree.json   ../backend/data/versions/$
 cp output/versions/$VERSION/ascension_perks.json      ../backend/data/versions/$VERSION/
 cp output/versions/$VERSION/species_archetypes.json   ../backend/data/versions/$VERSION/
 cp output/versions/$VERSION/planet_classes.json       ../backend/data/versions/$VERSION/
+cp output/versions/$VERSION/shipsets.json             ../backend/data/versions/$VERSION/
 cp output/ruler_traits.json                           ../backend/data/versions/$VERSION/ruler_traits.json
 cp output/species_classes.json                        ../backend/data/versions/$VERSION/species_classes.json
 cp ../backend/data/versions/$PREV/authorities.json    ../backend/data/versions/$VERSION/  # hand-maintained, copy then refresh:
@@ -405,7 +410,8 @@ EOF
     previous run (34/70 as of 2026-10-17, excluding throwaway test builds); a sudden jump means the new rules broke the evaluator, not the builds.
 13. Icons: a patch with no new civics/traits/origins needs no icon run. If there ARE new IDs, run
     `data-extractor/extract_icons.py` (generates both the 32px build-page PNGs and the 20px
-    `icons/home/*.webp` used by home cards, plus the planet icons in `icons/planets/`). Sanity-check that every `icon` path in the new JSON
+    `icons/home/*.webp` used by home cards, plus the planet icons in `icons/planets/` and the shipset
+    previews in `icons/shipsets/` - re-render those when a patch adds a shipset). Sanity-check that every `icon` path in the new JSON
     resolves under `frontend/public/`.
 14. Deploy: `npm run build -w frontend` then `pm2 restart stellaris-build` (see Production Deployment).
 
@@ -612,6 +618,31 @@ Planned features (not yet implemented):
 ---
 
 ## Recent Completions
+
+### Ship Appearance / Shipsets (2026-10-17)
+Builds can record their ship appearance (`graphical_culture`, optional).
+
+- **No 2D picture exists in-game** (the shipset picker is a live 3D view), so previews are rendered
+  from the game's models: `data-extractor/pdx_mesh.py` reads the binary `.mesh` format and rasterizes
+  it with numpy (texture + one light, no empire color tint - each set encodes its color mask
+  differently, a tint attempt was unreliable). One ship per set: the corvette's default section
+  (`CORVETTE_MID_S3`) for mechanical sets, the Mauler for biological ones; 3/4 side view, bow left,
+  like the in-game thumbnails. 320x160 WebP, ~10 KB each, `frontend/public/icons/shipsets/`.
+- **List = the in-game picker, checked against screenshots**: graphical cultures of species classes
+  playable at creation, in species class file order, Biological sets first; only sets with their own
+  ships (Solarpunk/Wilderness borrow others via `fallback` and are hidden in-game too). Names are the
+  species class names (IMPERIAL -> "Imperial" for nemesis_01, MACHINE -> "Machine" for synthetics_01).
+  Model resolution: entity (`*_entities.asset`) -> pdxmesh -> `.mesh`, with `.gfx` `meshsettings`
+  overriding textures (Psionic/Mindwarden have no texture in the mesh itself).
+- **Rules**: only the existing `graphical_culture` predicates (Wilderness requires a Biological set,
+  Red Giant forbids them...). Both evaluators are now **three-valued**: a condition on an optional
+  field the build left unset (`graphical_culture`, `preferred_planet_class`) is unknown, not false -
+  this removed 3 false positives from the audit (Wilderness / Shared Genetics builds were flagged for
+  "requiring" a Biological set they had no way to pick). Live picker filtering in `BuildForm.tsx`
+  (`utils/shipsetRules.ts`), submit/export warnings, `check_build_rules.js`.
+- **Export**: `graphical_culture` = the pick (default `humanoid_01`), `city_graphical_culture` = the
+  same set unless it has no cities (Imperial, Mindwarden -> `humanoid_01`).
+- **DB**: `builds.graphical_culture TEXT` (auto-migrated). Not shown on home cards yet.
 
 ### Homeworld Planet Class + Predicate Extractor Fix + 4.5.2 Data (2026-10-17)
 Builds can now record their homeworld planet class (optional).

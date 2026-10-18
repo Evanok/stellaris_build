@@ -11,6 +11,7 @@ import { parseBuildTags } from '../utils/buildTags';
 import { invalidateBuildsCache } from './Home';
 import { PredicateNode, getFailingNodes, describePredicateHuman } from '../utils/ruleEvaluator';
 import { ORIGIN_IMAGE_QUERY, iconQuery } from '../utils/assetVersions';
+import { Shipset, getCityGraphicalCulture } from '../utils/shipsetRules';
 import { PlanetClass, PlanetRuleInput, getEffectivePlanetClass, getForcedPlanetClass, getTraitPlanetConflicts, getSpeciesPlanetConflict } from '../utils/planetRules';
 
 interface Build {
@@ -37,6 +38,7 @@ interface Build {
   is_nomadic?: number;
   ark_type?: string;
   planet_class?: string | null;
+  graphical_culture?: string | null;
   author_id: number;
   author_username?: string;
   author_avatar?: string;
@@ -180,6 +182,7 @@ export const BuildDetail: React.FC = () => {
   const [allRulerTraits, setAllRulerTraits] = useState<RulerTrait[]>([]);
   const [speciesArchetypeBudgets, setSpeciesArchetypeBudgets] = useState<Record<string, { trait_points: number | null; max_traits: number | null }>>({});
   const [allPlanetClasses, setAllPlanetClasses] = useState<PlanetClass[]>([]);
+  const [allShipsets, setAllShipsets] = useState<Shipset[]>([]);
 
   // Image error states
   const [originImageError, setOriginImageError] = useState(false);
@@ -223,7 +226,9 @@ export const BuildDetail: React.FC = () => {
           fetch(`/api/ruler-traits${qs}`).then(res => res.json()),
           fetch(`/api/species-archetypes${qs}`).then(res => res.json()),
           fetch(`/api/planet-classes${qs}`).then(res => res.json()),
-        ]).then(([speciesClasses, traits, origins, ethics, authorities, civics, perks, traditions, rulerTraits, archetypeBudgets, planetClasses]) => {
+          fetch(`/api/shipsets${qs}`).then(res => res.json()),
+        ]).then(([speciesClasses, traits, origins, ethics, authorities, civics, perks, traditions, rulerTraits, archetypeBudgets, planetClasses, shipsets]) => {
+          setAllShipsets(Array.isArray(shipsets) ? shipsets : []);
           setAllSpeciesClasses(speciesClasses);
           setAllPlanetClasses(Array.isArray(planetClasses) ? planetClasses : []);
           setSpeciesArchetypeBudgets(archetypeBudgets && typeof archetypeBudgets === 'object' ? archetypeBudgets : {});
@@ -454,8 +459,10 @@ export const BuildDetail: React.FC = () => {
     lines.push('\tsystem_name=');
     lines.push(literalBlock('Fix Me', '\t'));
     lines.push('\tinitializer=""');
-    lines.push('\tgraphical_culture="humanoid_01"');
-    lines.push('\tcity_graphical_culture="humanoid_01"');
+    // Ship appearance when the build picked one; cities follow it unless the set has none (Imperial, Mindwarden)
+    const shipset = allShipsets.find(s => s.id === b.graphical_culture);
+    lines.push(`\tgraphical_culture="${shipset ? shipset.id : 'humanoid_01'}"`);
+    lines.push(`\tcity_graphical_culture="${getCityGraphicalCulture(shipset)}"`);
     lines.push('\tempire_flag=');
     lines.push('\t{');
     lines.push('\t\ticon=');
@@ -524,6 +531,7 @@ export const BuildDetail: React.FC = () => {
       case 'origin': return getOriginData(id)?.name || id;
       case 'species_archetype': return id.charAt(0) + id.slice(1).toLowerCase();
       case 'preferred_planet_class': return planetLabel(id);
+      case 'graphical_culture': return allShipsets.find(s => s.id === id)?.name || id;
       case 'traits': return getTraitData(id)?.name || id;
       default: return id;
     }
@@ -548,6 +556,7 @@ export const BuildDetail: React.FC = () => {
       traits,
       is_nomadic: !!b.is_nomadic,
       preferred_planet_class: getBuildPlanetClass(b),
+      graphical_culture: b.graphical_culture || undefined,
     };
 
     const warnings: string[] = [];
@@ -1218,6 +1227,30 @@ export const BuildDetail: React.FC = () => {
                     {startingColony && startingColony !== planetId && (
                       <small className="d-block text-info mt-1">Capital starts on a {planetLabel(startingColony)} (origin)</small>
                     )}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Ship appearance (optional) */}
+          {build.graphical_culture && (() => {
+            const shipset = allShipsets.find(s => s.id === build.graphical_culture);
+            return (
+              <div className="card bg-dark border-secondary mb-4">
+                <div className="card-header bg-secondary">
+                  <h4 className="mb-0 text-white">
+                    <i className="bi bi-rocket-takeoff me-2"></i>
+                    Ship appearance
+                  </h4>
+                </div>
+                <div className="card-body d-flex align-items-center flex-wrap gap-3">
+                  {shipset && (
+                    <img src={shipset.image} alt="" style={{ width: '240px', maxWidth: '100%', aspectRatio: '2 / 1', objectFit: 'contain' }} />
+                  )}
+                  <div>
+                    <h5 className="text-warning mb-1">{shipset?.name || build.graphical_culture}</h5>
+                    {shipset && <span className="badge bg-info">{shipset.category === 'biological' ? 'Biological' : 'Mechanical'}</span>}
                   </div>
                 </div>
               </div>

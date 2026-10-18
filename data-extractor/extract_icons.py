@@ -475,6 +475,13 @@ def extract_all_icons(stellaris_path, data_path, output_path, target_size=64):
     if planets_home:
         print(f"   ✓ Generated {planets_home} new home page planet icon(s) (40x40 webp)")
 
+    # Shipset previews, rendered from the game's 3D models (no 2D picture exists in-game)
+    print(f"\nRendering shipset previews (3D models, takes ~30s)...")
+    from extract_shipsets import extract_shipset_images
+    shipsets_rendered = extract_shipset_images(stellaris_path, os.path.join(output_path, 'shipsets'))
+    print(f"   ✓ Rendered: {shipsets_rendered}")
+    stats['total_extracted'] += shipsets_rendered
+
     print(f"\n" + "=" * 60)
     print(f"🎉 Extraction complete!")
     print(f"   Total extracted: {stats['total_extracted']}")

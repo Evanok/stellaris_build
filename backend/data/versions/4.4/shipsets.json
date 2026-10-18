@@ -1,0 +1,162 @@
+[
+  {
+    "id": "biogenesis_02",
+    "name": "Shellcraft",
+    "category": "biological",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/biogenesis_02.webp",
+    "preview_mesh": "gfx/models/ships/biogenesis_02/biogenesis_02_mauler_ship_stage_2.mesh"
+  },
+  {
+    "id": "biogenesis_01",
+    "name": "Spinovore",
+    "category": "biological",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/biogenesis_01.webp",
+    "preview_mesh": "gfx/models/ships/biogenesis_01/biogenesis_01_mauler_ship_stage_2.mesh"
+  },
+  {
+    "id": "humanoid_01",
+    "name": "Humanoid",
+    "category": "mechanical",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/humanoid_01.webp",
+    "preview_mesh": "gfx/models/ships/humanoid_01/humanoid_01_corvette_S3.mesh"
+  },
+  {
+    "id": "synthetics_01",
+    "name": "Machine",
+    "category": "mechanical",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/synthetics_01.webp",
+    "preview_mesh": "gfx/models/ships/synthetics_01/synthetics_01_corvette_S3.mesh"
+  },
+  {
+    "id": "mammalian_01",
+    "name": "Mammalian",
+    "category": "mechanical",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/mammalian_01.webp",
+    "preview_mesh": "gfx/models/ships/mammalian_01/mammalian_01_corvette_S3.mesh"
+  },
+  {
+    "id": "reptilian_01",
+    "name": "Reptilian",
+    "category": "mechanical",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/reptilian_01.webp",
+    "preview_mesh": "gfx/models/ships/reptilian_01/reptilian_01_corvette_S3.mesh"
+  },
+  {
+    "id": "avian_01",
+    "name": "Avian",
+    "category": "mechanical",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/avian_01.webp",
+    "preview_mesh": "gfx/models/ships/avian_01/avian_01_corvette_S3.mesh"
+  },
+  {
+    "id": "arthropoid_01",
+    "name": "Arthropoid",
+    "category": "mechanical",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/arthropoid_01.webp",
+    "preview_mesh": "gfx/models/ships/arthropoid_01/arthropoid_01_corvette_S3.mesh"
+  },
+  {
+    "id": "molluscoid_01",
+    "name": "Molluscoid",
+    "category": "mechanical",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/molluscoid_01.webp",
+    "preview_mesh": "gfx/models/ships/molluscoid_01/molluscoid_01_corvette_S3.mesh"
+  },
+  {
+    "id": "fungoid_01",
+    "name": "Fungoid",
+    "category": "mechanical",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/fungoid_01.webp",
+    "preview_mesh": "gfx/models/ships/fungoid_01/fungoid_01_corvette_S3.mesh"
+  },
+  {
+    "id": "plantoid_01",
+    "name": "Plantoid",
+    "category": "mechanical",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/plantoid_01.webp",
+    "preview_mesh": "gfx/models/ships/plantoid_01/plantoid_01_corvette_S3.mesh"
+  },
+  {
+    "id": "lithoid_01",
+    "name": "Lithoid",
+    "category": "mechanical",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/lithoid_01.webp",
+    "preview_mesh": "gfx/models/ships/lithoid_01/lithoid_01_corvette_S3.mesh"
+  },
+  {
+    "id": "necroid_01",
+    "name": "Necroid",
+    "category": "mechanical",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/necroid_01.webp",
+    "preview_mesh": "gfx/models/ships/necroid_01/necroid_01_corvette_S3.mesh"
+  },
+  {
+    "id": "nemesis_01",
+    "name": "Imperial",
+    "category": "mechanical",
+    "has_city_graphics": false,
+    "image": "/icons/shipsets/nemesis_01.webp",
+    "preview_mesh": "gfx/models/ships/nemesis_01/nemesis_01_corvette_S3.mesh"
+  },
+  {
+    "id": "aquatic_01",
+    "name": "Aquatic",
+    "category": "mechanical",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/aquatic_01.webp",
+    "preview_mesh": "gfx/models/ships/aquatic_01/aquatic_01_corvette_S3.mesh"
+  },
+  {
+    "id": "toxoid_01",
+    "name": "Toxoid",
+    "category": "mechanical",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/toxoid_01.webp",
+    "preview_mesh": "gfx/models/ships/toxoid_01/toxoid_01_corvette_S3.mesh"
+  },
+  {
+    "id": "cybernetics_01",
+    "name": "Cybernetic",
+    "category": "mechanical",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/cybernetics_01.webp",
+    "preview_mesh": "gfx/models/ships/cybernetics_01/cybernetics_01_corvette_S3.mesh"
+  },
+  {
+    "id": "psionic_01",
+    "name": "Psionic",
+    "category": "mechanical",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/psionic_01.webp",
+    "preview_mesh": "gfx/models/ships/psionic_01/psionic_01_corvette_S3.mesh"
+  },
+  {
+    "id": "mindwarden_01",
+    "name": "Mindwarden",
+    "category": "mechanical",
+    "has_city_graphics": false,
+    "image": "/icons/shipsets/mindwarden_01.webp",
+    "preview_mesh": "gfx/models/ships/mindwarden_01/mindwarden_01_corvette_S3.mesh"
+  },
+  {
+    "id": "infernal_01",
+    "name": "Thermophile",
+    "category": "mechanical",
+    "has_city_graphics": true,
+    "image": "/icons/shipsets/infernal_01.webp",
+    "preview_mesh": "gfx/models/ships/infernal_01/infernal_01_corvette_S3.mesh"
+  }
+]

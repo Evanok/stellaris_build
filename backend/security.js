@@ -223,6 +223,13 @@ const validateBuildData = (data) => {
     }
   }
 
+  // Ship appearance (optional): a graphical culture id like "humanoid_01"
+  if (data.graphical_culture !== undefined && data.graphical_culture !== null && data.graphical_culture !== '') {
+    if (typeof data.graphical_culture !== 'string' || !/^[a-z][a-z0-9_]{1,60}$/.test(data.graphical_culture)) {
+      errors.push('Invalid ship appearance');
+    }
+  }
+
   return errors;
 };
 

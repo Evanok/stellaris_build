@@ -5,7 +5,13 @@
 // duplication until/unless a shared package is worth the setup. Keep both in
 // sync.
 
+// Optional build fields: unset -> a condition on it is unknown (null), not
+// false, so "requires a Biological shipset" does not fail on builds that
+// simply did not pick one. Mirrors frontend/src/utils/ruleEvaluator.ts.
+const OPTIONAL_FIELDS = ['preferred_planet_class', 'graphical_culture'];
+
 function evaluateField(field, value, ctx) {
+  if (OPTIONAL_FIELDS.includes(field) && !ctx[field]) return null;
   switch (field) {
     case 'ethics': return (ctx.ethics || []).includes(value);
     case 'authority': return ctx.authority === value;
@@ -24,10 +30,25 @@ function evaluateField(field, value, ctx) {
 }
 
 function evaluatePredicate(node, ctx) {
+  return evaluateTriState(node, ctx) !== false;
+}
+
+// Three-valued (Kleene) evaluation, null = unknown (optional field unset);
+// unknown is treated as satisfied.
+function evaluateTriState(node, ctx) {
   if (!node) return true;
-  if (node.all) return node.all.every(c => evaluatePredicate(c, ctx));
-  if (node.any) return node.any.some(c => evaluatePredicate(c, ctx));
-  if (node.not) return !evaluatePredicate(node.not, ctx);
+  if (node.all) {
+    const results = node.all.map(c => evaluateTriState(c, ctx));
+    return results.includes(false) ? false : (results.includes(null) ? null : true);
+  }
+  if (node.any) {
+    const results = node.any.map(c => evaluateTriState(c, ctx));
+    return results.includes(true) ? true : (results.includes(null) ? null : false);
+  }
+  if (node.not) {
+    const inner = evaluateTriState(node.not, ctx);
+    return inner === null ? null : !inner;
+  }
   if ('always' in node) return !!node.always;
   if ('unsupported' in node || 'unsupported_limit' in node) return true;
   if (node.field) return evaluateField(node.field, node.value, ctx);
@@ -75,6 +96,7 @@ function contextFromBuild(build, archetypeByClass) {
     // Raw pick only - callers that know the origin should override with
     // planetRules.getEffectivePlanetClass() (Nomadic / origin-forced planet).
     preferred_planet_class: build.is_nomadic ? 'pc_ark' : (build.planet_class || undefined),
+    graphical_culture: build.graphical_culture || undefined,
   };
 }
 

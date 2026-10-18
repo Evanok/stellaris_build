@@ -7,6 +7,7 @@ import { normalizeBuildTags, serializeBuildTags, MAX_TAGS_PER_BUILD } from './ut
 import { BuildTagPicker } from './components/BuildTags';
 import { PredicateNode, findFieldOccurrences, getFailingNodes, describePredicateHuman } from './utils/ruleEvaluator';
 import { ORIGIN_IMAGE_QUERY, iconQuery } from './utils/assetVersions';
+import { Shipset, ShipsetRuleSource, getShipsetConflicts } from './utils/shipsetRules';
 import { PlanetClass, PlanetRuleInput, getForcedPlanetClass, getEffectivePlanetClass, getPlanetConflicts, getTraitPlanetConflicts, isTraitBlockedByPlanet, getPlanetPickerColumns, getSpeciesPlanetConflict } from './utils/planetRules';
 
 interface BuildFormProps {
@@ -355,6 +356,10 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const [allPlanetClasses, setAllPlanetClasses] = useState<PlanetClass[]>([]);
   const [selectedPlanetClass, setSelectedPlanetClass] = useState<string>('');
 
+  // Ship appearance (optional) - the shipset / graphical culture
+  const [allShipsets, setAllShipsets] = useState<Shipset[]>([]);
+  const [selectedShipset, setSelectedShipset] = useState<string>('');
+
   // Trait point/pick budget per archetype (BIOLOGICAL/ROBOT/MACHINE/LITHOID/PRESAPIENT) -
   // differs per archetype (e.g. MACHINE: 1 point/5 traits, ROBOT: 0 points/4 traits),
   // unlike the old flat BASE_MAX_TRAIT_POINTS/BASE_MAX_TRAIT_COUNT constants.
@@ -436,7 +441,9 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       fetch(`/api/species-classes${qs}`).then(res => res.json()),
       fetch(`/api/species-archetypes${qs}`).then(res => res.json()),
       fetch(`/api/planet-classes${qs}`).then(res => res.json()),
-    ]).then(([originsRaw, perksRaw, ethicsRaw, authoritiesRaw, civicsRaw, traditionsRaw, rulerTraitsRaw, classesRaw, archetypeBudgetsRaw, planetClassesRaw]) => {
+      fetch(`/api/shipsets${qs}`).then(res => res.json()),
+    ]).then(([originsRaw, perksRaw, ethicsRaw, authoritiesRaw, civicsRaw, traditionsRaw, rulerTraitsRaw, classesRaw, archetypeBudgetsRaw, planetClassesRaw, shipsetsRaw]) => {
+      setAllShipsets(Array.isArray(shipsetsRaw) ? shipsetsRaw : []);
       setSpeciesArchetypeBudgets(archetypeBudgetsRaw && typeof archetypeBudgetsRaw === 'object' ? archetypeBudgetsRaw : {});
       setAllPlanetClasses(Array.isArray(planetClassesRaw) ? planetClassesRaw : []);
       const originsArray = Array.isArray(originsRaw) ? originsRaw : (originsRaw.origins || []);
@@ -537,6 +544,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       setIsNomadic(!!initialData.is_nomadic);
       if (initialData.ark_type) setArkType(initialData.ark_type);
       if (initialData.planet_class) setSelectedPlanetClass(initialData.planet_class);
+      if (initialData.graphical_culture) setSelectedShipset(initialData.graphical_culture);
 
       // Handle ethics (array of strings) - trim whitespace
       if (Array.isArray(initialData.ethics)) {
@@ -677,6 +685,18 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   // from a build saved with Void Dwellers is dropped once the origin changes.
   const pickedPlanetClass = allPlanetClasses.some(p => p.id === selectedPlanetClass && p.selectable) ? selectedPlanetClass : '';
   const effectivePlanetClass = getEffectivePlanetClass(isNomadic, selectedOriginData, pickedPlanetClass);
+  // Ship appearance rules (see utils/shipsetRules.ts)
+  const shipsetLabel = (shipsetId: string) => allShipsets.find(s => s.id === shipsetId)?.name || shipsetId;
+  const pickedShipset = allShipsets.some(s => s.id === selectedShipset) ? selectedShipset : '';
+  const shipsetSourceFor = (kind: 'Origin' | 'Civic' | 'Authority', item: { name: string; possible?: PredicateNode; potential?: PredicateNode }): ShipsetRuleSource =>
+    ({ label: `${kind} "${item.name}"`, possible: item.possible, potential: item.potential });
+  const selectedAuthorityData = allAuthorities.find(a => a.id === selectedAuthority);
+  const shipsetRuleSources: ShipsetRuleSource[] = [
+    ...(selectedOriginData ? [shipsetSourceFor('Origin', selectedOriginData)] : []),
+    ...(selectedAuthorityData ? [shipsetSourceFor('Authority', selectedAuthorityData)] : []),
+    ...selectedCivics.map(id => allCivics.find(c => c.id === id)).filter((c): c is Civic => !!c).map(c => shipsetSourceFor('Civic', c)),
+  ];
+
   const planetRuleInput: PlanetRuleInput = {
     isNomadic,
     origin: selectedOriginData,
@@ -690,6 +710,11 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     // Already selected
     if (selectedCivics.includes(civic.id)) {
       return true;
+    }
+
+    // Incompatible with the picked ship appearance (e.g. a civic that forbids Biological ships)
+    if (pickedShipset && getShipsetConflicts(pickedShipset, [shipsetSourceFor('Civic', civic)], shipsetLabel).length > 0) {
+      return false;
     }
 
     // Incompatible with the homeworld (e.g. Anglers grants Aquatic, which needs an Ocean world)
@@ -804,6 +829,12 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     }
     if (requiresNotMachine && isMachineSpecies) {
       return false; // Origin requires NOT MACHINE but species is machine
+    }
+
+    // Origin incompatible with the picked ship appearance (Wilderness needs a Biological set, Red Giant forbids them)
+    if (pickedShipset && origin.id !== selectedOrigin &&
+        getShipsetConflicts(pickedShipset, [shipsetSourceFor('Origin', origin)], shipsetLabel).length > 0) {
+      return false;
     }
 
     // Origin incompatible with the homeworld the user picked (e.g. Wilderness
@@ -1027,6 +1058,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       isNomadic,
       arkType,
       selectedPlanetClass,
+      selectedShipset,
       selectedSpeciesClass,
       selectedTraits,
       selectedSecondaryTraits,
@@ -1064,6 +1096,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setIsNomadic(!!formData.isNomadic);
         setArkType(formData.arkType || '');
         setSelectedPlanetClass(formData.selectedPlanetClass || '');
+        setSelectedShipset(formData.selectedShipset || '');
         setSelectedCivics(formData.selectedCivics || []);
         setSelectedAscensionPerks(formData.selectedAscensionPerks || []);
         setSelectedTraditions(formData.selectedTraditions || []);
@@ -1114,6 +1147,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       case 'origin': return allOrigins.find(o => o.id === id)?.name || id;
       case 'species_archetype': return id.charAt(0) + id.slice(1).toLowerCase();
       case 'preferred_planet_class': return planetLabel(id);
+      case 'graphical_culture': return shipsetLabel(id);
       case 'traits': return allTraits.find(t => t.id === id)?.name || id;
       default: return id;
     }
@@ -1133,6 +1167,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       traits: selectedTraits,
       is_nomadic: isNomadic,
       preferred_planet_class: effectivePlanetClass,
+      graphical_culture: pickedShipset || undefined,
     };
 
     const warnings: string[] = [];
@@ -1319,6 +1354,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
           is_nomadic: isNomadic ? 1 : 0,
           ark_type: isNomadic ? arkType : null,
           planet_class: effectivePlanetClass || null,
+          graphical_culture: pickedShipset || null,
         }),
       });
 
@@ -1348,6 +1384,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       setIsNomadic(false);
       setArkType('');
       setSelectedPlanetClass('');
+      setSelectedShipset('');
       setSelectedCivics([]);
       setSelectedAscensionPerks([]);
       setSelectedTraditions([]);
@@ -1960,6 +1997,64 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
               </div>
             );
           })()}
+
+          {/* Ship Appearance (optional) - grouped like the in-game "Ship models" list */}
+          {allShipsets.length > 0 && (
+            <div className="mb-3">
+              <label className="form-label">
+                Ship appearance <small className="text-muted">(optional)</small>
+                {pickedShipset && <span className="badge bg-success ms-2">{shipsetLabel(pickedShipset)}</span>}
+              </label>
+              {(['biological', 'mechanical'] as const).map(category => {
+                const shipsets = allShipsets.filter(s => s.category === category);
+                if (shipsets.length === 0) return null;
+                return (
+                  <div key={category} className="mb-2">
+                    <small className="d-block text-muted fw-bold mb-1">{category === 'biological' ? 'Biological' : 'Mechanical'}</small>
+                    <div className="row row-cols-2 row-cols-sm-3 row-cols-lg-5 g-2">
+                      {shipsets.map(shipset => {
+                        const isSelected = pickedShipset === shipset.id;
+                        const conflicts = getShipsetConflicts(shipset.id, shipsetRuleSources, shipsetLabel);
+                        const isDisabled = !isSelected && conflicts.length > 0;
+                        return (
+                          <div key={shipset.id} className="col">
+                            <button
+                              type="button"
+                              className="btn btn-link text-decoration-none w-100 p-1 rounded d-flex flex-column align-items-center"
+                              disabled={isDisabled}
+                              title={[shipset.name, ...conflicts].join('\n')}
+                              onClick={() => setSelectedShipset(isSelected ? '' : shipset.id)}
+                              style={{
+                                // Inline border (Bootstrap's .border is !important and would hide the selection color)
+                                border: `${isSelected ? 2 : 1}px solid ${isSelected ? '#fd7e14' : '#495057'}`,
+                                boxShadow: isSelected ? '0 0 8px rgba(253, 126, 20, 0.6)' : undefined,
+                                backgroundColor: '#14191b',
+                                opacity: isDisabled ? 0.3 : 1,
+                                cursor: isDisabled ? 'not-allowed' : 'pointer',
+                              }}
+                            >
+                              <img src={shipset.image} alt="" loading="lazy" style={{ width: '100%', maxWidth: '160px', aspectRatio: '2 / 1', objectFit: 'contain' }} />
+                              <span className={`small ${isSelected ? 'text-warning fw-bold' : 'text-light'}`}>{shipset.name}</span>
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+              <button
+                type="button"
+                className={`btn btn-sm mt-1 ${!pickedShipset ? 'btn-primary' : 'btn-outline-light'}`}
+                onClick={() => setSelectedShipset('')}
+              >
+                Not specified
+              </button>
+              {pickedShipset && getShipsetConflicts(pickedShipset, shipsetRuleSources, shipsetLabel).map((conflict, idx) => (
+                <small key={idx} className="d-block text-warning mt-1">{conflict}</small>
+              ))}
+            </div>
+          )}
 
           {/* Starting Ruler Trait Selection */}
           <div className="mb-3">

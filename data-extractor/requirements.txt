@@ -1,2 +1,4 @@
 # Stellaris Data Extractor - Python Dependencies
-# No external dependencies required - uses only Python standard library
+Pillow      # icon / image processing (DDS -> PNG/WebP)
+numpy       # pdx_mesh.py: 3D model reader + software renderer for shipset previews
+# Also required: the ImageMagick `convert` CLI (shelled out for some DDS conversions)
