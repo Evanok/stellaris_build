@@ -128,6 +128,11 @@ export const Home: React.FC = () => {
   // What's New data
   const latestNews: NewsItem[] = [
     {
+      date: '17 Oct 2026',
+      title: 'Pick your Homeworld and Ship Appearance in builds',
+      type: 'feature'
+    },
+    {
       date: '10 Oct 2026',
       title: 'Build Tags + Clearer Difficulty Ratings',
       type: 'feature'
