@@ -1310,12 +1310,12 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
   // Publishing without an account: the build goes to the moderation queue. Only
   // reachable from the auth modal, i.e. after handleSubmit validated everything.
-  const handleGuestSubmit = async (guestName: string, website: string): Promise<string | null> => {
+  const handleGuestSubmit = async (guestName: string, guestEmail: string, website: string): Promise<string | null> => {
     try {
       const response = await fetch('/api/builds/guest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...getBuildPayload(), guest_name: guestName, website }),
+        body: JSON.stringify({ ...getBuildPayload(), guest_name: guestName, guest_email: guestEmail, website }),
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
@@ -1328,7 +1328,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       skipRuleWarningRef.current = false;
       setShowGuestModal(false);
       trackEvent('build_submitted_guest', { game_version });
-      navigate('/build-submitted', { state: { name, claimToken: data.claim_token } });
+      navigate('/build-submitted', { state: { name, claimToken: data.claim_token, emailed: !!data.emailed } });
       return null;
     } catch {
       return 'Network error, please try again.';

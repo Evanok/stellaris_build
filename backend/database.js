@@ -302,12 +302,15 @@ const setupDatabase = () => {
     //   to attach the build to an account later (before or after approval)
     // - claimed_user_id: set when claimed before approval - the build is then
     //   published under that account instead of a guest one
+    // - guest_email: optional, only used to email the submitter their claim link and
+    //   tell them when the build is published. Never displayed.
     db.run(`CREATE TABLE IF NOT EXISTS pending_builds (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       data TEXT NOT NULL,
       guest_name TEXT NOT NULL,
       claim_token_hash TEXT NOT NULL UNIQUE,
       claimed_user_id INTEGER,
+      guest_email TEXT,
       submitter_ip TEXT,
       status TEXT NOT NULL DEFAULT 'pending',
       build_id INTEGER,
@@ -318,6 +321,13 @@ const setupDatabase = () => {
     )`, (err) => {
       if (err) {
         console.error('Error creating pending_builds table:', err.message);
+      }
+    });
+
+    // Add guest_email column if it doesn't exist (for existing databases)
+    db.run(`ALTER TABLE pending_builds ADD COLUMN guest_email TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding guest_email column:', err.message);
       }
     });
 

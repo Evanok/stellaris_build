@@ -10,7 +10,7 @@ import { decodeHtmlEntities } from '../utils/htmlDecode';
 const GuestSubmitted: React.FC = () => {
   const location = useLocation();
   const { user } = useAuth();
-  const state = location.state as { name?: string; claimToken?: string } | null;
+  const state = location.state as { name?: string; claimToken?: string; emailed?: boolean } | null;
   const [copied, setCopied] = useState(false);
 
   const link = state?.claimToken ? claimUrl(state.claimToken) : null;
@@ -62,7 +62,9 @@ const GuestSubmitted: React.FC = () => {
               {link && (
                 <div className="mb-3">
                   <label className="form-label small text-muted mb-1">
-                    Claim link - keep it to link the build to an account from another device
+                    {state?.emailed
+                      ? 'Claim link - we also emailed it to you, to link the build to an account from any device'
+                      : 'Claim link - keep it to link the build to an account from another device'}
                   </label>
                   <div className="input-group">
                     <input
