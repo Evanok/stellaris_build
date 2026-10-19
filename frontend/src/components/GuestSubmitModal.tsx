@@ -5,10 +5,11 @@ interface GuestSubmitModalProps {
   onClose: () => void;
   onBack: () => void;
   // Resolves with an error message to display, or null on success
-  onSubmit: (guestName: string, website: string) => Promise<string | null>;
+  onSubmit: (guestName: string, guestEmail: string, website: string) => Promise<string | null>;
 }
 
 const GUEST_NAME_PATTERN = /^[a-zA-Z0-9_-]{3,30}$/;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Publishing without an account: the visitor only picks a name. The build is
 // reviewed by a moderator before it goes live (see POST /api/builds/guest).
@@ -20,6 +21,7 @@ export const GuestSubmitModal: React.FC<GuestSubmitModalProps> = ({ show, onClos
       return '';
     }
   });
+  const [guestEmail, setGuestEmail] = useState('');
   // Honeypot: hidden from humans, filled in by bots
   const [website, setWebsite] = useState('');
   const [error, setError] = useState('');
@@ -34,9 +36,14 @@ export const GuestSubmitModal: React.FC<GuestSubmitModalProps> = ({ show, onClos
       setError('Your name must be 3 to 30 characters: letters, numbers, underscores and dashes only.');
       return;
     }
+    const email = guestEmail.trim();
+    if (email && !EMAIL_PATTERN.test(email)) {
+      setError('Please enter a valid email address, or leave it empty.');
+      return;
+    }
     setError('');
     setSubmitting(true);
-    const submitError = await onSubmit(trimmed, website);
+    const submitError = await onSubmit(trimmed, email, website);
     setSubmitting(false);
     if (submitError) {
       setError(submitError);
@@ -77,6 +84,24 @@ export const GuestSubmitModal: React.FC<GuestSubmitModalProps> = ({ show, onClos
                 required
               />
               <div className="form-text text-muted">3-30 characters: letters, numbers, _ and -</div>
+
+              <label htmlFor="guest-email" className="form-label mt-3">
+                Email <span className="text-muted">(optional)</span>
+              </label>
+              <input
+                id="guest-email"
+                type="email"
+                className="form-control bg-secondary text-white border-secondary"
+                value={guestEmail}
+                onChange={(e) => setGuestEmail(e.target.value)}
+                maxLength={254}
+                autoComplete="email"
+                placeholder="you@example.com"
+              />
+              <div className="form-text text-muted">
+                We'll email you the link to claim your build from any device, and let you know when
+                it's live. Never shown publicly.
+              </div>
               {/* Honeypot - positioned off-screen rather than display:none, which some bots skip */}
               <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: '1px', height: '1px', overflow: 'hidden' }}>
                 <label htmlFor="guest-website">Website</label>

@@ -1177,6 +1177,57 @@ function notifyModeratorOfPendingBuild(pendingId, buildName, guestName) {
   }).catch(err => console.error('Failed to send pending build notification:', err.message));
 }
 
+const sendMailToSubmitter = (to, subject, text, html) => {
+  if (!process.env.SMTP_HOST) return;
+  createMailTransporter().sendMail({
+    from: process.env.SMTP_FROM || 'Stellaris Build <noreply@stellaris-build.com>',
+    to,
+    subject,
+    text,
+    html,
+  }).catch(err => console.error('Failed to email a guest submitter:', err.message));
+};
+
+// Sent right after a submission with an email: the claim link, reachable from any
+// device - the one shown on the confirmation page is easy to lose.
+function emailClaimLink(to, buildName, claimToken) {
+  const claimLink = `${SITE_URL}/claim/${claimToken}`;
+  const name = decodeStoredEntities(buildName);
+  sendMailToSubmitter(
+    to,
+    `Your Stellaris build "${name}" was received`,
+    `Thanks for sharing "${name}"! A moderator will review it, usually within 24-48 hours, and we will email you when it is live.
+
+To link this build to your account (so you can edit it later), open this link and sign in or create a free account:
+${claimLink}
+
+Keep this email: the link is the only proof that the build is yours.`,
+    // buildName is stored HTML-escaped already
+    `<p>Thanks for sharing <strong>${buildName}</strong>! A moderator will review it, usually within 24-48 hours, and we will email you when it is live.</p><p>To link this build to your account (so you can edit it later), sign in or create a free account from this link:</p><p><a href="${claimLink}">Claim my build</a></p><p>Keep this email: the link is the only proof that the build is yours.</p>`
+  );
+}
+
+// Sent on approval. The claim token itself is not recoverable here (only its hash
+// is stored), so this points back to the first email for it.
+function emailBuildPublished(to, buildName, buildId, alreadyClaimed) {
+  const buildLink = `${SITE_URL}/build/${buildId}`;
+  const name = decodeStoredEntities(buildName);
+  const claimHint = alreadyClaimed
+    ? 'It is already linked to your account.'
+    : 'To link it to your account, use the claim link from the email we sent when you submitted it.';
+  sendMailToSubmitter(
+    to,
+    `Your Stellaris build "${name}" is live`,
+    `Good news: "${name}" was approved and is now live:
+${buildLink}
+
+${claimHint}`,
+    `<p>Good news: <strong>${buildName}</strong> was approved and is now live.</p><p><a href="${buildLink}">View my build</a></p><p>${claimHint}</p>`
+  );
+}
+
+const GUEST_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 // Submit a build without an account
 app.post('/api/builds/guest', guestSubmitLimiter, (req, res) => {
   // Honeypot: a field hidden from humans, only bots fill it in. Pretend it worked.
@@ -1187,6 +1238,12 @@ app.post('/api/builds/guest', guestSubmitLimiter, (req, res) => {
   const guestName = typeof req.body.guest_name === 'string' ? req.body.guest_name.trim() : '';
   if (!GUEST_NAME_PATTERN.test(guestName)) {
     return res.status(400).json({ error: 'Your name must be 3 to 30 characters: letters, numbers, underscores and dashes only.' });
+  }
+
+  // Optional
+  const guestEmail = typeof req.body.guest_email === 'string' ? req.body.guest_email.trim().toLowerCase() : '';
+  if (guestEmail && (guestEmail.length > 254 || !GUEST_EMAIL_PATTERN.test(guestEmail))) {
+    return res.status(400).json({ error: 'Please enter a valid email address, or leave it empty.' });
   }
 
   const validationErrors = validateBuildData(req.body);
@@ -1214,12 +1271,13 @@ app.post('/api/builds/guest', guestSubmitLimiter, (req, res) => {
 
         const claimToken = crypto.randomBytes(24).toString('base64url');
         db.run(
-          `INSERT INTO pending_builds (data, guest_name, claim_token_hash, submitter_ip) VALUES (?, ?, ?, ?)`,
-          [JSON.stringify(sanitizedData), guestName, hashClaimToken(claimToken), req.ip || null],
+          `INSERT INTO pending_builds (data, guest_name, guest_email, claim_token_hash, submitter_ip) VALUES (?, ?, ?, ?, ?)`,
+          [JSON.stringify(sanitizedData), guestName, guestEmail || null, hashClaimToken(claimToken), req.ip || null],
           function (err) {
             if (err) return res.status(500).json({ error: 'Failed to save the build' });
             notifyModeratorOfPendingBuild(this.lastID, sanitizedData.name, guestName);
-            res.status(201).json({ pending: true, claim_token: claimToken });
+            if (guestEmail) emailClaimLink(guestEmail, sanitizedData.name, claimToken);
+            res.status(201).json({ pending: true, claim_token: claimToken, emailed: !!guestEmail });
           }
         );
       });
@@ -1290,6 +1348,7 @@ app.post('/api/admin/pending-builds/:id/approve', isAdmin, (req, res) => {
             [build.id, row.id],
             (err) => {
               if (err) console.error('Failed to mark pending build as approved:', err.message);
+              if (row.guest_email) emailBuildPublished(row.guest_email, data.name, build.id, !!row.claimed_user_id);
               res.json({ success: true, build_id: build.id });
             }
           );
