@@ -380,6 +380,21 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const { user, refreshUser } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showGuestModal, setShowGuestModal] = useState(false);
+
+  // Funnel analytics: which step visitors reach in the create form, so drop-offs
+  // can be located (started -> invalid / auth prompt -> created or guest-submitted).
+  // form_mode tells manual entry from imports; edits are not part of the funnel.
+  const formMode = buildId ? 'edit' : initialData ? 'import' : 'manual';
+  const formStartedRef = useRef(false);
+  const trackFunnel = (event: Parameters<typeof trackEvent>[0], params: Record<string, string | number | boolean | undefined> = {}) => {
+    if (formMode === 'edit') return;
+    trackEvent(event, { form_mode: formMode, logged_in: !!user, ...params });
+  };
+  const handleFirstInteraction = () => {
+    if (formStartedRef.current) return;
+    formStartedRef.current = true;
+    trackFunnel('build_form_started');
+  };
   const navigate = useNavigate();
 
   // Warn on submit if the description is empty (create mode only)
@@ -1331,6 +1346,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
         const details = Array.isArray(data.details) ? `: ${data.details.join(', ')}` : '';
+        trackFunnel('build_submit_error', { status: response.status, guest: true });
         return (data.error || 'Failed to submit the build') + details;
       }
       addGuestClaim({ token: data.claim_token, name });
@@ -1357,6 +1373,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     // Check if there are URL errors
     if (youtubeUrlError || sourceUrlError) {
       setError('Please fix the URL errors before submitting.');
+      trackFunnel('build_form_invalid', { reason: 'url' });
       // Scroll to top to show the error and the invalid field
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -1365,6 +1382,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     // Check if URLs are valid (validate again in case state hasn't updated)
     if ((youtube_url && !isValidUrl(youtube_url)) || (source_url && !isValidUrl(source_url))) {
       setError('Please enter valid URLs or leave the fields empty.');
+      trackFunnel('build_form_invalid', { reason: 'url' });
       // Scroll to top to show the error
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -1374,6 +1392,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     if (!isBuildComplete()) {
       const missing = getMissingFields();
       setError(`Please complete the following required fields: ${missing.join(', ')}`);
+      trackFunnel('build_form_invalid', { reason: 'missing_fields', missing_fields: missing.join(', ') });
       // Scroll to top to show the error
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -1382,6 +1401,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     // Warn if description is empty (create mode only), unless the user already confirmed
     if (!isEditMode && !description.trim() && !skipDescriptionWarningRef.current) {
       setShowDescriptionWarning(true);
+      trackFunnel('build_form_warning', { warning: 'empty_description' });
       return;
     }
 
@@ -1392,6 +1412,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       if (warnings.length > 0) {
         setRuleWarnings(warnings);
         setShowRuleWarning(true);
+        trackFunnel('build_form_warning', { warning: 'rule_conflict' });
         return;
       }
     }
@@ -1404,6 +1425,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       // Save form data to localStorage before showing auth modal
       saveFormDataToLocalStorage();
       setShowAuthModal(true);
+      trackFunnel('build_auth_prompt');
       return;
     }
     skipDescriptionWarningRef.current = false;
@@ -1426,6 +1448,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       if (!response.ok) {
         // Try to get error message from response body
         const errorData = await response.json().catch(() => null);
+        trackFunnel('build_submit_error', { status: response.status, guest: false });
         throw new Error(errorData?.error || 'Failed to create build.');
       }
 
@@ -1468,7 +1491,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     <div className="card bg-dark border-secondary mb-4">
       <div className="card-body">
         <h3 className="card-title">{isEditMode ? 'Edit Build' : 'Create a New Build'}</h3>
-        <form id="build-form" onSubmit={handleSubmit}>
+        <form id="build-form" onSubmit={handleSubmit} onChangeCapture={handleFirstInteraction} onClickCapture={handleFirstInteraction}>
           {draftRestored && (
             <div className="alert alert-success alert-dismissible">
               <i className="bi bi-check-circle me-2"></i>
@@ -2788,6 +2811,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         onContinueAsGuest={isEditMode ? undefined : () => {
           setShowAuthModal(false);
           setShowGuestModal(true);
+          trackFunnel('build_guest_started');
         }}
       />
       <GuestSubmitModal

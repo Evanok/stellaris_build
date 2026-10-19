@@ -2641,8 +2641,14 @@ app.use((req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+// Loopback only: the app is meant to be reached through nginx. Listening on every
+// interface exposed port 3001 to the internet, where a client could talk to Node
+// directly and forge X-Forwarded-For (i.e. its IP as seen by the rate limiters).
+// Set BIND_HOST=0.0.0.0 to expose it on purpose (e.g. testing from another device).
+const bindHost = process.env.BIND_HOST || '127.0.0.1';
+
+app.listen(port, bindHost, () => {
+  console.log(`Server listening on ${bindHost}:${port}`);
   const host = process.env.SERVER_HOST || 'localhost';
   console.log(`Access the app at: http://${host}:${port}`);
 });
