@@ -229,7 +229,7 @@ export const Home: React.FC = () => {
           "itemListElement": pagedBuilds.slice(0, 20).map((build, index) => ({
             "@type": "ListItem",
             "position": index + 1,
-            "url": `https://stellaris-build.com/builds/${build.id}`,
+            "url": `https://stellaris-build.com/build/${build.id}`,
             "name": build.name,
             "description": build.description || `Stellaris empire build - ${build.game_version}`
           }))

@@ -2248,6 +2248,11 @@ app.get('/og/build/:file', (req, res) => {
 
 // Serve React app for all other routes (must be after API routes)
 app.use((req, res) => {
+  // /builds/:id was emitted by the home page JSON-LD by mistake and got indexed;
+  // permanently redirect it to the real route so search engines replace it.
+  const legacyMatch = req.path.match(/^\/builds\/(\d+)\/?$/);
+  if (legacyMatch) return res.redirect(301, `/build/${legacyMatch[1]}`);
+
   const buildMatch = req.path.match(/^\/build\/(\d+)\/?$/);
   if (!buildMatch) {
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
