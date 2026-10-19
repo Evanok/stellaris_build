@@ -30,6 +30,7 @@ This project is currently in active development with the following features impl
   - **Import from .sav files** (automatically extract build data from Stellaris save files)
   - **Import from Empire Designs** (import all empires from `user_empire_designs.txt`) - the fastest way to share a build, listed first on the create page
   - **No account needed to start**: the form and both imports work without logging in; the login is only asked at publish time, and the build in progress is restored after signing in (email, Google or Steam). Uploaded files are deleted as soon as they are parsed
+  - **Publish without an account**: pick a name (and optionally an email) and the build goes to a moderation queue; it is published under that name once approved. A private claim link (shown, and emailed if an address was given) attaches it to an account later - automatically when the visitor signs up on the same browser
   - **Nomadic Empire support** (Nomads DLC) - ark type selection with per-tier stats
 - **Build Rule Checking (experimental)**: Every build is checked at submit and export time against rules parsed directly from the game's own files - not hardcoded - covering origin/authority/civic compatibility, civic count, and trait budget per species archetype. Shows a non-blocking, plain-English warning ("Authority 'Democratic' requires none of: ethic 'Authoritarian'...") rather than blocking the user. A standalone CLI (`backend/check_build_rules.js`) can audit the whole database or check a single build. About 57% of currently published builds have at least one flagged rule conflict.
 - **Export to Stellaris (experimental)**: Generate a custom empire design block ready to paste into `user_empire_designs_v3.4.txt`, so a build can be loaded directly in-game. Runs the same rule check before exporting.
@@ -49,6 +50,7 @@ This project is currently in active development with the following features impl
   - **Password requirements**: 12+ chars, uppercase, lowercase, number, special character
   - Password reset via email token
 - **Ratings**: Star ratings on builds (one per logged-in user, average shown)
+- **Moderation**: admin queue for builds submitted without an account (preview, approve, reject), with an email notification per submission
 - **Community Chat**: IRC-style chat panel on the Feedback page (logged-in or guest with a pseudo), rate-limited, admin moderation
 - **Statistics Page**: Admin and public statistics on build usage, version distribution, and popular traits
 - **Resources Page**: Curated guides, YouTube channels, tools, and communities, filterable by category and game version
@@ -60,6 +62,8 @@ This project is currently in active development with the following features impl
 - **Security**:
   - Rate limiting (100 requests/15min per IP, 5 builds/hour per user)
   - File imports open to visitors but capped: 30/hour per IP (60 with an account), at most 3 parsed at once, 60s timeout per file
+  - Guest submissions: 5 per day per IP, honeypot field against bots, never public before moderation
+  - Backend only listens on localhost, behind nginx
   - Input validation and sanitization
   - XSS protection
   - Password complexity requirements (NIST/OWASP compliant)
@@ -317,6 +321,9 @@ version (currently 4.2, 4.3, or 4.4).
 | `/api/builds` | GET | Get paginated/filtered/sorted builds (excludes soft-deleted) |
 | `/api/builds/:id` | GET | Get a single build with resolved names |
 | `/api/builds` | POST | Create a new build (requires authentication) |
+| `/api/builds/guest` | POST | Submit a build without an account (moderation queue, rate-limited) |
+| `/api/builds/claim` | POST | Attach a guest build to the logged-in account using its claim token |
+| `/api/admin/pending-builds` | GET | Moderation queue (admin only); `/:id` for one build, `/:id/approve` and `/:id/reject` (POST) |
 | `/api/builds/:id` | PUT | Update a build (requires authentication, author only) |
 | `/api/builds/:id` | DELETE | Soft delete a build (requires authentication, author only) |
 | `/api/builds/:id/rating` | GET | Get average rating and the current user's rating |

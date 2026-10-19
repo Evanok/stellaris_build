@@ -54,7 +54,7 @@ _Versions verified against the workspace `package.json` files on 2026-08-18 (maj
 
 **Deployment**
 - PM2 + nginx + Let's Encrypt SSL on a Scaleway Dedibox
-- Backend on :3001; the Vite dev server proxies `/api/*` to it locally
+- Backend on :3001, **bound to 127.0.0.1 only** (`BIND_HOST` to override) - reached through nginx in prod; the Vite dev server proxies `/api/*` to `127.0.0.1:3001` locally
 
 ## Development Commands
 
@@ -177,11 +177,15 @@ The project uses npm workspaces with three main parts:
 
 **Pages:**
 - `Home.tsx` - Displays all builds with search, filtering, and pagination
-- `CreateChoice.tsx` (`/create`) - Public page listing the 3 ways to create a build, imports first (`ImportEmpireDesigns.tsx`, `ImportSave.tsx`, `CreateManual.tsx`). None of them needs a login up front - it is asked at publish time (see "Build Creation Funnel" in Recent Completions)
+- `CreateChoice.tsx` (`/create`) - Public page listing the 3 ways to create a build, imports first (`ImportEmpireDesigns.tsx`, `ImportSave.tsx`, `CreateManual.tsx`). None of them needs a login up front - it is asked at publish time, where the visitor can also publish as a guest (see "Build Creation Funnel" and "Publishing Without an Account" in Recent Completions)
 - `BuildDetail.tsx` - Individual build view with all details, embedded YouTube videos, and soft delete button
 - `Login.tsx` - Login page, tabs Login (default) / Register / Google / Steam - email login is deliberately the default, OAuth buttons put some visitors off
 - `Resources.tsx` - Curated community resources page with categorized links to guides, tools, YouTubers, mods, and communities
 - `Feedback.tsx` - Feedback & bug reports list (col-lg-8) with community chat sidebar (col-lg-4)
+- `GuestSubmitted.tsx` (`/build-submitted`) - Confirmation after a guest submission: claim link + "create an account" pitch
+- `ClaimBuild.tsx` (`/claim/:token`) - Attaches a guest build to the logged-in account (asks to sign in first)
+- `PendingBuilds.tsx` (`/admin/pending`) - Moderation queue (admin only); `/admin/pending/:id` is `BuildDetail.tsx` in `pendingMode` (moderator preview with Approve/Reject, no rating)
+- `AdminStats.tsx` (`/admin/stats`) - Admin statistics. Both admin pages are linked in the navbar for admins only (Moderation shows the pending count)
 
 **Authentication:**
 - `AuthContext.tsx` - React context providing authentication state and user info
@@ -198,7 +202,7 @@ The project uses npm workspaces with three main parts:
 ### Backend Architecture
 
 **Entry Point:** `backend/index.js`
-- Express server running on port 3001 (configurable via PORT env var)
+- Express server running on port 3001 (configurable via PORT env var), listening on `127.0.0.1` only (`BIND_HOST` env var to override, e.g. `0.0.0.0` to test from another device)
 - Sets up database on startup via `setupDatabase()`
 - Configures Passport.js for OAuth authentication (Google + Steam)
 - Uses express-session for maintaining user sessions
@@ -214,10 +218,11 @@ The project uses npm workspaces with three main parts:
 
 **Database:** `backend/database.js`
 - SQLite database stored at `./stellaris_builds.db` (created at runtime)
-- Tables: `users`, `builds`, `ratings`, `feedback`, `page_views`, `chat_messages`
-- Users table: stores OAuth user info (provider, provider_id, username, email, avatar)
+- Tables: `users`, `builds`, `ratings`, `feedback`, `page_views`, `chat_messages`, `pending_builds`
+- Users table: stores OAuth user info (provider, provider_id, username, email, avatar). `provider = 'guest'` rows are not real accounts: they only carry the author name of approved guest builds, cannot log in, and are excluded from signup stats
 - Builds table: stores complete empire configurations with soft delete support and author_id foreign key
 - chat_messages table: community chat (content, author_name, author_id nullable, is_guest, deleted, created_at)
+- pending_builds table: builds submitted without an account, waiting for moderation (`data` = sanitized build fields as JSON, `guest_name`, optional `guest_email`, `claim_token_hash`, `claimed_user_id`, `status` pending/approved/rejected, `build_id` once published). Deliberately separate from `builds`, which many public queries read
 - Schema uses ALTER TABLE for migrations to add new columns without breaking existing data
 
 **Authentication Routes:**
@@ -242,6 +247,9 @@ The project uses npm workspaces with three main parts:
 - `GET /api/planet-classes` - Returns homeworld planet classes (10 selectable climates + origin-forced classes like Habitat/Gaia, with icons)
 - `GET /api/builds` - Returns all non-deleted builds ordered by created_at DESC
 - `POST /api/builds` - Creates new build (requires authentication, name, checks for duplicates)
+- `POST /api/builds/guest` - Submits a build without an account to the moderation queue (`guest_name` required, `guest_email` optional, honeypot field `website`). `guestSubmitLimiter`: 5 successful submissions/day per IP. Returns the claim token
+- `POST /api/builds/claim` - Attaches a guest build to the logged-in user from its claim token (before or after approval)
+- `GET /api/admin/pending-builds`, `GET /api/admin/pending-builds/:id`, `POST /api/admin/pending-builds/:id/approve|reject` - Moderation (admin only). Approve copies the build into `builds`
 - `POST /api/import-build` (`.sav`), `POST /api/list-empires` + `POST /api/import-empire-designs` (empire designs `.txt`) - parse an uploaded file with a Python script and return pre-filled build data. **Open to anonymous visitors**, protected by `importLimiter` (30/h per IP, 60/h per account), max 3 concurrent parses (503 beyond), 60s script timeout. The uploaded file is deleted as soon as the script exits
 - `DELETE /api/builds/:id` - Soft deletes a build (sets deleted=1)
 - `GET /api/resources` - Returns curated community resources (YouTube channels, guides, tools, mods, communities)
@@ -425,7 +433,7 @@ EOF
 
 1. **Database Initialization**: Database tables are created automatically on server startup if they don't exist (database.js:12-40)
 
-2. **API Proxy**: Frontend Vite dev server proxies `/api/*` requests to `http://localhost:3001` (vite.config.ts:9-14)
+2. **API Proxy**: Frontend Vite dev server proxies `/api/*` requests to `http://127.0.0.1:3001` (vite.config.ts) - an explicit IPv4 address, as the backend only listens on IPv4 loopback
 
 3. **Data Format**: Build data fields are stored as comma-separated strings in SQLite:
    - `traits`: "trait_intelligent,trait_strong"
@@ -438,7 +446,7 @@ EOF
 
 4. **Soft Delete**: Builds have a `deleted` column (0=visible, 1=hidden). Deleted builds stay in the database for potential recovery.
 
-5. **Authentication**: Local accounts + OAuth (Google + Steam). User sessions managed via express-session. Publishing a build requires authentication (author_id automatically set), but filling the form or importing a file does not: `BuildForm.tsx` asks for a login only at submit time, after every validation step.
+5. **Authentication**: Local accounts + OAuth (Google + Steam). User sessions managed via express-session. Publishing a build requires authentication (author_id automatically set), or goes through the guest moderation queue; filling the form or importing a file needs neither: `BuildForm.tsx` asks for a login (or a guest name) only at submit time, after every validation step.
 
 6. **Nodemon Limitation**: Backend nodemon only watches `.js` files. If you update JSON data files in `backend/data/`, you must manually restart the backend.
 
@@ -574,6 +582,7 @@ After making changes to game data:
 - `backend/index.js` - Auth routes and middleware
 - Sessions stored in SQLite (`sessions.db`, via `connect-sqlite3`)
 - `isAuthenticated` middleware protects routes requiring login
+- Rate limiters (`security.js`) are skipped for requests from the machine itself (`isLocalRequest`, based on `req.ip`). **Never base such checks on `req.hostname`**: behind nginx with `trust proxy`, it comes from `X-Forwarded-Host`, which any client can set
 - Custom display names: OAuth users can set unique display_name (3-30 chars, alphanumeric + underscore/dash)
 - Collision prevention: display_name uniqueness enforced across all users (both usernames and display_names)
 
@@ -621,6 +630,31 @@ Planned features (not yet implemented):
 ---
 
 ## Recent Completions
+
+### Publishing Without an Account + Moderation + Hardening (2026-10-19)
+Follow-up of the funnel work below: the last barrier was the login itself.
+
+**Guest submission flow:**
+- `BuildForm.tsx` runs every check first (missing fields, URLs, empty description, rule warnings), then, if not logged in, opens `AuthModal.tsx`, which offers "Publish without an account" in create mode -> `GuestSubmitModal.tsx` (name + optional email + hidden honeypot) -> `POST /api/builds/guest` -> `/build-submitted`.
+- Guest name: same format as display names (3-30, `[a-zA-Z0-9_-]`), rejected if it matches a **real** account's username/display_name (case-insensitive). Guest names may repeat (one visitor, several builds).
+- Nothing is public before approval: the build sits in `pending_builds`. On approval it is inserted into `builds` (shared `insertBuild()` helper with `POST /api/builds`) under a guest user for the name (`findOrCreateGuestUser()`), or directly under the account that already claimed it.
+- The moderator gets an email per submission (SMTP + `ADMIN_EMAIL`, already set in prod); the queue is `/admin/pending`. Mail failures are logged, never fail a request.
+
+**Claiming** (proof of authorship = owning the secret token; only its sha256 is stored):
+- The token is kept in localStorage (`utils/guestClaims.ts`): when the visitor signs in on the same browser, `App.tsx` claims automatically and shows a banner.
+- It is also shown as a `/claim/:token` link on the confirmation page and, if an email was given, emailed right away; a second email is sent on approval. The approval email cannot repeat the link (hash only), it points back to the first one.
+- Claim before approval -> published under the account. After -> the build moves off the guest user, which is deleted once it has no build left (frees the name).
+
+**Security hardening:**
+- The backend listened on every interface, so Node could be reached directly, bypassing nginx and forging `X-Forwarded-For`. It now binds to `127.0.0.1` (`BIND_HOST`), and nginx/Vite target `127.0.0.1:3001` explicitly.
+- The limiters' localhost bypass used `req.hostname` (spoofable via `X-Forwarded-Host`, see Authentication System); now `isLocalRequest()` on `req.ip`, also applied to `importLimiter`/`guestSubmitLimiter` so local testing never hits their quotas.
+- **Prod deploy order:** `infra/deploy_nginx.sh` (new `proxy_pass`) **before** restarting the app on the loopback bind. Afterwards `curl http://<server-ip>:3001/api/test` from outside must fail.
+
+**GA:**
+- New events: `build_submitted_guest` (key event), `build_claimed` (`source`: auto/link), and the form funnel `build_form_started` -> `build_form_invalid` (`reason`, `missing_fields`) / `build_form_warning` (`warning`) -> `build_auth_prompt` -> `build_guest_started` / `build_submit_error` (`status`, `guest`). Funnel events carry `form_mode` (manual/import) and `logged_in`, and are not sent in edit mode.
+- All their parameters are registered as GA custom dimensions.
+
+**Key files:** `backend/index.js` (guest/moderation/claim routes, `insertBuild()`, emails, `BIND_HOST`), `backend/security.js` (`isLocalRequest`, `guestSubmitLimiter`), `backend/database.js` (`pending_builds`), `frontend/src/BuildForm.tsx`, `frontend/src/components/AuthModal.tsx`, `frontend/src/components/GuestSubmitModal.tsx`, `frontend/src/pages/{GuestSubmitted,ClaimBuild,PendingBuilds,BuildDetail}.tsx`, `frontend/src/utils/{guestClaims,moderation}.ts`, `frontend/src/App.tsx`, `frontend/src/components/Navbar.tsx`, `infra/nginx/stellaris-build.conf`, `frontend/vite.config.ts`
 
 ### Google Analytics Clean-up + Build Creation Funnel (2026-10-19)
 Started from a GA4 audit (Data API, via a service account - access details in `CLAUDE.local.md`).
