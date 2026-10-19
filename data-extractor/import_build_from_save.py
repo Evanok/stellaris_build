@@ -14,29 +14,21 @@ import zipfile
 import tempfile
 import re
 
-def extract_gamestate(save_file_path):
-    """Extract gamestate file from .sav ZIP archive with caching"""
+def extract_gamestate(save_file_path, work_dir):
+    """Extract the gamestate file from the .sav ZIP archive into work_dir.
+
+    No cache next to the upload: every upload has a random name, so a cache was
+    never reused and each import left ~100 MB behind in backend/uploads.
+    """
     try:
-        # Create cache directory based on save file name
-        save_basename = os.path.basename(save_file_path)
-        cache_dir = os.path.join(os.path.dirname(save_file_path), f'.cache_{save_basename}')
-        gamestate_path = os.path.join(cache_dir, 'gamestate')
-
-        # Check if cached gamestate exists
-        if os.path.exists(gamestate_path):
-            print(f"✓ Using cached gamestate")
-            return gamestate_path
-
-        # Extract to cache directory
-        print(f"Extracting gamestate to cache...")
+        print(f"Extracting gamestate...")
         with zipfile.ZipFile(save_file_path, 'r') as zip_ref:
             if 'gamestate' not in zip_ref.namelist():
                 print("ERROR: 'gamestate' file not found in save archive")
                 return None
 
-            os.makedirs(cache_dir, exist_ok=True)
-            zip_ref.extract('gamestate', cache_dir)
-            return gamestate_path
+            zip_ref.extract('gamestate', work_dir)
+            return os.path.join(work_dir, 'gamestate')
     except Exception as e:
         print(f"ERROR: Failed to extract save file: {e}")
         return None
@@ -50,6 +42,35 @@ def find_value_in_section(lines, start_idx, key):
         match = pattern.match(lines[i])
         if match:
             return match.group(1)
+    return None
+
+def find_block_end(lines, key_idx):
+    """Index just past the closing brace of the block opened after the `key=` line at key_idx"""
+    depth = 0
+    opened = False
+    for i in range(key_idx + 1, len(lines)):
+        depth += lines[i].count('{') - lines[i].count('}')
+        if '{' in lines[i]:
+            opened = True
+        if opened and depth <= 0:
+            return i + 1
+    return len(lines)
+
+def find_planet_class(lines, planet_id):
+    """planet_class of a planet in the top-level planets={ planet={ <id>={ ... } } } section"""
+    planets_start = next((i for i, line in enumerate(lines) if line.rstrip() == 'planets='), None)
+    if planets_start is None:
+        return None
+    planet_header = f'\t\t{planet_id}='
+    for i in range(planets_start, len(lines)):
+        if lines[i].rstrip() == planet_header:
+            for j in range(i, min(i + 50, len(lines))):
+                match = re.search(r'planet_class="([^"]+)"', lines[j])
+                if match:
+                    return match.group(1)
+            return None
+        if i > planets_start and lines[i] and not lines[i][0].isspace() and lines[i][0] not in '{}':
+            break  # Left the planets section
     return None
 
 def find_list_in_section(lines, start_idx, key):
@@ -108,117 +129,87 @@ def parse_gamestate_simple(gamestate_path):
 
     print(f"Found country section at line {country_start}")
 
-    # Find key sections within the country data
-
-    # Search for government section (contains civics, authority, origin)
-    gov_start = None
-    ethos_start = None
-
-    for i in range(country_start, min(country_start + 50000, len(lines))):
-        line = lines[i].strip()
-
-        if line == 'government=':
-            gov_start = i
-            print(f"Found government section at line {gov_start}")
-
-        if line == 'ethos=':
-            ethos_start = i
-            print(f"Found ethos section at line {ethos_start}")
-
-        # Stop if we've found both
-        if gov_start and ethos_start:
+    # Bound the search to the player's country block (country 0). It is tens of
+    # thousands of lines long in a late-game save, so a fixed-size window misses keys.
+    country0_start = None
+    for i in range(country_start, min(country_start + 10, len(lines))):
+        if lines[i].rstrip() == '\t0=':
+            country0_start = i
             break
 
-    # Extract ethics
-    if ethos_start:
-        ethics = []
-        for i in range(ethos_start, min(ethos_start + 20, len(lines))):
-            matches = re.findall(r'ethic="([^"]+)"', lines[i])
-            ethics.extend(matches)
+    if country0_start is None:
+        print("ERROR: Could not find the player country (country 0)")
+        return None
 
-        # Filter to only ethic_ entries
-        build_data['ethics'] = [e for e in ethics if e.startswith('ethic_')]
+    country0_end = find_block_end(lines, country0_start)
+    print(f"Player country block: lines {country0_start}-{country0_end}")
+
+    def country_key(key):
+        """Line index of a top-level key of the player country, or None"""
+        prefix = f'\t\t{key}='
+        for i in range(country0_start, country0_end):
+            if lines[i].startswith(prefix):
+                return i
+        return None
+
+    gov_start = country_key('government')
+    ethos_start = country_key('ethos')
+
+    # Extract ethics: ethos={ ethics={ "ethic_a" "ethic_b" } }
+    # Always present: the backend locates the JSON output by its "ethics" key
+    build_data['ethics'] = []
+    if ethos_start is not None:
+        ethos_lines = lines[ethos_start:find_block_end(lines, ethos_start)]
+        build_data['ethics'] = re.findall(r'"(ethic_[^"]+)"', '\n'.join(ethos_lines))
 
     # Extract government data
-    if gov_start:
-        # Find authority
-        for i in range(gov_start, min(gov_start + 30, len(lines))):
-            match = re.search(r'authority="([^"]+)"', lines[i])
-            if match:
-                build_data['authority'] = match.group(1)
-                break
+    if gov_start is not None:
+        gov_lines = lines[gov_start:find_block_end(lines, gov_start)]
+        gov_text = '\n'.join(gov_lines)
 
-        # Find civics list
+        match = re.search(r'authority="([^"]+)"', gov_text)
+        if match:
+            build_data['authority'] = match.group(1)
+
         civics = find_list_in_section(lines, gov_start, 'civics')
         build_data['civics'] = [c for c in civics if c.startswith('civic_')]
 
-        # Find origin
-        for i in range(gov_start, min(gov_start + 50, len(lines))):
-            match = re.search(r'origin="([^"]+)"', lines[i])
-            if match:
-                build_data['origin'] = match.group(1)
-                break
+        match = re.search(r'origin="([^"]+)"', gov_text)
+        if match:
+            build_data['origin'] = match.group(1)
 
-    # Empire name was already extracted from header (no need to parse complex structure)
+    # Ship appearance
+    shipset_line = country_key('graphical_culture')
+    if shipset_line is not None:
+        match = re.search(r'graphical_culture="([^"]+)"', lines[shipset_line])
+        if match:
+            build_data['graphical_culture'] = match.group(1)
 
-    # Extract traditions (tradition trees)
-    traditions_start = None
-    for i in range(country_start, min(country_start + 50000, len(lines))):
-        if lines[i].strip() == 'traditions=':
-            traditions_start = i
-            print(f"Found traditions section at line {traditions_start}")
-            break
-
-    if traditions_start:
-        tradition_trees = []
-        seen_trees = set()
-        for i in range(traditions_start, min(traditions_start + 200, len(lines))):
-            # Match individual traditions like "tr_expansion_adopt"
-            match = re.search(r'"(tr_[^_]+)', lines[i])
-            if match:
-                tree_id = match.group(1)  # Extract just "tr_expansion" part
-                if tree_id not in seen_trees:
-                    seen_trees.add(tree_id)
-                    tradition_trees.append(tree_id)
-                    print(f"  Found tradition tree: {tree_id}")
-            elif lines[i].strip() == '}' and '{' not in lines[i-1]:
-                # End of traditions section
-                break
-
+    # Extract tradition trees, in adoption order: every tree has a "<tree>_adopt"
+    # entry (tree ids can contain underscores, e.g. tr_cybernetics_assimilator)
+    traditions_start = country_key('traditions')
+    if traditions_start is not None:
+        tradition_lines = lines[traditions_start:find_block_end(lines, traditions_start)]
+        tradition_trees = re.findall(r'"(tr_[^"]+)_adopt"', '\n'.join(tradition_lines))
         if tradition_trees:
             build_data['traditions'] = tradition_trees
+            print(f"  Found tradition trees: {', '.join(tradition_trees)}")
 
     # Extract ascension perks
-    ascension_start = None
-    for i in range(country_start, min(country_start + 50000, len(lines))):
-        if lines[i].strip() == 'ascension_perks=':
-            ascension_start = i
-            print(f"Found ascension_perks section at line {ascension_start}")
-            break
-
-    if ascension_start:
-        ascension_perks = []
-        for i in range(ascension_start, min(ascension_start + 50, len(lines))):
-            match = re.search(r'"(ap_[^"]+)"', lines[i])
-            if match:
-                perk_id = match.group(1)
-                ascension_perks.append(perk_id)
-                print(f"  Found ascension perk: {perk_id}")
-            elif lines[i].strip() == '}' and '{' not in lines[i-1]:
-                # End of ascension_perks section
-                break
-
+    ascension_start = country_key('ascension_perks')
+    if ascension_start is not None:
+        perk_lines = lines[ascension_start:find_block_end(lines, ascension_start)]
+        ascension_perks = re.findall(r'"(ap_[^"]+)"', '\n'.join(perk_lines))
         if ascension_perks:
             build_data['ascension_perks'] = ascension_perks
+            print(f"  Found ascension perks: {', '.join(ascension_perks)}")
 
     # Extract founder_species_ref from the player's country (country 0)
     founder_species_id = None
-    for i in range(country_start, min(country_start + 20000, len(lines))):
-        match = re.search(r'founder_species_ref=(\d+)', lines[i])
-        if match:
-            founder_species_id = match.group(1)
-            print(f"Found founder_species_ref={founder_species_id} at line {i}")
-            break
+    founder_line = country_key('founder_species_ref')
+    if founder_line is not None:
+        founder_species_id = lines[founder_line].split('=', 1)[1].strip()
+        print(f"Found founder_species_ref={founder_species_id} at line {founder_line}")
 
     if not founder_species_id:
         print("⚠️  Could not find founder_species_ref in player country")
@@ -251,6 +242,20 @@ def parse_gamestate_simple(gamestate_path):
                 species_found = True
                 founder_species_start = i
 
+                species_text = '\n'.join(lines[i:find_block_end(lines, i)])
+                portrait_match = re.search(r'^\t\tportrait="([^"]+)"', species_text, re.MULTILINE)
+                if portrait_match:
+                    build_data['portrait'] = portrait_match.group(1)
+                    print(f"Found portrait: {build_data['portrait']}")
+
+                # Homeworld planet class: home_planet={ type=planet reference=<id> } (4.2+), home_planet=<id> before
+                home_match = re.search(r'home_planet=\s*(?:\{[^}]*reference=)?(\d+)', species_text)
+                if home_match:
+                    planet_class = find_planet_class(lines, home_match.group(1))
+                    if planet_class:
+                        build_data['planet_class'] = planet_class
+                        print(f"Found homeworld planet class: {planet_class}")
+
                 # Now extract species_class and traits for this species
                 for j in range(i, min(i + 200, len(lines))):
                     # Extract species class
@@ -276,7 +281,8 @@ def parse_gamestate_simple(gamestate_path):
                                     'trait_robot', 'trait_wilderness', 'trait_clone_soldier_infertile',
                                     'trait_self_modified', 'trait_lithoid', 'trait_mechanical',
                                     'trait_cybernetic', 'trait_latent_psionic', 'trait_psionic',
-                                    'trait_nerve_stapled', 'trait_erudite', 'trait_enigmatic_intelligence'
+                                    'trait_nerve_stapled', 'trait_erudite', 'trait_enigmatic_intelligence',
+                                    'trait_infernal'
                                     # Note: trait_auto_mod_robotic (Adaptive Frames) and trait_auto_mod_biological (Vocational Genomics)
                                     # are NOT excluded - they are selectable traits at empire creation
                                 }
@@ -361,16 +367,16 @@ def main():
     print(f"Importing build from: {save_filename}")
     print(f"{'='*70}\n")
 
-    # Extract gamestate (with caching)
-    gamestate_path = extract_gamestate(save_file)
+    # Extract and parse the gamestate in a temporary directory, removed afterwards
+    with tempfile.TemporaryDirectory(prefix='stellaris_save_') as work_dir:
+        gamestate_path = extract_gamestate(save_file, work_dir)
 
-    if not gamestate_path:
-        sys.exit(1)
+        if not gamestate_path:
+            sys.exit(1)
 
-    print(f"✓ Gamestate ready\n")
+        print(f"✓ Gamestate ready\n")
 
-    # Parse gamestate
-    build_data = parse_gamestate_simple(gamestate_path)
+        build_data = parse_gamestate_simple(gamestate_path)
 
     if not build_data:
         print("\n✗ Failed to extract build data")
@@ -404,9 +410,15 @@ def main():
     try:
         # Get relative path to backend data (don't expose absolute server paths)
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        backend_data_path = os.path.join(script_dir, '..', 'backend', 'data')
+        # Game data is versioned (backend/data/versions/X.Y/): validate against the latest one
+        versions_path = os.path.join(script_dir, '..', 'backend', 'data', 'versions')
+        versions = sorted(
+            (v for v in os.listdir(versions_path) if re.fullmatch(r'\d+\.\d+', v)),
+            key=lambda v: tuple(int(n) for n in v.split('.'))
+        ) if os.path.isdir(versions_path) else []
+        backend_data_path = os.path.join(versions_path, versions[-1]) if versions else None
 
-        if os.path.exists(backend_data_path):
+        if backend_data_path:
             # Load backend data for validation
             with open(os.path.join(backend_data_path, 'origins.json')) as f:
                 origins = json.load(f)

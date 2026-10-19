@@ -574,6 +574,7 @@ export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode =
       civics,
       origin: b.origin || undefined,
       species_archetype: speciesArchetype,
+      species_class: b.species_class || undefined,
       traits,
       is_nomadic: !!b.is_nomadic,
       preferred_planet_class: getBuildPlanetClass(b),

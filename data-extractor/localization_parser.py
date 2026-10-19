@@ -178,6 +178,10 @@ def clean_localized_text(text: str, localizations: Optional[Dict[str, str]] = No
         # If no localizations available, just remove the brackets and clean up
         text = re.sub(r"\['([^']+)'\]", lambda m: m.group(1).split(':')[-1].replace('_', ' ').title(), text)
 
+    # Resolved concepts can bring their own markup back (e.g. "£blocker£ Ancient Stasis Pods")
+    text = re.sub(r'§[A-Z!]', '', text)
+    text = re.sub(r'£[a-z_]+£', '', text)
+
     # Clean up multiple spaces
     text = re.sub(r'\s+', ' ', text)
 

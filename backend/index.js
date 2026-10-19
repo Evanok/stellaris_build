@@ -709,9 +709,28 @@ app.get('/api/ruler-traits', (req, res) => {
   readVersionedData(req.query.version, 'ruler_traits.json', res, 'Could not read ruler traits data.');
 });
 
+// Portrait ids that have an image (a few game portraits were never downloaded:
+// listing them would show an invisible, yet selectable, thumbnail)
+const PORTRAIT_IDS_WITH_IMAGE = new Set(
+  fs.readdirSync(path.join(__dirname, '../frontend/public/portraits'))
+    .filter(f => f.endsWith('.png'))
+    .map(f => f.slice(0, -'.png'.length))
+);
+
 // Get all species classes with their portraits
 app.get('/api/species-classes', (req, res) => {
-  readVersionedData(req.query.version, 'species_classes.json', res, 'Could not read species classes data.');
+  const filePath = path.join(__dirname, 'data', 'versions', getDataVersion(req.query.version), 'species_classes.json');
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json({ error: 'Could not read species classes data.' });
+      return;
+    }
+    const speciesClasses = JSON.parse(data).map(sc => {
+      const portraits = sc.portraits.filter(id => PORTRAIT_IDS_WITH_IMAGE.has(id));
+      return { ...sc, portraits, portrait_count: portraits.length };
+    });
+    res.json(speciesClasses);
+  });
 });
 
 // Get trait point/pick budget per species archetype (BIOLOGICAL/ROBOT/MACHINE/LITHOID/PRESAPIENT/OTHER)

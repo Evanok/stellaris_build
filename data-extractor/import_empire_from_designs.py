@@ -108,6 +108,16 @@ def parse_empire_block(block, empire_name):
     if origin_match:
         data['origin'] = origin_match.group(1)
 
+    # Extract homeworld planet class and shipset (top-level keys, one tab deep;
+    # the anchor keeps city_graphical_culture from matching)
+    planet_match = re.search(r'^\tplanet_class\s*=\s*"([^"]+)"', block, re.MULTILINE)
+    if planet_match:
+        data['planet_class'] = planet_match.group(1)
+
+    shipset_match = re.search(r'^\tgraphical_culture\s*=\s*"([^"]+)"', block, re.MULTILINE)
+    if shipset_match:
+        data['graphical_culture'] = shipset_match.group(1)
+
     # Extract ethics (can be multiple)
     ethic_matches = re.findall(r'ethic\s*=\s*"([^"]+)"', block)
     data['ethics'] = ethic_matches
@@ -129,6 +139,11 @@ def parse_empire_block(block, empire_name):
         class_match = re.search(r'class\s*=\s*"([^"]+)"', species_block)
         if class_match:
             data['species_class'] = class_match.group(1)
+
+        # Species portrait (the ruler block has its own portrait, hence the species-block-only search)
+        portrait_match = re.search(r'portrait\s*=\s*"([^"]+)"', species_block)
+        if portrait_match:
+            data['portrait'] = portrait_match.group(1)
 
         # Detect species type from system traits before filtering
         species_type = 'BIOLOGICAL'  # Default
