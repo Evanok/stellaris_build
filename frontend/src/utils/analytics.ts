@@ -12,7 +12,11 @@ export type AnalyticsEvent =
   | 'filter_used'
   | 'search'
   | 'login'
-  | 'sign_up';
+  | 'sign_up'
+  | 'feedback_opened'
+  | 'feedback_submitted'
+  | 'chat_message_sent'
+  | 'resource_clicked';
 
 type EventParams = Record<string, string | number | boolean | undefined>;
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../AuthContext';
+import { trackEvent } from '../utils/analytics';
 
 interface ChatMessage {
   id: number;
@@ -96,6 +97,7 @@ const ChatPanel: React.FC = () => {
         return;
       }
 
+      trackEvent('chat_message_sent', { is_guest: !user });
       setInput('');
       await fetchMessages();
     } catch {
