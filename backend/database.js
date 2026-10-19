@@ -203,6 +203,20 @@ const setupDatabase = () => {
       }
     });
 
+    // Optional homeworld planet class (species habitability preference), e.g. "pc_desert"
+    db.run(`ALTER TABLE builds ADD COLUMN planet_class TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding planet_class column:', err.message);
+      }
+    });
+
+    // Optional ship appearance (shipset / graphical culture), e.g. "humanoid_01"
+    db.run(`ALTER TABLE builds ADD COLUMN graphical_culture TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding graphical_culture column:', err.message);
+      }
+    });
+
     // Add reset_token columns for password recovery (local accounts)
     db.run(`ALTER TABLE users ADD COLUMN reset_token TEXT`, (err) => {
       if (err && !err.message.includes('duplicate column')) {

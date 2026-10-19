@@ -33,6 +33,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -66,6 +67,9 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [
+      "pc_ocean"
+    ],
     "tags": [
       "organic",
       "positive",
@@ -95,6 +99,9 @@
     "allowed_archetypes": [
       "MACHINE",
       "ROBOT"
+    ],
+    "allowed_planet_classes": [
+      "pc_ocean"
     ],
     "tags": [
       "machine",
@@ -127,6 +134,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "automod",
@@ -154,6 +162,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -184,6 +193,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -214,6 +224,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -248,6 +259,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -280,6 +292,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -315,6 +328,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -352,6 +366,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -387,6 +402,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -423,6 +439,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -459,6 +476,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -495,6 +513,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -534,6 +553,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -575,6 +595,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -607,6 +628,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -640,6 +662,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -673,6 +696,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -704,6 +728,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -736,6 +761,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -768,6 +794,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -799,6 +826,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -832,6 +860,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -868,6 +897,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -905,6 +935,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -941,6 +972,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -975,6 +1007,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -1008,6 +1041,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1039,6 +1073,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -1071,6 +1106,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1103,6 +1139,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -1137,6 +1174,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1170,6 +1208,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -1205,6 +1244,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1239,6 +1279,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1272,6 +1313,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -1305,6 +1347,7 @@
     "allowed_archetypes": [
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -1339,6 +1382,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -1372,6 +1416,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1404,6 +1449,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1438,6 +1484,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -1478,6 +1525,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1519,6 +1567,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1563,6 +1612,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1604,6 +1654,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1638,6 +1689,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1672,6 +1724,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1706,6 +1759,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1739,6 +1793,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1784,6 +1839,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1868,6 +1924,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1909,6 +1966,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1917,7 +1975,7 @@
       "species"
     ],
     "modifier": {},
-    "effects": "Every 100 Pops working as a slave or better produces 0.02 Monthly Organic Pop Growth.  This stacks with other sources of Monthly Organic Pop Growth such as Clone Vats or Spawning Drones. | Triggered: has_budding_trait: +True; divide_over_pop_groups: False; has_budding_trait: +True",
+    "effects": "Every 100 Pops working as a slave or better produces 0.02 Monthly Organic Pop Growth.  This stacks with other sources of Monthly Organic Pop Growth such as Clone Vats or Spawning Drones. | Triggered: has_budding_trait: +True; divide_over_pop_groups: False; has_budding_trait: +True; divide_over_pop_groups: False",
     "custom_tooltip": "TRAIT_LITHOID_BUDDING_EFFECT",
     "slave_cost": {
       "trade": 2000
@@ -1949,6 +2007,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1982,6 +2041,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -2012,6 +2072,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -2047,6 +2108,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2074,6 +2136,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2104,6 +2167,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2134,6 +2198,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2164,6 +2229,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2193,6 +2259,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2224,6 +2291,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2255,6 +2323,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2292,6 +2361,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2324,6 +2394,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "negative",
@@ -2353,6 +2424,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2389,6 +2461,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2421,6 +2494,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "negative",
@@ -2453,6 +2527,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2484,6 +2559,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "negative",
@@ -2515,6 +2591,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2547,6 +2624,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2579,6 +2657,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2610,6 +2689,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "negative",
@@ -2641,6 +2721,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2673,6 +2754,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "negative",
@@ -2704,6 +2786,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2738,6 +2821,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2769,6 +2853,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "negative",
@@ -2800,6 +2885,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2832,6 +2918,7 @@
       "MACHINE",
       "ROBOT"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2864,6 +2951,7 @@
       "MACHINE",
       "ROBOT"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2895,6 +2983,7 @@
       "MACHINE",
       "ROBOT"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2927,6 +3016,7 @@
       "MACHINE",
       "ROBOT"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2963,6 +3053,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2998,6 +3089,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3033,6 +3125,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3066,6 +3159,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3101,6 +3195,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3138,6 +3233,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3169,6 +3265,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3203,6 +3300,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3234,6 +3332,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3266,6 +3365,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3303,6 +3403,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3339,6 +3440,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3376,6 +3478,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3413,6 +3516,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3450,6 +3554,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3487,6 +3592,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3522,6 +3628,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3556,6 +3663,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3590,6 +3698,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3624,6 +3733,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3658,6 +3768,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3689,6 +3800,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3721,6 +3833,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3754,6 +3867,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3786,6 +3900,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3817,6 +3932,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3847,6 +3963,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3879,6 +3996,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3910,6 +4028,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3936,6 +4055,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -3965,6 +4085,7 @@
     "opposites": [],
     "prerequisites": [],
     "allowed_archetypes": [],
+    "allowed_planet_classes": [],
     "tags": [],
     "modifier": {
       "trader_jobs_bonus_workforce_mult": 0.25
@@ -3993,6 +4114,7 @@
     "allowed_archetypes": [
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4033,6 +4155,7 @@
     "allowed_archetypes": [
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4073,6 +4196,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4120,6 +4244,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4168,6 +4293,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4214,6 +4340,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4258,6 +4385,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4322,6 +4450,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4362,6 +4491,7 @@
     "allowed_archetypes": [
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4398,6 +4528,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4435,6 +4566,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4472,6 +4604,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4508,6 +4641,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4552,6 +4686,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4595,6 +4730,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4622,6 +4758,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4653,6 +4790,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4688,6 +4826,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4722,6 +4861,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4753,6 +4893,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4785,6 +4926,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4819,6 +4961,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4852,6 +4995,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4885,6 +5029,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4918,6 +5063,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4951,6 +5097,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4984,6 +5131,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5019,6 +5167,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5054,6 +5203,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5085,6 +5235,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5120,6 +5271,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5153,6 +5305,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5188,6 +5341,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5221,6 +5375,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5269,6 +5424,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -5304,6 +5460,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5339,6 +5496,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5377,6 +5535,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -5410,6 +5569,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -5442,6 +5602,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5482,6 +5643,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5520,6 +5682,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5560,6 +5723,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5599,6 +5763,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -5631,6 +5796,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5666,6 +5832,17 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [
+      "pc_tropical",
+      "pc_arid",
+      "pc_continental",
+      "pc_ocean",
+      "pc_tundra",
+      "pc_arctic",
+      "pc_alpine",
+      "pc_savannah",
+      "pc_desert"
+    ],
     "tags": [
       "organic",
       "negative",
@@ -5699,6 +5876,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5738,6 +5916,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -5772,6 +5951,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5810,6 +5990,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5846,6 +6027,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5882,6 +6064,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5910,6 +6093,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5940,6 +6124,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5970,6 +6155,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -6009,6 +6195,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "infernal",
@@ -6037,6 +6224,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "infernal",
@@ -6065,6 +6253,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -6098,6 +6287,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -6133,6 +6323,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -6165,6 +6356,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -6201,6 +6393,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -6236,6 +6429,7 @@
       "MACHINE",
       "ROBOT"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -6273,6 +6467,9 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [
+      "pc_ark"
+    ],
     "tags": [
       "organic",
       "positive",
@@ -6305,6 +6502,9 @@
       "MACHINE",
       "ROBOT"
     ],
+    "allowed_planet_classes": [
+      "pc_ark"
+    ],
     "tags": [
       "machine",
       "positive",
@@ -6336,6 +6536,9 @@
     "allowed_archetypes": [
       "MACHINE",
       "ROBOT"
+    ],
+    "allowed_planet_classes": [
+      "pc_ark"
     ],
     "tags": [
       "machine",
@@ -6371,6 +6574,7 @@
       "LITHOID",
       "ROBOT"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "positive",
       "leader"
@@ -6401,6 +6605,10 @@
     "allowed_archetypes": [
       "MACHINE",
       "ROBOT"
+    ],
+    "allowed_planet_classes": [
+      "pc_ark",
+      "pc_habitat"
     ],
     "tags": [
       "machine",
@@ -6439,6 +6647,10 @@
       "LITHOID",
       "MACHINE",
       "ROBOT"
+    ],
+    "allowed_planet_classes": [
+      "pc_ark",
+      "pc_habitat"
     ],
     "tags": [
       "negative",

@@ -1,3 +1,9 @@
+const BUILD_TAGS = require('../shared/build_tags.json');
+const KNOWN_TAG_IDS = new Set(BUILD_TAGS.tags.map(tag => tag.id));
+
+// Deduplicated list of tag ids from the stored comma-separated value
+const splitTagIds = (value) => [...new Set(value.split(',').map(s => s.trim()).filter(Boolean))];
+
 // Manual rate limiting stores
 const apiRequestStore = new Map();
 const buildCreationStore = new Map();
@@ -167,10 +173,24 @@ const validateBuildData = (data) => {
     }
   }
 
-  // Tags validation
-  if (data.tags && typeof data.tags === 'string') {
-    if (data.tags.length > 500) {
-      errors.push('Tags must be less than 500 characters');
+  // Tags validation: only the hardcoded ids from shared/build_tags.json are accepted
+  if (data.tags !== undefined && data.tags !== null && data.tags !== '') {
+    if (typeof data.tags !== 'string') {
+      errors.push('Tags must be a comma-separated string');
+    } else {
+      const ids = splitTagIds(data.tags);
+      const unknown = ids.filter(id => !KNOWN_TAG_IDS.has(id));
+      if (unknown.length > 0) {
+        errors.push(`Unknown tag(s): ${unknown.join(', ')}`);
+      }
+      if (ids.length > BUILD_TAGS.maxPerBuild) {
+        errors.push(`A build can have at most ${BUILD_TAGS.maxPerBuild} tags`);
+      }
+      for (const [a, b] of BUILD_TAGS.exclusive) {
+        if (ids.includes(a) && ids.includes(b)) {
+          errors.push(`Tags "${a}" and "${b}" cannot be combined`);
+        }
+      }
     }
   }
 
@@ -194,6 +214,22 @@ const validateBuildData = (data) => {
     }
   });
 
+  // Homeworld planet class (optional): a game id like "pc_desert". Not checked
+  // against planet_classes.json - the rule evaluator handles game validity,
+  // this only keeps arbitrary strings out of the column.
+  if (data.planet_class !== undefined && data.planet_class !== null && data.planet_class !== '') {
+    if (typeof data.planet_class !== 'string' || !/^pc_[a-z0-9_]{1,60}$/.test(data.planet_class)) {
+      errors.push('Invalid planet class');
+    }
+  }
+
+  // Ship appearance (optional): a graphical culture id like "humanoid_01"
+  if (data.graphical_culture !== undefined && data.graphical_culture !== null && data.graphical_culture !== '') {
+    if (typeof data.graphical_culture !== 'string' || !/^[a-z][a-z0-9_]{1,60}$/.test(data.graphical_culture)) {
+      errors.push('Invalid ship appearance');
+    }
+  }
+
   return errors;
 };
 
@@ -215,12 +251,18 @@ const sanitizeBuildData = (data) => {
   const sanitized = { ...data };
 
   // Sanitize string fields
-  const stringFields = ['name', 'description', 'game_version', 'tags'];
+  const stringFields = ['name', 'description', 'game_version'];
   stringFields.forEach(field => {
     if (sanitized[field] && typeof sanitized[field] === 'string') {
       sanitized[field] = sanitizeString(sanitized[field]);
     }
   });
+
+  // Tags are already whitelisted by validateBuildData: store them deduplicated, in canonical order
+  if (typeof sanitized.tags === 'string') {
+    const ids = new Set(splitTagIds(sanitized.tags));
+    sanitized.tags = BUILD_TAGS.tags.filter(tag => ids.has(tag.id)).map(tag => tag.id).join(',');
+  }
 
   return sanitized;
 };

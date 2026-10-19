@@ -2,7 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { AuthModal } from './components/AuthModal';
 import { decodeHtmlEntities } from './utils/htmlDecode';
+import { DIFFICULTY_LEVELS } from './utils/difficulty';
+import { normalizeBuildTags, serializeBuildTags, MAX_TAGS_PER_BUILD } from './utils/buildTags';
+import { BuildTagPicker } from './components/BuildTags';
 import { PredicateNode, findFieldOccurrences, getFailingNodes, describePredicateHuman } from './utils/ruleEvaluator';
+import { ORIGIN_IMAGE_QUERY, iconQuery } from './utils/assetVersions';
+import { Shipset, ShipsetRuleSource, getShipsetConflicts } from './utils/shipsetRules';
+import { PlanetClass, PlanetRuleInput, getForcedPlanetClass, getEffectivePlanetClass, getPlanetConflicts, getTraitPlanetConflicts, isTraitBlockedByPlanet, getPlanetPickerColumns, getSpeciesPlanetConflict } from './utils/planetRules';
 
 interface BuildFormProps {
   onBuildCreated: (newBuild: any) => void;
@@ -45,7 +51,7 @@ const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type,
   return (
     <img
       ref={imgRef}
-      src={isVisible ? `/icons/${type}/${id}.png` : undefined}
+      src={isVisible ? `/icons/${type}/${id}.png${iconQuery(type)}` : undefined}
       alt=""
       width={size}
       height={size}
@@ -70,7 +76,7 @@ const OriginCard: React.FC<{ originId: string; origin: Origin | undefined }> = (
         {!imageError && (
           <div className="col-md-4" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backgroundColor: '#1a1a1a' }}>
             <img
-              src={`/icons/origin_original/${originId}.png`}
+              src={`/icons/origin_original/${originId}.png${ORIGIN_IMAGE_QUERY}`}
               alt={origin?.name || originId}
               style={{
                 width: '100%',
@@ -119,6 +125,7 @@ interface Trait {
   opposites: any[];
   category: string;
   allowed_archetypes?: string[];
+  allowed_planet_classes?: string[];
 }
 
 interface Origin {
@@ -134,6 +141,9 @@ interface Origin {
   modifier?: {
     [key: string]: number;
   };
+  habitability_preference?: string; // Forces the homeworld planet class (e.g. Void Dwellers -> pc_habitat)
+  starting_colony?: string; // Capital planet class when it differs from the species preference (e.g. Remnants -> pc_relic)
+  granted_traits?: string[];
 }
 
 interface AscensionPerk {
@@ -210,6 +220,7 @@ interface Civic {
     [key: string]: number;
   };
   can_modify: boolean;
+  granted_traits?: string[];
 }
 
 interface TraditionTree {
@@ -340,6 +351,15 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const [selectedSpeciesClass, setSelectedSpeciesClass] = useState<string>('');
   const [selectedPortrait, setSelectedPortrait] = useState<string>('');
 
+  // Homeworld planet class (optional). Holds the user's own pick - an origin or
+  // the Nomadic toggle can override it, see getEffectivePlanetClass().
+  const [allPlanetClasses, setAllPlanetClasses] = useState<PlanetClass[]>([]);
+  const [selectedPlanetClass, setSelectedPlanetClass] = useState<string>('');
+
+  // Ship appearance (optional) - the shipset / graphical culture
+  const [allShipsets, setAllShipsets] = useState<Shipset[]>([]);
+  const [selectedShipset, setSelectedShipset] = useState<string>('');
+
   // Trait point/pick budget per archetype (BIOLOGICAL/ROBOT/MACHINE/LITHOID/PRESAPIENT) -
   // differs per archetype (e.g. MACHINE: 1 point/5 traits, ROBOT: 0 points/4 traits),
   // unlike the old flat BASE_MAX_TRAIT_POINTS/BASE_MAX_TRAIT_COUNT constants.
@@ -420,8 +440,12 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       fetch(`/api/ruler-traits${qs}`).then(res => res.json()),
       fetch(`/api/species-classes${qs}`).then(res => res.json()),
       fetch(`/api/species-archetypes${qs}`).then(res => res.json()),
-    ]).then(([originsRaw, perksRaw, ethicsRaw, authoritiesRaw, civicsRaw, traditionsRaw, rulerTraitsRaw, classesRaw, archetypeBudgetsRaw]) => {
+      fetch(`/api/planet-classes${qs}`).then(res => res.json()),
+      fetch(`/api/shipsets${qs}`).then(res => res.json()),
+    ]).then(([originsRaw, perksRaw, ethicsRaw, authoritiesRaw, civicsRaw, traditionsRaw, rulerTraitsRaw, classesRaw, archetypeBudgetsRaw, planetClassesRaw, shipsetsRaw]) => {
+      setAllShipsets(Array.isArray(shipsetsRaw) ? shipsetsRaw : []);
       setSpeciesArchetypeBudgets(archetypeBudgetsRaw && typeof archetypeBudgetsRaw === 'object' ? archetypeBudgetsRaw : {});
+      setAllPlanetClasses(Array.isArray(planetClassesRaw) ? planetClassesRaw : []);
       const originsArray = Array.isArray(originsRaw) ? originsRaw : (originsRaw.origins || []);
       const sanitizedOrigins = originsArray
         .filter((o: any) => o.pickable_at_start && o.is_origin)
@@ -512,13 +536,15 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       if (initialData.source_url) setSourceUrl(initialData.source_url);
       if (initialData.difficulty) setDifficulty(initialData.difficulty);
       if (initialData.dlcs) setDlcs(initialData.dlcs);
-      if (initialData.tags) setTags(initialData.tags);
+      if (initialData.tags) setTags(normalizeBuildTags(initialData.tags));
 
       // Set empire selections
       if (initialData.origin) setSelectedOrigin(initialData.origin);
       if (initialData.authority) setSelectedAuthority(initialData.authority);
       setIsNomadic(!!initialData.is_nomadic);
       if (initialData.ark_type) setArkType(initialData.ark_type);
+      if (initialData.planet_class) setSelectedPlanetClass(initialData.planet_class);
+      if (initialData.graphical_culture) setSelectedShipset(initialData.graphical_culture);
 
       // Handle ethics (array of strings) - trim whitespace
       if (Array.isArray(initialData.ethics)) {
@@ -648,11 +674,52 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const currentEthicsPoints = calculateEthicsPoints();
   const exceedsEthicsPoints = currentEthicsPoints > MAX_ETHICS_POINTS;
 
+  // Homeworld planet rules (see utils/planetRules.ts). The planet is optional:
+  // with no pick and nothing forcing one, every planet check below is skipped.
+  const selectedOriginData = allOrigins.find(o => o.id === selectedOrigin);
+  const traitById: Record<string, Trait> = Object.fromEntries(allTraits.map(t => [t.id, t]));
+  const planetLabel = (planetId: string) => allPlanetClasses.find(p => p.id === planetId)?.name || planetId;
+  const speciesLabel = (classId: string) => allSpeciesClasses.find(sc => sc.id === classId)?.name || classId;
+  const forcedPlanetClass = getForcedPlanetClass(isNomadic, selectedOriginData);
+  // Only a selectable class counts as the user's pick - e.g. pc_habitat loaded
+  // from a build saved with Void Dwellers is dropped once the origin changes.
+  const pickedPlanetClass = allPlanetClasses.some(p => p.id === selectedPlanetClass && p.selectable) ? selectedPlanetClass : '';
+  const effectivePlanetClass = getEffectivePlanetClass(isNomadic, selectedOriginData, pickedPlanetClass);
+  // Ship appearance rules (see utils/shipsetRules.ts)
+  const shipsetLabel = (shipsetId: string) => allShipsets.find(s => s.id === shipsetId)?.name || shipsetId;
+  const pickedShipset = allShipsets.some(s => s.id === selectedShipset) ? selectedShipset : '';
+  const shipsetSourceFor = (kind: 'Origin' | 'Civic' | 'Authority', item: { name: string; possible?: PredicateNode; potential?: PredicateNode }): ShipsetRuleSource =>
+    ({ label: `${kind} "${item.name}"`, possible: item.possible, potential: item.potential });
+  const selectedAuthorityData = allAuthorities.find(a => a.id === selectedAuthority);
+  const shipsetRuleSources: ShipsetRuleSource[] = [
+    ...(selectedOriginData ? [shipsetSourceFor('Origin', selectedOriginData)] : []),
+    ...(selectedAuthorityData ? [shipsetSourceFor('Authority', selectedAuthorityData)] : []),
+    ...selectedCivics.map(id => allCivics.find(c => c.id === id)).filter((c): c is Civic => !!c).map(c => shipsetSourceFor('Civic', c)),
+  ];
+
+  const planetRuleInput: PlanetRuleInput = {
+    isNomadic,
+    origin: selectedOriginData,
+    civics: selectedCivics.map(id => allCivics.find(c => c.id === id)).filter((c): c is Civic => !!c),
+    traitIds: selectedTraits,
+    traitById,
+  };
+
   // Check if a civic can be selected based on current selections
   const canSelectCivic = (civic: Civic): boolean => {
     // Already selected
     if (selectedCivics.includes(civic.id)) {
       return true;
+    }
+
+    // Incompatible with the picked ship appearance (e.g. a civic that forbids Biological ships)
+    if (pickedShipset && getShipsetConflicts(pickedShipset, [shipsetSourceFor('Civic', civic)], shipsetLabel).length > 0) {
+      return false;
+    }
+
+    // Incompatible with the homeworld (e.g. Anglers grants Aquatic, which needs an Ocean world)
+    if (effectivePlanetClass && getPlanetConflicts(effectivePlanetClass, { isNomadic, civics: [civic], traitIds: [], traitById }, planetLabel).length > 0) {
+      return false;
     }
 
     // Only check if at max slots - no complex compatibility rules
@@ -716,6 +783,12 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       return false;
     }
 
+    // Traits restricted to some homeworlds (e.g. Aquatic = Ocean only). A
+    // selected one stays listed so it can still be unticked.
+    if (!selectedTraits.includes(trait.id) && isTraitBlockedByPlanet(trait, effectivePlanetClass)) {
+      return false;
+    }
+
     // Filter by search query
     if (traitSearchQuery) {
       const query = traitSearchQuery.toLowerCase();
@@ -756,6 +829,21 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     }
     if (requiresNotMachine && isMachineSpecies) {
       return false; // Origin requires NOT MACHINE but species is machine
+    }
+
+    // Origin incompatible with the picked ship appearance (Wilderness needs a Biological set, Red Giant forbids them)
+    if (pickedShipset && origin.id !== selectedOrigin &&
+        getShipsetConflicts(pickedShipset, [shipsetSourceFor('Origin', origin)], shipsetLabel).length > 0) {
+      return false;
+    }
+
+    // Origin incompatible with the homeworld the user picked (e.g. Wilderness
+    // forbids Volcanic). Origins that force their own planet are never hidden:
+    // choosing one simply overrides the pick.
+    const userPlanetClass = isNomadic ? 'pc_ark' : pickedPlanetClass;
+    if (userPlanetClass && !origin.habitability_preference && origin.id !== selectedOrigin &&
+        getPlanetConflicts(userPlanetClass, { isNomadic, origin, civics: [], traitIds: [], traitById }, planetLabel).length > 0) {
+      return false;
     }
 
     // Filter by search query
@@ -969,6 +1057,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       tags,
       isNomadic,
       arkType,
+      selectedPlanetClass,
+      selectedShipset,
       selectedSpeciesClass,
       selectedTraits,
       selectedSecondaryTraits,
@@ -996,7 +1086,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setSourceUrl(formData.source_url || '');
         setDifficulty(formData.difficulty || '');
         setDlcs(formData.dlcs || '');
-        setTags(formData.tags || '');
+        setTags(normalizeBuildTags(formData.tags));
         setSelectedSpeciesClass(formData.selectedSpeciesClass || '');
         setSelectedTraits(formData.selectedTraits || []);
         setSelectedSecondaryTraits(formData.selectedSecondaryTraits || []);
@@ -1005,6 +1095,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setSelectedAuthority(formData.selectedAuthority || '');
         setIsNomadic(!!formData.isNomadic);
         setArkType(formData.arkType || '');
+        setSelectedPlanetClass(formData.selectedPlanetClass || '');
+        setSelectedShipset(formData.selectedShipset || '');
         setSelectedCivics(formData.selectedCivics || []);
         setSelectedAscensionPerks(formData.selectedAscensionPerks || []);
         setSelectedTraditions(formData.selectedTraditions || []);
@@ -1054,6 +1146,9 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       case 'authority': return allAuthorities.find(a => a.id === id)?.name || id;
       case 'origin': return allOrigins.find(o => o.id === id)?.name || id;
       case 'species_archetype': return id.charAt(0) + id.slice(1).toLowerCase();
+      case 'preferred_planet_class': return planetLabel(id);
+      case 'graphical_culture': return shipsetLabel(id);
+      case 'traits': return allTraits.find(t => t.id === id)?.name || id;
       default: return id;
     }
   };
@@ -1071,6 +1166,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       species_archetype: getSpeciesArchetype(selectedSpeciesClass),
       traits: selectedTraits,
       is_nomadic: isNomadic,
+      preferred_planet_class: effectivePlanetClass,
+      graphical_culture: pickedShipset || undefined,
     };
 
     const warnings: string[] = [];
@@ -1109,6 +1206,20 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
           warnings.push(`Trait "${trait?.name || traitId}" is not allowed for ${resolveRuleLabel('species_archetype', ctx.species_archetype)} species`);
         }
       });
+    }
+
+    // Traits (picked or granted by the origin/civics) that the homeworld does
+    // not allow. Origin/civic `preferred_planet_class` rules are covered by the
+    // possible/potential checks below through ctx.preferred_planet_class.
+    if (effectivePlanetClass) {
+      warnings.push(...getTraitPlanetConflicts(effectivePlanetClass, planetRuleInput, planetLabel));
+    }
+    // A picked (not origin-forced) planet the species class is not offered
+    // (Volcanic is Infernal-only, Infernals cannot pick cold worlds)
+    const pickedPlanetData = allPlanetClasses.find(p => p.id === pickedPlanetClass);
+    if (pickedPlanetData && !forcedPlanetClass) {
+      const speciesConflict = getSpeciesPlanetConflict(pickedPlanetData, selectedSpeciesClass || undefined, speciesLabel);
+      if (speciesConflict) warnings.push(speciesConflict);
     }
 
     if (selectedAuthority) {
@@ -1242,6 +1353,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
           portrait: selectedPortrait,
           is_nomadic: isNomadic ? 1 : 0,
           ark_type: isNomadic ? arkType : null,
+          planet_class: effectivePlanetClass || null,
+          graphical_culture: pickedShipset || null,
         }),
       });
 
@@ -1270,6 +1383,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       setSelectedAuthority('');
       setIsNomadic(false);
       setArkType('');
+      setSelectedPlanetClass('');
+      setSelectedShipset('');
       setSelectedCivics([]);
       setSelectedAscensionPerks([]);
       setSelectedTraditions([]);
@@ -1377,12 +1492,23 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
               onChange={(e) => setDifficulty(e.target.value)}
             >
               <option value="">-- Select Difficulty --</option>
-              <option value="overpowered">Overpowered</option>
-              <option value="strong">Strong</option>
-              <option value="balanced">Balanced</option>
-              <option value="challenging">Challenging</option>
-              <option value="extreme">Extreme Challenge</option>
+              {DIFFICULTY_LEVELS.map(level => (
+                <option key={level.value} value={level.value}>{level.label}</option>
+              ))}
             </select>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label mb-2">
+              Tags (Optional)
+              <small className="text-muted d-block">
+                Pick up to {MAX_TAGS_PER_BUILD} tags that describe how this build plays. Read each description - a wrong tag misleads players.
+              </small>
+            </label>
+            <BuildTagPicker
+              selected={tags ? tags.split(',') : []}
+              onChange={(ids) => setTags(serializeBuildTags(ids))}
+            />
           </div>
 
           {/* Species Class Selector */}
@@ -1715,7 +1841,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                           }}
                         >
                           <img
-                            src={`/icons/origin_original/${origin.id}.png`}
+                            src={`/icons/origin_original/${origin.id}.png${ORIGIN_IMAGE_QUERY}`}
                             alt=""
                             width={48}
                             height={48}
@@ -1748,6 +1874,187 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
               </div>
             )}
           </div>
+
+          {/* Homeworld Planet Class (optional) - same layout as the in-game picker */}
+          {allPlanetClasses.length > 0 && (() => {
+            const COLUMN_COLORS: Record<string, string> = { dry: '#e0d050', wet: '#5cd65c', cold: '#6fd3e0', volcanic: '#ff6a4d' };
+            const forcedPlanet = forcedPlanetClass ? allPlanetClasses.find(p => p.id === forcedPlanetClass) : undefined;
+            // The grid stays visible (locked) when the origin forces one of its own
+            // planets (Red Giant -> Volcanic, Ocean Paradise -> Ocean), like in-game.
+            // Planets outside the grid (Habitat, Gaia, Arkship...) get a simple card.
+            const isLocked = !!forcedPlanetClass;
+            const showGrid = !forcedPlanetClass || !!forcedPlanet?.selectable;
+            const columns = getPlanetPickerColumns(allPlanetClasses, selectedSpeciesClass || undefined, forcedPlanetClass);
+            const shownPlanet = allPlanetClasses.find(p => p.id === effectivePlanetClass);
+            const lockReason = isNomadic
+              ? 'Nomadic empires always live on an Arkship.'
+              : `Set by the origin "${selectedOriginData?.name || selectedOrigin}".`;
+            const pickedPlanet = allPlanetClasses.find(p => p.id === pickedPlanetClass);
+            const pickWarnings = !isLocked && pickedPlanet ? [
+              getSpeciesPlanetConflict(pickedPlanet, selectedSpeciesClass || undefined, speciesLabel),
+              ...getPlanetConflicts(pickedPlanet.id, planetRuleInput, planetLabel),
+            ].filter((w): w is string => !!w) : [];
+
+            const renderPlanetTile = (planet: PlanetClass) => {
+              const isSelected = effectivePlanetClass === planet.id;
+              const conflicts = isLocked ? [] : getPlanetConflicts(planet.id, planetRuleInput, planetLabel);
+              const isDisabled = isLocked ? !isSelected : (!isSelected && conflicts.length > 0);
+              return (
+                <button
+                  key={planet.id}
+                  type="button"
+                  className="btn btn-link text-decoration-none d-flex flex-column align-items-center p-1"
+                  disabled={isDisabled}
+                  title={[planet.name, isLocked ? lockReason : '', ...conflicts].filter(Boolean).join('\n')}
+                  onClick={() => { if (!isLocked) setSelectedPlanetClass(isSelected ? '' : planet.id); }}
+                  style={{ opacity: isDisabled ? 0.3 : 1, cursor: isLocked ? 'default' : (isDisabled ? 'not-allowed' : 'pointer') }}
+                >
+                  <img
+                    src={planet.icon}
+                    alt=""
+                    width={72}
+                    height={72}
+                    loading="lazy"
+                    style={{
+                      borderRadius: '50%',
+                      // Only the selected planet gets a ring - colored rings on every planet made the pick hard to spot
+                      border: `3px solid ${isSelected ? '#fd7e14' : 'transparent'}`,
+                      boxShadow: isSelected ? '0 0 10px #fd7e14' : undefined,
+                    }}
+                  />
+                  <span className={`small mt-1 ${isSelected ? 'text-warning fw-bold' : 'text-light'}`}>{planet.name}</span>
+                </button>
+              );
+            };
+
+            return (
+              <div className="mb-3">
+                <label className="form-label">
+                  Homeworld / Climate preference <small className="text-muted">(optional)</small>
+                  {effectivePlanetClass && <span className="badge bg-success ms-2">Selected</span>}
+                </label>
+                {selectedOriginData?.starting_colony && !isLocked && (
+                  <small className="d-block text-info mb-2">
+                    With "{selectedOriginData.name}" your capital starts on a {planetLabel(selectedOriginData.starting_colony)} -
+                    the choice below sets your species' climate preference.
+                  </small>
+                )}
+                {showGrid ? (
+                  <>
+                    <div className="row g-2">
+                      {/* Selected planet info, like the in-game left panel */}
+                      <div className="col-12 col-lg-3">
+                        <div className="border border-secondary rounded p-3 h-100">
+                          {shownPlanet ? (
+                            <>
+                              <h6 className="text-white mb-1">{shownPlanet.name}</h6>
+                              {shownPlanet.climate_name && (
+                                <small className="d-block fw-bold mb-2" style={{ color: COLUMN_COLORS[shownPlanet.climate || ''] }}>
+                                  {shownPlanet.climate_name} climate
+                                </small>
+                              )}
+                              <small className="text-light d-block">{shownPlanet.description}</small>
+                              {isLocked && <small className="d-block text-info mt-2"><i className="bi bi-lock-fill me-1"></i>{lockReason}</small>}
+                            </>
+                          ) : (
+                            <small className="text-muted">No homeworld specified. Pick a planet to record the species' climate preference.</small>
+                          )}
+                        </div>
+                      </div>
+                      {columns.map(column => (
+                        <div key={column.id} className="col-4 col-lg-3">
+                          <div className="border border-secondary rounded py-2 h-100 d-flex flex-column align-items-center">
+                            <span className="fw-bold mb-1" style={{ color: COLUMN_COLORS[column.id] || '#adb5bd' }}>{column.name}</span>
+                            <div className="flex-grow-1 d-flex flex-column justify-content-center">
+                              {column.planets.map(renderPlanetTile)}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    {!isLocked && (
+                      <button
+                        type="button"
+                        className={`btn btn-sm mt-2 ${!pickedPlanetClass ? 'btn-primary' : 'btn-outline-light'}`}
+                        onClick={() => setSelectedPlanetClass('')}
+                      >
+                        Not specified
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <div className="d-flex align-items-center p-3 border border-secondary rounded" style={{ maxWidth: '520px' }}>
+                    <img src={`/icons/planets/${forcedPlanetClass}.png`} alt="" width={76} height={76} style={{ marginRight: '16px' }} />
+                    <div>
+                      <strong className="text-white fs-5">{planetLabel(forcedPlanetClass!)}</strong>
+                      <small className="d-block text-muted"><i className="bi bi-lock-fill me-1"></i>{lockReason}</small>
+                    </div>
+                  </div>
+                )}
+                {pickWarnings.map((warning, idx) => (
+                  <small key={idx} className="d-block text-warning mt-1">{warning}</small>
+                ))}
+              </div>
+            );
+          })()}
+
+          {/* Ship Appearance (optional) - grouped like the in-game "Ship models" list */}
+          {allShipsets.length > 0 && (
+            <div className="mb-3">
+              <label className="form-label">
+                Ship appearance <small className="text-muted">(optional)</small>
+                {pickedShipset && <span className="badge bg-success ms-2">{shipsetLabel(pickedShipset)}</span>}
+              </label>
+              {(['biological', 'mechanical'] as const).map(category => {
+                const shipsets = allShipsets.filter(s => s.category === category);
+                if (shipsets.length === 0) return null;
+                return (
+                  <div key={category} className="mb-2">
+                    <small className="d-block text-muted fw-bold mb-1">{category === 'biological' ? 'Biological' : 'Mechanical'}</small>
+                    <div className="row row-cols-2 row-cols-sm-3 row-cols-lg-5 g-2">
+                      {shipsets.map(shipset => {
+                        const isSelected = pickedShipset === shipset.id;
+                        const conflicts = getShipsetConflicts(shipset.id, shipsetRuleSources, shipsetLabel);
+                        const isDisabled = !isSelected && conflicts.length > 0;
+                        return (
+                          <div key={shipset.id} className="col">
+                            <button
+                              type="button"
+                              className="btn btn-link text-decoration-none w-100 p-1 rounded d-flex flex-column align-items-center"
+                              disabled={isDisabled}
+                              title={[shipset.name, ...conflicts].join('\n')}
+                              onClick={() => setSelectedShipset(isSelected ? '' : shipset.id)}
+                              style={{
+                                // Inline border (Bootstrap's .border is !important and would hide the selection color)
+                                border: `${isSelected ? 2 : 1}px solid ${isSelected ? '#fd7e14' : '#495057'}`,
+                                boxShadow: isSelected ? '0 0 8px rgba(253, 126, 20, 0.6)' : undefined,
+                                backgroundColor: '#14191b',
+                                opacity: isDisabled ? 0.3 : 1,
+                                cursor: isDisabled ? 'not-allowed' : 'pointer',
+                              }}
+                            >
+                              <img src={shipset.image} alt="" loading="lazy" style={{ width: '100%', maxWidth: '160px', aspectRatio: '2 / 1', objectFit: 'contain' }} />
+                              <span className={`small ${isSelected ? 'text-warning fw-bold' : 'text-light'}`}>{shipset.name}</span>
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+              <button
+                type="button"
+                className={`btn btn-sm mt-1 ${!pickedShipset ? 'btn-primary' : 'btn-outline-light'}`}
+                onClick={() => setSelectedShipset('')}
+              >
+                Not specified
+              </button>
+              {pickedShipset && getShipsetConflicts(pickedShipset, shipsetRuleSources, shipsetLabel).map((conflict, idx) => (
+                <small key={idx} className="d-block text-warning mt-1">{conflict}</small>
+              ))}
+            </div>
+          )}
 
           {/* Starting Ruler Trait Selection */}
           <div className="mb-3">

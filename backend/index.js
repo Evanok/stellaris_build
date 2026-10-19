@@ -608,17 +608,31 @@ for (const v of AVAILABLE_DATA_VERSIONS) {
       return map;
     } catch { return {}; }
   };
+  // Origins that force the homeworld (habitability_preference), e.g. Void Dwellers -> pc_habitat
+  let forcedPlanets = {};
+  try {
+    JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'versions', v, 'origins.json'), 'utf8'))
+      .forEach(o => { if (o.habitability_preference) forcedPlanets[o.id] = o.habitability_preference; });
+  } catch { forcedPlanets = {}; }
   _nameCache[v] = {
     origins: load('origins.json'),
     ethics: load('ethics.json'),
     authorities: load('authorities.json'),
+    planets: load('planet_classes.json'),
+    forcedPlanets,
   };
 }
 
 function enrichBuild(build) {
   const names = _nameCache[getDataVersion(build.game_version)] || {};
+  // Effective homeworld (mirrors frontend/src/utils/planetRules.ts): Nomadic -> Arkship,
+  // else the origin's forced planet, else the build's own pick - so builds saved before
+  // planet_class existed still show e.g. Void Dwellers' Habitat.
+  const homeworld = build.is_nomadic ? 'pc_ark' : (names.forcedPlanets?.[build.origin] || build.planet_class || null);
   return {
     ...build,
+    homeworld,
+    homeworld_name: homeworld ? (names.planets?.[homeworld] || null) : null,
     origin_name: names.origins?.[build.origin] || null,
     authority_name: names.authorities?.[build.authority] || null,
     ethics_names: build.ethics
@@ -705,6 +719,16 @@ app.get('/api/species-archetypes', (req, res) => {
   readVersionedData(req.query.version, 'species_archetypes.json', res, 'Could not read species archetypes data.');
 });
 
+// Get homeworld planet classes (selectable climates + origin-forced classes, with icons)
+app.get('/api/planet-classes', (req, res) => {
+  readVersionedData(req.query.version, 'planet_classes.json', res, 'Could not read planet classes data.');
+});
+
+// Get shipsets (ship appearance options, with preview images rendered from the game models)
+app.get('/api/shipsets', (req, res) => {
+  readVersionedData(req.query.version, 'shipsets.json', res, 'Could not read shipsets data.');
+});
+
 // Get all community resources (guides, tools, videos, etc.)
 app.get('/api/resources', (req, res) => {
   fs.readFile('./data/resources.json', 'utf8', (err, data) => {
@@ -736,6 +760,7 @@ app.get('/api/builds', (req, res) => {
   const verDisp = req.query.version?.trim()    || null;
   const sort    = req.query.sort               || 'newest';
   const nomadic = req.query.nomadic === 'true';
+  const tag     = req.query.tag?.trim()        || null;
 
   const conditions = ['builds.deleted = 0'];
   const params = [];
@@ -756,6 +781,11 @@ app.get('/api/builds', (req, res) => {
   }
   if (nomadic) {
     conditions.push('builds.is_nomadic = 1');
+  }
+  if (tag) {
+    // tags is a comma-separated id list: wrap both sides in commas to match whole ids only
+    conditions.push("(',' || builds.tags || ',') LIKE ?");
+    params.push(`%,${tag},%`);
   }
 
   const where = `WHERE ${conditions.join(' AND ')}`;
@@ -981,12 +1011,16 @@ app.post('/api/builds/:id/rating', isAuthenticated, (req, res) => {
   }
 
   // Check if build exists
-  db.get('SELECT id FROM builds WHERE id = ? AND deleted = 0', [id], (err, build) => {
+  db.get('SELECT id, author_id FROM builds WHERE id = ? AND deleted = 0', [id], (err, build) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
     if (!build) {
       return res.status(404).json({ error: 'Build not found' });
+    }
+    // Authors cannot rate their own builds (self-votes inflated single-vote averages)
+    if (build.author_id === userId) {
+      return res.status(403).json({ error: 'You cannot rate your own build' });
     }
 
     // Insert or update rating (UPSERT)
@@ -1040,7 +1074,7 @@ app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
 
   // Sanitize input data to prevent XSS
   const sanitizedData = sanitizeBuildData(req.body);
-  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type } = sanitizedData;
+  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture } = sanitizedData;
 
   // Get author_id from authenticated user
   const author_id = req.user.id;
@@ -1055,8 +1089,8 @@ app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
     }
 
     // If no duplicate, proceed with insert
-    const sql = `INSERT INTO builds (name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, author_id];
+    const sql = `INSERT INTO builds (name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, planet_class || null, graphical_culture || null, author_id];
 
     db.run(sql, params, function(err) {
       if (err) {
@@ -1148,7 +1182,7 @@ app.put('/api/builds/:id', isAuthenticated, createBuildLimiter, (req, res) => {
 
   // Sanitize input data to prevent XSS
   const sanitizedData = sanitizeBuildData(req.body);
-  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type } = sanitizedData;
+  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture } = sanitizedData;
 
   // First, check if the build exists and belongs to the user
   db.get('SELECT * FROM builds WHERE id = ? AND deleted = 0', [id], (err, build) => {
@@ -1196,10 +1230,12 @@ app.put('/api/builds/:id', isAuthenticated, createBuildLimiter, (req, res) => {
         dlcs = ?,
         tags = ?,
         is_nomadic = ?,
-        ark_type = ?
+        ark_type = ?,
+        planet_class = ?,
+        graphical_culture = ?
       WHERE id = ?`;
 
-      const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, id];
+      const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, planet_class || null, graphical_culture || null, id];
 
       db.run(sql, params, function(err) {
         if (err) {
@@ -1685,13 +1721,13 @@ app.get('/api/stats', async (req, res) => {
       }));
     stats.topTraits = topTraits;
 
-    // 10. Top 5 Contributors
+    // 10. Top 5 Contributors (site admins excluded - they seed builds, not the community)
     const topContributors = await new Promise((resolve, reject) => {
       db.all(
-        `SELECT u.username, u.avatar, COUNT(b.id) as buildCount
+        `SELECT COALESCE(u.display_name, u.username) as username, u.avatar, COUNT(b.id) as buildCount
          FROM users u
          INNER JOIN builds b ON u.id = b.author_id
-         WHERE b.deleted = 0
+         WHERE b.deleted = 0 AND COALESCE(u.is_admin, 0) = 0
          GROUP BY u.id
          ORDER BY buildCount DESC
          LIMIT 5`,

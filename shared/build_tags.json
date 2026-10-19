@@ -1,0 +1,32 @@
+{
+  "_comment": "Hardcoded build tags. Single source of truth: the backend validates against it (backend/security.js) and the frontend renders it (frontend/src/utils/buildTags.ts). Tag ids are stored as a comma-separated list in builds.tags - never rename an id, only labels and descriptions.",
+  "maxPerBuild": 4,
+  "groups": [
+    { "id": "style", "label": "Playstyle" },
+    { "id": "timing", "label": "Power Curve" },
+    { "id": "goal", "label": "Goal" },
+    { "id": "context", "label": "Tested For" }
+  ],
+  "tags": [
+    { "id": "tech_rush", "group": "style", "label": "Tech Rush", "description": "Research is the top priority from day one." },
+    { "id": "early_rush", "group": "style", "label": "Early Rush", "description": "Attacks a neighbor within the first ~30 years." },
+    { "id": "warmonger", "group": "style", "label": "Warmonger", "description": "Expands mainly through conquest for the whole game." },
+    { "id": "peaceful", "group": "style", "label": "Peaceful", "description": "Avoids offensive wars; grows through diplomacy, trade and development." },
+    { "id": "tall", "group": "style", "label": "Tall (Few Planets)", "description": "Few planets, each heavily developed." },
+    { "id": "wide", "group": "style", "label": "Wide (Many Planets)", "description": "Claims as many systems and planets as possible." },
+    { "id": "strong_early", "group": "timing", "label": "Strong Early Game", "description": "Power peaks in the first ~50 years." },
+    { "id": "late_scaling", "group": "timing", "label": "Late Game Scaling", "description": "Slow start, becomes dominant in the late game." },
+    { "id": "min_max", "group": "goal", "label": "Min-Max", "description": "Optimized for raw power above everything else." },
+    { "id": "roleplay", "group": "goal", "label": "Roleplay / Story", "description": "Theme and story first, power second." },
+    { "id": "meme", "group": "goal", "label": "Meme / Gimmick", "description": "Built around an unusual idea, mostly for fun." },
+    { "id": "grand_admiral", "group": "context", "label": "Grand Admiral Viable", "description": "Holds up on the highest AI difficulty (Grand Admiral)." },
+    { "id": "crisis_killer", "group": "context", "label": "Crisis Killer", "description": "Designed to beat end-game crises at high strength (10x-25x)." }
+  ],
+  "exclusive": [
+    ["tall", "wide"],
+    ["peaceful", "early_rush"],
+    ["peaceful", "warmonger"],
+    ["strong_early", "late_scaling"],
+    ["min_max", "meme"]
+  ]
+}

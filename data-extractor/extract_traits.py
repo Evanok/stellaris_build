@@ -146,6 +146,20 @@ def extract_trait_data(trait_key: str, trait_data: Dict[str, Any], localizations
     else:
         trait["allowed_archetypes"] = []
 
+    # Extract allowed homeworld planet classes (e.g. Aquatic is pc_ocean only,
+    # nomad traits are pc_ark only). Empty list = no restriction. The game's
+    # allowed_planet_classes_override is a mid-game escape hatch (auto
+    # preference traits), irrelevant at empire creation, so it is ignored.
+    planet_classes = trait_data.get("allowed_planet_classes", [])
+    if isinstance(planet_classes, dict):
+        trait["allowed_planet_classes"] = list(planet_classes.values())
+    elif isinstance(planet_classes, list):
+        trait["allowed_planet_classes"] = planet_classes
+    elif isinstance(planet_classes, str) and planet_classes:
+        trait["allowed_planet_classes"] = [planet_classes]
+    else:
+        trait["allowed_planet_classes"] = []
+
     # Extract tags
     tags = trait_data.get("tags", {})
     if isinstance(tags, dict):

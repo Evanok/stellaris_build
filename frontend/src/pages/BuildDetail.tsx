@@ -5,8 +5,14 @@ import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../AuthContext';
 import { decodeHtmlEntities } from '../utils/htmlDecode';
 import RatingStars from '../components/RatingStars';
+import { DifficultyBadge } from '../components/DifficultyBadge';
+import { BuildTagList } from '../components/BuildTags';
+import { parseBuildTags } from '../utils/buildTags';
 import { invalidateBuildsCache } from './Home';
 import { PredicateNode, getFailingNodes, describePredicateHuman } from '../utils/ruleEvaluator';
+import { ORIGIN_IMAGE_QUERY, iconQuery } from '../utils/assetVersions';
+import { Shipset, getCityGraphicalCulture } from '../utils/shipsetRules';
+import { PlanetClass, PlanetRuleInput, getEffectivePlanetClass, getForcedPlanetClass, getTraitPlanetConflicts, getSpeciesPlanetConflict } from '../utils/planetRules';
 
 interface Build {
   id: number;
@@ -31,6 +37,8 @@ interface Build {
   tags: string;
   is_nomadic?: number;
   ark_type?: string;
+  planet_class?: string | null;
+  graphical_culture?: string | null;
   author_id: number;
   author_username?: string;
   author_avatar?: string;
@@ -45,6 +53,7 @@ interface Trait {
   cost: number;
   effects: string;
   allowed_archetypes?: string[];
+  allowed_planet_classes?: string[];
 }
 
 interface Origin {
@@ -55,6 +64,9 @@ interface Origin {
   potential?: PredicateNode;
   possible?: PredicateNode;
   modifier?: Record<string, number>;
+  habitability_preference?: string;
+  starting_colony?: string;
+  granted_traits?: string[];
 }
 
 interface Ethic {
@@ -82,6 +94,7 @@ interface Civic {
   tooltip?: string;
   potential?: PredicateNode;
   possible?: PredicateNode;
+  granted_traits?: string[];
 }
 
 interface AscensionPerk {
@@ -138,7 +151,7 @@ const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type,
 
   return (
     <img
-      src={`/icons/${type}/${id}.png`}
+      src={`/icons/${type}/${id}.png${iconQuery(type)}`}
       alt=""
       width={size}
       height={size}
@@ -146,28 +159,6 @@ const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type,
       loading="lazy"
       onError={() => setHasError(true)}
     />
-  );
-};
-
-// Helper function to get difficulty badge styling
-const getDifficultyBadge = (difficulty: string | undefined) => {
-  if (!difficulty) return null;
-
-  const difficultyConfig: Record<string, { label: string; className: string }> = {
-    'overpowered': { label: 'Overpowered', className: 'bg-danger' },
-    'strong': { label: 'Strong', className: 'bg-warning text-dark' },
-    'balanced': { label: 'Balanced', className: 'bg-success' },
-    'challenging': { label: 'Challenging', className: 'bg-info text-dark' },
-    'extreme': { label: 'Extreme Challenge', className: 'bg-secondary' }
-  };
-
-  const config = difficultyConfig[difficulty];
-  if (!config) return null;
-
-  return (
-    <span className={`badge ${config.className} fs-6`}>
-      {config.label}
-    </span>
   );
 };
 
@@ -190,6 +181,8 @@ export const BuildDetail: React.FC = () => {
   const [allTraditionTrees, setAllTraditionTrees] = useState<TraditionTree[]>([]);
   const [allRulerTraits, setAllRulerTraits] = useState<RulerTrait[]>([]);
   const [speciesArchetypeBudgets, setSpeciesArchetypeBudgets] = useState<Record<string, { trait_points: number | null; max_traits: number | null }>>({});
+  const [allPlanetClasses, setAllPlanetClasses] = useState<PlanetClass[]>([]);
+  const [allShipsets, setAllShipsets] = useState<Shipset[]>([]);
 
   // Image error states
   const [originImageError, setOriginImageError] = useState(false);
@@ -232,8 +225,12 @@ export const BuildDetail: React.FC = () => {
           fetch(`/api/traditions${qs}`).then(res => res.json()),
           fetch(`/api/ruler-traits${qs}`).then(res => res.json()),
           fetch(`/api/species-archetypes${qs}`).then(res => res.json()),
-        ]).then(([speciesClasses, traits, origins, ethics, authorities, civics, perks, traditions, rulerTraits, archetypeBudgets]) => {
+          fetch(`/api/planet-classes${qs}`).then(res => res.json()),
+          fetch(`/api/shipsets${qs}`).then(res => res.json()),
+        ]).then(([speciesClasses, traits, origins, ethics, authorities, civics, perks, traditions, rulerTraits, archetypeBudgets, planetClasses, shipsets]) => {
+          setAllShipsets(Array.isArray(shipsets) ? shipsets : []);
           setAllSpeciesClasses(speciesClasses);
+          setAllPlanetClasses(Array.isArray(planetClasses) ? planetClasses : []);
           setSpeciesArchetypeBudgets(archetypeBudgets && typeof archetypeBudgets === 'object' ? archetypeBudgets : {});
           setAllTraits(traits);
           setAllOrigins(Array.isArray(origins) ? origins : (origins.origins || []));
@@ -332,6 +329,19 @@ export const BuildDetail: React.FC = () => {
   const getSpeciesClassData = (classId: string) => allSpeciesClasses.find(sc => sc.id === classId);
   const getTraitData = (traitId: string) => allTraits.find(t => t.id === traitId);
   const getOriginData = (originId: string) => allOrigins.find(o => o.id === originId);
+  const planetLabel = (planetId: string) => allPlanetClasses.find(p => p.id === planetId)?.name || planetId;
+
+  // Homeworld the build plays on (forced by Nomadic / the origin, else the
+  // stored pick) and the inputs for the planet rules - see utils/planetRules.ts.
+  const getBuildPlanetClass = (b: Build): string | undefined =>
+    getEffectivePlanetClass(!!b.is_nomadic, b.origin ? getOriginData(b.origin) : undefined, b.planet_class);
+  const getPlanetRuleInput = (b: Build): PlanetRuleInput => ({
+    isNomadic: !!b.is_nomadic,
+    origin: b.origin ? getOriginData(b.origin) : undefined,
+    civics: parseList(b.civics).map(id => getCivicData(id)).filter((c): c is Civic => !!c),
+    traitIds: parseList(b.traits),
+    traitById: Object.fromEntries(allTraits.map(t => [t.id, t])),
+  });
   const getEthicData = (ethicId: string) => allEthics.find(e => e.id === ethicId);
   const getAuthorityData = (authId: string) => allAuthorities.find(a => a.id === authId);
   const getCivicData = (civicId: string) => allCivics.find(c => c.id === civicId);
@@ -437,8 +447,11 @@ export const BuildDetail: React.FC = () => {
     lines.push(adjectiveBlock(empireName, '%ADJ%', '\t'));
     if (b.authority) lines.push(`\tauthority="${b.authority}"`);
     lines.push('\tgovernment="gov_fallback"');
+    // The build's homeworld when known (picked, or forced by Nomadic / the
+    // origin). Otherwise a valid default: Anglers grants Aquatic, which needs an
+    // Ocean world (hardcoded because pre-4.5 data has no granted_traits).
     const OCEAN_HOMEWORLD_CIVICS = ['civic_anglers', 'civic_corporate_anglers', 'civic_machine_anglers', 'civic_corporate_machine_anglers'];
-    const planetClass = b.is_nomadic ? 'pc_ark' : (civics.some(c => OCEAN_HOMEWORLD_CIVICS.includes(c)) ? 'pc_ocean' : 'pc_continental');
+    const planetClass = getBuildPlanetClass(b) || (civics.some(c => OCEAN_HOMEWORLD_CIVICS.includes(c)) ? 'pc_ocean' : 'pc_continental');
     lines.push('\tplanet_name=');
     lines.push(literalBlock('Fix Me', '\t'));
     lines.push(`\tplanet_class="${planetClass}"`);
@@ -446,8 +459,10 @@ export const BuildDetail: React.FC = () => {
     lines.push('\tsystem_name=');
     lines.push(literalBlock('Fix Me', '\t'));
     lines.push('\tinitializer=""');
-    lines.push('\tgraphical_culture="humanoid_01"');
-    lines.push('\tcity_graphical_culture="humanoid_01"');
+    // Ship appearance when the build picked one; cities follow it unless the set has none (Imperial, Mindwarden)
+    const shipset = allShipsets.find(s => s.id === b.graphical_culture);
+    lines.push(`\tgraphical_culture="${shipset ? shipset.id : 'humanoid_01'}"`);
+    lines.push(`\tcity_graphical_culture="${getCityGraphicalCulture(shipset)}"`);
     lines.push('\tempire_flag=');
     lines.push('\t{');
     lines.push('\t\ticon=');
@@ -515,6 +530,9 @@ export const BuildDetail: React.FC = () => {
       case 'authority': return getAuthorityData(id)?.name || id;
       case 'origin': return getOriginData(id)?.name || id;
       case 'species_archetype': return id.charAt(0) + id.slice(1).toLowerCase();
+      case 'preferred_planet_class': return planetLabel(id);
+      case 'graphical_culture': return allShipsets.find(s => s.id === id)?.name || id;
+      case 'traits': return getTraitData(id)?.name || id;
       default: return id;
     }
   };
@@ -537,6 +555,8 @@ export const BuildDetail: React.FC = () => {
       species_archetype: speciesArchetype,
       traits,
       is_nomadic: !!b.is_nomadic,
+      preferred_planet_class: getBuildPlanetClass(b),
+      graphical_culture: b.graphical_culture || undefined,
     };
 
     const warnings: string[] = [];
@@ -577,6 +597,18 @@ export const BuildDetail: React.FC = () => {
           warnings.push(`Trait "${trait?.name || traitId}" is not allowed for ${resolveExportRuleLabel('species_archetype', speciesArchetype)} species`);
         }
       });
+    }
+
+    // Homeworld vs traits (picked or granted by the origin/civics) - the
+    // origin/civic preferred_planet_class rules go through ctx above.
+    if (ctx.preferred_planet_class) {
+      warnings.push(...getTraitPlanetConflicts(ctx.preferred_planet_class, getPlanetRuleInput(b), planetLabel));
+    }
+    // Picked (not origin-forced) planet the species class is not offered (Volcanic = Infernal only)
+    const pickedPlanet = allPlanetClasses.find(p => p.id === b.planet_class);
+    if (pickedPlanet && !getForcedPlanetClass(!!b.is_nomadic, b.origin ? getOriginData(b.origin) : undefined)) {
+      const speciesConflict = getSpeciesPlanetConflict(pickedPlanet, b.species_class || undefined, cls => getSpeciesClassData(cls)?.name || cls);
+      if (speciesConflict) warnings.push(speciesConflict);
     }
 
     if (b.authority) {
@@ -718,13 +750,13 @@ export const BuildDetail: React.FC = () => {
             "datePublished": build.created_at || new Date().toISOString(),
             "dateModified": build.updated_at || build.created_at || new Date().toISOString(),
             "version": build.game_version || "4.1",
-            "keywords": build.tags || "",
+            "keywords": parseBuildTags(build.tags).map(tag => tag.label).join(", "),
             "url": buildUrl
           })}
         </script>
       </Helmet>
 
-      <div className="container mt-4">
+      <div className="container container-wide mt-4">
         {/* Header */}
         <div className="row mb-4">
         <div className="col-12 d-flex justify-content-between align-items-start flex-wrap gap-2">
@@ -757,7 +789,8 @@ export const BuildDetail: React.FC = () => {
                 <ReactMarkdown>{decodeHtmlEntities(build.name)}</ReactMarkdown>
               </h1>
               {build.description && (
-                <div className="text-light fs-5">
+                // Capped line length: the page goes wide on large screens, but prose stays readable
+                <div className="text-light fs-5" style={{ maxWidth: '80ch' }}>
                   <ReactMarkdown>{decodeHtmlEntities(build.description)}</ReactMarkdown>
                 </div>
               )}
@@ -765,7 +798,7 @@ export const BuildDetail: React.FC = () => {
             <div className="col-md-4 text-end">
               <div className="mb-2">
                 <span className="badge bg-primary fs-6 me-2">{build.game_version}</span>
-                {getDifficultyBadge(build.difficulty)}
+                <DifficultyBadge difficulty={build.difficulty} className="fs-6" />
               </div>
               {build.species_class && (() => {
                 const speciesClass = getSpeciesClassData(build.species_class);
@@ -820,7 +853,15 @@ export const BuildDetail: React.FC = () => {
                 size="lg"
               />
             </div>
-            {user && (
+            {user && build.author_id === user.id && (
+              <div className="col-md-6 border-start border-secondary">
+                <p className="text-muted mb-0">
+                  <i className="bi bi-info-circle me-2"></i>
+                  You can't rate your own build
+                </p>
+              </div>
+            )}
+            {user && build.author_id !== user.id && (
               <div className="col-md-6 border-start border-secondary">
                 <h6 className="text-white mb-3">
                   {userRating !== null ? 'Your Rating' : 'Rate this Build'}
@@ -1010,7 +1051,7 @@ export const BuildDetail: React.FC = () => {
                       {!originImageError && (
                         <div className="mb-3 text-center" style={{ backgroundColor: '#1a1a1a', padding: '1rem', borderRadius: '8px' }}>
                           <img
-                            src={`/icons/origin_original/${build.origin}.png`}
+                            src={`/icons/origin_original/${build.origin}.png${ORIGIN_IMAGE_QUERY}`}
                             alt={origin?.name || build.origin}
                             style={{
                               width: '100%',
@@ -1160,6 +1201,61 @@ export const BuildDetail: React.FC = () => {
               </div>
             </div>
           )}
+
+          {/* Homeworld (optional - shown when picked or forced by the origin; Nomadic arks are shown above) */}
+          {!build.is_nomadic && getBuildPlanetClass(build) && (() => {
+            const planetId = getBuildPlanetClass(build)!;
+            const planet = allPlanetClasses.find(p => p.id === planetId);
+            // e.g. Post-Apocalyptic: the capital is a Tomb World, the pick is only the species' climate preference
+            const startingColony = build.origin ? getOriginData(build.origin)?.starting_colony : undefined;
+            return (
+              <div className="card bg-dark border-secondary mb-4">
+                <div className="card-header bg-secondary">
+                  <h4 className="mb-0 text-white">
+                    <i className="bi bi-globe-americas me-2"></i>
+                    Homeworld / Climate preference
+                  </h4>
+                </div>
+                <div className="card-body d-flex align-items-center">
+                  <img src={`/icons/planets/${planetId}.png`} width={64} height={64} alt="" className="me-3" />
+                  <div>
+                    <h5 className="text-warning mb-1">
+                      {planetLabel(planetId)}
+                      {planet?.climate_name && <span className="badge bg-info ms-2">{planet.climate_name}</span>}
+                    </h5>
+                    {planet?.description && <p className="text-light mb-0">{planet.description}</p>}
+                    {startingColony && startingColony !== planetId && (
+                      <small className="d-block text-info mt-1">Capital starts on a {planetLabel(startingColony)} (origin)</small>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Ship appearance (optional) */}
+          {build.graphical_culture && (() => {
+            const shipset = allShipsets.find(s => s.id === build.graphical_culture);
+            return (
+              <div className="card bg-dark border-secondary mb-4">
+                <div className="card-header bg-secondary">
+                  <h4 className="mb-0 text-white">
+                    <i className="bi bi-rocket-takeoff me-2"></i>
+                    Ship appearance
+                  </h4>
+                </div>
+                <div className="card-body d-flex align-items-center flex-wrap gap-3">
+                  {shipset && (
+                    <img src={shipset.image} alt="" style={{ width: '240px', maxWidth: '100%', aspectRatio: '2 / 1', objectFit: 'contain' }} />
+                  )}
+                  <div>
+                    <h5 className="text-warning mb-1">{shipset?.name || build.graphical_culture}</h5>
+                    {shipset && <span className="badge bg-info">{shipset.category === 'biological' ? 'Biological' : 'Mechanical'}</span>}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Authority */}
           {build.authority && (
@@ -1334,7 +1430,7 @@ export const BuildDetail: React.FC = () => {
           )}
 
           {/* Tags */}
-          {build.tags && (
+          {parseBuildTags(build.tags).length > 0 && (
             <div className="card bg-dark border-secondary mb-4">
               <div className="card-header bg-secondary">
                 <h4 className="mb-0 text-white">
@@ -1343,13 +1439,12 @@ export const BuildDetail: React.FC = () => {
                 </h4>
               </div>
               <div className="card-body">
-                <div className="d-flex flex-wrap gap-2">
-                  {parseList(build.tags).map((tag, idx) => (
-                    <span key={idx} className="badge bg-secondary fs-6 px-3 py-2">
-                      {tag}
-                    </span>
+                <BuildTagList tags={build.tags} large />
+                <ul className="list-unstyled small text-white-50 mt-3 mb-0">
+                  {parseBuildTags(build.tags).map(tag => (
+                    <li key={tag.id}><span className="text-white">{tag.label}:</span> {tag.description}</li>
                   ))}
-                </div>
+                </ul>
               </div>
             </div>
           )}

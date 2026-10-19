@@ -1,1 +1,19 @@
 /* Using bootstrap, so minimal custom css for now */
+
+/* Wide layout for grid pages (Home, Resources, Stats): Bootstrap's .container stops at 1320px,
+   which leaves half of a large screen empty. Grid pages grow wider and gain a 4th column instead
+   of stretching cards; reading pages (build detail, forms) keep the default width on purpose. */
+@media (min-width: 1600px) {
+  .container.container-wide {
+    max-width: 1520px;
+  }
+  .row.row-cols-wide-4 > * {
+    flex: 0 0 auto;
+    width: 25%;
+  }
+}
+@media (min-width: 1920px) {
+  .container.container-wide {
+    max-width: 1760px;
+  }
+}

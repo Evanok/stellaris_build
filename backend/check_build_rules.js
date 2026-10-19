@@ -8,7 +8,7 @@
 //                                                    file shaped like GET /api/builds/:id -
 //                                                    origin, ethics, authority, civics,
 //                                                    traits, species_class, is_nomadic,
-//                                                    game_version)
+//                                                    planet_class, game_version)
 //   node check_build_rules.js check-id <id>         Fetch build <id> from the local
 //                                                    DB and check it
 //   node check_build_rules.js audit                 Check every non-deleted build in
@@ -21,6 +21,7 @@
 const path = require('path');
 const fs = require('fs');
 const { getFailingConditions, contextFromBuild } = require('./rules/predicateEvaluator');
+const { getEffectivePlanetClass, getTraitPlanetConflicts, getSpeciesPlanetConflict } = require('./rules/planetRules');
 
 const AVAILABLE_DATA_VERSIONS = ['4.2', '4.3', '4.4', '4.5'];
 const FIXED_VERSIONS = new Set(['4.4', '4.5']); // versions re-extracted with the structured predicate format
@@ -49,7 +50,9 @@ function loadVersionData(dataVersion) {
   const authorities = JSON.parse(fs.readFileSync(path.join(dir, 'authorities.json'), 'utf8'));
   const traits = JSON.parse(fs.readFileSync(path.join(dir, 'traits.json'), 'utf8'));
   const archetypeBudgets = JSON.parse(fs.readFileSync(path.join(dir, 'species_archetypes.json'), 'utf8'));
+  const planetClasses = JSON.parse(fs.readFileSync(path.join(dir, 'planet_classes.json'), 'utf8'));
   return {
+    planetById: Object.fromEntries(planetClasses.map(p => [p.id, p])),
     civicById: Object.fromEntries(civics.map(c => [c.id, c])),
     originById: Object.fromEntries(origins.map(o => [o.id, o])),
     archetypeByClass: Object.fromEntries(speciesClasses.map(c => [c.id, c.archetype])),
@@ -77,8 +80,10 @@ function getOriginTraitBonus(origin, speciesArchetype) {
 function checkBuild(build) {
   const dataVersion = getDataVersion(build.game_version);
   const verified = FIXED_VERSIONS.has(dataVersion);
-  const { civicById, originById, archetypeByClass, authorityById, costByTraitId, traitById, archetypeBudgets } = loadVersionData(dataVersion);
+  const { civicById, originById, archetypeByClass, authorityById, costByTraitId, traitById, archetypeBudgets, planetById } = loadVersionData(dataVersion);
   const ctx = contextFromBuild(build, archetypeByClass);
+  const buildOrigin = build.origin ? originById[build.origin] : undefined;
+  ctx.preferred_planet_class = getEffectivePlanetClass(build, buildOrigin);
   const issues = [];
 
   // GOVERNMENT_CIVIC_POINTS_BASE in common/defines/00_defines.txt - 2 civics
@@ -120,6 +125,23 @@ function checkBuild(build) {
         issues.push(`trait "${id}" is not allowed for ${ctx.species_archetype} species`);
       }
     });
+  }
+
+  // Homeworld vs traits (picked, or granted by the origin/civics), e.g.
+  // Aquatic needs an Ocean world. Only when the planet is known - it is
+  // optional, and an unset planet must not be read as "matches nothing".
+  if (ctx.preferred_planet_class) {
+    getTraitPlanetConflicts(ctx.preferred_planet_class, {
+      origin: buildOrigin,
+      civics: ctx.civics.map(id => civicById[id]).filter(Boolean),
+      traitIds: ctx.traits,
+      traitById,
+    }).forEach(conflict => issues.push(conflict));
+  }
+  const forcedPlanet = build.is_nomadic || (buildOrigin && buildOrigin.habitability_preference);
+  if (build.planet_class && !forcedPlanet && planetById[build.planet_class]) {
+    const speciesConflict = getSpeciesPlanetConflict(planetById[build.planet_class], build.species_class || undefined);
+    if (speciesConflict) issues.push(speciesConflict);
   }
 
   if (build.authority) {

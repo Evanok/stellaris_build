@@ -29,6 +29,14 @@
           "featured": false
         },
         {
+          "title": "Stellaris Best Fleet Composition (4.5)",
+          "url": "https://gamerofpassion.com/stellaris-best-fleet-composition/",
+          "description": "Written guide to fleet composition for Stellaris 4.5 Cygnus: corvettes, cruisers, battleships and ship ratios, based on 4.5 hull values.",
+          "tags": ["fleet", "military", "guide", "4.5", "written"],
+          "era": "4.5+",
+          "featured": true
+        },
+        {
           "title": "How To Tech Rush In Stellaris 4.0",
           "url": "https://www.youtube.com/watch?v=rK6RstNJtXM&t=1524s",
           "description": "Complete guide to tech rushing strategies in Stellaris 4.0 for early game dominance.",
@@ -139,6 +147,22 @@
           "tags": ["tips", "guide", "4.3", "beginner"],
           "era": "4.3+",
           "featured": true
+        },
+        {
+          "title": "Stellaris 4.5 Origins Tier List",
+          "url": "https://www.youtube.com/watch?v=HAjACyJQdEc",
+          "description": "Video tier list ranking every origin in Stellaris 4.5 Cygnus, with the strengths and weaknesses of each.",
+          "tags": ["origins", "tier-list", "guide", "4.5", "video"],
+          "era": "4.5+",
+          "featured": true
+        },
+        {
+          "title": "Stellaris 2026 Beginners Guide - UNDER 20 Minutes",
+          "url": "https://www.youtube.com/watch?v=ZqLtpGi4y-8",
+          "description": "Condensed beginner guide in under 20 minutes: the essentials to get your first Stellaris 4.4 game going.",
+          "tags": ["beginner", "guide", "video", "quick-start", "4.4"],
+          "era": "4.4+",
+          "featured": false
         }
       ]
     },
