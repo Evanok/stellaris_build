@@ -407,6 +407,9 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const [ruleWarnings, setRuleWarnings] = useState<string[]>([]);
   const skipRuleWarningRef = useRef(false);
 
+  // "Check Build" button: same checks as submit, results only, never submits
+  const [checkResult, setCheckResult] = useState<{ blocking: string[]; warnings: string[] } | null>(null);
+
   // Track whether the user manually changed the version (vs initial load or initialData population)
   const userChangedVersion = useRef(false);
 
@@ -1360,6 +1363,21 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     } catch {
       return 'Network error, please try again.';
     }
+  };
+
+  const handleCheckBuild = () => {
+    const blocking: string[] = [];
+    if (!isBuildComplete()) {
+      blocking.push(`Missing required fields: ${getMissingFields().join(', ')}`);
+    }
+    if (hasInvalidTraits) blocking.push('Species trait limits exceeded');
+    if (exceedsEthicsPoints) blocking.push('Ethics points exceeded');
+    if ((youtube_url && !isValidUrl(youtube_url)) || (source_url && !isValidUrl(source_url))) {
+      blocking.push('Invalid YouTube or source URL');
+    }
+    // Rule checks need the whole build (see getRuleWarnings), so only once it is complete
+    const warnings = isBuildComplete() ? getRuleWarnings() : [];
+    setCheckResult({ blocking, warnings });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -2786,6 +2804,10 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
           <button type="submit" className="btn btn-primary" disabled={submitting || hasInvalidTraits || exceedsEthicsPoints || !isBuildComplete()}>
             {submitting ? (isEditMode ? 'Updating...' : 'Submitting...') : (isEditMode ? 'Update Build' : 'Submit Build')}
           </button>
+          <button type="button" className="btn btn-outline-info ms-2" onClick={handleCheckBuild} disabled={submitting}>
+            <i className="bi bi-clipboard-check me-1"></i>
+            Check Build
+          </button>
           {hasInvalidTraits && (
             <small className="text-danger ms-2">Cannot submit: trait limits exceeded</small>
           )}
@@ -2857,6 +2879,67 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                 </button>
                 <button type="button" className="btn btn-warning" onClick={handleConfirmSubmitWithoutDescription}>
                   Submit Anyway
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Check Build result modal */}
+      {checkResult && (
+        <div
+          className="modal show d-block"
+          tabIndex={-1}
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+          onClick={(e) => { if (e.target === e.currentTarget) setCheckResult(null); }}
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content bg-dark text-white border-secondary">
+              <div className="modal-header border-secondary">
+                <h5 className="modal-title">
+                  {checkResult.blocking.length === 0 && checkResult.warnings.length === 0 ? (
+                    <><i className="bi bi-check-circle text-success me-2"></i>Build looks valid</>
+                  ) : (
+                    <><i className="bi bi-exclamation-triangle text-warning me-2"></i>Build Check</>
+                  )}
+                </h5>
+                <button type="button" className="btn-close btn-close-white" onClick={() => setCheckResult(null)}></button>
+              </div>
+              <div className="modal-body">
+                {checkResult.blocking.length === 0 && checkResult.warnings.length === 0 && (
+                  <p className="mb-0">
+                    No problem found. The build can be submitted. The rule check is experimental and may miss
+                    some conflicts, so use it as a hint, not a guarantee.
+                  </p>
+                )}
+                {checkResult.blocking.length > 0 && (
+                  <>
+                    <p className="mb-1 text-danger"><strong>Must be fixed before submitting:</strong></p>
+                    <ul className={checkResult.warnings.length > 0 ? 'mb-3' : 'mb-0'}>
+                      {checkResult.blocking.map((issue, idx) => (
+                        <li key={idx}>{issue}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+                {checkResult.warnings.length > 0 && (
+                  <>
+                    <p className="mb-1">
+                      <span className="badge bg-secondary me-2">Experimental</span>
+                      <strong>Possible rule conflicts:</strong>
+                    </p>
+                    <ul className="mb-0">
+                      {checkResult.warnings.map((warning, idx) => (
+                        <li key={idx}><code className="text-warning-emphasis">{warning}</code></li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </div>
+              <div className="modal-footer border-secondary">
+                <button type="button" className="btn btn-secondary" onClick={() => setCheckResult(null)}>
+                  Close
                 </button>
               </div>
             </div>
