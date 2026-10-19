@@ -1189,6 +1189,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       civics: selectedCivics,
       origin: selectedOrigin || undefined,
       species_archetype: getSpeciesArchetype(selectedSpeciesClass),
+      species_class: selectedSpeciesClass || undefined,
       traits: selectedTraits,
       is_nomadic: isNomadic,
       preferred_planet_class: effectivePlanetClass,
