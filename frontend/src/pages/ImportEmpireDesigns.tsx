@@ -125,8 +125,14 @@ const ImportEmpireDesigns: React.FC = () => {
               <p className="card-text">
                 The empire designs file contains all your custom-created empires from Stellaris.
               </p>
-              <p className="mb-0">
+              <p className="mb-1">
                 <strong>Windows:</strong> <code>Documents\Paradox Interactive\Stellaris\user_empire_designs_v3.4.txt</code>
+              </p>
+              <p className="mb-1">
+                <strong>macOS:</strong> <code>~/Documents/Paradox Interactive/Stellaris/user_empire_designs_v3.4.txt</code>
+              </p>
+              <p className="mb-0">
+                <strong>Linux:</strong> <code>~/.local/share/Paradox Interactive/Stellaris/user_empire_designs_v3.4.txt</code>
               </p>
             </div>
           </div>

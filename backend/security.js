@@ -7,6 +7,7 @@ const splitTagIds = (value) => [...new Set(value.split(',').map(s => s.trim()).f
 // Manual rate limiting stores
 const apiRequestStore = new Map();
 const buildCreationStore = new Map();
+const importStore = new Map();
 
 // Clean up old entries every 15 minutes
 setInterval(() => {
@@ -22,6 +23,11 @@ setInterval(() => {
 
   // Clean build creation store
   const oneHour = 60 * 60 * 1000;
+  for (const [key, data] of importStore.entries()) {
+    if (now - data.resetTime > oneHour) {
+      importStore.delete(key);
+    }
+  }
   for (const [key, data] of buildCreationStore.entries()) {
     if (now - data.resetTime > oneHour) {
       buildCreationStore.delete(key);
@@ -267,8 +273,40 @@ const sanitizeBuildData = (data) => {
   return sanitized;
 };
 
+// Rate limiter for file imports (.sav / empire designs). Imports are open to
+// anonymous visitors (the login is asked at publish time), and each one runs a
+// Python parser on up to 50 MB, so they get their own, tighter budget per hour:
+// per IP for visitors, per account once logged in. An empire designs import is
+// 2 requests (list empires, then import one).
+// No localhost bypass here on purpose: req.hostname comes from X-Forwarded-Host
+// behind the proxy, which a client can set itself.
+const IMPORT_LIMIT_ANONYMOUS = 30;
+const IMPORT_LIMIT_USER = 60;
+
+const importLimiter = (req, res, next) => {
+  const key = req.user ? `user:${req.user.id}` : `ip:${req.ip || 'unknown'}`;
+  const limit = req.user ? IMPORT_LIMIT_USER : IMPORT_LIMIT_ANONYMOUS;
+  const now = Date.now();
+  const oneHour = 60 * 60 * 1000;
+
+  let entry = importStore.get(key);
+  if (!entry || now - entry.resetTime > oneHour) {
+    entry = { count: 0, resetTime: now };
+    importStore.set(key, entry);
+  }
+
+  entry.count += 1;
+  if (entry.count > limit) {
+    return res.status(429).json({
+      error: 'Too many imports, please try again in an hour.',
+    });
+  }
+  next();
+};
+
 module.exports = {
   apiLimiter,
+  importLimiter,
   createBuildLimiter,
   validateBuildData,
   sanitizeBuildData,

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { trackEvent, trackEventThenNavigate } from '../utils/analytics';
+import { consumePostLoginRedirect } from '../utils/postLoginRedirect';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const [activeTab, setActiveTab] = useState<'login' | 'register' | 'oauth'>('oauth');
+  const [activeTab, setActiveTab] = useState<'login' | 'register' | 'oauth'>('login');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,10 +15,11 @@ const Login: React.FC = () => {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  // Redirect if already logged in
+  // Redirect if already logged in - to the page that sent the visitor here, if any
+  // (consumed here rather than in App.tsx so the two redirects do not race)
   useEffect(() => {
     if (!loading && user) {
-      navigate('/');
+      navigate(consumePostLoginRedirect() || '/', { replace: true });
     }
   }, [user, loading, navigate]);
 
@@ -121,15 +123,6 @@ const Login: React.FC = () => {
               <ul className="nav nav-tabs nav-fill mb-3" role="tablist">
                 <li className="nav-item" role="presentation">
                   <button
-                    className={`nav-link ${activeTab === 'oauth' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('oauth')}
-                    type="button"
-                  >
-                    OAuth
-                  </button>
-                </li>
-                <li className="nav-item" role="presentation">
-                  <button
                     className={`nav-link ${activeTab === 'login' ? 'active' : ''}`}
                     onClick={() => setActiveTab('login')}
                     type="button"
@@ -144,6 +137,15 @@ const Login: React.FC = () => {
                     type="button"
                   >
                     Register
+                  </button>
+                </li>
+                <li className="nav-item" role="presentation">
+                  <button
+                    className={`nav-link ${activeTab === 'oauth' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('oauth')}
+                    type="button"
+                  >
+                    Google / Steam
                   </button>
                 </li>
               </ul>

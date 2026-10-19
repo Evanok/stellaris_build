@@ -73,6 +73,10 @@
       gtag('config', 'G-E67MKKS33Q', { send_page_view: false });
 
       (function () {
+        // Production only: localhost dev servers, test runs and LAN previews must not
+        // pollute the stats. gtag() calls still queue harmlessly in dataLayer.
+        var PRODUCTION_HOSTS = ['stellaris-build.com', 'www.stellaris-build.com'];
+        if (PRODUCTION_HOSTS.indexOf(location.hostname) === -1) return;
         if (navigator.webdriver) return; // set by Selenium/Puppeteer/Playwright
 
         var VISIBLE_MS_THRESHOLD = 5000;

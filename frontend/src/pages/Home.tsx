@@ -276,10 +276,21 @@ export const Home: React.FC = () => {
                 Up to date with Stellaris {LATEST_GAME_VERSION.patch} &quot;{LATEST_GAME_VERSION.name}&quot;
               </span>
             </div>
-            <div className="col-md-4 text-end">
-              <div className="d-inline-block p-2 rounded" style={{ background: 'rgba(255, 255, 255, 0.1)' }}>
-                <h4 className="text-white mb-1">{total}</h4>
-                <p className="text-light mb-0 small">Community Builds</p>
+            <div className="col-md-4 text-md-end mt-3 mt-md-0">
+              <div className="d-inline-flex align-items-center gap-3">
+                <div className="p-2 rounded text-center" style={{ background: 'rgba(255, 255, 255, 0.1)' }}>
+                  <h4 className="text-white mb-1">{total}</h4>
+                  <p className="text-light mb-0 small">Community Builds</p>
+                </div>
+                <div className="text-center">
+                  <Link to="/create" className="btn btn-success fw-bold">
+                    <i className="bi bi-plus-circle me-2"></i>
+                    Share your build
+                  </Link>
+                  <div className="text-light small mt-1" style={{ opacity: 0.8 }}>
+                    Import it from your game in 30s
+                  </div>
+                </div>
               </div>
             </div>
           </div>

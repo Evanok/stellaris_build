@@ -367,6 +367,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
   // UI state
   const [error, setError] = useState<string | null>(null);
+  const [draftRestored, setDraftRestored] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [youtubeUrlError, setYoutubeUrlError] = useState<string | null>(null);
   const [sourceUrlError, setSourceUrlError] = useState<string | null>(null);
@@ -1060,6 +1061,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       selectedPlanetClass,
       selectedShipset,
       selectedSpeciesClass,
+      selectedPortrait,
       selectedTraits,
       selectedSecondaryTraits,
       selectedOrigin,
@@ -1088,6 +1090,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setDlcs(formData.dlcs || '');
         setTags(normalizeBuildTags(formData.tags));
         setSelectedSpeciesClass(formData.selectedSpeciesClass || '');
+        setSelectedPortrait(formData.selectedPortrait || '');
         setSelectedTraits(formData.selectedTraits || []);
         setSelectedSecondaryTraits(formData.selectedSecondaryTraits || []);
         setSelectedOrigin(formData.selectedOrigin || '');
@@ -1108,6 +1111,18 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       }
     }
   };
+
+  // Google/Steam sign-in leaves the page: the draft saved before the redirect is
+  // restored when the visitor comes back here logged in (App.tsx brings them back).
+  // Not auto-submitted, unlike the in-modal local login: after a full round trip
+  // the visitor should see what they are about to publish.
+  useEffect(() => {
+    if (!user || buildId || initialData) return;
+    if (!localStorage.getItem('stellaris_build_draft')) return;
+    restoreFormDataFromLocalStorage();
+    setDraftRestored(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   // Handle successful authentication
   const handleAuthSuccess = async () => {
@@ -1404,6 +1419,13 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       <div className="card-body">
         <h3 className="card-title">{isEditMode ? 'Edit Build' : 'Create a New Build'}</h3>
         <form id="build-form" onSubmit={handleSubmit}>
+          {draftRestored && (
+            <div className="alert alert-success alert-dismissible">
+              <i className="bi bi-check-circle me-2"></i>
+              Welcome back! Your build was restored - review it and click submit to publish it.
+              <button type="button" className="btn-close" aria-label="Close" onClick={() => setDraftRestored(false)}></button>
+            </div>
+          )}
           {error && <div className="alert alert-danger">{error}</div>}
 
           {/* Manual entry section */}

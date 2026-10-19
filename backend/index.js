@@ -47,7 +47,7 @@ const { spawn } = require('child_process');
 const { setupDatabase, db } = require('./database');
 const { renderBuildOgImage } = require('./ogImage');
 const passport = require('./auth');
-const { apiLimiter, createBuildLimiter, validateBuildData, sanitizeBuildData } = require('./security');
+const { apiLimiter, createBuildLimiter, importLimiter, validateBuildData, sanitizeBuildData } = require('./security');
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -1252,7 +1252,33 @@ app.put('/api/builds/:id', isAuthenticated, createBuildLimiter, (req, res) => {
 });
 
 // Import build from .sav file
-app.post('/api/import-build', isAuthenticated, upload.single('savefile'), (req, res) => {
+// File imports are open to anonymous visitors: the login is only asked when the
+// pre-filled build is published (POST /api/builds stays authenticated). Each import
+// spawns a Python parser, so besides importLimiter the number running at once is
+// capped (prod is a 2-core box) and each run is killed after IMPORT_TIMEOUT_MS.
+const MAX_CONCURRENT_IMPORTS = 3;
+const IMPORT_TIMEOUT_MS = 60 * 1000;
+let runningImports = 0;
+
+const importConcurrencyGuard = (req, res, next) => {
+  if (runningImports >= MAX_CONCURRENT_IMPORTS) {
+    return res.status(503).json({ error: 'The server is busy processing other imports, please try again in a minute.' });
+  }
+  runningImports += 1;
+  let released = false;
+  const release = () => {
+    if (released) return;
+    released = true;
+    runningImports -= 1;
+  };
+  res.on('finish', release);
+  res.on('close', release);
+  next();
+};
+
+const importGuards = [importLimiter, importConcurrencyGuard];
+
+app.post('/api/import-build', importGuards, upload.single('savefile'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
@@ -1261,7 +1287,7 @@ app.post('/api/import-build', isAuthenticated, upload.single('savefile'), (req, 
   const scriptPath = path.join(__dirname, '../data-extractor/import_build_from_save.py');
 
   // Run Python script to extract build data
-  const python = spawn('python3', [scriptPath, savFilePath]);
+  const python = spawn('python3', [scriptPath, savFilePath], { timeout: IMPORT_TIMEOUT_MS });
 
   let stdout = '';
   let stderr = '';
@@ -1328,7 +1354,7 @@ app.post('/api/import-build', isAuthenticated, upload.single('savefile'), (req, 
 });
 
 // List all empires from empire designs file
-app.post('/api/list-empires', isAuthenticated, upload.single('designsfile'), (req, res) => {
+app.post('/api/list-empires', importGuards, upload.single('designsfile'), (req, res) => {
   console.log('[list-empires] Request received');
 
   if (!req.file) {
@@ -1343,7 +1369,7 @@ app.post('/api/list-empires', isAuthenticated, upload.single('designsfile'), (re
   console.log('[list-empires] Script path:', scriptPath);
 
   // Run Python script to list empires
-  const python = spawn('python3', [scriptPath, designsFilePath]);
+  const python = spawn('python3', [scriptPath, designsFilePath], { timeout: IMPORT_TIMEOUT_MS });
   console.log('[list-empires] Python script spawned');
 
   let stdout = '';
@@ -1394,7 +1420,7 @@ app.post('/api/list-empires', isAuthenticated, upload.single('designsfile'), (re
 });
 
 // Extract specific empire from empire designs file
-app.post('/api/import-empire-designs', isAuthenticated, upload.single('designsfile'), (req, res) => {
+app.post('/api/import-empire-designs', importGuards, upload.single('designsfile'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
@@ -1410,7 +1436,7 @@ app.post('/api/import-empire-designs', isAuthenticated, upload.single('designsfi
   const scriptPath = path.join(__dirname, '../data-extractor/import_empire_from_designs.py');
 
   // Run Python script to extract specific empire
-  const python = spawn('python3', [scriptPath, designsFilePath, empireName]);
+  const python = spawn('python3', [scriptPath, designsFilePath, empireName], { timeout: IMPORT_TIMEOUT_MS });
 
   let stdout = '';
   let stderr = '';

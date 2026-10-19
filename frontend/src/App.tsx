@@ -1,11 +1,12 @@
 import { lazy, Suspense, useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import Footer from './components/Footer';
 import { GoogleAnalytics } from './components/GoogleAnalytics';
 import { FeedbackButton } from './components/FeedbackButton';
 import { SetEmailModal } from './components/SetEmailModal';
 import { useAuth } from './AuthContext';
+import { consumePostLoginRedirect } from './utils/postLoginRedirect';
 import { Home } from './pages/Home';
 import Login from './pages/Login';
 
@@ -45,6 +46,7 @@ const getRandomBackground = () => {
 // AppContent component that uses useLocation
 const AppContent = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
   const [showSetEmailModal, setShowSetEmailModal] = useState(false);
@@ -53,6 +55,14 @@ const AppContent = () => {
   useEffect(() => {
     setBackgroundImage(getRandomBackground());
   }, [location.pathname]);
+
+  // Back to the page that sent the visitor to log in (all login paths end on '/')
+  useEffect(() => {
+    if (!user) return;
+    const redirect = consumePostLoginRedirect();
+    if (redirect && redirect !== location.pathname) navigate(redirect, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   // Show email prompt for local users without an email (unless dismissed for this specific user)
   useEffect(() => {

@@ -47,13 +47,12 @@ export const Navbar: React.FC = () => {
                 Feedback
               </Link>
             </li>
-            {user && (
-              <li className="nav-item">
-                <Link className="nav-link" to="/create">
-                  Create Build
-                </Link>
-              </li>
-            )}
+            {/* Shown to everyone: /create explains the options and asks for a login only when needed */}
+            <li className="nav-item">
+              <Link className="nav-link" to="/create">
+                Create Build
+              </Link>
+            </li>
             {!loading && (
               <>
                 {user ? (
