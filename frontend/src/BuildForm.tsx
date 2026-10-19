@@ -681,6 +681,16 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const traitById: Record<string, Trait> = Object.fromEntries(allTraits.map(t => [t.id, t]));
   const planetLabel = (planetId: string) => allPlanetClasses.find(p => p.id === planetId)?.name || planetId;
   const speciesLabel = (classId: string) => allSpeciesClasses.find(sc => sc.id === classId)?.name || classId;
+
+  // An imported or saved portrait the picker does not offer (no image on the site) is dropped:
+  // no portrait at all rather than a selection nobody can see
+  useEffect(() => {
+    if (!selectedPortrait) return;
+    const speciesClass = allSpeciesClasses.find(sc => sc.id === selectedSpeciesClass);
+    if (speciesClass && !speciesClass.portraits.includes(selectedPortrait)) {
+      setSelectedPortrait('');
+    }
+  }, [allSpeciesClasses, selectedSpeciesClass, selectedPortrait]);
   const forcedPlanetClass = getForcedPlanetClass(isNomadic, selectedOriginData);
   // Only a selectable class counts as the user's pick - e.g. pc_habitat loaded
   // from a build saved with Void Dwellers is dropped once the origin changes.
