@@ -293,6 +293,34 @@ const setupDatabase = () => {
       }
     });
 
+    // Builds submitted without an account, waiting for a moderator. Kept out of the
+    // builds table on purpose: builds is read by many public queries (home, detail,
+    // sitemap, stats, OG images...), and a pending row leaking through any of them
+    // would publish unreviewed content. Approval copies the build into builds.
+    // - data: the sanitized build fields as JSON (same shape as POST /api/builds)
+    // - claim_token_hash: sha256 of the secret given to the submitter, who can use it
+    //   to attach the build to an account later (before or after approval)
+    // - claimed_user_id: set when claimed before approval - the build is then
+    //   published under that account instead of a guest one
+    db.run(`CREATE TABLE IF NOT EXISTS pending_builds (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      data TEXT NOT NULL,
+      guest_name TEXT NOT NULL,
+      claim_token_hash TEXT NOT NULL UNIQUE,
+      claimed_user_id INTEGER,
+      submitter_ip TEXT,
+      status TEXT NOT NULL DEFAULT 'pending',
+      build_id INTEGER,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      reviewed_at TIMESTAMP,
+      FOREIGN KEY (claimed_user_id) REFERENCES users (id),
+      FOREIGN KEY (build_id) REFERENCES builds (id)
+    )`, (err) => {
+      if (err) {
+        console.error('Error creating pending_builds table:', err.message);
+      }
+    });
+
     // Create ratings table for build ratings
     db.run(`CREATE TABLE IF NOT EXISTS ratings (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
