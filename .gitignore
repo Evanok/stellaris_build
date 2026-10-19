@@ -53,8 +53,9 @@ stellaris_builds.db
 *.db-wal
 *.db-shm
 *.db-journal
-# Manual database backups (e.g. stellaris_builds.db.backup-20260811-094038)
+# Manual database backups (e.g. stellaris_builds.db.backup-20260811-094038, stellaris_builds.db.bak)
 *.db.backup*
+*.db.bak*
 
 # Backups
 backups/
