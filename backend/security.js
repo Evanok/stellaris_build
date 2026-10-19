@@ -8,6 +8,7 @@ const splitTagIds = (value) => [...new Set(value.split(',').map(s => s.trim()).f
 const apiRequestStore = new Map();
 const buildCreationStore = new Map();
 const importStore = new Map();
+const guestSubmitStore = new Map();
 
 // Clean up old entries every 15 minutes
 setInterval(() => {
@@ -26,6 +27,11 @@ setInterval(() => {
   for (const [key, data] of importStore.entries()) {
     if (now - data.resetTime > oneHour) {
       importStore.delete(key);
+    }
+  }
+  for (const [key, data] of guestSubmitStore.entries()) {
+    if (now - data.resetTime > 24 * oneHour) {
+      guestSubmitStore.delete(key);
     }
   }
   for (const [key, data] of buildCreationStore.entries()) {
@@ -304,9 +310,39 @@ const importLimiter = (req, res, next) => {
   next();
 };
 
+// Rate limiter for builds submitted without an account (moderation queue): every
+// one of them lands in the moderator's inbox, so keep it to a few per day per IP.
+// Same reason as importLimiter for not trusting req.hostname.
+const GUEST_SUBMIT_LIMIT_PER_DAY = 5;
+
+const guestSubmitLimiter = (req, res, next) => {
+  const key = req.ip || 'unknown';
+  const now = Date.now();
+  const oneDay = 24 * 60 * 60 * 1000;
+
+  let entry = guestSubmitStore.get(key);
+  if (!entry || now - entry.resetTime > oneDay) {
+    entry = { count: 0, resetTime: now };
+    guestSubmitStore.set(key, entry);
+  }
+
+  if (entry.count >= GUEST_SUBMIT_LIMIT_PER_DAY) {
+    return res.status(429).json({
+      error: 'Too many builds submitted without an account today. Sign in to keep publishing, or try again tomorrow.',
+    });
+  }
+  // Only successful submissions count: a visitor retrying after "name already
+  // taken" or a validation error should not burn their daily quota
+  res.on('finish', () => {
+    if (res.statusCode === 201) entry.count += 1;
+  });
+  next();
+};
+
 module.exports = {
   apiLimiter,
   importLimiter,
+  guestSubmitLimiter,
   createBuildLimiter,
   validateBuildData,
   sanitizeBuildData,

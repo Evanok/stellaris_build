@@ -1,11 +1,24 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { DisplayNameModal } from './DisplayNameModal';
 
 export const Navbar: React.FC = () => {
   const { user, loading, logout } = useAuth();
   const [showDisplayNameModal, setShowDisplayNameModal] = useState(false);
+  const [pendingCount, setPendingCount] = useState(0);
+  const location = useLocation();
+  const isAdmin = user?.is_admin === 1;
+
+  // Admins only: how many builds submitted without an account wait for review.
+  // Refreshed on navigation so it drops after reviewing.
+  useEffect(() => {
+    if (!isAdmin) return;
+    fetch('/api/admin/pending-builds')
+      .then(res => (res.ok ? res.json() : null))
+      .then(data => setPendingCount(data?.pending?.length || 0))
+      .catch(() => setPendingCount(0));
+  }, [isAdmin, location.pathname]);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -53,6 +66,21 @@ export const Navbar: React.FC = () => {
                 Create Build
               </Link>
             </li>
+            {isAdmin && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/admin/pending">
+                  Moderation
+                  {pendingCount > 0 && <span className="badge bg-warning text-dark ms-1">{pendingCount}</span>}
+                </Link>
+              </li>
+            )}
+            {isAdmin && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/admin/stats">
+                  Admin Stats
+                </Link>
+              </li>
+            )}
             {!loading && (
               <>
                 {user ? (

@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { AuthModal } from './components/AuthModal';
+import { GuestSubmitModal } from './components/GuestSubmitModal';
+import { addGuestClaim } from './utils/guestClaims';
+import { trackEvent } from './utils/analytics';
+import { useNavigate } from 'react-router-dom';
 import { decodeHtmlEntities } from './utils/htmlDecode';
 import { DIFFICULTY_LEVELS } from './utils/difficulty';
 import { normalizeBuildTags, serializeBuildTags, MAX_TAGS_PER_BUILD } from './utils/buildTags';
@@ -375,6 +379,8 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   // Auth state
   const { user, refreshUser } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showGuestModal, setShowGuestModal] = useState(false);
+  const navigate = useNavigate();
 
   // Warn on submit if the description is empty (create mode only)
   const [showDescriptionWarning, setShowDescriptionWarning] = useState(false);
@@ -1275,6 +1281,60 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     setShowRuleWarning(false);
   };
 
+  // Request body shared by account submissions (POST/PUT /api/builds) and guest ones
+  const getBuildPayload = () => ({
+    name,
+    description,
+    game_version,
+    youtube_url,
+    source_url,
+    difficulty,
+    civics: selectedCivics.join(', '), // Convert array to comma-separated string
+    dlcs,
+    tags,
+    traits: selectedTraits.join(', '), // Convert array to comma-separated string
+    secondary_traits: selectedSecondaryTraits.join(', '), // Convert array to comma-separated string
+    origin: selectedOrigin,
+    ethics: selectedEthics.join(', '), // Convert array to comma-separated string
+    authority: selectedAuthority,
+    ascension_perks: selectedAscensionPerks.join(', '), // Convert array to comma-separated string
+    traditions: selectedTraditions.join(', '), // Convert array to comma-separated string
+    ruler_trait: selectedRulerTrait,
+    species_class: selectedSpeciesClass,
+    portrait: selectedPortrait,
+    is_nomadic: isNomadic ? 1 : 0,
+    ark_type: isNomadic ? arkType : null,
+    planet_class: effectivePlanetClass || null,
+    graphical_culture: pickedShipset || null,
+  });
+
+  // Publishing without an account: the build goes to the moderation queue. Only
+  // reachable from the auth modal, i.e. after handleSubmit validated everything.
+  const handleGuestSubmit = async (guestName: string, website: string): Promise<string | null> => {
+    try {
+      const response = await fetch('/api/builds/guest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...getBuildPayload(), guest_name: guestName, website }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const details = Array.isArray(data.details) ? `: ${data.details.join(', ')}` : '';
+        return (data.error || 'Failed to submit the build') + details;
+      }
+      addGuestClaim({ token: data.claim_token, name });
+      localStorage.removeItem('stellaris_build_draft');
+      skipDescriptionWarningRef.current = false;
+      skipRuleWarningRef.current = false;
+      setShowGuestModal(false);
+      trackEvent('build_submitted_guest', { game_version });
+      navigate('/build-submitted', { state: { name, claimToken: data.claim_token } });
+      return null;
+    } catch {
+      return 'Network error, please try again.';
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -1299,14 +1359,6 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       return;
     }
 
-    // Check if user is authenticated
-    if (!user) {
-      // Save form data to localStorage before showing auth modal
-      saveFormDataToLocalStorage();
-      setShowAuthModal(true);
-      return;
-    }
-
     // Check if build is complete
     if (!isBuildComplete()) {
       const missing = getMissingFields();
@@ -1321,7 +1373,6 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       setShowDescriptionWarning(true);
       return;
     }
-    skipDescriptionWarningRef.current = false;
 
     // Experimental non-blocking check against extracted game rules (origin +
     // civics only for now). See TODO.md section 3b for the full plan.
@@ -1333,6 +1384,18 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         return;
       }
     }
+
+    // Asked last, once the build is known to be complete: a visitor who did all the
+    // work is far more likely to sign in (or publish as a guest) than one asked up
+    // front. The warning skip flags are kept so the automatic resubmission after
+    // an in-modal login does not ask the same questions again.
+    if (!user) {
+      // Save form data to localStorage before showing auth modal
+      saveFormDataToLocalStorage();
+      setShowAuthModal(true);
+      return;
+    }
+    skipDescriptionWarningRef.current = false;
     skipRuleWarningRef.current = false;
 
     setSubmitting(true);
@@ -1346,31 +1409,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          name,
-          description,
-          game_version,
-          youtube_url,
-          source_url,
-          difficulty,
-          civics: selectedCivics.join(', '), // Convert array to comma-separated string
-          dlcs,
-          tags,
-          traits: selectedTraits.join(', '), // Convert array to comma-separated string
-          secondary_traits: selectedSecondaryTraits.join(', '), // Convert array to comma-separated string
-          origin: selectedOrigin,
-          ethics: selectedEthics.join(', '), // Convert array to comma-separated string
-          authority: selectedAuthority,
-          ascension_perks: selectedAscensionPerks.join(', '), // Convert array to comma-separated string
-          traditions: selectedTraditions.join(', '), // Convert array to comma-separated string
-          ruler_trait: selectedRulerTrait,
-          species_class: selectedSpeciesClass,
-          portrait: selectedPortrait,
-          is_nomadic: isNomadic ? 1 : 0,
-          ark_type: isNomadic ? arkType : null,
-          planet_class: effectivePlanetClass || null,
-          graphical_culture: pickedShipset || null,
-        }),
+        body: JSON.stringify(getBuildPayload()),
       });
 
       if (!response.ok) {
@@ -2728,8 +2767,30 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       {/* Auth Modal */}
       <AuthModal
         show={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
+        onClose={() => {
+          setShowAuthModal(false);
+          // Back to editing: the warnings must be shown again on the next submit
+          skipDescriptionWarningRef.current = false;
+          skipRuleWarningRef.current = false;
+        }}
         onSuccess={handleAuthSuccess}
+        onContinueAsGuest={isEditMode ? undefined : () => {
+          setShowAuthModal(false);
+          setShowGuestModal(true);
+        }}
+      />
+      <GuestSubmitModal
+        show={showGuestModal}
+        onClose={() => {
+          setShowGuestModal(false);
+          skipDescriptionWarningRef.current = false;
+          skipRuleWarningRef.current = false;
+        }}
+        onBack={() => {
+          setShowGuestModal(false);
+          setShowAuthModal(true);
+        }}
+        onSubmit={handleGuestSubmit}
       />
 
       {/* Description Warning Modal */}

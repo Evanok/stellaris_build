@@ -6,9 +6,11 @@ interface AuthModalProps {
   show: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  // Offered when publishing a new build: skip the account, the build is reviewed by a moderator
+  onContinueAsGuest?: () => void;
 }
 
-export const AuthModal: React.FC<AuthModalProps> = ({ show, onClose, onSuccess }) => {
+export const AuthModal: React.FC<AuthModalProps> = ({ show, onClose, onSuccess, onContinueAsGuest }) => {
   const [activeTab, setActiveTab] = useState<'login' | 'register' | 'oauth'>('login');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -102,7 +104,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ show, onClose, onSuccess }
 
           <div className="modal-body">
             <p className="text-muted mb-3">
-              You need to be signed in to create a build. Choose how you want to continue:
+              {onContinueAsGuest
+                ? 'Sign in to publish your build right away, or publish it without an account below.'
+                : 'You need to be signed in to create a build. Choose how you want to continue:'}
             </p>
 
             {/* Tab Navigation */}
@@ -293,6 +297,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({ show, onClose, onSuccess }
                   {loading ? 'Creating account...' : 'Create Account'}
                 </button>
               </form>
+            )}
+
+            {onContinueAsGuest && (
+              <div className="border-top border-secondary mt-4 pt-3 text-center">
+                <p className="text-muted small mb-2">No account? No problem.</p>
+                <button type="button" className="btn btn-outline-light w-100" onClick={onContinueAsGuest}>
+                  <i className="bi bi-person me-2"></i>
+                  Publish without an account
+                </button>
+                <p className="text-muted small mt-2 mb-0">
+                  Reviewed by a moderator before it goes live (usually within 24-48 hours)
+                </p>
+              </div>
             )}
           </div>
         </div>

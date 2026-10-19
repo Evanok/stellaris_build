@@ -14,6 +14,7 @@ import { ORIGIN_IMAGE_QUERY, iconQuery } from '../utils/assetVersions';
 import { Shipset, getCityGraphicalCulture } from '../utils/shipsetRules';
 import { PlanetClass, PlanetRuleInput, getEffectivePlanetClass, getForcedPlanetClass, getTraitPlanetConflicts, getSpeciesPlanetConflict } from '../utils/planetRules';
 import { trackEvent } from '../utils/analytics';
+import { reviewPendingBuild } from '../utils/moderation';
 
 interface Build {
   id: number;
@@ -163,7 +164,9 @@ const GameIcon: React.FC<{ type: string; id: string; size?: number }> = ({ type,
   );
 };
 
-export const BuildDetail: React.FC = () => {
+// pendingMode: moderator preview of a build submitted without an account
+// (/admin/pending/:id) - same page, read from the moderation queue, no rating
+export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode = false }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -206,7 +209,7 @@ export const BuildDetail: React.FC = () => {
     if (!id) return;
 
     // First fetch the build to know its game version, then load matching game data
-    fetch(`/api/builds/${id}`)
+    fetch(pendingMode ? `/api/admin/pending-builds/${id}` : `/api/builds/${id}`)
       .then(res => {
         if (!res.ok) throw new Error('Build not found');
         return res.json();
@@ -263,9 +266,25 @@ export const BuildDetail: React.FC = () => {
       });
   }, [id]);
 
+  const [moderating, setModerating] = useState(false);
+  const [moderationError, setModerationError] = useState('');
+
+  const handleModeration = async (action: 'approve' | 'reject') => {
+    if (!id) return;
+    setModerating(true);
+    setModerationError('');
+    try {
+      const publishedId = await reviewPendingBuild(id, action);
+      navigate(action === 'approve' && publishedId ? `/build/${publishedId}` : '/admin/pending');
+    } catch (err) {
+      setModerationError(err instanceof Error ? err.message : 'Action failed');
+      setModerating(false);
+    }
+  };
+
   // Load rating data
   useEffect(() => {
-    if (!id) return;
+    if (!id || pendingMode) return;
 
     fetch(`/api/builds/${id}/rating`)
       .then(res => res.json())
@@ -715,6 +734,7 @@ export const BuildDetail: React.FC = () => {
   return (
     <>
       <Helmet>
+        {pendingMode && <meta name="robots" content="noindex" />}
         {/* Primary Meta Tags */}
         <title>{buildTitle}</title>
         <meta name="title" content={buildTitle} />
@@ -760,6 +780,18 @@ export const BuildDetail: React.FC = () => {
       </Helmet>
 
       <div className="container container-wide mt-4">
+        {pendingMode && (
+          <div className="alert alert-warning d-flex flex-wrap align-items-center gap-2">
+            <div className="flex-grow-1">
+              <i className="bi bi-hourglass-split me-2"></i>
+              <strong>Moderation preview</strong> - submitted without an account by <strong>{build.author_username}</strong>. Not public yet.
+            </div>
+            {moderationError && <div className="text-danger w-100 order-last">{moderationError}</div>}
+            <Link to="/admin/pending" className="btn btn-sm btn-secondary">Back to queue</Link>
+            <button className="btn btn-sm btn-success" disabled={moderating} onClick={() => handleModeration('approve')}>Approve &amp; publish</button>
+            <button className="btn btn-sm btn-danger" disabled={moderating} onClick={() => handleModeration('reject')}>Reject</button>
+          </div>
+        )}
         {/* Header */}
         <div className="row mb-4">
         <div className="col-12 d-flex justify-content-between align-items-start flex-wrap gap-2">
@@ -841,6 +873,7 @@ export const BuildDetail: React.FC = () => {
       </div>
 
       {/* Rating System */}
+      {!pendingMode && (
       <div className="card bg-dark border-secondary mb-4">
         <div className="card-body">
           <div className="row align-items-center">
@@ -899,6 +932,7 @@ export const BuildDetail: React.FC = () => {
           </div>
         </div>
       </div>
+      )}
 
       {/* Source URL */}
       {build.source_url && (
