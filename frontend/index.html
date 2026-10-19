@@ -58,13 +58,59 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
 
-    <!-- Google Analytics loaded after main content for better performance -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-E67MKKS33Q"></script>
+    <!-- Google Analytics, loaded only once the visitor looks human.
+         gtag() calls are queued in dataLayer right away, but gtag.js (which actually
+         sends them) is injected only after a real interaction or a few seconds of
+         visible page time. Headless/automated browsers that load the page and leave
+         within seconds (e.g. the ~4s, zero-engagement Singapore traffic) never send
+         anything. Page views are sent by components/GoogleAnalytics.tsx on every
+         route change, so the automatic one from 'config' is disabled to avoid
+         counting the landing page twice. -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-E67MKKS33Q');
+      gtag('config', 'G-E67MKKS33Q', { send_page_view: false });
+
+      (function () {
+        // Production only: localhost dev servers, test runs and LAN previews must not
+        // pollute the stats. gtag() calls still queue harmlessly in dataLayer.
+        var PRODUCTION_HOSTS = ['stellaris-build.com', 'www.stellaris-build.com'];
+        if (PRODUCTION_HOSTS.indexOf(location.hostname) === -1) return;
+        if (navigator.webdriver) return; // set by Selenium/Puppeteer/Playwright
+
+        var VISIBLE_MS_THRESHOLD = 5000;
+        var HUMAN_EVENTS = ['pointerdown', 'keydown', 'scroll', 'touchstart', 'wheel'];
+        var loaded = false;
+        var visibleTimer = null;
+
+        function loadAnalytics() {
+          if (loaded) return;
+          loaded = true;
+          HUMAN_EVENTS.forEach(function (name) { window.removeEventListener(name, loadAnalytics, true); });
+          document.removeEventListener('visibilitychange', onVisibilityChange);
+          clearTimeout(visibleTimer);
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=G-E67MKKS33Q';
+          document.head.appendChild(script);
+        }
+
+        // Only count time while the tab is actually visible (background tabs and
+        // prerendered pages do not qualify).
+        function onVisibilityChange() {
+          clearTimeout(visibleTimer);
+          if (document.visibilityState === 'visible') {
+            visibleTimer = setTimeout(loadAnalytics, VISIBLE_MS_THRESHOLD);
+          }
+        }
+
+        HUMAN_EVENTS.forEach(function (name) {
+          window.addEventListener(name, loadAnalytics, { capture: true, passive: true });
+        });
+        document.addEventListener('visibilitychange', onVisibilityChange);
+        onVisibilityChange();
+      })();
     </script>
   </body>
 </html>

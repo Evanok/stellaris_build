@@ -2,11 +2,13 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BuildForm } from '../BuildForm';
 import { invalidateBuildsCache } from './Home';
+import { trackEvent } from '../utils/analytics';
 
 const CreateManual: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleBuildCreated = () => {
+  const handleBuildCreated = (newBuild: any) => {
+    trackEvent('build_created', { method: 'manual', game_version: newBuild?.game_version });
     invalidateBuildsCache();
     navigate('/');
   };

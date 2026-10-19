@@ -13,6 +13,7 @@ import { PredicateNode, getFailingNodes, describePredicateHuman } from '../utils
 import { ORIGIN_IMAGE_QUERY, iconQuery } from '../utils/assetVersions';
 import { Shipset, getCityGraphicalCulture } from '../utils/shipsetRules';
 import { PlanetClass, PlanetRuleInput, getEffectivePlanetClass, getForcedPlanetClass, getTraitPlanetConflicts, getSpeciesPlanetConflict } from '../utils/planetRules';
+import { trackEvent } from '../utils/analytics';
 
 interface Build {
   id: number;
@@ -301,6 +302,7 @@ export const BuildDetail: React.FC = () => {
       setAverageRating(data.average_rating);
       setRatingCount(data.rating_count);
       setUserRating(data.user_rating);
+      trackEvent('rating_submitted', { build_id: id, rating, is_update: userRating != null });
     } catch (err: any) {
       console.error('Failed to submit rating:', err);
       alert(err.message || 'Failed to submit rating');
@@ -553,6 +555,7 @@ export const BuildDetail: React.FC = () => {
       civics,
       origin: b.origin || undefined,
       species_archetype: speciesArchetype,
+      species_class: b.species_class || undefined,
       traits,
       is_nomadic: !!b.is_nomadic,
       preferred_planet_class: getBuildPlanetClass(b),
@@ -653,6 +656,7 @@ export const BuildDetail: React.FC = () => {
     }
     setExportCopied(true);
     setTimeout(() => setExportCopied(false), 2000);
+    trackEvent('build_exported', { build_id: id, game_version: build?.game_version });
   };
 
   const handleDelete = async () => {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BuildForm } from '../BuildForm';
 import { invalidateBuildsCache } from './Home';
+import { trackEvent } from '../utils/analytics';
 
 const ImportSave: React.FC = () => {
   const navigate = useNavigate();
@@ -49,7 +50,8 @@ const ImportSave: React.FC = () => {
     }
   };
 
-  const handleBuildCreated = () => {
+  const handleBuildCreated = (newBuild: any) => {
+    trackEvent('build_created', { method: 'import_save', game_version: newBuild?.game_version });
     invalidateBuildsCache();
     navigate('/');
   };
@@ -142,9 +144,13 @@ const ImportSave: React.FC = () => {
               <p className="mb-2">
                 <strong>Windows:</strong> <code>Documents\Paradox Interactive\Stellaris\save games\</code>
               </p>
-              <p className="mb-0">
-                <strong>Tip:</strong> Use a recent save file from a game you're currently playing for the most accurate results.
-              </p>
+              <div className="alert alert-warning mb-0">
+                <i className="bi bi-exclamation-triangle me-2"></i>
+                A save holds your empire <strong>as it is at that date</strong>, not as it was created.
+                Civics, traits and ethics gained during the game (technologies, extra civic slots,
+                genetic modification, ethics drift...) are imported too and can make the build invalid:
+                remove the extra ones in the form before publishing.
+              </div>
             </div>
           </div>
 

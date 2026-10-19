@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import './Resources.css';
+import { trackEvent } from '../utils/analytics';
 
 interface Resource {
   title: string;
@@ -28,6 +29,16 @@ export const Resources: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  // Links open in a new tab, so the event is sent normally (this page stays loaded)
+  const trackResourceClick = (resource: Resource, categoryId: string) => {
+    trackEvent('resource_clicked', {
+      resource_title: resource.title,
+      link_url: resource.url,
+      category: categoryId,
+      featured: resource.featured,
+    });
+  };
   const [selectedEra, setSelectedEra] = useState<string>('all');
 
   useEffect(() => {
@@ -197,7 +208,10 @@ export const Resources: React.FC = () => {
                   <button
                     key={category.id}
                     className={`btn ${selectedCategory === category.id ? 'btn-primary' : 'btn-outline-secondary'}`}
-                    onClick={() => setSelectedCategory(category.id)}
+                    onClick={() => {
+                      setSelectedCategory(category.id);
+                      trackEvent('filter_used', { filter_type: 'resource_category', filter_value: category.id });
+                    }}
                   >
                     <i className={`${category.icon} me-2`}></i>
                     {category.name}
@@ -235,6 +249,7 @@ export const Resources: React.FC = () => {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="resource-card-link"
+                          onClick={() => trackResourceClick(resource, category.id)}
                         >
                           <div className="card bg-dark border-warning h-100 resource-card">
                             <div className="card-body">
@@ -283,6 +298,7 @@ export const Resources: React.FC = () => {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="resource-card-link"
+                          onClick={() => trackResourceClick(resource, category.id)}
                         >
                           <div className="card bg-dark border-secondary h-100 resource-card">
                             <div className="card-body">

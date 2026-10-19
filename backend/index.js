@@ -47,7 +47,7 @@ const { spawn } = require('child_process');
 const { setupDatabase, db } = require('./database');
 const { renderBuildOgImage } = require('./ogImage');
 const passport = require('./auth');
-const { apiLimiter, createBuildLimiter, validateBuildData, sanitizeBuildData } = require('./security');
+const { apiLimiter, createBuildLimiter, importLimiter, validateBuildData, sanitizeBuildData } = require('./security');
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -709,9 +709,28 @@ app.get('/api/ruler-traits', (req, res) => {
   readVersionedData(req.query.version, 'ruler_traits.json', res, 'Could not read ruler traits data.');
 });
 
+// Portrait ids that have an image (a few game portraits were never downloaded:
+// listing them would show an invisible, yet selectable, thumbnail)
+const PORTRAIT_IDS_WITH_IMAGE = new Set(
+  fs.readdirSync(path.join(__dirname, '../frontend/public/portraits'))
+    .filter(f => f.endsWith('.png'))
+    .map(f => f.slice(0, -'.png'.length))
+);
+
 // Get all species classes with their portraits
 app.get('/api/species-classes', (req, res) => {
-  readVersionedData(req.query.version, 'species_classes.json', res, 'Could not read species classes data.');
+  const filePath = path.join(__dirname, 'data', 'versions', getDataVersion(req.query.version), 'species_classes.json');
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json({ error: 'Could not read species classes data.' });
+      return;
+    }
+    const speciesClasses = JSON.parse(data).map(sc => {
+      const portraits = sc.portraits.filter(id => PORTRAIT_IDS_WITH_IMAGE.has(id));
+      return { ...sc, portraits, portrait_count: portraits.length };
+    });
+    res.json(speciesClasses);
+  });
 });
 
 // Get trait point/pick budget per species archetype (BIOLOGICAL/ROBOT/MACHINE/LITHOID/PRESAPIENT/OTHER)
@@ -1109,30 +1128,6 @@ app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
   });
 });
 
-// Update a build's description
-app.patch('/api/builds/:id', (req, res) => {
-  const { id } = req.params;
-  const { description } = req.body;
-
-  if (!description) {
-    return res.status(400).json({ error: 'Description is required.' });
-  }
-
-  const sql = `UPDATE builds SET description = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND deleted = 0`;
-
-  db.run(sql, [description, id], function(err) {
-    if (err) {
-      res.status(500).json({ error: err.message });
-      return;
-    }
-    if (this.changes === 0) {
-      res.status(404).json({ error: 'Build not found or already deleted.' });
-      return;
-    }
-    res.json({ success: true, changes: this.changes, id: parseInt(id) });
-  });
-});
-
 // Soft delete a build by ID (requires authentication and ownership)
 app.delete('/api/builds/:id', isAuthenticated, (req, res) => {
   const { id } = req.params;
@@ -1252,7 +1247,33 @@ app.put('/api/builds/:id', isAuthenticated, createBuildLimiter, (req, res) => {
 });
 
 // Import build from .sav file
-app.post('/api/import-build', isAuthenticated, upload.single('savefile'), (req, res) => {
+// File imports are open to anonymous visitors: the login is only asked when the
+// pre-filled build is published (POST /api/builds stays authenticated). Each import
+// spawns a Python parser, so besides importLimiter the number running at once is
+// capped (prod is a 2-core box) and each run is killed after IMPORT_TIMEOUT_MS.
+const MAX_CONCURRENT_IMPORTS = 3;
+const IMPORT_TIMEOUT_MS = 60 * 1000;
+let runningImports = 0;
+
+const importConcurrencyGuard = (req, res, next) => {
+  if (runningImports >= MAX_CONCURRENT_IMPORTS) {
+    return res.status(503).json({ error: 'The server is busy processing other imports, please try again in a minute.' });
+  }
+  runningImports += 1;
+  let released = false;
+  const release = () => {
+    if (released) return;
+    released = true;
+    runningImports -= 1;
+  };
+  res.on('finish', release);
+  res.on('close', release);
+  next();
+};
+
+const importGuards = [importLimiter, importConcurrencyGuard];
+
+app.post('/api/import-build', importGuards, upload.single('savefile'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
@@ -1261,7 +1282,7 @@ app.post('/api/import-build', isAuthenticated, upload.single('savefile'), (req, 
   const scriptPath = path.join(__dirname, '../data-extractor/import_build_from_save.py');
 
   // Run Python script to extract build data
-  const python = spawn('python3', [scriptPath, savFilePath]);
+  const python = spawn('python3', [scriptPath, savFilePath], { timeout: IMPORT_TIMEOUT_MS });
 
   let stdout = '';
   let stderr = '';
@@ -1328,7 +1349,7 @@ app.post('/api/import-build', isAuthenticated, upload.single('savefile'), (req, 
 });
 
 // List all empires from empire designs file
-app.post('/api/list-empires', isAuthenticated, upload.single('designsfile'), (req, res) => {
+app.post('/api/list-empires', importGuards, upload.single('designsfile'), (req, res) => {
   console.log('[list-empires] Request received');
 
   if (!req.file) {
@@ -1343,7 +1364,7 @@ app.post('/api/list-empires', isAuthenticated, upload.single('designsfile'), (re
   console.log('[list-empires] Script path:', scriptPath);
 
   // Run Python script to list empires
-  const python = spawn('python3', [scriptPath, designsFilePath]);
+  const python = spawn('python3', [scriptPath, designsFilePath], { timeout: IMPORT_TIMEOUT_MS });
   console.log('[list-empires] Python script spawned');
 
   let stdout = '';
@@ -1394,7 +1415,7 @@ app.post('/api/list-empires', isAuthenticated, upload.single('designsfile'), (re
 });
 
 // Extract specific empire from empire designs file
-app.post('/api/import-empire-designs', isAuthenticated, upload.single('designsfile'), (req, res) => {
+app.post('/api/import-empire-designs', importGuards, upload.single('designsfile'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
@@ -1410,7 +1431,7 @@ app.post('/api/import-empire-designs', isAuthenticated, upload.single('designsfi
   const scriptPath = path.join(__dirname, '../data-extractor/import_empire_from_designs.py');
 
   // Run Python script to extract specific empire
-  const python = spawn('python3', [scriptPath, designsFilePath, empireName]);
+  const python = spawn('python3', [scriptPath, designsFilePath, empireName], { timeout: IMPORT_TIMEOUT_MS });
 
   let stdout = '';
   let stderr = '';
@@ -2284,6 +2305,11 @@ app.get('/og/build/:file', (req, res) => {
 
 // Serve React app for all other routes (must be after API routes)
 app.use((req, res) => {
+  // /builds/:id was emitted by the home page JSON-LD by mistake and got indexed;
+  // permanently redirect it to the real route so search engines replace it.
+  const legacyMatch = req.path.match(/^\/builds\/(\d+)\/?$/);
+  if (legacyMatch) return res.redirect(301, `/build/${legacyMatch[1]}`);
+
   const buildMatch = req.path.match(/^\/build\/(\d+)\/?$/);
   if (!buildMatch) {
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

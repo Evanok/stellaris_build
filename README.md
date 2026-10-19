@@ -28,7 +28,8 @@ This project is currently in active development with the following features impl
   - Optional YouTube video link with embedded player
   - **Source URL attribution** for builds from Reddit/forums
   - **Import from .sav files** (automatically extract build data from Stellaris save files)
-  - **Import from Empire Designs** (import all empires from `user_empire_designs.txt`)
+  - **Import from Empire Designs** (import all empires from `user_empire_designs.txt`) - the fastest way to share a build, listed first on the create page
+  - **No account needed to start**: the form and both imports work without logging in; the login is only asked at publish time, and the build in progress is restored after signing in (email, Google or Steam). Uploaded files are deleted as soon as they are parsed
   - **Nomadic Empire support** (Nomads DLC) - ark type selection with per-tier stats
 - **Build Rule Checking (experimental)**: Every build is checked at submit and export time against rules parsed directly from the game's own files - not hardcoded - covering origin/authority/civic compatibility, civic count, and trait budget per species archetype. Shows a non-blocking, plain-English warning ("Authority 'Democratic' requires none of: ethic 'Authoritarian'...") rather than blocking the user. A standalone CLI (`backend/check_build_rules.js`) can audit the whole database or check a single build. About 57% of currently published builds have at least one flagged rule conflict.
 - **Export to Stellaris (experimental)**: Generate a custom empire design block ready to paste into `user_empire_designs_v3.4.txt`, so a build can be loaded directly in-game. Runs the same rule check before exporting.
@@ -54,8 +55,11 @@ This project is currently in active development with the following features impl
 - **Feedback System**: A global button for users to submit feedback and bug reports (with optional screenshot upload), plus a public feedback/bug list with admin resolve controls
 - **Social Link Previews**: Per-build Open Graph image generated on demand (species portrait or origin art, build name, origin, authority, ethics), so shared links show a real preview instead of the generic site card
 - **Google Analytics**: Visitor tracking and statistics (G-E67MKKS33Q)
+  - Loaded only on the production domain, and only after a sign of a real visitor (interaction, or a few seconds on a visible page) - filters out the headless bots that used to inflate the numbers
+  - Custom events to understand what visitors do: build creation (manual vs imports), exports, ratings, search, filters, logins, feedback, resource clicks
 - **Security**:
   - Rate limiting (100 requests/15min per IP, 5 builds/hour per user)
+  - File imports open to visitors but capped: 30/hour per IP (60 with an account), at most 3 parsed at once, 60s timeout per file
   - Input validation and sanitization
   - XSS protection
   - Password complexity requirements (NIST/OWASP compliant)
@@ -317,8 +321,8 @@ version (currently 4.2, 4.3, or 4.4).
 | `/api/builds/:id` | DELETE | Soft delete a build (requires authentication, author only) |
 | `/api/builds/:id/rating` | GET | Get average rating and the current user's rating |
 | `/api/builds/:id/rating` | POST | Rate a build (requires authentication) |
-| `/api/import-build` | POST | Extract a build from an uploaded `.sav` file |
-| `/api/list-empires` / `/api/import-empire-designs` | POST | List/import empires from a `user_empire_designs.txt` upload |
+| `/api/import-build` | POST | Extract a build from an uploaded `.sav` file (no login required, rate-limited) |
+| `/api/list-empires` / `/api/import-empire-designs` | POST | List/import empires from a `user_empire_designs.txt` upload (no login required, rate-limited) |
 | `/api/stats` | GET | Public site statistics |
 | `/api/feedback` | GET/POST | List/submit feedback and bug reports |
 | `/api/chat` | GET/POST | Community chat messages (rate-limited) |

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
+import { trackEvent } from '../utils/analytics';
 
 interface FeedbackModalProps {
   show: boolean;
@@ -49,6 +50,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ show, onHide }) =>
       }
 
       setSuccess(true);
+      trackEvent('feedback_submitted', { feedback_type: type, page_path: location.pathname, has_screenshot: !!screenshot });
       setDescription('');
       setScreenshot(null);
 

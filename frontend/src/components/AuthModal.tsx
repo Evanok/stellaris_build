@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { setPostLoginRedirect } from '../utils/postLoginRedirect';
 
 interface AuthModalProps {
   show: boolean;
@@ -8,7 +9,7 @@ interface AuthModalProps {
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({ show, onClose, onSuccess }) => {
-  const [activeTab, setActiveTab] = useState<'login' | 'register' | 'oauth'>('oauth');
+  const [activeTab, setActiveTab] = useState<'login' | 'register' | 'oauth'>('login');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -79,7 +80,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ show, onClose, onSuccess }
   };
 
   const handleOAuthLogin = (provider: 'google' | 'steam') => {
-    // Store current form data before redirecting
+    // The form data was already saved by the caller; the OAuth round trip ends on
+    // '/', so remember to come back to a page where BuildForm restores the draft.
+    // Import pages start on their upload step after a reload, but the saved draft
+    // holds the whole imported build, so the manual form is the place to resume.
+    const path = window.location.pathname;
+    setPostLoginRedirect(path.startsWith('/create/import') ? '/create/manual' : path);
     window.location.href = `/auth/${provider}`;
   };
 
@@ -103,15 +109,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ show, onClose, onSuccess }
             <ul className="nav nav-tabs nav-fill mb-3" role="tablist">
               <li className="nav-item" role="presentation">
                 <button
-                  className={`nav-link ${activeTab === 'oauth' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('oauth')}
-                  type="button"
-                >
-                  OAuth
-                </button>
-              </li>
-              <li className="nav-item" role="presentation">
-                <button
                   className={`nav-link ${activeTab === 'login' ? 'active' : ''}`}
                   onClick={() => setActiveTab('login')}
                   type="button"
@@ -126,6 +123,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ show, onClose, onSuccess }
                   type="button"
                 >
                   Register
+                </button>
+              </li>
+              <li className="nav-item" role="presentation">
+                <button
+                  className={`nav-link ${activeTab === 'oauth' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('oauth')}
+                  type="button"
+                >
+                  Google / Steam
                 </button>
               </li>
             </ul>

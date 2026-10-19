@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FeedbackModal } from './FeedbackModal';
+import { trackEvent } from '../utils/analytics';
 
 export const FeedbackButton: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
@@ -7,7 +8,10 @@ export const FeedbackButton: React.FC = () => {
   return (
     <>
       <button
-        onClick={() => setShowModal(true)}
+        onClick={() => {
+          setShowModal(true);
+          trackEvent('feedback_opened', { page_path: window.location.pathname });
+        }}
         className="btn btn-primary"
         style={{
           position: 'fixed',

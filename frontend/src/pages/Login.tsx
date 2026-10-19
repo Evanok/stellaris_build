@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { trackEvent, trackEventThenNavigate } from '../utils/analytics';
+import { consumePostLoginRedirect } from '../utils/postLoginRedirect';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const [activeTab, setActiveTab] = useState<'login' | 'register' | 'oauth'>('oauth');
+  const [activeTab, setActiveTab] = useState<'login' | 'register' | 'oauth'>('login');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,10 +15,11 @@ const Login: React.FC = () => {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  // Redirect if already logged in
+  // Redirect if already logged in - to the page that sent the visitor here, if any
+  // (consumed here rather than in App.tsx so the two redirects do not race)
   useEffect(() => {
     if (!loading && user) {
-      navigate('/');
+      navigate(consumePostLoginRedirect() || '/', { replace: true });
     }
   }, [user, loading, navigate]);
 
@@ -47,11 +50,24 @@ const Login: React.FC = () => {
       }
 
       // Registration successful, redirect to home
-      window.location.href = '/';
+      trackEventThenNavigate('sign_up', { method: 'local' }, '/');
     } catch (err) {
       setError('Network error. Please try again.');
       setSubmitting(false);
     }
+  };
+
+  // OAuth success happens on the provider's side and comes back as a plain redirect,
+  // so the click is the closest signal we have: 'login' here means "started an
+  // OAuth sign-in", not a confirmed one (new and returning users look the same).
+  const handleOAuthClick = (e: React.MouseEvent<HTMLAnchorElement>, provider: 'google' | 'steam') => {
+    // Modified clicks open a new tab: the current page stays, so no need to hold the navigation
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) {
+      trackEvent('login', { method: provider });
+      return;
+    }
+    e.preventDefault();
+    trackEventThenNavigate('login', { method: provider }, e.currentTarget.href);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -75,7 +91,7 @@ const Login: React.FC = () => {
       }
 
       // Login successful, redirect to home
-      window.location.href = '/';
+      trackEventThenNavigate('login', { method: 'local' }, '/');
     } catch (err) {
       setError('Network error. Please try again.');
       setSubmitting(false);
@@ -107,15 +123,6 @@ const Login: React.FC = () => {
               <ul className="nav nav-tabs nav-fill mb-3" role="tablist">
                 <li className="nav-item" role="presentation">
                   <button
-                    className={`nav-link ${activeTab === 'oauth' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('oauth')}
-                    type="button"
-                  >
-                    OAuth
-                  </button>
-                </li>
-                <li className="nav-item" role="presentation">
-                  <button
                     className={`nav-link ${activeTab === 'login' ? 'active' : ''}`}
                     onClick={() => setActiveTab('login')}
                     type="button"
@@ -132,6 +139,15 @@ const Login: React.FC = () => {
                     Register
                   </button>
                 </li>
+                <li className="nav-item" role="presentation">
+                  <button
+                    className={`nav-link ${activeTab === 'oauth' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('oauth')}
+                    type="button"
+                  >
+                    Google / Steam
+                  </button>
+                </li>
               </ul>
 
               {/* Error Alert */}
@@ -146,6 +162,7 @@ const Login: React.FC = () => {
                 <div className="d-grid gap-3">
                   <a
                     href="/auth/google"
+                    onClick={(e) => handleOAuthClick(e, 'google')}
                     className="btn btn-lg btn-light d-flex align-items-center justify-content-center"
                   >
                     <i className="bi bi-google me-2"></i>
@@ -153,6 +170,7 @@ const Login: React.FC = () => {
                   </a>
                   <a
                     href="/auth/steam"
+                    onClick={(e) => handleOAuthClick(e, 'steam')}
                     className="btn btn-lg btn-primary d-flex align-items-center justify-content-center"
                   >
                     <i className="bi bi-steam me-2"></i>

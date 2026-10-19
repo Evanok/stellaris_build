@@ -1,9 +1,34 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BuildForm } from '../BuildForm';
+import { trackEvent } from '../utils/analytics';
+
+const DESIGNS_FILE = 'user_empire_designs_v3.4.txt';
+
+// A web page cannot choose the folder the file picker opens in, but every OS
+// picker accepts a full path typed or pasted into it. The Windows picker expands
+// environment variables, so no need to know the user name.
+const DESIGNS_FILE_PATHS = [
+  {
+    os: 'Windows',
+    path: `%USERPROFILE%\\Documents\\Paradox Interactive\\Stellaris\\${DESIGNS_FILE}`,
+    hint: 'In the file picker, paste it into the "File name" field at the bottom (not the address bar at the top) and press Enter.',
+  },
+  {
+    os: 'macOS',
+    path: `~/Documents/Paradox Interactive/Stellaris/${DESIGNS_FILE}`,
+    hint: 'In the file picker, press Cmd+Shift+G, paste it and press Enter.',
+  },
+  {
+    os: 'Linux',
+    path: `~/.local/share/Paradox Interactive/Stellaris/${DESIGNS_FILE}`,
+    hint: 'In the file picker, press Ctrl+L, paste it and press Enter.',
+  },
+];
 
 const ImportEmpireDesigns: React.FC = () => {
   const navigate = useNavigate();
+  const [copiedOs, setCopiedOs] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [empireList, setEmpireList] = useState<string[] | null>(null);
@@ -47,6 +72,16 @@ const ImportEmpireDesigns: React.FC = () => {
     }
   };
 
+  const handleCopyPath = async (os: string, path: string) => {
+    try {
+      await navigator.clipboard.writeText(path);
+      setCopiedOs(os);
+      setTimeout(() => setCopiedOs(current => (current === os ? null : current)), 2000);
+    } catch {
+      // Clipboard unavailable (permission denied, insecure context): the path stays visible to copy by hand
+    }
+  };
+
   const handleEmpireSelect = async (empireName: string) => {
     setSelectedEmpire(empireName);
     setError(null);
@@ -80,7 +115,8 @@ const ImportEmpireDesigns: React.FC = () => {
     }
   };
 
-  const handleBuildCreated = () => {
+  const handleBuildCreated = (newBuild: any) => {
+    trackEvent('build_created', { method: 'import_designs', game_version: newBuild?.game_version });
     navigate('/');
   };
 
@@ -123,9 +159,33 @@ const ImportEmpireDesigns: React.FC = () => {
               <p className="card-text">
                 The empire designs file contains all your custom-created empires from Stellaris.
               </p>
-              <p className="mb-0">
-                <strong>Windows:</strong> <code>Documents\Paradox Interactive\Stellaris\user_empire_designs_v3.4.txt</code>
+              <p className="card-text">
+                Copy the path for your system, then paste it into the file picker to open the file directly.
               </p>
+              {DESIGNS_FILE_PATHS.map(({ os, path, hint }, index) => (
+                <div key={os} className={index < DESIGNS_FILE_PATHS.length - 1 ? 'mb-3' : ''}>
+                  <strong>{os}:</strong>
+                  <div className="input-group input-group-sm mt-1">
+                    <input
+                      type="text"
+                      className="form-control bg-secondary text-white border-secondary font-monospace"
+                      value={path}
+                      readOnly
+                      onFocus={e => e.target.select()}
+                      aria-label={`${os} path`}
+                    />
+                    <button
+                      type="button"
+                      className={`btn ${copiedOs === os ? 'btn-success' : 'btn-outline-light'}`}
+                      onClick={() => handleCopyPath(os, path)}
+                    >
+                      <i className={`bi ${copiedOs === os ? 'bi-check-lg' : 'bi-clipboard'} me-1`}></i>
+                      {copiedOs === os ? 'Copied' : 'Copy'}
+                    </button>
+                  </div>
+                  <div className="form-text text-light opacity-75">{hint}</div>
+                </div>
+              ))}
             </div>
           </div>
 

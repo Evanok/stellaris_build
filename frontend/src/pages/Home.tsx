@@ -9,6 +9,7 @@ import { BUILD_TAGS } from '../utils/buildTags';
 import { BuildTagList, BuildTagsHelpModal } from '../components/BuildTags';
 import { WhatsNewBanner, NewsItem } from '../components/WhatsNewBanner';
 import { LATEST_GAME_VERSION } from '../utils/gameVersion';
+import { trackEvent } from '../utils/analytics';
 import './Home.css';
 
 const VERSION_NAMES: Record<string, string> = {
@@ -128,6 +129,11 @@ export const Home: React.FC = () => {
   // What's New data
   const latestNews: NewsItem[] = [
     {
+      date: '19 Oct 2026',
+      title: 'Improved build import, you can now start a build without logging in',
+      type: 'update'
+    },
+    {
       date: '17 Oct 2026',
       title: 'Pick your Homeworld and Ship Appearance in builds',
       type: 'feature'
@@ -151,7 +157,13 @@ export const Home: React.FC = () => {
     searchTimerRef.current = setTimeout(() => {
       setDebouncedSearch(value);
       setCurrentPage(1);
+      if (value.trim().length >= 2) trackEvent('search', { search_term: value.trim() });
     }, 300);
+  };
+
+  // Only actual selections are tracked; going back to "All ..." is not a filter use
+  const trackFilter = (filterType: string, value: string) => {
+    if (value) trackEvent('filter_used', { filter_type: filterType, filter_value: value });
   };
 
   const hasActiveFilters = !!(searchQuery || difficultyFilter || versionFilter || nomadicFilter || tagFilter);
@@ -234,7 +246,7 @@ export const Home: React.FC = () => {
           "itemListElement": pagedBuilds.slice(0, 20).map((build, index) => ({
             "@type": "ListItem",
             "position": index + 1,
-            "url": `https://stellaris-build.com/builds/${build.id}`,
+            "url": `https://stellaris-build.com/build/${build.id}`,
             "name": build.name,
             "description": build.description || `Stellaris empire build - ${build.game_version}`
           }))
@@ -269,10 +281,21 @@ export const Home: React.FC = () => {
                 Up to date with Stellaris {LATEST_GAME_VERSION.patch} &quot;{LATEST_GAME_VERSION.name}&quot;
               </span>
             </div>
-            <div className="col-md-4 text-end">
-              <div className="d-inline-block p-2 rounded" style={{ background: 'rgba(255, 255, 255, 0.1)' }}>
-                <h4 className="text-white mb-1">{total}</h4>
-                <p className="text-light mb-0 small">Community Builds</p>
+            <div className="col-md-4 text-md-end mt-3 mt-md-0">
+              <div className="d-inline-flex align-items-center gap-3">
+                <div className="p-2 rounded text-center" style={{ background: 'rgba(255, 255, 255, 0.1)' }}>
+                  <h4 className="text-white mb-1">{total}</h4>
+                  <p className="text-light mb-0 small">Community Builds</p>
+                </div>
+                <div className="text-center">
+                  <Link to="/create" className="btn btn-success fw-bold">
+                    <i className="bi bi-plus-circle me-2"></i>
+                    Share your build
+                  </Link>
+                  <div className="text-light small mt-1" style={{ opacity: 0.8 }}>
+                    Import it from your game in 30s
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -363,6 +386,7 @@ export const Home: React.FC = () => {
               onChange={(e) => {
                 setDifficultyFilter(e.target.value);
                 setCurrentPage(1);
+                trackFilter('difficulty', e.target.value);
               }}
             >
               <option value="">All Difficulties</option>
@@ -379,6 +403,7 @@ export const Home: React.FC = () => {
               onChange={(e) => {
                 setVersionFilter(e.target.value);
                 setCurrentPage(1);
+                trackFilter('version', e.target.value);
               }}
             >
               <option value="">All Versions</option>
@@ -395,6 +420,7 @@ export const Home: React.FC = () => {
               onChange={(e) => {
                 setTagFilter(e.target.value);
                 setCurrentPage(1);
+                trackFilter('tag', e.target.value);
               }}
             >
               <option value="">All Tags</option>
@@ -411,6 +437,7 @@ export const Home: React.FC = () => {
               onChange={(e) => {
                 setNomadicFilter(e.target.value === 'nomadic');
                 setCurrentPage(1);
+                trackFilter('empire_type', e.target.value);
               }}
             >
               <option value="">All Empires</option>
@@ -425,6 +452,7 @@ export const Home: React.FC = () => {
               onChange={(e) => {
                 setSortBy(e.target.value);
                 setCurrentPage(1);
+                trackFilter('sort', e.target.value);
               }}
             >
               <option value="newest">Newest First</option>

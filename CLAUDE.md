@@ -177,16 +177,16 @@ The project uses npm workspaces with three main parts:
 
 **Pages:**
 - `Home.tsx` - Displays all builds with search, filtering, and pagination
-- `Create.tsx` - Build creation page with BuildForm (requires authentication)
+- `CreateChoice.tsx` (`/create`) - Public page listing the 3 ways to create a build, imports first (`ImportEmpireDesigns.tsx`, `ImportSave.tsx`, `CreateManual.tsx`). None of them needs a login up front - it is asked at publish time (see "Build Creation Funnel" in Recent Completions)
 - `BuildDetail.tsx` - Individual build view with all details, embedded YouTube videos, and soft delete button
-- `Login.tsx` - OAuth login page with Google and Steam buttons
+- `Login.tsx` - Login page, tabs Login (default) / Register / Google / Steam - email login is deliberately the default, OAuth buttons put some visitors off
 - `Resources.tsx` - Curated community resources page with categorized links to guides, tools, YouTubers, mods, and communities
 - `Feedback.tsx` - Feedback & bug reports list (col-lg-8) with community chat sidebar (col-lg-4)
 
 **Authentication:**
 - `AuthContext.tsx` - React context providing authentication state and user info
 - `useAuth()` hook - Access current user, loading state, logout function
-- Protected routes redirect to `/login` if user not authenticated
+- Pages that need an account send the visitor to `/login` after `setPostLoginRedirect(path)` (`utils/postLoginRedirect.ts`); `App.tsx` / `Login.tsx` bring them back once logged in. Every login path (local, Google, Steam) otherwise ends on `/`
 - Navbar shows user avatar and username when logged in
 
 **Data Flow:**
@@ -242,6 +242,7 @@ The project uses npm workspaces with three main parts:
 - `GET /api/planet-classes` - Returns homeworld planet classes (10 selectable climates + origin-forced classes like Habitat/Gaia, with icons)
 - `GET /api/builds` - Returns all non-deleted builds ordered by created_at DESC
 - `POST /api/builds` - Creates new build (requires authentication, name, checks for duplicates)
+- `POST /api/import-build` (`.sav`), `POST /api/list-empires` + `POST /api/import-empire-designs` (empire designs `.txt`) - parse an uploaded file with a Python script and return pre-filled build data. **Open to anonymous visitors**, protected by `importLimiter` (30/h per IP, 60/h per account), max 3 concurrent parses (503 beyond), 60s script timeout. The uploaded file is deleted as soon as the script exits
 - `DELETE /api/builds/:id` - Soft deletes a build (sets deleted=1)
 - `GET /api/resources` - Returns curated community resources (YouTube channels, guides, tools, mods, communities)
 - `GET /api/chat` - Returns last 100 non-deleted chat messages (oldest first)
@@ -437,7 +438,7 @@ EOF
 
 4. **Soft Delete**: Builds have a `deleted` column (0=visible, 1=hidden). Deleted builds stay in the database for potential recovery.
 
-5. **Authentication**: OAuth-based authentication (Google + Steam). User sessions managed via express-session. Creating builds requires authentication (author_id automatically set).
+5. **Authentication**: Local accounts + OAuth (Google + Steam). User sessions managed via express-session. Publishing a build requires authentication (author_id automatically set), but filling the form or importing a file does not: `BuildForm.tsx` asks for a login only at submit time, after every validation step.
 
 6. **Nodemon Limitation**: Backend nodemon only watches `.js` files. If you update JSON data files in `backend/data/`, you must manually restart the backend.
 
@@ -534,6 +535,9 @@ All extracted data must be:
 
 ## Common Issues
 
+**Issue**: A frontend change does not show up when testing on `http://localhost:3001`
+**Solution**: Port 3001 is the backend serving the **built** `frontend/dist`, only refreshed by `npm run build -w frontend`. During development use the Vite server on `http://localhost:3000` (hot reload). The backend's "Access the app at: http://localhost:3001" startup log is misleading in dev.
+
 **Issue**: Origin/civic names show as IDs
 **Solution**: Re-run data extraction with `extract_all.py`
 
@@ -550,6 +554,8 @@ All extracted data must be:
 **Solution**: `database.js` opens `./stellaris_builds.db` — a path relative to the **current working directory**, not to the file. Launching with `node backend/index.js` from the repo root silently creates a fresh empty DB there instead of using `backend/stellaris_builds.db`. Always start from the backend folder (`cd backend && node index.js`) or via `npm run dev -w backend`. Delete the stray root DB if one was created. PM2 sets its own cwd, so prod is unaffected.
 
 ## Testing
+
+**Google Analytics in tests:** `frontend/index.html` only loads GA on `stellaris-build.com` / `www.stellaris-build.com`, so localhost and test runs never send hits. `trackEvent()` calls still land in `window.dataLayer`, which is what tests should assert on. GA is also skipped when `navigator.webdriver` is true (Playwright/Selenium) - to test the loading gate itself, override it with `addInitScript`.
 
 After making changes to game data:
 
@@ -574,8 +580,8 @@ After making changes to game data:
 **Frontend:**
 - `AuthContext.tsx` - React context for auth state
 - `useAuth()` hook - Access user, loading, logout, refreshUser
-- Protected routes redirect to `/login` when user is null
-- Navbar displays user info (display_name or username) and conditional "Create Build" link
+- Pages needing an account redirect to `/login` with a post-login redirect (see Frontend Architecture > Authentication)
+- Navbar displays user info (display_name or username); the "Create Build" link is shown to everyone
 - `DisplayNameModal.tsx` - Modal for OAuth users to set/change their custom display name
 - "Edit" button in navbar for OAuth users only (local users cannot change display_name)
 
@@ -585,7 +591,7 @@ After making changes to game data:
 3. Provider authenticates user → callback to backend
 4. Backend creates/finds user in database → session created
 5. User redirected to home → frontend fetches user via `/api/user`
-6. AuthContext updates, user can now create builds
+6. AuthContext updates; `App.tsx` sends the user back to the page stored by `setPostLoginRedirect()` (30 min expiry), if any - e.g. the build form, where `BuildForm.tsx` restores the draft saved before the OAuth round trip
 
 **Environment Variables Required:**
 - `SESSION_SECRET` - Random string for session encryption
@@ -615,6 +621,33 @@ Planned features (not yet implemented):
 ---
 
 ## Recent Completions
+
+### Google Analytics Clean-up + Build Creation Funnel (2026-10-19)
+Started from a GA4 audit (Data API, via a service account - access details in `CLAUDE.local.md`).
+
+**Audit findings worth remembering:**
+- GA "users" are browser cookies, not people nor accounts: ~24.5k GA users all-time vs 211 real accounts (2026-10-19).
+- ~500 "users"/month from Singapore (+ some China) were bots: 1 session each, ~4s, ~39% engagement.
+- ~70% of traffic is organic search. Most "Direct" traffic is bots or links clicked in apps (Discord, Steam client...), which send no referrer - UTM-tagging our own links was considered and dropped (nobody on our side posts links).
+- Create funnel, 90 days: 391 visitors on `/create/manual` -> 17 published builds (~4%). Empire designs imports convert ~50% (12 uploads -> at least 5 builds, matched from pm2 logs) but were barely used, partly because they required a login up front.
+
+**GA (`frontend/index.html`, `components/GoogleAnalytics.tsx`, `utils/analytics.ts`):**
+- gtag.js is only injected after a human signal (pointer/key/scroll/touch/wheel, or 5s of *visible* page time) and never for `navigator.webdriver`; `gtag()` calls are queued in `dataLayer` meanwhile. Production domain only (see Testing).
+- `send_page_view: false` on `config`: the landing page was counted twice (automatic + manual page_view).
+- The manual page_view waits (max 1.5s) for react-helmet-async to update `<title>`, which used to report the previous page's title.
+- Custom events through `trackEvent()` (typed list in `utils/analytics.ts`): `build_created` (`method`: manual/import_save/import_designs), `build_updated`, `build_exported`, `rating_submitted`, `search`, `filter_used` (`filter_type`/`filter_value`, home filters + resource categories), `login`/`sign_up` (`method`; for Google/Steam it is the click, success happens on the provider side), `feedback_opened`, `feedback_submitted`, `chat_message_sent`, `resource_clicked`. Events right before a full page load use `trackEventThenNavigate()` (waits for GA, max 500ms).
+- Event parameters only show in GA reports once registered as custom dimensions/metrics (GA Admin > Custom definitions) - done for all of the above; `build_created` and `sign_up` are key events. **A new event parameter needs the same registration.**
+
+**SEO fix:** the home page JSON-LD `ItemList` linked to `/builds/:id` (plural, no such route; Google indexed it as blank pages). Fixed to `/build/:id`, and the backend 301-redirects `/builds/:id` -> `/build/:id`.
+
+**Build creation funnel** - ask for effort only once the work is done:
+- `/create` and the "Create Build" navbar link are public; home hero has a "Share your build" CTA. Imports are listed first.
+- File imports no longer need a login (see the import endpoints in API Endpoints for the abuse limits).
+- `BuildForm.tsx` asks for a login only after every validation step. **Bug fixed:** an anonymous visitor who filled the form then picked Google/Steam in the auth modal came back on `/` and silently lost the build - the draft (`stellaris_build_draft` in localStorage) was only restored for the in-modal email login. Now `AuthModal.tsx` stores a post-login redirect (`/create/manual` for import pages, whose upload step does not survive a reload) and `BuildForm.tsx` restores the draft on mount when logged in. The portrait was also missing from the draft.
+
+**Security:** removed `PATCH /api/builds/:id` - unused by the frontend and unauthenticated, anyone could rewrite any build's description.
+
+**Key files:** `frontend/index.html`, `frontend/src/components/GoogleAnalytics.tsx`, `frontend/src/utils/analytics.ts`, `frontend/src/utils/postLoginRedirect.ts`, `frontend/src/pages/CreateChoice.tsx`, `frontend/src/BuildForm.tsx`, `frontend/src/components/AuthModal.tsx`, `frontend/src/App.tsx`, `backend/index.js`, `backend/security.js`
 
 ### Ship Appearance / Shipsets (2026-10-17)
 Builds can record their ship appearance (`graphical_culture`, optional).
