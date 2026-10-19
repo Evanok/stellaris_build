@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { BuildForm } from '../BuildForm';
 import { useAuth } from '../AuthContext';
 import { invalidateBuildsCache } from './Home';
+import { trackEvent } from '../utils/analytics';
 
 const EditBuild: React.FC = () => {
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ const EditBuild: React.FC = () => {
   }, [id, user]);
 
   const handleBuildUpdated = () => {
+    trackEvent('build_updated', { build_id: id });
     invalidateBuildsCache();
     navigate(`/build/${id}`);
   };

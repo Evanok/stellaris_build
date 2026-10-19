@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BuildForm } from '../BuildForm';
 import { invalidateBuildsCache } from './Home';
+import { trackEvent } from '../utils/analytics';
 
 const ImportSave: React.FC = () => {
   const navigate = useNavigate();
@@ -49,7 +50,8 @@ const ImportSave: React.FC = () => {
     }
   };
 
-  const handleBuildCreated = () => {
+  const handleBuildCreated = (newBuild: any) => {
+    trackEvent('build_created', { method: 'import_save', game_version: newBuild?.game_version });
     invalidateBuildsCache();
     navigate('/');
   };

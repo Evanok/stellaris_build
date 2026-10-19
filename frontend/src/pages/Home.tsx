@@ -9,6 +9,7 @@ import { BUILD_TAGS } from '../utils/buildTags';
 import { BuildTagList, BuildTagsHelpModal } from '../components/BuildTags';
 import { WhatsNewBanner, NewsItem } from '../components/WhatsNewBanner';
 import { LATEST_GAME_VERSION } from '../utils/gameVersion';
+import { trackEvent } from '../utils/analytics';
 import './Home.css';
 
 const VERSION_NAMES: Record<string, string> = {
@@ -151,7 +152,13 @@ export const Home: React.FC = () => {
     searchTimerRef.current = setTimeout(() => {
       setDebouncedSearch(value);
       setCurrentPage(1);
+      if (value.trim().length >= 2) trackEvent('search', { search_term: value.trim() });
     }, 300);
+  };
+
+  // Only actual selections are tracked; going back to "All ..." is not a filter use
+  const trackFilter = (filterType: string, value: string) => {
+    if (value) trackEvent('filter_used', { filter_type: filterType, filter_value: value });
   };
 
   const hasActiveFilters = !!(searchQuery || difficultyFilter || versionFilter || nomadicFilter || tagFilter);
@@ -363,6 +370,7 @@ export const Home: React.FC = () => {
               onChange={(e) => {
                 setDifficultyFilter(e.target.value);
                 setCurrentPage(1);
+                trackFilter('difficulty', e.target.value);
               }}
             >
               <option value="">All Difficulties</option>
@@ -379,6 +387,7 @@ export const Home: React.FC = () => {
               onChange={(e) => {
                 setVersionFilter(e.target.value);
                 setCurrentPage(1);
+                trackFilter('version', e.target.value);
               }}
             >
               <option value="">All Versions</option>
@@ -395,6 +404,7 @@ export const Home: React.FC = () => {
               onChange={(e) => {
                 setTagFilter(e.target.value);
                 setCurrentPage(1);
+                trackFilter('tag', e.target.value);
               }}
             >
               <option value="">All Tags</option>
@@ -411,6 +421,7 @@ export const Home: React.FC = () => {
               onChange={(e) => {
                 setNomadicFilter(e.target.value === 'nomadic');
                 setCurrentPage(1);
+                trackFilter('empire_type', e.target.value);
               }}
             >
               <option value="">All Empires</option>
@@ -425,6 +436,7 @@ export const Home: React.FC = () => {
               onChange={(e) => {
                 setSortBy(e.target.value);
                 setCurrentPage(1);
+                trackFilter('sort', e.target.value);
               }}
             >
               <option value="newest">Newest First</option>

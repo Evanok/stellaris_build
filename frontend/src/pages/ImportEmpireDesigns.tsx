@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BuildForm } from '../BuildForm';
+import { trackEvent } from '../utils/analytics';
 
 const ImportEmpireDesigns: React.FC = () => {
   const navigate = useNavigate();
@@ -80,7 +81,8 @@ const ImportEmpireDesigns: React.FC = () => {
     }
   };
 
-  const handleBuildCreated = () => {
+  const handleBuildCreated = (newBuild: any) => {
+    trackEvent('build_created', { method: 'import_designs', game_version: newBuild?.game_version });
     navigate('/');
   };
 
