@@ -111,19 +111,21 @@ test.describe('Game Assets - Image Availability', () => {
         return false;
       }
 
-      const potential = civic.potential || [];
+      // Origins the civic requires: positive `origin` predicates of its potential
+      // tree ({all/any/not/field} nodes), ignoring the ones under a `not`
+      const requiredOrigins: string[] = [];
+      const collect = (node: any, negated: boolean) => {
+        if (!node || typeof node !== 'object') return;
+        if (Array.isArray(node)) return node.forEach(child => collect(child, negated));
+        if (node.field === 'origin' && !negated) requiredOrigins.push(node.value);
+        if (node.all) collect(node.all, negated);
+        if (node.any) collect(node.any, negated);
+        if (node.not) collect(node.not, !negated);
+      };
+      collect(civic.potential, false);
 
-      // Check if civic requires a specific origin
-      for (const condition of potential) {
-        if (typeof condition === 'string' && condition.startsWith('origin:')) {
-          const requiredOrigin = condition.replace('origin:', '').trim();
-          // If the required origin doesn't exist in our list, filter out this civic
-          if (!availableOriginIds.has(requiredOrigin)) {
-            return false;
-          }
-        }
-      }
-      return true;
+      // Requires only origins not available at empire creation: never displayed
+      return requiredOrigins.length === 0 || requiredOrigins.some(id => availableOriginIds.has(id));
     });
 
     const missing: string[] = [];

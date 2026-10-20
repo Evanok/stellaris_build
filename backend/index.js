@@ -47,7 +47,7 @@ const { spawn } = require('child_process');
 const { setupDatabase, db } = require('./database');
 const { renderBuildOgImage } = require('./ogImage');
 const passport = require('./auth');
-const { apiLimiter, createBuildLimiter, importLimiter, validateBuildData, sanitizeBuildData } = require('./security');
+const { apiLimiter, createBuildLimiter, importLimiter, guestSubmitLimiter, reserveGuestEmail, validateBuildData, sanitizeBuildData } = require('./security');
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -142,33 +142,6 @@ const isAdmin = (req, res, next) => {
   res.status(403).json({ error: 'Forbidden. Admin access required.' });
 };
 
-// Page view tracking middleware for important pages
-const trackPageView = (req, res, next) => {
-  const trackedPaths = ['/', '/create', '/create/manual', '/create/import-save', '/create/import-designs'];
-  const url = req.path;
-
-  // Only track specific paths
-  if (trackedPaths.includes(url)) {
-    const referrer = req.get('Referer') || req.get('Referrer') || 'direct';
-    const userAgent = req.get('User-Agent') || 'unknown';
-
-    db.run(
-      'INSERT INTO page_views (url, referrer, user_agent) VALUES (?, ?, ?)',
-      [url, referrer, userAgent],
-      (err) => {
-        if (err) {
-          console.error('Error tracking page view:', err.message);
-        }
-      }
-    );
-  }
-
-  next();
-};
-
-// Apply page view tracking to all routes
-app.use(trackPageView);
-
 // ============ AUTH ROUTES ============
 
 // Google OAuth routes
@@ -243,8 +216,8 @@ app.post('/auth/register', async (req, res) => {
     });
   }
 
-  // Check if username already exists (as username OR as display_name)
-  db.get('SELECT * FROM users WHERE username = ? OR display_name = ?', [username, username], async (err, existingUser) => {
+  // Check if username already exists (as username OR as display_name of a real account)
+  findRealAccountByName(username, null, async (err, existingUser) => {
     if (err) {
       return res.status(500).json({ error: 'Database error.' });
     }
@@ -271,6 +244,9 @@ app.post('/auth/register', async (req, res) => {
           if (err) {
             return res.status(500).json({ error: 'Failed to create user.' });
           }
+          releaseGuestName(username, (err) => {
+            if (err) console.error('Failed to release guest name:', err.message);
+          });
 
           db.get('SELECT * FROM users WHERE id = ?', [this.lastID], (err, newUser) => {
             if (err) {
@@ -419,11 +395,8 @@ app.patch('/api/user/display-name', isAuthenticated, (req, res) => {
     return res.status(400).json({ error: 'Display name can only contain letters, numbers, underscores, and dashes' });
   }
 
-  // Check if display name is already taken (as display_name OR as username)
-  db.get(
-    'SELECT id FROM users WHERE (display_name = ? OR username = ?) AND id != ?',
-    [trimmedName, trimmedName, userId],
-    (err, existingUser) => {
+  // Check if display name is already taken (as display_name OR as username of a real account)
+  findRealAccountByName(trimmedName, userId, (err, existingUser) => {
       if (err) {
         return res.status(500).json({ error: 'Database error' });
       }
@@ -440,6 +413,9 @@ app.patch('/api/user/display-name', isAuthenticated, (req, res) => {
           if (err) {
             return res.status(500).json({ error: 'Failed to update display name' });
           }
+          releaseGuestName(trimmedName, (err) => {
+            if (err) console.error('Failed to release guest name:', err.message);
+          });
 
           // Fetch updated user
           db.get('SELECT * FROM users WHERE id = ?', [userId], (err, updatedUser) => {
@@ -1081,6 +1057,19 @@ app.post('/api/builds/:id/rating', isAuthenticated, (req, res) => {
 });
 
 // Create a new build (requires authentication + rate limiting)
+// Inserts a sanitized build (output of sanitizeBuildData) and returns the stored row.
+// Shared by POST /api/builds and the approval of builds submitted without an account.
+function insertBuild(data, authorId, callback) {
+  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture } = data;
+  const sql = `INSERT INTO builds (name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, planet_class || null, graphical_culture || null, authorId];
+
+  db.run(sql, params, function(err) {
+    if (err) return callback(err);
+    db.get(`SELECT * FROM builds WHERE id = ?`, [this.lastID], callback);
+  });
+}
+
 app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
   // Validate input data
   const validationErrors = validateBuildData(req.body);
@@ -1093,7 +1082,7 @@ app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
 
   // Sanitize input data to prevent XSS
   const sanitizedData = sanitizeBuildData(req.body);
-  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture } = sanitizedData;
+  const { name } = sanitizedData;
 
   // Get author_id from authenticated user
   const author_id = req.user.id;
@@ -1108,22 +1097,389 @@ app.post('/api/builds', isAuthenticated, createBuildLimiter, (req, res) => {
     }
 
     // If no duplicate, proceed with insert
-    const sql = `INSERT INTO builds (name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, planet_class || null, graphical_culture || null, author_id];
-
-    db.run(sql, params, function(err) {
+    insertBuild(sanitizedData, author_id, (err, row) => {
       if (err) {
         res.status(500).json({ error: err.message });
         return;
       }
-      // Get the newly created build and return it
-      db.get(`SELECT * FROM builds WHERE id = ?`, [this.lastID], (err, row) => {
-        if (err) {
-          res.status(500).json({ error: err.message });
-          return;
+      res.status(201).json({ build: row });
+    });
+  });
+});
+
+// ============ BUILDS SUBMITTED WITHOUT AN ACCOUNT ============
+// A visitor can publish without logging in: the build goes to pending_builds and
+// is only copied into builds once a moderator approves it. The visitor picks a
+// pseudo and gets a secret claim token to attach the build to an account later.
+
+const GUEST_NAME_PATTERN = /^[a-zA-Z0-9_-]{3,30}$/;
+const GUEST_PROVIDER = 'guest';
+
+// Author names are unique across real accounts, case-insensitively, and checked the
+// same way at every step: registration, display name change, guest submission and
+// guest approval. A guest author never blocks a real account: when an account takes
+// a name a guest was using, the guest account is renamed instead (releaseGuestName).
+function findRealAccountByName(name, excludeUserId, callback) {
+  db.get(
+    `SELECT id FROM users WHERE provider != ? AND id != ? AND (username = ? COLLATE NOCASE OR display_name = ? COLLATE NOCASE)`,
+    [GUEST_PROVIDER, excludeUserId || 0, name, name],
+    callback
+  );
+}
+
+const GUEST_NAME_SUFFIX = ' (guest)';
+
+// Renames the guest account(s) using `name` so they can never look like the real
+// account taking it. Their builds stay online, credited to "<name> (guest)".
+// The usual case is a guest registering their own pseudo: claiming then moves the
+// builds to the new account and deletes the renamed guest account.
+function releaseGuestName(name, callback) {
+  db.run(
+    `UPDATE users SET username = username || ? WHERE provider = ? AND username = ? COLLATE NOCASE`,
+    [GUEST_NAME_SUFFIX, GUEST_PROVIDER, name],
+    callback
+  );
+}
+
+const hashClaimToken = (token) => crypto.createHash('sha256').update(String(token)).digest('hex');
+
+// Turns a stored pending row into the same build shape GET /api/builds/:id returns,
+// so the moderator preview can reuse the build page as-is.
+function pendingRowToBuild(row) {
+  const data = JSON.parse(row.data);
+  const splitTrim = (str) => str ? String(str).split(',').map(s => s.trim()).filter(Boolean) : [];
+  return {
+    ...data,
+    id: row.id,
+    author_id: null,
+    author_username: row.guest_name,
+    created_at: row.created_at,
+    updated_at: row.created_at,
+    traits: splitTrim(data.traits),
+    secondary_traits: splitTrim(data.secondary_traits),
+    ethics: splitTrim(data.ethics),
+    civics: splitTrim(data.civics),
+    ascension_perks: splitTrim(data.ascension_perks),
+    traditions: splitTrim(data.traditions),
+  };
+}
+
+// Best effort: a missing SMTP config or a mail failure must never fail the submission
+function notifyModeratorOfPendingBuild(pendingId, buildName, guestName) {
+  if (!process.env.SMTP_HOST || !process.env.ADMIN_EMAIL) return;
+  const reviewUrl = `${SITE_URL}/admin/pending/${pendingId}`;
+  const transporter = createMailTransporter();
+  transporter.sendMail({
+    from: process.env.SMTP_FROM || 'Stellaris Build <noreply@stellaris-build.com>',
+    to: process.env.ADMIN_EMAIL,
+    subject: `New build to review: ${decodeStoredEntities(buildName)}`,
+    text: `"${decodeStoredEntities(buildName)}" was submitted without an account by ${guestName}.\n\nReview it: ${reviewUrl}`,
+    // buildName is stored HTML-escaped already, guestName only allows [a-zA-Z0-9_-]
+    html: `<p><strong>${buildName}</strong> was submitted without an account by <strong>${guestName}</strong>.</p><p><a href="${reviewUrl}">Review it</a></p>`,
+  }).catch(err => console.error('Failed to send pending build notification:', err.message));
+}
+
+const sendMailToSubmitter = (to, subject, text, html) => {
+  if (!process.env.SMTP_HOST) return;
+  createMailTransporter().sendMail({
+    from: process.env.SMTP_FROM || 'Stellaris Build <noreply@stellaris-build.com>',
+    to,
+    subject,
+    text,
+    html,
+  }).catch(err => console.error('Failed to email a guest submitter:', err.message));
+};
+
+// Sent right after a submission with an email: the claim link, reachable from any
+// device - the one shown on the confirmation page is easy to lose.
+function emailClaimLink(to, buildName, claimToken) {
+  const claimLink = `${SITE_URL}/claim/${claimToken}`;
+  const name = decodeStoredEntities(buildName);
+  sendMailToSubmitter(
+    to,
+    `Your Stellaris build "${name}" was received`,
+    `Thanks for sharing "${name}"! A moderator will review it, usually within 24-48 hours, and we will email you when it is live.
+
+To link this build to your account (so you can edit it later), open this link and sign in or create a free account:
+${claimLink}
+
+Keep this email: the link is the only proof that the build is yours.`,
+    // buildName is stored HTML-escaped already
+    `<p>Thanks for sharing <strong>${buildName}</strong>! A moderator will review it, usually within 24-48 hours, and we will email you when it is live.</p><p>To link this build to your account (so you can edit it later), sign in or create a free account from this link:</p><p><a href="${claimLink}">Claim my build</a></p><p>Keep this email: the link is the only proof that the build is yours.</p>`
+  );
+}
+
+// Sent on approval. The claim token itself is not recoverable here (only its hash
+// is stored), so this points back to the first email for it.
+function emailBuildPublished(to, buildName, buildId, alreadyClaimed) {
+  const buildLink = `${SITE_URL}/build/${buildId}`;
+  const name = decodeStoredEntities(buildName);
+  const claimHint = alreadyClaimed
+    ? 'It is already linked to your account.'
+    : 'To link it to your account, use the claim link from the email we sent when you submitted it.';
+  sendMailToSubmitter(
+    to,
+    `Your Stellaris build "${name}" is live`,
+    `Good news: "${name}" was approved and is now live:
+${buildLink}
+
+${claimHint}`,
+    `<p>Good news: <strong>${buildName}</strong> was approved and is now live.</p><p><a href="${buildLink}">View my build</a></p><p>${claimHint}</p>`
+  );
+}
+
+const GUEST_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Submit a build without an account
+app.post('/api/builds/guest', guestSubmitLimiter, (req, res) => {
+  // Honeypot: a field hidden from humans, only bots fill it in. Pretend it worked.
+  if (req.body.website) {
+    return res.status(201).json({ pending: true, claim_token: crypto.randomBytes(24).toString('base64url') });
+  }
+
+  const guestName = typeof req.body.guest_name === 'string' ? req.body.guest_name.trim() : '';
+  if (!GUEST_NAME_PATTERN.test(guestName)) {
+    return res.status(400).json({ error: 'Your name must be 3 to 30 characters: letters, numbers, underscores and dashes only.' });
+  }
+
+  // Optional
+  const guestEmail = typeof req.body.guest_email === 'string' ? req.body.guest_email.trim().toLowerCase() : '';
+  if (guestEmail && (guestEmail.length > 254 || !GUEST_EMAIL_PATTERN.test(guestEmail))) {
+    return res.status(400).json({ error: 'Please enter a valid email address, or leave it empty.' });
+  }
+
+  const validationErrors = validateBuildData(req.body);
+  if (validationErrors.length > 0) {
+    return res.status(400).json({ error: 'Validation failed', details: validationErrors });
+  }
+  const sanitizedData = sanitizeBuildData(req.body);
+
+  // The pseudo must not impersonate a real account (case-insensitive). Guest names
+  // can repeat: the same visitor may submit several builds under one name.
+  findRealAccountByName(guestName, null, (err, existingUser) => {
+      if (err) return res.status(500).json({ error: 'Database error' });
+      if (existingUser) {
+        return res.status(409).json({ error: 'This name belongs to a registered account. Please pick another one, or sign in if it is yours.' });
+      }
+
+      db.get(`SELECT id FROM builds WHERE name = ? AND deleted = 0`, [sanitizedData.name], (err, duplicate) => {
+        if (err) return res.status(500).json({ error: 'Database error' });
+        if (duplicate) {
+          return res.status(409).json({ error: 'A build with this name already exists. Please choose a different name.' });
         }
-        res.status(201).json({ build: row });
+
+        const claimToken = crypto.randomBytes(24).toString('base64url');
+        db.run(
+          `INSERT INTO pending_builds (data, guest_name, guest_email, claim_token_hash, submitter_ip) VALUES (?, ?, ?, ?, ?)`,
+          [JSON.stringify(sanitizedData), guestName, guestEmail || null, hashClaimToken(claimToken), req.ip || null],
+          function (err) {
+            if (err) return res.status(500).json({ error: 'Failed to save the build' });
+            notifyModeratorOfPendingBuild(this.lastID, sanitizedData.name, guestName);
+            const emailed = !!guestEmail && reserveGuestEmail(guestEmail);
+            if (emailed) emailClaimLink(guestEmail, sanitizedData.name, claimToken);
+            res.status(201).json({ pending: true, claim_token: claimToken, emailed });
+          }
+        );
       });
+    }
+  );
+});
+
+// Size of the moderation queue, for the admin navbar badge (fetched on every
+// navigation, so a COUNT instead of the whole queue)
+app.get('/api/admin/pending-builds-count', isAdmin, (req, res) => {
+  db.get(`SELECT COUNT(*) as count FROM pending_builds WHERE status = 'pending'`, (err, row) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ count: row.count });
+  });
+});
+
+// Moderation queue
+app.get('/api/admin/pending-builds', isAdmin, (req, res) => {
+  db.all(
+    `SELECT id, data, guest_name, claimed_user_id, created_at FROM pending_builds WHERE status = 'pending' ORDER BY created_at ASC`,
+    [],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({
+        pending: rows.map(row => {
+          const data = JSON.parse(row.data);
+          return { id: row.id, name: data.name, game_version: data.game_version, guest_name: row.guest_name, claimed: !!row.claimed_user_id, created_at: row.created_at };
+        }),
+      });
+    }
+  );
+});
+
+app.get('/api/admin/pending-builds/:id', isAdmin, (req, res) => {
+  db.get(`SELECT * FROM pending_builds WHERE id = ?`, [req.params.id], (err, row) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (!row) return res.status(404).json({ error: 'Pending build not found' });
+    res.json({ build: pendingRowToBuild(row), status: row.status, published_build_id: row.build_id });
+  });
+});
+
+// Finds the guest account for a pseudo, or creates it. Guest accounts only exist to
+// carry the author name of approved builds: provider 'guest' has no password and
+// no OAuth id, so nobody can log into them (local login only matches 'local').
+//
+// The pseudo was checked at submission, but a real account may have taken it since:
+// the guest is then credited as "<name> (guest)", like releaseGuestName does.
+function findOrCreateGuestUser(guestName, callback) {
+  findRealAccountByName(guestName, null, (err, realAccount) => {
+    if (err) return callback(err);
+    const authorName = realAccount ? guestName + GUEST_NAME_SUFFIX : guestName;
+    db.get(`SELECT * FROM users WHERE provider = ? AND username = ? COLLATE NOCASE`, [GUEST_PROVIDER, authorName], (err, existing) => {
+      if (err) return callback(err);
+      if (existing) return callback(null, existing);
+      db.run(
+        `INSERT INTO users (username, provider, provider_id) VALUES (?, ?, ?)`,
+        [authorName, GUEST_PROVIDER, `guest-${crypto.randomUUID()}`],
+        function (err) {
+          if (err) return callback(err);
+          db.get(`SELECT * FROM users WHERE id = ?`, [this.lastID], callback);
+        }
+      );
+    });
+  });
+}
+
+app.post('/api/admin/pending-builds/:id/approve', isAdmin, (req, res) => {
+  // Lock the row first with an atomic pending -> approving transition: a double
+  // click or a second tab must not publish the build twice. The row is read after
+  // the lock, so a claim made just before is taken into account (and claims are
+  // refused while the row is 'approving').
+  db.run(`UPDATE pending_builds SET status = 'approving' WHERE id = ? AND status = 'pending'`, [req.params.id], function (err) {
+    if (err) return res.status(500).json({ error: err.message });
+    if (this.changes === 0) return res.status(404).json({ error: 'Pending build not found or already reviewed' });
+
+    const unlock = (status, message) => {
+      db.run(`UPDATE pending_builds SET status = 'pending' WHERE id = ? AND status = 'approving'`, [req.params.id]);
+      res.status(status).json({ error: message });
+    };
+
+    db.get(`SELECT * FROM pending_builds WHERE id = ?`, [req.params.id], (err, row) => {
+      if (err || !row) return unlock(500, err ? err.message : 'Pending build not found');
+
+      const data = JSON.parse(row.data);
+      db.get(`SELECT id FROM builds WHERE name = ? AND deleted = 0`, [data.name], (err, duplicate) => {
+        if (err) return unlock(500, err.message);
+        if (duplicate) {
+          return unlock(409, `A build named "${decodeStoredEntities(data.name)}" was published in the meantime. Reject this one, or ask the author to rename it.`);
+        }
+
+        const publish = (authorId) => {
+          insertBuild(data, authorId, (err, build) => {
+            if (err) return unlock(500, err.message);
+            db.run(
+              `UPDATE pending_builds SET status = 'approved', build_id = ?, reviewed_at = CURRENT_TIMESTAMP WHERE id = ?`,
+              [build.id, row.id],
+              (err) => {
+                if (err) console.error('Failed to mark pending build as approved:', err.message);
+                if (row.guest_email) emailBuildPublished(row.guest_email, data.name, build.id, !!row.claimed_user_id);
+                res.json({ success: true, build_id: build.id });
+              }
+            );
+          });
+        };
+
+        // Claimed before approval: publish straight under the real account
+        if (row.claimed_user_id) return publish(row.claimed_user_id);
+        findOrCreateGuestUser(row.guest_name, (err, guestUser) => {
+          if (err) return unlock(500, err.message);
+          publish(guestUser.id);
+        });
+      });
+    });
+  });
+});
+
+app.post('/api/admin/pending-builds/:id/reject', isAdmin, (req, res) => {
+  db.run(
+    `UPDATE pending_builds SET status = 'rejected', reviewed_at = CURRENT_TIMESTAMP WHERE id = ? AND status = 'pending'`,
+    [req.params.id],
+    function (err) {
+      if (err) return res.status(500).json({ error: err.message });
+      if (this.changes === 0) return res.status(404).json({ error: 'Pending build not found or already reviewed' });
+      res.json({ success: true });
+    }
+  );
+});
+
+// Attach a build submitted without an account to the logged-in user. Owning the
+// secret token is the proof of authorship. Works before approval (the build will be
+// published under this account) and after (the build moves off the guest account).
+app.post('/api/builds/claim', isAuthenticated, (req, res) => {
+  const { token } = req.body;
+  if (typeof token !== 'string' || token.length < 16) {
+    return res.status(400).json({ error: 'Invalid claim link' });
+  }
+
+  db.get(`SELECT * FROM pending_builds WHERE claim_token_hash = ?`, [hashClaimToken(token)], (err, row) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    if (!row) return res.status(404).json({ error: 'This claim link is not valid' });
+
+    const buildName = decodeStoredEntities(JSON.parse(row.data).name);
+    if (row.status === 'rejected') {
+      return res.json({ status: 'rejected', build_name: buildName });
+    }
+    if (row.claimed_user_id && row.claimed_user_id !== req.user.id) {
+      return res.status(409).json({ error: 'This build was already claimed by another account' });
+    }
+
+    if (row.status === 'approving') {
+      return res.status(409).json({ error: 'This build is being published right now. Please try again in a few seconds.' });
+    }
+
+    if (row.status === 'pending') {
+      // status = 'pending' in the WHERE: an approval that locked the row in the
+      // meantime must not be told about this claim after reading the row
+      return db.run(
+        `UPDATE pending_builds SET claimed_user_id = ? WHERE id = ? AND status = 'pending'`,
+        [req.user.id, row.id],
+        function (err) {
+          if (err) return res.status(500).json({ error: 'Database error' });
+          if (this.changes === 0) {
+            return res.status(409).json({ error: 'This build is being published right now. Please try again in a few seconds.' });
+          }
+          res.json({ status: 'pending', build_name: buildName });
+        }
+      );
+    }
+
+    // Approved: move the build from the guest account to this user. The author_id
+    // condition makes a repeated claim a harmless no-op.
+    db.get(`SELECT author_id FROM builds WHERE id = ?`, [row.build_id], (err, build) => {
+      if (err) return res.status(500).json({ error: 'Database error' });
+      if (!build) return res.status(404).json({ error: 'This build no longer exists' });
+      if (build.author_id === req.user.id) {
+        return res.json({ status: 'approved', build_id: row.build_id, build_name: buildName });
+      }
+      const guestUserId = build.author_id;
+      db.run(
+        `UPDATE builds SET author_id = ? WHERE id = ? AND author_id IN (SELECT id FROM users WHERE provider = ?)`,
+        [req.user.id, row.build_id, GUEST_PROVIDER],
+        function (err) {
+          if (err) return res.status(500).json({ error: 'Database error' });
+          if (this.changes === 0) {
+            // Nothing moved: either another account got it, or a concurrent claim of
+            // this same user did (claim page + auto-claim on login run together)
+            return db.get(`SELECT author_id FROM builds WHERE id = ?`, [row.build_id], (err, current) => {
+              if (!err && current && current.author_id === req.user.id) {
+                return res.json({ status: 'approved', build_id: row.build_id, build_name: buildName });
+              }
+              res.status(409).json({ error: 'This build was already claimed by another account' });
+            });
+          }
+          db.run(`UPDATE pending_builds SET claimed_user_id = ? WHERE id = ?`, [req.user.id, row.id]);
+          // A guest account left without builds only reserves its name: free it
+          db.run(
+            `DELETE FROM users WHERE id = ? AND provider = ? AND NOT EXISTS (SELECT 1 FROM builds WHERE author_id = ?)`,
+            [guestUserId, GUEST_PROVIDER, guestUserId]
+          );
+          res.json({ status: 'approved', build_id: row.build_id, build_name: buildName });
+        }
+      );
     });
   });
 });
@@ -1776,7 +2132,8 @@ app.get('/api/admin/stats', isAdmin, async (req, res) => {
 
     // 1. Total users
     const totalUsers = await new Promise((resolve, reject) => {
-      db.get('SELECT COUNT(*) as count FROM users', (err, row) => {
+      // Guest accounts (authors of builds submitted without an account) are not signups
+      db.get(`SELECT COUNT(*) as count FROM users WHERE provider != 'guest'`, (err, row) => {
         if (err) reject(err);
         else resolve(row.count);
       });
@@ -1787,7 +2144,7 @@ app.get('/api/admin/stats', isAdmin, async (req, res) => {
     const newUsersThisMonth = await new Promise((resolve, reject) => {
       db.get(
         `SELECT COUNT(*) as count FROM users
-         WHERE created_at >= date('now', 'start of month')`,
+         WHERE created_at >= date('now', 'start of month') AND provider != 'guest'`,
         (err, row) => {
           if (err) reject(err);
           else resolve(row.count);
@@ -1839,7 +2196,7 @@ app.get('/api/admin/stats', isAdmin, async (req, res) => {
           strftime('%Y-W%W', created_at) as week,
           COUNT(*) as count
          FROM users
-         WHERE created_at >= date('now', '-84 days')
+         WHERE created_at >= date('now', '-84 days') AND provider != 'guest'
          GROUP BY week
          ORDER BY week`,
         (err, rows) => {
@@ -1850,24 +2207,42 @@ app.get('/api/admin/stats', isAdmin, async (req, res) => {
     });
     stats.signupsPerWeek = signupsPerWeek;
 
-    // 7. Top referrers (last 30 days)
-    const topReferrers = await new Promise((resolve, reject) => {
+    // 7. Builds submitted without an account (pending_builds, all time)
+    const guestBuilds = await new Promise((resolve, reject) => {
+      db.get(
+        `SELECT
+          COUNT(*) as total,
+          COALESCE(SUM(status = 'pending'), 0) as pending,
+          COALESCE(SUM(status = 'approved'), 0) as approved,
+          COALESCE(SUM(status = 'rejected'), 0) as rejected,
+          COALESCE(SUM(guest_email IS NOT NULL), 0) as withEmail,
+          COALESCE(SUM(claimed_user_id IS NOT NULL), 0) as claimed
+         FROM pending_builds`,
+        (err, row) => {
+          if (err) reject(err);
+          else resolve(row);
+        }
+      );
+    });
+    stats.guestBuilds = guestBuilds;
+
+    // 8. Guest submissions per week (last 12 weeks)
+    const guestSubmissionsPerWeek = await new Promise((resolve, reject) => {
       db.all(
         `SELECT
-          referrer,
+          strftime('%Y-W%W', created_at) as week,
           COUNT(*) as count
-         FROM page_views
-         WHERE created_at >= date('now', '-30 days')
-         GROUP BY referrer
-         ORDER BY count DESC
-         LIMIT 10`,
+         FROM pending_builds
+         WHERE created_at >= date('now', '-84 days')
+         GROUP BY week
+         ORDER BY week`,
         (err, rows) => {
           if (err) reject(err);
           else resolve(rows);
         }
       );
     });
-    stats.topReferrers = topReferrers;
+    stats.guestSubmissionsPerWeek = guestSubmissionsPerWeek;
 
     res.json(stats);
   } catch (error) {
@@ -2335,8 +2710,14 @@ app.use((req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+// Loopback only: the app is meant to be reached through nginx. Listening on every
+// interface exposed port 3001 to the internet, where a client could talk to Node
+// directly and forge X-Forwarded-For (i.e. its IP as seen by the rate limiters).
+// Set BIND_HOST=0.0.0.0 to expose it on purpose (e.g. testing from another device).
+const bindHost = process.env.BIND_HOST || '127.0.0.1';
+
+app.listen(port, bindHost, () => {
+  console.log(`Server listening on ${bindHost}:${port}`);
   const host = process.env.SERVER_HOST || 'localhost';
   console.log(`Access the app at: http://${host}:${port}`);
 });

@@ -16,7 +16,15 @@ export type AnalyticsEvent =
   | 'feedback_opened'
   | 'feedback_submitted'
   | 'chat_message_sent'
-  | 'resource_clicked';
+  | 'resource_clicked'
+  | 'build_submitted_guest'
+  | 'build_claimed'
+  | 'build_form_started'
+  | 'build_form_invalid'
+  | 'build_form_warning'
+  | 'build_auth_prompt'
+  | 'build_guest_started'
+  | 'build_submit_error';
 
 type EventParams = Record<string, string | number | boolean | undefined>;
 

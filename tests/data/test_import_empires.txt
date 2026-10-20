@@ -165,7 +165,6 @@
 	spawn_enabled=yes
 	ethic="ethic_authoritarian"
 	ethic="ethic_fanatic_militarist"
-	ethic="ethic_fanatic_materialist"
 	civics=
 	{
 		"civic_efficient_bureaucracy"

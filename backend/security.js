@@ -4,10 +4,20 @@ const KNOWN_TAG_IDS = new Set(BUILD_TAGS.tags.map(tag => tag.id));
 // Deduplicated list of tag ids from the stored comma-separated value
 const splitTagIds = (value) => [...new Set(value.split(',').map(s => s.trim()).filter(Boolean))];
 
+// Dev bypass for the rate limiters: true only for requests really coming from this
+// machine. Based on req.ip, not req.hostname: with 'trust proxy', req.hostname is
+// read from the X-Forwarded-Host header, which nginx passes through untouched, so
+// any client could send "X-Forwarded-Host: localhost" and skip every limit. req.ip
+// comes from X-Forwarded-For, whose last hop nginx appends itself (real client IP).
+const LOCAL_IPS = new Set(['127.0.0.1', '::1', '::ffff:127.0.0.1']);
+const isLocalRequest = (req) => LOCAL_IPS.has(req.ip);
+
 // Manual rate limiting stores
 const apiRequestStore = new Map();
 const buildCreationStore = new Map();
 const importStore = new Map();
+const guestSubmitStore = new Map();
+const guestEmailStore = new Map();
 
 // Clean up old entries every 15 minutes
 setInterval(() => {
@@ -28,6 +38,16 @@ setInterval(() => {
       importStore.delete(key);
     }
   }
+  for (const [key, data] of guestSubmitStore.entries()) {
+    if (now - data.resetTime > 24 * oneHour) {
+      guestSubmitStore.delete(key);
+    }
+  }
+  for (const [key, data] of guestEmailStore.entries()) {
+    if (now - data.resetTime > 24 * oneHour) {
+      guestEmailStore.delete(key);
+    }
+  }
   for (const [key, data] of buildCreationStore.entries()) {
     if (now - data.resetTime > oneHour) {
       buildCreationStore.delete(key);
@@ -38,8 +58,7 @@ setInterval(() => {
 // General API rate limiter - 100 requests per 15 minutes per IP
 const apiLimiter = (req, res, next) => {
   // Skip rate limiting on localhost for development
-  const isLocalhost = req.hostname === 'localhost' || req.hostname === '127.0.0.1';
-  if (isLocalhost) {
+  if (isLocalRequest(req)) {
     return next();
   }
 
@@ -86,8 +105,7 @@ const apiLimiter = (req, res, next) => {
 // Manual rate limiter middleware for build creation - 20 builds per hour (unlimited on localhost)
 const createBuildLimiter = (req, res, next) => {
   // Skip rate limiting on localhost for development
-  const isLocalhost = req.hostname === 'localhost' || req.hostname === '127.0.0.1';
-  if (isLocalhost) {
+  if (isLocalRequest(req)) {
     return next();
   }
 
@@ -278,12 +296,11 @@ const sanitizeBuildData = (data) => {
 // Python parser on up to 50 MB, so they get their own, tighter budget per hour:
 // per IP for visitors, per account once logged in. An empire designs import is
 // 2 requests (list empires, then import one).
-// No localhost bypass here on purpose: req.hostname comes from X-Forwarded-Host
-// behind the proxy, which a client can set itself.
 const IMPORT_LIMIT_ANONYMOUS = 30;
 const IMPORT_LIMIT_USER = 60;
 
 const importLimiter = (req, res, next) => {
+  if (isLocalRequest(req)) return next();
   const key = req.user ? `user:${req.user.id}` : `ip:${req.ip || 'unknown'}`;
   const limit = req.user ? IMPORT_LIMIT_USER : IMPORT_LIMIT_ANONYMOUS;
   const now = Date.now();
@@ -304,9 +321,74 @@ const importLimiter = (req, res, next) => {
   next();
 };
 
+// Rate limiter for builds submitted without an account (moderation queue): every
+// one of them lands in the moderator's inbox, so keep it to a few per day per IP.
+const GUEST_SUBMIT_LIMIT_PER_DAY = 5;
+
+const guestSubmitLimiter = (req, res, next) => {
+  if (isLocalRequest(req)) return next();
+  const key = req.ip || 'unknown';
+  const now = Date.now();
+  const oneDay = 24 * 60 * 60 * 1000;
+
+  let entry = guestSubmitStore.get(key);
+  if (!entry || now - entry.resetTime > oneDay) {
+    entry = { count: 0, resetTime: now };
+    guestSubmitStore.set(key, entry);
+  }
+
+  if (entry.count >= GUEST_SUBMIT_LIMIT_PER_DAY) {
+    return res.status(429).json({
+      error: 'Too many builds submitted without an account today. Sign in to keep publishing, or try again tomorrow.',
+    });
+  }
+  // The slot is reserved before the (async) handler runs, otherwise parallel
+  // requests would all pass the check above before any of them is counted.
+  // Only successful submissions keep it: a visitor retrying after "name already
+  // taken" or a validation error should not burn their daily quota.
+  entry.count += 1;
+  res.on('finish', () => {
+    if (res.statusCode !== 201) entry.count = Math.max(0, entry.count - 1);
+  });
+  next();
+};
+
+// Emails sent to the address a guest typed in. Nothing proves the address is
+// theirs, so anyone could make the site email a stranger: cap it per address and
+// overall, per day. Beyond the cap the build is still saved, just not emailed
+// (the claim link is shown on screen anyway).
+const GUEST_EMAILS_PER_ADDRESS_PER_DAY = 3;
+const GUEST_EMAILS_TOTAL_PER_DAY = 50;
+const GUEST_EMAIL_TOTAL_KEY = '*';
+
+// Returns true and counts the email if it may be sent
+const reserveGuestEmail = (address) => {
+  const now = Date.now();
+  const oneDay = 24 * 60 * 60 * 1000;
+  const entryFor = (key) => {
+    let entry = guestEmailStore.get(key);
+    if (!entry || now - entry.resetTime > oneDay) {
+      entry = { count: 0, resetTime: now };
+      guestEmailStore.set(key, entry);
+    }
+    return entry;
+  };
+
+  const perAddress = entryFor(`address:${address}`);
+  const total = entryFor(GUEST_EMAIL_TOTAL_KEY);
+  if (perAddress.count >= GUEST_EMAILS_PER_ADDRESS_PER_DAY || total.count >= GUEST_EMAILS_TOTAL_PER_DAY) {
+    return false;
+  }
+  perAddress.count += 1;
+  total.count += 1;
+  return true;
+};
+
 module.exports = {
   apiLimiter,
   importLimiter,
+  guestSubmitLimiter,
+  reserveGuestEmail,
   createBuildLimiter,
   validateBuildData,
   sanitizeBuildData,

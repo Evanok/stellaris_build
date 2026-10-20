@@ -13,8 +13,10 @@ export default defineConfig({
   // Run tests in files in parallel
   fullyParallel: true,
 
-  // No global test timeout - individual actions have their own timeouts
-  timeout: 0,
+  // Per-test timeout: actions have their own timeouts, but one without any (e.g. a
+  // waitForSelector on a selector that no longer exists) would otherwise hang the
+  // whole run forever
+  timeout: 3 * 60 * 1000,
 
   // Fail the build on CI if you accidentally left test.only in the source code
   forbidOnly: !!process.env.CI,

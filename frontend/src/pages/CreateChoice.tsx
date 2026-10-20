@@ -72,7 +72,7 @@ const CreateChoice: React.FC = () => {
 
           <p className="text-center text-muted small mb-4">
             <i className="bi bi-unlock me-1"></i>
-            No account needed to start - you only sign in when you publish.
+            No account needed - sign in when you publish, or publish as a guest (reviewed by a moderator).
           </p>
 
           <div className="row g-4">

@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { AuthModal } from './components/AuthModal';
+import { GuestSubmitModal } from './components/GuestSubmitModal';
+import { addGuestClaim } from './utils/guestClaims';
+import { trackEvent } from './utils/analytics';
+import { useNavigate } from 'react-router-dom';
 import { decodeHtmlEntities } from './utils/htmlDecode';
 import { DIFFICULTY_LEVELS } from './utils/difficulty';
 import { normalizeBuildTags, serializeBuildTags, MAX_TAGS_PER_BUILD } from './utils/buildTags';
@@ -375,6 +379,23 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   // Auth state
   const { user, refreshUser } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showGuestModal, setShowGuestModal] = useState(false);
+
+  // Funnel analytics: which step visitors reach in the create form, so drop-offs
+  // can be located (started -> invalid / auth prompt -> created or guest-submitted).
+  // form_mode tells manual entry from imports; edits are not part of the funnel.
+  const formMode = buildId ? 'edit' : initialData ? 'import' : 'manual';
+  const formStartedRef = useRef(false);
+  const trackFunnel = (event: Parameters<typeof trackEvent>[0], params: Record<string, string | number | boolean | undefined> = {}) => {
+    if (formMode === 'edit') return;
+    trackEvent(event, { form_mode: formMode, logged_in: !!user, ...params });
+  };
+  const handleFirstInteraction = () => {
+    if (formStartedRef.current) return;
+    formStartedRef.current = true;
+    trackFunnel('build_form_started');
+  };
+  const navigate = useNavigate();
 
   // Warn on submit if the description is empty (create mode only)
   const [showDescriptionWarning, setShowDescriptionWarning] = useState(false);
@@ -385,6 +406,9 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const [showRuleWarning, setShowRuleWarning] = useState(false);
   const [ruleWarnings, setRuleWarnings] = useState<string[]>([]);
   const skipRuleWarningRef = useRef(false);
+
+  // "Check Build" button: same checks as submit, results only, never submits
+  const [checkResult, setCheckResult] = useState<{ blocking: string[]; warnings: string[] } | null>(null);
 
   // Track whether the user manually changed the version (vs initial load or initialData population)
   const userChangedVersion = useRef(false);
@@ -1286,6 +1310,82 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     setShowRuleWarning(false);
   };
 
+  // Request body shared by account submissions (POST/PUT /api/builds) and guest ones
+  const getBuildPayload = () => ({
+    name,
+    description,
+    game_version,
+    youtube_url,
+    source_url,
+    difficulty,
+    civics: selectedCivics.join(', '), // Convert array to comma-separated string
+    dlcs,
+    tags,
+    traits: selectedTraits.join(', '), // Convert array to comma-separated string
+    secondary_traits: selectedSecondaryTraits.join(', '), // Convert array to comma-separated string
+    origin: selectedOrigin,
+    ethics: selectedEthics.join(', '), // Convert array to comma-separated string
+    authority: selectedAuthority,
+    ascension_perks: selectedAscensionPerks.join(', '), // Convert array to comma-separated string
+    traditions: selectedTraditions.join(', '), // Convert array to comma-separated string
+    ruler_trait: selectedRulerTrait,
+    species_class: selectedSpeciesClass,
+    portrait: selectedPortrait,
+    is_nomadic: isNomadic ? 1 : 0,
+    ark_type: isNomadic ? arkType : null,
+    planet_class: effectivePlanetClass || null,
+    graphical_culture: pickedShipset || null,
+  });
+
+  // Publishing without an account: the build goes to the moderation queue. Only
+  // reachable from the auth modal, i.e. after handleSubmit validated everything.
+  const handleGuestSubmit = async (guestName: string, guestEmail: string, website: string): Promise<string | null> => {
+    try {
+      const response = await fetch('/api/builds/guest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...getBuildPayload(), guest_name: guestName, guest_email: guestEmail, website }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const details = Array.isArray(data.details) ? `: ${data.details.join(', ')}` : '';
+        trackFunnel('build_submit_error', { status: response.status, guest: true });
+        return (data.error || 'Failed to submit the build') + details;
+      }
+      addGuestClaim({ token: data.claim_token, name });
+      // The build is saved at this point: a storage error must not report a failure
+      // (the visitor would resubmit and create a duplicate in the moderation queue)
+      try {
+        localStorage.removeItem('stellaris_build_draft');
+      } catch {
+        // Storage unavailable: the draft simply stays
+      }
+      skipDescriptionWarningRef.current = false;
+      skipRuleWarningRef.current = false;
+      setShowGuestModal(false);
+      trackEvent('build_submitted_guest', { game_version });
+      navigate('/build-submitted', { state: { name, claimToken: data.claim_token, emailed: !!data.emailed } });
+      return null;
+    } catch {
+      return 'Network error, please try again.';
+    }
+  };
+
+  const handleCheckBuild = () => {
+    const blocking: string[] = [];
+    if (!isBuildComplete()) {
+      blocking.push(`Missing required fields: ${getMissingFields().join(', ')}`);
+    }
+    if (hasInvalidTraits) blocking.push('Species trait limits exceeded');
+    if (exceedsEthicsPoints) blocking.push('Ethics points exceeded');
+    if ((youtube_url && !isValidUrl(youtube_url)) || (source_url && !isValidUrl(source_url))) {
+      blocking.push('Invalid YouTube or source URL');
+    }
+    // Rule checks need the whole build (see getRuleWarnings), so only once it is complete
+    const warnings = isBuildComplete() ? getRuleWarnings() : [];
+    setCheckResult({ blocking, warnings });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -1297,6 +1397,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     // Check if there are URL errors
     if (youtubeUrlError || sourceUrlError) {
       setError('Please fix the URL errors before submitting.');
+      trackFunnel('build_form_invalid', { reason: 'url' });
       // Scroll to top to show the error and the invalid field
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -1305,16 +1406,9 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     // Check if URLs are valid (validate again in case state hasn't updated)
     if ((youtube_url && !isValidUrl(youtube_url)) || (source_url && !isValidUrl(source_url))) {
       setError('Please enter valid URLs or leave the fields empty.');
+      trackFunnel('build_form_invalid', { reason: 'url' });
       // Scroll to top to show the error
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    // Check if user is authenticated
-    if (!user) {
-      // Save form data to localStorage before showing auth modal
-      saveFormDataToLocalStorage();
-      setShowAuthModal(true);
       return;
     }
 
@@ -1322,6 +1416,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     if (!isBuildComplete()) {
       const missing = getMissingFields();
       setError(`Please complete the following required fields: ${missing.join(', ')}`);
+      trackFunnel('build_form_invalid', { reason: 'missing_fields', missing_fields: missing.join(', ') });
       // Scroll to top to show the error
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -1330,9 +1425,9 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     // Warn if description is empty (create mode only), unless the user already confirmed
     if (!isEditMode && !description.trim() && !skipDescriptionWarningRef.current) {
       setShowDescriptionWarning(true);
+      trackFunnel('build_form_warning', { warning: 'empty_description' });
       return;
     }
-    skipDescriptionWarningRef.current = false;
 
     // Experimental non-blocking check against extracted game rules (origin +
     // civics only for now). See TODO.md section 3b for the full plan.
@@ -1341,9 +1436,23 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       if (warnings.length > 0) {
         setRuleWarnings(warnings);
         setShowRuleWarning(true);
+        trackFunnel('build_form_warning', { warning: 'rule_conflict' });
         return;
       }
     }
+
+    // Asked last, once the build is known to be complete: a visitor who did all the
+    // work is far more likely to sign in (or publish as a guest) than one asked up
+    // front. The warning skip flags are kept so the automatic resubmission after
+    // an in-modal login does not ask the same questions again.
+    if (!user) {
+      // Save form data to localStorage before showing auth modal
+      saveFormDataToLocalStorage();
+      setShowAuthModal(true);
+      trackFunnel('build_auth_prompt');
+      return;
+    }
+    skipDescriptionWarningRef.current = false;
     skipRuleWarningRef.current = false;
 
     setSubmitting(true);
@@ -1357,36 +1466,13 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          name,
-          description,
-          game_version,
-          youtube_url,
-          source_url,
-          difficulty,
-          civics: selectedCivics.join(', '), // Convert array to comma-separated string
-          dlcs,
-          tags,
-          traits: selectedTraits.join(', '), // Convert array to comma-separated string
-          secondary_traits: selectedSecondaryTraits.join(', '), // Convert array to comma-separated string
-          origin: selectedOrigin,
-          ethics: selectedEthics.join(', '), // Convert array to comma-separated string
-          authority: selectedAuthority,
-          ascension_perks: selectedAscensionPerks.join(', '), // Convert array to comma-separated string
-          traditions: selectedTraditions.join(', '), // Convert array to comma-separated string
-          ruler_trait: selectedRulerTrait,
-          species_class: selectedSpeciesClass,
-          portrait: selectedPortrait,
-          is_nomadic: isNomadic ? 1 : 0,
-          ark_type: isNomadic ? arkType : null,
-          planet_class: effectivePlanetClass || null,
-          graphical_culture: pickedShipset || null,
-        }),
+        body: JSON.stringify(getBuildPayload()),
       });
 
       if (!response.ok) {
         // Try to get error message from response body
         const errorData = await response.json().catch(() => null);
+        trackFunnel('build_submit_error', { status: response.status, guest: false });
         throw new Error(errorData?.error || 'Failed to create build.');
       }
 
@@ -1429,7 +1515,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     <div className="card bg-dark border-secondary mb-4">
       <div className="card-body">
         <h3 className="card-title">{isEditMode ? 'Edit Build' : 'Create a New Build'}</h3>
-        <form id="build-form" onSubmit={handleSubmit}>
+        <form id="build-form" onSubmit={handleSubmit} onChangeCapture={handleFirstInteraction} onClickCapture={handleFirstInteraction}>
           {draftRestored && (
             <div className="alert alert-success alert-dismissible">
               <i className="bi bi-check-circle me-2"></i>
@@ -2724,6 +2810,10 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
           <button type="submit" className="btn btn-primary" disabled={submitting || hasInvalidTraits || exceedsEthicsPoints || !isBuildComplete()}>
             {submitting ? (isEditMode ? 'Updating...' : 'Submitting...') : (isEditMode ? 'Update Build' : 'Submit Build')}
           </button>
+          <button type="button" className="btn btn-outline-info ms-2" onClick={handleCheckBuild} disabled={submitting}>
+            <i className="bi bi-clipboard-check me-1"></i>
+            Check Build
+          </button>
           {hasInvalidTraits && (
             <small className="text-danger ms-2">Cannot submit: trait limits exceeded</small>
           )}
@@ -2739,8 +2829,31 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       {/* Auth Modal */}
       <AuthModal
         show={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
+        onClose={() => {
+          setShowAuthModal(false);
+          // Back to editing: the warnings must be shown again on the next submit
+          skipDescriptionWarningRef.current = false;
+          skipRuleWarningRef.current = false;
+        }}
         onSuccess={handleAuthSuccess}
+        onContinueAsGuest={isEditMode ? undefined : () => {
+          setShowAuthModal(false);
+          setShowGuestModal(true);
+          trackFunnel('build_guest_started');
+        }}
+      />
+      <GuestSubmitModal
+        show={showGuestModal}
+        onClose={() => {
+          setShowGuestModal(false);
+          skipDescriptionWarningRef.current = false;
+          skipRuleWarningRef.current = false;
+        }}
+        onBack={() => {
+          setShowGuestModal(false);
+          setShowAuthModal(true);
+        }}
+        onSubmit={handleGuestSubmit}
       />
 
       {/* Description Warning Modal */}
@@ -2772,6 +2885,67 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                 </button>
                 <button type="button" className="btn btn-warning" onClick={handleConfirmSubmitWithoutDescription}>
                   Submit Anyway
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Check Build result modal */}
+      {checkResult && (
+        <div
+          className="modal show d-block"
+          tabIndex={-1}
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+          onClick={(e) => { if (e.target === e.currentTarget) setCheckResult(null); }}
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content bg-dark text-white border-secondary">
+              <div className="modal-header border-secondary">
+                <h5 className="modal-title">
+                  {checkResult.blocking.length === 0 && checkResult.warnings.length === 0 ? (
+                    <><i className="bi bi-check-circle text-success me-2"></i>Build looks valid</>
+                  ) : (
+                    <><i className="bi bi-exclamation-triangle text-warning me-2"></i>Build Check</>
+                  )}
+                </h5>
+                <button type="button" className="btn-close btn-close-white" onClick={() => setCheckResult(null)}></button>
+              </div>
+              <div className="modal-body">
+                {checkResult.blocking.length === 0 && checkResult.warnings.length === 0 && (
+                  <p className="mb-0">
+                    No problem found. The build can be submitted. The rule check is experimental and may miss
+                    some conflicts, so use it as a hint, not a guarantee.
+                  </p>
+                )}
+                {checkResult.blocking.length > 0 && (
+                  <>
+                    <p className="mb-1 text-danger"><strong>Must be fixed before submitting:</strong></p>
+                    <ul className={checkResult.warnings.length > 0 ? 'mb-3' : 'mb-0'}>
+                      {checkResult.blocking.map((issue, idx) => (
+                        <li key={idx}>{issue}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+                {checkResult.warnings.length > 0 && (
+                  <>
+                    <p className="mb-1">
+                      <span className="badge bg-secondary me-2">Experimental</span>
+                      <strong>Possible rule conflicts:</strong>
+                    </p>
+                    <ul className="mb-0">
+                      {checkResult.warnings.map((warning, idx) => (
+                        <li key={idx}><code className="text-warning-emphasis">{warning}</code></li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </div>
+              <div className="modal-footer border-secondary">
+                <button type="button" className="btn btn-secondary" onClick={() => setCheckResult(null)}>
+                  Close
                 </button>
               </div>
             </div>
