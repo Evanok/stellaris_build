@@ -23,16 +23,17 @@ This project is currently in active development with the following features impl
   - Civics with conditional filtering (potential/possible) and a 2-civic limit matching the game's own rule
   - Recommended Ascension Perks (with ordering)
   - Recommended Tradition Trees (with ordering)
-  - Game version tracking (4.4 Pegasus, 4.3 Cetus, 4.2 Corvus, 4.1 Lyra, 4.0 Phoenix, 3.14 Circinus, 3.13 Vela)
+  - Game version tracking (4.5 Cygnus, 4.4 Pegasus, 4.3 Cetus, 4.2 Corvus, 4.1 Lyra, 4.0 Phoenix, 3.14 Circinus, 3.13 Vela)
   - Difficulty rating (Overpowered, Strong, Balanced, Challenging, Extreme Challenge)
   - Optional YouTube video link with embedded player
   - **Source URL attribution** for builds from Reddit/forums
-  - **Import from .sav files** (automatically extract build data from Stellaris save files)
-  - **Import from Empire Designs** (import all empires from `user_empire_designs.txt`) - the fastest way to share a build, listed first on the create page
+  - **Import from .sav files** (automatically extract build data from Stellaris save files, including traditions and ascension perks). A save holds the empire as it is at that date, so the page warns that civics/traits gained during the game must be removed
+  - **Import from Empire Designs** (import all empires from `user_empire_designs_v3.4.txt`) - the fastest way to share a build, listed first on the create page. The page offers each OS path ready to copy into the file picker
+  - Both imports also fill in the species portrait, homeworld planet and ship appearance
   - **No account needed to start**: the form and both imports work without logging in; the login is only asked at publish time, and the build in progress is restored after signing in (email, Google or Steam). Uploaded files are deleted as soon as they are parsed
   - **Publish without an account**: pick a name (and optionally an email) and the build goes to a moderation queue; it is published under that name once approved. A private claim link (shown, and emailed if an address was given) attaches it to an account later - automatically when the visitor signs up on the same browser
   - **Nomadic Empire support** (Nomads DLC) - ark type selection with per-tier stats
-- **Build Rule Checking (experimental)**: Every build is checked at submit and export time against rules parsed directly from the game's own files - not hardcoded - covering origin/authority/civic compatibility, civic count, and trait budget per species archetype. Shows a non-blocking, plain-English warning ("Authority 'Democratic' requires none of: ethic 'Authoritarian'...") rather than blocking the user. A standalone CLI (`backend/check_build_rules.js`) can audit the whole database or check a single build. About 57% of currently published builds have at least one flagged rule conflict.
+- **Build Rule Checking (experimental)**: Every build is checked at submit and export time against rules parsed directly from the game's own files - not hardcoded - covering origin/authority/civic compatibility, civic count, and trait budget per species archetype. Shows a non-blocking, plain-English warning ("Authority 'Democratic' requires none of: ethic 'Authoritarian'...") rather than blocking the user. A **Check Build** button next to Submit runs the same checks on demand, without submitting. A standalone CLI (`backend/check_build_rules.js`) can audit the whole database or check a single build. About 57% of currently published builds have at least one flagged rule conflict.
 - **Export to Stellaris (experimental)**: Generate a custom empire design block ready to paste into `user_empire_designs_v3.4.txt`, so a build can be loaded directly in-game. Runs the same rule check before exporting.
 - **Species Portraits**: Portrait selector in the build form; build cards and detail pages display the species portrait alongside civic/trait/origin/ethics/authority icons.
 - **Build Display**: View submitted builds with all details, difficulty badges, embedded YouTube videos, and source attribution
@@ -52,7 +53,7 @@ This project is currently in active development with the following features impl
 - **Ratings**: Star ratings on builds (one per logged-in user, average shown)
 - **Moderation**: admin queue for builds submitted without an account (preview, approve, reject), with an email notification per submission
 - **Community Chat**: IRC-style chat panel on the Feedback page (logged-in or guest with a pseudo), rate-limited, admin moderation
-- **Statistics Page**: Admin and public statistics on build usage, version distribution, and popular traits
+- **Statistics Page**: Admin and public statistics on build usage, version distribution, and popular traits. The admin page also tracks builds published without an account (submitted, approved/rejected, emails left, claimed)
 - **Resources Page**: Curated guides, YouTube channels, tools, and communities, filterable by category and game version
 - **Feedback System**: A global button for users to submit feedback and bug reports (with optional screenshot upload), plus a public feedback/bug list with admin resolve controls
 - **Social Link Previews**: Per-build Open Graph image generated on demand (species portrait or origin art, build name, origin, authority, ethics), so shared links show a real preview instead of the generic site card
@@ -62,12 +63,13 @@ This project is currently in active development with the following features impl
 - **Security**:
   - Rate limiting (100 requests/15min per IP, 5 builds/hour per user)
   - File imports open to visitors but capped: 30/hour per IP (60 with an account), at most 3 parsed at once, 60s timeout per file
-  - Guest submissions: 5 per day per IP, honeypot field against bots, never public before moderation
+  - Guest submissions: 5 per day per IP (safe against parallel requests), honeypot field against bots, never public before moderation. Emails to the address a guest typed are capped (3 per address, 50 in total per day)
+  - Author names are unique among real accounts, case-insensitively, at every step (registration, display name, guest submission, approval)
   - Backend only listens on localhost, behind nginx
   - Input validation and sanitization
   - XSS protection
   - Password complexity requirements (NIST/OWASP compliant)
-- **Data Extraction**: Automated, versioned extraction from Stellaris game files with full localization - separate datasets per supported game version (4.2/4.3/4.4)
+- **Data Extraction**: Automated, versioned extraction from Stellaris game files with full localization - separate datasets per supported game version (4.2/4.3/4.4/4.5)
 - **Maintenance Mode**: nginx-level maintenance page, toggled by stopping/restarting the PM2 process
 - **Production Deployment**: Fully deployed with HTTPS, auto-restart, SSL certificates, and 100MB file upload support
 - **Dynamic Backgrounds**: Random Stellaris loading screen backgrounds that change on page navigation (mobile-optimized)
@@ -301,12 +303,12 @@ All data includes:
 
 Most game-data endpoints accept an optional `?version=X.Y` query param (e.g.
 `/api/traits?version=4.3`); the server maps it to the nearest available data
-version (currently 4.2, 4.3, or 4.4).
+version (currently 4.2, 4.3, 4.4 or 4.5).
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/api/test` | GET | Health check |
-| `/api/species-classes` | GET | Get all species classes (18 classes with archetype mapping) |
+| `/api/species-classes` | GET | Get all species classes (18 classes with archetype mapping); only portraits that have an image on the site are listed |
 | `/api/species-archetypes` | GET | Get trait point/pick budget per species archetype |
 | `/api/traits` | GET | Get all species traits |
 | `/api/origins` | GET | Get all origins |
@@ -324,12 +326,13 @@ version (currently 4.2, 4.3, or 4.4).
 | `/api/builds/guest` | POST | Submit a build without an account (moderation queue, rate-limited) |
 | `/api/builds/claim` | POST | Attach a guest build to the logged-in account using its claim token |
 | `/api/admin/pending-builds` | GET | Moderation queue (admin only); `/:id` for one build, `/:id/approve` and `/:id/reject` (POST) |
+| `/api/admin/pending-builds-count` | GET | Number of builds waiting for review (admin navbar badge) |
 | `/api/builds/:id` | PUT | Update a build (requires authentication, author only) |
 | `/api/builds/:id` | DELETE | Soft delete a build (requires authentication, author only) |
 | `/api/builds/:id/rating` | GET | Get average rating and the current user's rating |
 | `/api/builds/:id/rating` | POST | Rate a build (requires authentication) |
 | `/api/import-build` | POST | Extract a build from an uploaded `.sav` file (no login required, rate-limited) |
-| `/api/list-empires` / `/api/import-empire-designs` | POST | List/import empires from a `user_empire_designs.txt` upload (no login required, rate-limited) |
+| `/api/list-empires` / `/api/import-empire-designs` | POST | List/import empires from a `user_empire_designs_v3.4.txt` upload (no login required, rate-limited) |
 | `/api/stats` | GET | Public site statistics |
 | `/api/feedback` | GET/POST | List/submit feedback and bug reports |
 | `/api/chat` | GET/POST | Community chat messages (rate-limited) |
@@ -415,7 +418,7 @@ npm run test:report
 
 **Import Tests** (`tests/e2e/import.spec.ts` - 8 tests):
 - Import a build from a `.sav` file
-- List and import empires from a `user_empire_designs.txt` upload
+- List and import empires from a `user_empire_designs_v3.4.txt` upload
 
 **Resources Page Tests** (`tests/e2e/resources.spec.ts` - 14 tests):
 - Category filters, featured resources, SEO meta tags, loading state
@@ -424,6 +427,8 @@ npm run test:report
 - Full frontend TypeScript compilation test
 - Type check only test (tsc --noEmit)
 - Prevents deployment with TypeScript errors
+
+Each test has a 3 minute timeout (`playwright.config.ts`), so a broken selector fails the test instead of hanging the whole run.
 
 **Test Strategy:**
 - Tests run automatically before production deployments
@@ -480,7 +485,7 @@ The project uses **SQLite** with the following schema:
 - `ratings` - one star rating per user per build
 - `feedback` - bug reports and feedback, with admin resolve status
 - `chat_messages` - community chat (logged-in or guest)
-- `page_views` - basic analytics
+- `page_views` - legacy traffic log, no longer written (traffic sources come from Google Analytics)
 
 **Database file:** `./stellaris_builds.db` (auto-created on first run)
 

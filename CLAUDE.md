@@ -185,7 +185,7 @@ The project uses npm workspaces with three main parts:
 - `GuestSubmitted.tsx` (`/build-submitted`) - Confirmation after a guest submission: claim link + "create an account" pitch
 - `ClaimBuild.tsx` (`/claim/:token`) - Attaches a guest build to the logged-in account (asks to sign in first)
 - `PendingBuilds.tsx` (`/admin/pending`) - Moderation queue (admin only); `/admin/pending/:id` is `BuildDetail.tsx` in `pendingMode` (moderator preview with Approve/Reject, no rating)
-- `AdminStats.tsx` (`/admin/stats`) - Admin statistics. Both admin pages are linked in the navbar for admins only (Moderation shows the pending count)
+- `AdminStats.tsx` (`/admin/stats`) - Admin statistics from the DB only (accounts, builds, and builds published without an account: submitted / approved / rejected / emailed / claimed, plus a weekly published-vs-guest chart). Traffic sources are left to GA. Both admin pages are linked in the navbar for admins only (Moderation shows the pending count)
 
 **Authentication:**
 - `AuthContext.tsx` - React context providing authentication state and user info
@@ -218,11 +218,11 @@ The project uses npm workspaces with three main parts:
 
 **Database:** `backend/database.js`
 - SQLite database stored at `./stellaris_builds.db` (created at runtime)
-- Tables: `users`, `builds`, `ratings`, `feedback`, `page_views`, `chat_messages`, `pending_builds`
+- Tables: `users`, `builds`, `ratings`, `feedback`, `page_views` (legacy, no longer written since 2026-10-19), `chat_messages`, `pending_builds`
 - Users table: stores OAuth user info (provider, provider_id, username, email, avatar). `provider = 'guest'` rows are not real accounts: they only carry the author name of approved guest builds, cannot log in, and are excluded from signup stats
 - Builds table: stores complete empire configurations with soft delete support and author_id foreign key
 - chat_messages table: community chat (content, author_name, author_id nullable, is_guest, deleted, created_at)
-- pending_builds table: builds submitted without an account, waiting for moderation (`data` = sanitized build fields as JSON, `guest_name`, optional `guest_email`, `claim_token_hash`, `claimed_user_id`, `status` pending/approved/rejected, `build_id` once published). Deliberately separate from `builds`, which many public queries read
+- pending_builds table: builds submitted without an account, waiting for moderation (`data` = sanitized build fields as JSON, `guest_name`, optional `guest_email`, `claim_token_hash`, `claimed_user_id`, `status` pending/approved/rejected, plus a transient `approving` that locks the row during an approval and is reset to `pending` at startup, `build_id` once published). Deliberately separate from `builds`, which many public queries read
 - Schema uses ALTER TABLE for migrations to add new columns without breaking existing data
 
 **Authentication Routes:**
@@ -247,9 +247,10 @@ The project uses npm workspaces with three main parts:
 - `GET /api/planet-classes` - Returns homeworld planet classes (10 selectable climates + origin-forced classes like Habitat/Gaia, with icons)
 - `GET /api/builds` - Returns all non-deleted builds ordered by created_at DESC
 - `POST /api/builds` - Creates new build (requires authentication, name, checks for duplicates)
-- `POST /api/builds/guest` - Submits a build without an account to the moderation queue (`guest_name` required, `guest_email` optional, honeypot field `website`). `guestSubmitLimiter`: 5 successful submissions/day per IP. Returns the claim token
+- `POST /api/builds/guest` - Submits a build without an account to the moderation queue (`guest_name` required, `guest_email` optional, honeypot field `website`). `guestSubmitLimiter`: 5 successful submissions/day per IP (the slot is reserved before the handler runs, so parallel requests cannot bypass it). Emails to `guest_email` are capped by `reserveGuestEmail()` (3/day per address, 50/day in total; beyond, the build is saved but not emailed). Returns the claim token
 - `POST /api/builds/claim` - Attaches a guest build to the logged-in user from its claim token (before or after approval)
-- `GET /api/admin/pending-builds`, `GET /api/admin/pending-builds/:id`, `POST /api/admin/pending-builds/:id/approve|reject` - Moderation (admin only). Approve copies the build into `builds`
+- `GET /api/admin/pending-builds`, `GET /api/admin/pending-builds/:id`, `POST /api/admin/pending-builds/:id/approve|reject` - Moderation (admin only). Approve copies the build into `builds`, after an atomic `pending` -> `approving` transition (a double click cannot publish twice)
+- `GET /api/admin/pending-builds-count` - Pending queue size for the admin navbar badge
 - `POST /api/import-build` (`.sav`), `POST /api/list-empires` + `POST /api/import-empire-designs` (empire designs `.txt`) - parse an uploaded file with a Python script and return pre-filled build data. **Open to anonymous visitors**, protected by `importLimiter` (30/h per IP, 60/h per account), max 3 concurrent parses (503 beyond), 60s script timeout. The uploaded file is deleted as soon as the script exits
 - `DELETE /api/builds/:id` - Soft deletes a build (sets deleted=1)
 - `GET /api/resources` - Returns curated community resources (YouTube channels, guides, tools, mods, communities)
@@ -631,12 +632,41 @@ Planned features (not yet implemented):
 
 ## Recent Completions
 
+### Imports, Guest Mode Review Fixes, Admin Stats, Test Suite (2026-10-19)
+
+**Empire designs import** (`import_empire_from_designs.py`): now also extracts `portrait` (species block only, the ruler has its own), `planet_class` and `graphical_culture` (top-level keys, anchored so `city_graphical_culture` does not match). The file is still `user_empire_designs_v3.4.txt` in 4.5 (`v3.4` is the format version, hard-coded in `stellaris.exe`). `ImportEmpireDesigns.tsx` lists a copyable path per OS: Windows uses `%USERPROFILE%\Documents\...` (the file picker expands it; paste it in "File name", not the address bar, which opens the file instead). A web page cannot choose the folder the picker opens in; `showOpenFilePicker` (`startIn: 'documents'`) was tried and dropped: Chromium only, Brave disables it.
+
+**Save import** (`import_build_from_save.py`), several bugs on recent saves:
+- Keys were searched in a fixed 50k-line window after `country=`; the player country is ~70k lines in a late save, so traditions/perks were missed. Now bounded to the exact country 0 block (`find_block_end()`)
+- Ethics are now a list (`ethics={ "ethic_a" }`), the old `ethic="..."` regex found nothing. Both formats work; `ethics` is always in the output (the backend finds the JSON by that key)
+- Tradition trees come from `<tree>_adopt` entries (ids can contain `_`, e.g. `tr_cybernetics_assimilator`)
+- `trait_infernal` filtered (automatic trait of the INF class, `initial = no`, not in `traits.json`)
+- New fields: portrait, homeworld `planet_class` (species `home_planet`, both `home_planet=<id>` and `{ reference=<id> }` formats), `graphical_culture`
+- **Disk leak fixed**: each import unzipped ~100 MB into `backend/uploads/.cache_<random name>`, never reused nor deleted. Now a `TemporaryDirectory`. Prod `backend/uploads` was 8 KB (save imports barely used), nothing to clean
+- Validation read `backend/data/*.json` (pre-versioning path); now the latest `backend/data/versions/X.Y/`
+- `ImportSave.tsx` warns that a save holds the empire at that date: civics/traits/ethics gained in game must be removed
+
+**Portraits**: `GET /api/species-classes` drops portrait ids with no PNG in `frontend/public/portraits/` (only `lith_human_inf` and `default_robot` as of today), and `BuildForm.tsx` clears a selected portrait the picker does not offer - before, it showed a selection on an invisible thumbnail.
+
+**Rule check false positive**: `BuildForm.tsx` (submit) and `BuildDetail.tsx` (export) built the evaluator context without `species_class`, so every "requires species class X" predicate failed (20 in 4.5, e.g. Cosmic Dawn requires INF). `check_build_rules.js` already passed it.
+
+**`£blocker£` in origin texts** (Cosmic Dawn, Buried Lithoids...): `clean_localized_text()` stripped icons before resolving `['concept_...']` references, whose text brings them back; markup is now stripped again afterwards. 4.5 re-extracted (only those 5 lines changed); 4.2-4.4 cannot be re-extracted (game versions not installed), the token was removed from their `origins.json` directly.
+
+**Check Build button** next to Submit in `BuildForm.tsx`: same checks as submit (blocking issues + experimental rule warnings), results only, never submits.
+
+**Admin stats**: removed "Top Traffic Sources" and the `trackPageView` middleware (5 paths only, no bot filter, an SQLite write per page load - GA does it better); added the guest build cards and chart (see Pages).
+
+**Guest mode review fixes** (code review of PR #12): limiter reservation, email cap, atomic approval, one name rule (see Guest submission flow below), claim race (a 0-row claim UPDATE re-checks whether the build already belongs to the caller before answering "claimed by another account"), unguarded `localStorage.removeItem` after a successful guest submit (showed "Network error" and invited a duplicate), navbar count endpoint. Not fixed on purpose: claim token sent to GA in the `/claim/:token` page path (only the owner has GA access), auto-claim on a shared browser.
+
+**Tests**: the whole Playwright suite passes (55/55, ~1 min). Fixed stale tests: Resources page title, civic image test reading `potential` as the pre-2026-08 flat-string format, empire designs fixture with 5 ethics points, save submit test now on `test2.sav` (`test1.sav` really holds a gestalt empire with an extra ethic, which rightly disables Submit). `playwright.config.ts` had `timeout: 0`: a selector that no longer exists hung the run forever; now 3 min per test. Gotcha: on branches without `isLocalRequest()`, repeated local runs hit `importLimiter` ("Too many imports") - restarting the backend resets the in-memory counters.
+
 ### Publishing Without an Account + Moderation + Hardening (2026-10-19)
 Follow-up of the funnel work below: the last barrier was the login itself.
 
 **Guest submission flow:**
 - `BuildForm.tsx` runs every check first (missing fields, URLs, empty description, rule warnings), then, if not logged in, opens `AuthModal.tsx`, which offers "Publish without an account" in create mode -> `GuestSubmitModal.tsx` (name + optional email + hidden honeypot) -> `POST /api/builds/guest` -> `/build-submitted`.
-- Guest name: same format as display names (3-30, `[a-zA-Z0-9_-]`), rejected if it matches a **real** account's username/display_name (case-insensitive). Guest names may repeat (one visitor, several builds).
+- Guest name: same format as display names (3-30, `[a-zA-Z0-9_-]`). Guest names may repeat (one visitor, several builds).
+- **One name rule at every step** (registration, display name change, guest submission, guest approval): `findRealAccountByName()` - unique among real accounts (`provider != 'guest'`), username or display_name, case-insensitive. A guest never blocks a real account: when an account takes a name a guest uses, `releaseGuestName()` renames the guest account to `<name> (guest)` (and an approval whose pseudo was taken in the meantime credits `<name> (guest)` directly). Typical case: a guest registers their own pseudo, then claims, and the emptied guest account is deleted. Known gap: Google/Steam accounts still get the provider's name at creation without this check
 - Nothing is public before approval: the build sits in `pending_builds`. On approval it is inserted into `builds` (shared `insertBuild()` helper with `POST /api/builds`) under a guest user for the name (`findOrCreateGuestUser()`), or directly under the account that already claimed it.
 - The moderator gets an email per submission (SMTP + `ADMIN_EMAIL`, already set in prod); the queue is `/admin/pending`. Mail failures are logged, never fail a request.
 
@@ -1181,7 +1211,7 @@ Diagnosed with WebPageTest (waterfall analysis). Fixes applied in order of impac
 **Portrait extraction notes:**
 - Source: `common/portrait_categories/00_portrait_categories.txt` → `common/portrait_sets/00_portrait_sets.txt`
 - 341 total portrait IDs across 18 categories (295 unique — many shared between categories e.g. cybernetic portraits appear under both MAM and CYBERNETIC)
-- ~29 portraits still missing images (psionic_02/05/06/09, bio7/9/10/11, mammalian_ar_03/06/08/09, etc.) — these timed out on wiki; show broken image silently via `onError` handler
+- Portraits still missing an image: only `lith_human_inf` and `default_robot` as of 2026-10-19 (the ~29 initially missing were downloaded since). They are filtered out of `GET /api/species-classes`
 - Wiki uses different naming conventions: `Cyber_NN_stage_2.png`, `Synth_NN.png`, `Bio_species_NN.png`, etc.
 
 ### AI Search Optimization / LLM SEO (2026-05-22)
