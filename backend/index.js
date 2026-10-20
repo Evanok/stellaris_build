@@ -142,33 +142,6 @@ const isAdmin = (req, res, next) => {
   res.status(403).json({ error: 'Forbidden. Admin access required.' });
 };
 
-// Page view tracking middleware for important pages
-const trackPageView = (req, res, next) => {
-  const trackedPaths = ['/', '/create', '/create/manual', '/create/import-save', '/create/import-designs'];
-  const url = req.path;
-
-  // Only track specific paths
-  if (trackedPaths.includes(url)) {
-    const referrer = req.get('Referer') || req.get('Referrer') || 'direct';
-    const userAgent = req.get('User-Agent') || 'unknown';
-
-    db.run(
-      'INSERT INTO page_views (url, referrer, user_agent) VALUES (?, ?, ?)',
-      [url, referrer, userAgent],
-      (err) => {
-        if (err) {
-          console.error('Error tracking page view:', err.message);
-        }
-      }
-    );
-  }
-
-  next();
-};
-
-// Apply page view tracking to all routes
-app.use(trackPageView);
-
 // ============ AUTH ROUTES ============
 
 // Google OAuth routes
@@ -2156,24 +2129,42 @@ app.get('/api/admin/stats', isAdmin, async (req, res) => {
     });
     stats.signupsPerWeek = signupsPerWeek;
 
-    // 7. Top referrers (last 30 days)
-    const topReferrers = await new Promise((resolve, reject) => {
+    // 7. Builds submitted without an account (pending_builds, all time)
+    const guestBuilds = await new Promise((resolve, reject) => {
+      db.get(
+        `SELECT
+          COUNT(*) as total,
+          COALESCE(SUM(status = 'pending'), 0) as pending,
+          COALESCE(SUM(status = 'approved'), 0) as approved,
+          COALESCE(SUM(status = 'rejected'), 0) as rejected,
+          COALESCE(SUM(guest_email IS NOT NULL), 0) as withEmail,
+          COALESCE(SUM(claimed_user_id IS NOT NULL), 0) as claimed
+         FROM pending_builds`,
+        (err, row) => {
+          if (err) reject(err);
+          else resolve(row);
+        }
+      );
+    });
+    stats.guestBuilds = guestBuilds;
+
+    // 8. Guest submissions per week (last 12 weeks)
+    const guestSubmissionsPerWeek = await new Promise((resolve, reject) => {
       db.all(
         `SELECT
-          referrer,
+          strftime('%Y-W%W', created_at) as week,
           COUNT(*) as count
-         FROM page_views
-         WHERE created_at >= date('now', '-30 days')
-         GROUP BY referrer
-         ORDER BY count DESC
-         LIMIT 10`,
+         FROM pending_builds
+         WHERE created_at >= date('now', '-84 days')
+         GROUP BY week
+         ORDER BY week`,
         (err, rows) => {
           if (err) reject(err);
           else resolve(rows);
         }
       );
     });
-    stats.topReferrers = topReferrers;
+    stats.guestSubmissionsPerWeek = guestSubmissionsPerWeek;
 
     res.json(stats);
   } catch (error) {
