@@ -671,7 +671,7 @@ Follow-up of the funnel work below: the last barrier was the login itself.
 - The moderator gets an email per submission (SMTP + `ADMIN_EMAIL`, already set in prod); the queue is `/admin/pending`. Mail failures are logged, never fail a request.
 
 **Claiming** (proof of authorship = owning the secret token; only its sha256 is stored):
-- The token is kept in localStorage (`utils/guestClaims.ts`): when the visitor signs in on the same browser, `App.tsx` claims automatically and shows a banner.
+- The token is kept in localStorage (`utils/guestClaims.ts`): when the visitor signs in on the same browser, `App.tsx` claims automatically and shows a banner. **Never for admin accounts**: an admin enters builds on behalf of others (e.g. a Reddit author credited as a guest, then sent the claim link by DM), and logging in on that browser would take them over; their tokens stay untouched.
 - It is also shown as a `/claim/:token` link on the confirmation page and, if an email was given, emailed right away; a second email is sent on approval. The approval email cannot repeat the link (hash only), it points back to the first one.
 - Claim before approval -> published under the account. After -> the build moves off the guest user, which is deleted once it has no build left (frees the name).
 

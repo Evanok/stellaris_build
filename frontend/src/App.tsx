@@ -73,8 +73,11 @@ const AppContent = () => {
   // Builds this browser submitted without an account are attached to the account
   // as soon as the visitor signs in. Tokens that can no longer be claimed (invalid,
   // rejected, taken) are dropped; network errors keep them for the next visit.
+  // Never for admins: they enter builds on behalf of other people (e.g. a Reddit
+  // author, credited under their name as a guest), and logging in on the same
+  // browser would silently take those builds over. Their tokens are left untouched.
   useEffect(() => {
-    if (!user) return;
+    if (!user || user.is_admin === 1) return;
     const claims = getGuestClaims();
     if (!claims.length) return;
     Promise.all(claims.map(claim =>
