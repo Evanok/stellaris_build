@@ -1353,7 +1353,13 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         return (data.error || 'Failed to submit the build') + details;
       }
       addGuestClaim({ token: data.claim_token, name });
-      localStorage.removeItem('stellaris_build_draft');
+      // The build is saved at this point: a storage error must not report a failure
+      // (the visitor would resubmit and create a duplicate in the moderation queue)
+      try {
+        localStorage.removeItem('stellaris_build_draft');
+      } catch {
+        // Storage unavailable: the draft simply stays
+      }
       skipDescriptionWarningRef.current = false;
       skipRuleWarningRef.current = false;
       setShowGuestModal(false);

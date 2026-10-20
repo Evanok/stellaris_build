@@ -20,7 +20,7 @@ test.describe('Resources Page', () => {
     await page.goto('/resources');
 
     // Wait for content to load
-    await page.waitForSelector('h1:has-text("Community Resources")', { timeout: 10000 });
+    await page.waitForSelector('h1:has-text("Guides & Resources")', { timeout: 10000 });
 
     // Verify no errors occurred
     expect(consoleErrors, 'No console errors should occur').toEqual([]);
@@ -29,10 +29,10 @@ test.describe('Resources Page', () => {
 
   test('should display hero banner with resource count', async ({ page }) => {
     await page.goto('/resources');
-    await page.waitForSelector('h1:has-text("Community Resources")');
+    await page.waitForSelector('h1:has-text("Guides & Resources")');
 
     // Check hero banner exists
-    const heroTitle = await page.locator('h1:has-text("Community Resources")');
+    const heroTitle = await page.locator('h1:has-text("Guides & Resources")');
     await expect(heroTitle).toBeVisible();
 
     // Check tagline
@@ -47,7 +47,7 @@ test.describe('Resources Page', () => {
 
   test('should display all category filter buttons', async ({ page }) => {
     await page.goto('/resources');
-    await page.waitForSelector('h1:has-text("Community Resources")');
+    await page.waitForSelector('h1:has-text("Guides & Resources")');
 
     // Check "All Resources" button
     const allButton = await page.locator('button:has-text("All Resources")');
@@ -71,7 +71,7 @@ test.describe('Resources Page', () => {
 
   test('should filter categories when clicking category buttons', async ({ page }) => {
     await page.goto('/resources');
-    await page.waitForSelector('h1:has-text("Community Resources")');
+    await page.waitForSelector('h1:has-text("Guides & Resources")');
 
     // Initially all categories should be visible
     let visibleCategories = await page.locator('.card-header h2').count();
@@ -101,7 +101,7 @@ test.describe('Resources Page', () => {
 
   test('should display featured resources with featured badge', async ({ page }) => {
     await page.goto('/resources');
-    await page.waitForSelector('h1:has-text("Community Resources")');
+    await page.waitForSelector('h1:has-text("Guides & Resources")');
 
     // Check for "Featured" section header
     const featuredHeader = await page.locator('h4:has-text("Featured")').first();
@@ -118,7 +118,7 @@ test.describe('Resources Page', () => {
 
   test('should display resource cards with all required information', async ({ page }) => {
     await page.goto('/resources');
-    await page.waitForSelector('h1:has-text("Community Resources")');
+    await page.waitForSelector('h1:has-text("Guides & Resources")');
 
     // Get first resource card
     const firstCard = page.locator('.resource-card').first();
@@ -143,7 +143,7 @@ test.describe('Resources Page', () => {
 
   test('should have working external links', async ({ page }) => {
     await page.goto('/resources');
-    await page.waitForSelector('h1:has-text("Community Resources")');
+    await page.waitForSelector('h1:has-text("Guides & Resources")');
 
     // Get all resource card links
     const links = await page.locator('.resource-card-link').all();
@@ -164,7 +164,7 @@ test.describe('Resources Page', () => {
 
   test('should display "More Resources" section when category has both featured and non-featured', async ({ page }) => {
     await page.goto('/resources');
-    await page.waitForSelector('h1:has-text("Community Resources")');
+    await page.waitForSelector('h1:has-text("Guides & Resources")');
 
     // Check for "More Resources" header (appears after featured resources)
     const moreResourcesHeaders = await page.locator('h4:has-text("More Resources")').count();
@@ -173,7 +173,7 @@ test.describe('Resources Page', () => {
 
   test('should display contribution CTA at bottom', async ({ page }) => {
     await page.goto('/resources');
-    await page.waitForSelector('h1:has-text("Community Resources")');
+    await page.waitForSelector('h1:has-text("Guides & Resources")');
 
     // Scroll to bottom
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
@@ -224,7 +224,7 @@ test.describe('Resources Page', () => {
 
   test('should have proper SEO meta tags', async ({ page }) => {
     await page.goto('/resources');
-    await page.waitForSelector('h1:has-text("Community Resources")');
+    await page.waitForSelector('h1:has-text("Guides & Resources")');
 
     // Check title
     const title = await page.title();
@@ -243,7 +243,7 @@ test.describe('Resources Page', () => {
 
   test('should display category icons', async ({ page }) => {
     await page.goto('/resources');
-    await page.waitForSelector('h1:has-text("Community Resources")');
+    await page.waitForSelector('h1:has-text("Guides & Resources")');
 
     // Check for Bootstrap icons in category headers
     const categoryIcons = await page.locator('.card-header h2 i[class*="bi-"]').count();
@@ -268,7 +268,7 @@ test.describe('Resources Page', () => {
     // Spinner might not be visible if request is too fast, but shouldn't throw error
 
     await loadingPromise;
-    await page.waitForSelector('h1:has-text("Community Resources")');
+    await page.waitForSelector('h1:has-text("Guides & Resources")');
 
     // Spinner should be gone
     await expect(spinner).not.toBeVisible();
@@ -283,7 +283,7 @@ test.describe('Resources Page', () => {
     await page.click('a[href="/resources"]');
 
     // Should navigate to resources page
-    await page.waitForSelector('h1:has-text("Community Resources")');
+    await page.waitForSelector('h1:has-text("Guides & Resources")');
     expect(page.url()).toContain('/resources');
   });
 });

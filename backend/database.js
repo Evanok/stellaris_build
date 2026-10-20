@@ -321,7 +321,11 @@ const setupDatabase = () => {
     )`, (err) => {
       if (err) {
         console.error('Error creating pending_builds table:', err.message);
+        return;
       }
+      // 'approving' only lasts during an approval request: a row still in it at
+      // startup was interrupted by a crash or restart, put it back in the queue
+      db.run(`UPDATE pending_builds SET status = 'pending' WHERE status = 'approving' AND build_id IS NULL`);
     });
 
     // Add guest_email column if it doesn't exist (for existing databases)

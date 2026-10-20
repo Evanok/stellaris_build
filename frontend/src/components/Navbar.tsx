@@ -14,9 +14,9 @@ export const Navbar: React.FC = () => {
   // Refreshed on navigation so it drops after reviewing.
   useEffect(() => {
     if (!isAdmin) return;
-    fetch('/api/admin/pending-builds')
+    fetch('/api/admin/pending-builds-count')
       .then(res => (res.ok ? res.json() : null))
-      .then(data => setPendingCount(data?.pending?.length || 0))
+      .then(data => setPendingCount(data?.count || 0))
       .catch(() => setPendingCount(0));
   }, [isAdmin, location.pathname]);
 

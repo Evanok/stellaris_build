@@ -176,9 +176,10 @@ test.describe('Import Functionality - Save Files', () => {
     await page.goto('/create/import-save');
     await page.waitForSelector('#savefile', { timeout: 10000 });
 
-    // Import test1.sav
-    const test1Path = path.join(__dirname, '../data/test1.sav');
-    await page.setInputFiles('#savefile', test1Path);
+    // Import test2.sav: its empire is valid at creation. test1.sav holds a gestalt
+    // empire with an extra ethic (4 ethics points), which rightly disables Submit
+    const test2Path = path.join(__dirname, '../data/test2.sav');
+    await page.setInputFiles('#savefile', test2Path);
 
     // Wait for preview and continue to form
     await page.waitForSelector('button:has-text("Continue to Build Form")', { timeout: 30000 });

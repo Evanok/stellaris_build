@@ -17,6 +17,7 @@ const apiRequestStore = new Map();
 const buildCreationStore = new Map();
 const importStore = new Map();
 const guestSubmitStore = new Map();
+const guestEmailStore = new Map();
 
 // Clean up old entries every 15 minutes
 setInterval(() => {
@@ -40,6 +41,11 @@ setInterval(() => {
   for (const [key, data] of guestSubmitStore.entries()) {
     if (now - data.resetTime > 24 * oneHour) {
       guestSubmitStore.delete(key);
+    }
+  }
+  for (const [key, data] of guestEmailStore.entries()) {
+    if (now - data.resetTime > 24 * oneHour) {
+      guestEmailStore.delete(key);
     }
   }
   for (const [key, data] of buildCreationStore.entries()) {
@@ -336,18 +342,53 @@ const guestSubmitLimiter = (req, res, next) => {
       error: 'Too many builds submitted without an account today. Sign in to keep publishing, or try again tomorrow.',
     });
   }
-  // Only successful submissions count: a visitor retrying after "name already
-  // taken" or a validation error should not burn their daily quota
+  // The slot is reserved before the (async) handler runs, otherwise parallel
+  // requests would all pass the check above before any of them is counted.
+  // Only successful submissions keep it: a visitor retrying after "name already
+  // taken" or a validation error should not burn their daily quota.
+  entry.count += 1;
   res.on('finish', () => {
-    if (res.statusCode === 201) entry.count += 1;
+    if (res.statusCode !== 201) entry.count = Math.max(0, entry.count - 1);
   });
   next();
+};
+
+// Emails sent to the address a guest typed in. Nothing proves the address is
+// theirs, so anyone could make the site email a stranger: cap it per address and
+// overall, per day. Beyond the cap the build is still saved, just not emailed
+// (the claim link is shown on screen anyway).
+const GUEST_EMAILS_PER_ADDRESS_PER_DAY = 3;
+const GUEST_EMAILS_TOTAL_PER_DAY = 50;
+const GUEST_EMAIL_TOTAL_KEY = '*';
+
+// Returns true and counts the email if it may be sent
+const reserveGuestEmail = (address) => {
+  const now = Date.now();
+  const oneDay = 24 * 60 * 60 * 1000;
+  const entryFor = (key) => {
+    let entry = guestEmailStore.get(key);
+    if (!entry || now - entry.resetTime > oneDay) {
+      entry = { count: 0, resetTime: now };
+      guestEmailStore.set(key, entry);
+    }
+    return entry;
+  };
+
+  const perAddress = entryFor(`address:${address}`);
+  const total = entryFor(GUEST_EMAIL_TOTAL_KEY);
+  if (perAddress.count >= GUEST_EMAILS_PER_ADDRESS_PER_DAY || total.count >= GUEST_EMAILS_TOTAL_PER_DAY) {
+    return false;
+  }
+  perAddress.count += 1;
+  total.count += 1;
+  return true;
 };
 
 module.exports = {
   apiLimiter,
   importLimiter,
   guestSubmitLimiter,
+  reserveGuestEmail,
   createBuildLimiter,
   validateBuildData,
   sanitizeBuildData,
