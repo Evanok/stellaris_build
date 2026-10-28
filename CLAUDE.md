@@ -218,7 +218,7 @@ The project uses npm workspaces with three main parts:
 
 **Database:** `backend/database.js`
 - SQLite database stored at `./stellaris_builds.db` (created at runtime)
-- Tables: `users`, `builds`, `ratings`, `feedback`, `page_views` (legacy, no longer written since 2026-10-19), `chat_messages`, `pending_builds`
+- Tables: `users`, `builds`, `ratings`, `feedback`, `page_views` (legacy, no longer written since 2026-10-19), `chat_messages`, `pending_builds`, `import_attempts`
 - Users table: stores OAuth user info (provider, provider_id, username, email, avatar). `provider = 'guest'` rows are not real accounts: they only carry the author name of approved guest builds, cannot log in, and are excluded from signup stats
 - Builds table: stores complete empire configurations with soft delete support and author_id foreign key
 - chat_messages table: community chat (content, author_name, author_id nullable, is_guest, deleted, created_at)
@@ -251,7 +251,7 @@ The project uses npm workspaces with three main parts:
 - `POST /api/builds/claim` - Attaches a guest build to the logged-in user from its claim token (before or after approval)
 - `GET /api/admin/pending-builds`, `GET /api/admin/pending-builds/:id`, `POST /api/admin/pending-builds/:id/approve|reject` - Moderation (admin only). Approve copies the build into `builds`, after an atomic `pending` -> `approving` transition (a double click cannot publish twice)
 - `GET /api/admin/pending-builds-count` - Pending queue size for the admin navbar badge
-- `POST /api/import-build` (`.sav`), `POST /api/list-empires` + `POST /api/import-empire-designs` (empire designs `.txt`) - parse an uploaded file with a Python script and return pre-filled build data. **Open to anonymous visitors**, protected by `importLimiter` (30/h per IP, 60/h per account), max 3 concurrent parses (503 beyond), 60s script timeout. The uploaded file is deleted as soon as the script exits
+- `POST /api/import-build` (`.sav`), `POST /api/list-empires` + `POST /api/import-empire-designs` (empire designs `.txt`) - parse an uploaded file with a Python script and return pre-filled build data. **Open to anonymous visitors**, protected by `importLimiter` (30/h per IP, 60/h per account), max 3 concurrent parses (503 beyond), 60s script timeout. Every request, failed ones included (rate limit, wrong file, parser crash), gets a row in `import_attempts` (status, error, parser output tail, file name/size/sha256), and the uploaded file is kept in `backend/import_archive/{save,designs}/<sha256>.<ext>` (gitignored, deduplicated, 5 GB cap) as test material when a parser breaks - see `backend/importLog.js`
 - `DELETE /api/builds/:id` - Soft deletes a build (sets deleted=1)
 - `GET /api/resources` - Returns curated community resources (YouTube channels, guides, tools, mods, communities)
 - `GET /api/chat` - Returns last 100 non-deleted chat messages (oldest first)
@@ -699,7 +699,7 @@ Started from a GA4 audit (Data API, via a service account - access details in `C
 - gtag.js is only injected after a human signal (pointer/key/scroll/touch/wheel, or 5s of *visible* page time) and never for `navigator.webdriver`; `gtag()` calls are queued in `dataLayer` meanwhile. Production domain only (see Testing).
 - `send_page_view: false` on `config`: the landing page was counted twice (automatic + manual page_view).
 - The manual page_view waits (max 1.5s) for react-helmet-async to update `<title>`, which used to report the previous page's title.
-- Custom events through `trackEvent()` (typed list in `utils/analytics.ts`): `build_created` (`method`: manual/import_save/import_designs), `build_updated`, `build_exported`, `rating_submitted`, `search`, `filter_used` (`filter_type`/`filter_value`, home filters + resource categories), `login`/`sign_up` (`method`; for Google/Steam it is the click, success happens on the provider side), `feedback_opened`, `feedback_submitted`, `chat_message_sent`, `resource_clicked`. Events right before a full page load use `trackEventThenNavigate()` (waits for GA, max 500ms).
+- Custom events through `trackEvent()` (typed list in `utils/analytics.ts`): `build_created` (`method`: manual/import_save/import_designs), `build_updated`, `build_exported`, `rating_submitted`, `search`, `filter_used` (`filter_type`/`filter_value`, home filters + resource categories), `login`/`sign_up` (`method`; for Google/Steam it is the click, success happens on the provider side), `feedback_opened`, `feedback_submitted`, `chat_message_sent`, `resource_clicked`, `build_import_uploaded` / `build_import_empire_selected` (`method`, `result`, `error_status`, `empire_count`; sent for every upload, published or not). Events right before a full page load use `trackEventThenNavigate()` (waits for GA, max 500ms).
 - Event parameters only show in GA reports once registered as custom dimensions/metrics (GA Admin > Custom definitions) - done for all of the above; `build_created` and `sign_up` are key events. **A new event parameter needs the same registration.**
 
 **SEO fix:** the home page JSON-LD `ItemList` linked to `/builds/:id` (plural, no such route; Google indexed it as blank pages). Fixed to `/build/:id`, and the backend 301-redirects `/builds/:id` -> `/build/:id`.

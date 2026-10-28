@@ -47,6 +47,7 @@ const { spawn } = require('child_process');
 const { setupDatabase, db } = require('./database');
 const { renderBuildOgImage } = require('./ogImage');
 const passport = require('./auth');
+const { trackImport, failImport, receiveImportFile } = require('./importLog');
 const { apiLimiter, createBuildLimiter, importLimiter, guestSubmitLimiter, reserveGuestEmail, validateBuildData, sanitizeBuildData } = require('./security');
 const app = express();
 const port = process.env.PORT || 3001;
@@ -1629,64 +1630,43 @@ const importConcurrencyGuard = (req, res, next) => {
 
 const importGuards = [importLimiter, importConcurrencyGuard];
 
-app.post('/api/import-build', importGuards, upload.single('savefile'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded' });
-  }
-
-  const savFilePath = req.file.path;
-  const scriptPath = path.join(__dirname, '../data-extractor/import_build_from_save.py');
-
-  // Run Python script to extract build data
-  const python = spawn('python3', [scriptPath, savFilePath], { timeout: IMPORT_TIMEOUT_MS });
-
+// Runs an import parser and hands back its exit status and output. A run killed by
+// IMPORT_TIMEOUT_MS exits with code null and signal SIGTERM.
+const runImportScript = (scriptName, args, callback) => {
+  const scriptPath = path.join(__dirname, '../data-extractor', scriptName);
+  const python = spawn('python3', [scriptPath, ...args], { timeout: IMPORT_TIMEOUT_MS });
   let stdout = '';
   let stderr = '';
+  python.stdout.on('data', (data) => { stdout += data.toString(); });
+  python.stderr.on('data', (data) => { stderr += data.toString(); });
+  python.on('close', (code, signal) => callback({ code, signal, stdout, stderr }));
+};
 
-  python.stdout.on('data', (data) => {
-    stdout += data.toString();
-  });
+// The parsers print their own errors on stdout as well as stderr, keep both
+const scriptFailureDetails = ({ code, signal, stdout, stderr }) =>
+  (signal ? `Killed by ${signal} (timeout ${IMPORT_TIMEOUT_MS / 1000}s?)` : `Exit code ${code}`) +
+  `\n--- stderr ---\n${stderr}\n--- stdout ---\n${stdout}`;
 
-  python.stderr.on('data', (data) => {
-    stderr += data.toString();
-  });
+app.post('/api/import-build', trackImport('save'), importGuards, receiveImportFile(upload, 'savefile'), (req, res) => {
+  if (!req.file) {
+    return failImport(res, 400, 'No file uploaded');
+  }
 
-  python.on('close', (code) => {
-    // Clean up uploaded file
-    fs.unlink(savFilePath, (err) => {
-      if (err) console.error('Failed to delete uploaded file:', err);
-    });
-
-    // Clean up cache directory (.cache_<filename>)
-    const savFileName = path.basename(savFilePath);
-    const cacheDir = path.join(path.dirname(savFilePath), `.cache_${savFileName}`);
-    if (fs.existsSync(cacheDir)) {
-      fs.rm(cacheDir, { recursive: true, force: true }, (err) => {
-        if (err) console.error('Failed to delete cache directory:', err);
-      });
+  runImportScript('import_build_from_save.py', [req.file.path], (result) => {
+    const { stdout } = result;
+    if (result.code !== 0) {
+      console.error('Python script error:', result.stderr);
+      return failImport(res, 500, 'Failed to parse save file', scriptFailureDetails(result), { output: stdout });
     }
 
-    if (code !== 0) {
-      console.error('Python script error:', stderr);
-      return res.status(500).json({
-        error: 'Failed to parse save file',
-        details: stderr,
-        output: stdout
-      });
+    // Extract JSON from output (it's at the end after "JSON OUTPUT")
+    const jsonMatch = stdout.match(/\{[\s\S]*"ethics"[\s\S]*\}/);
+    if (!jsonMatch) {
+      return failImport(res, 500, 'Failed to extract build data from save file', stdout, { output: stdout });
     }
 
     try {
-      // Extract JSON from output (it's at the end after "JSON OUTPUT")
-      const jsonMatch = stdout.match(/\{[\s\S]*"ethics"[\s\S]*\}/);
-      if (!jsonMatch) {
-        return res.status(500).json({
-          error: 'Failed to extract build data from save file',
-          output: stdout
-        });
-      }
-
       const buildData = JSON.parse(jsonMatch[0]);
-
       // Return both the extracted data and the full output for debugging
       res.json({
         success: true,
@@ -1695,136 +1675,60 @@ app.post('/api/import-build', importGuards, upload.single('savefile'), (req, res
       });
     } catch (error) {
       console.error('JSON parse error:', error);
-      res.status(500).json({
-        error: 'Failed to parse extracted data',
-        details: error.message,
-        output: stdout
-      });
+      failImport(res, 500, 'Failed to parse extracted data', `${error.message}\n${stdout}`, { output: stdout });
     }
   });
 });
 
 // List all empires from empire designs file
-app.post('/api/list-empires', importGuards, upload.single('designsfile'), (req, res) => {
-  console.log('[list-empires] Request received');
-
+app.post('/api/list-empires', trackImport('designs_list'), importGuards, receiveImportFile(upload, 'designsfile'), (req, res) => {
   if (!req.file) {
-    console.log('[list-empires] ERROR: No file uploaded');
-    return res.status(400).json({ error: 'No file uploaded' });
+    return failImport(res, 400, 'No file uploaded');
   }
 
-  const designsFilePath = req.file.path;
-  const scriptPath = path.join(__dirname, '../data-extractor/import_empire_from_designs.py');
-
-  console.log('[list-empires] File uploaded:', designsFilePath);
-  console.log('[list-empires] Script path:', scriptPath);
-
-  // Run Python script to list empires
-  const python = spawn('python3', [scriptPath, designsFilePath], { timeout: IMPORT_TIMEOUT_MS });
-  console.log('[list-empires] Python script spawned');
-
-  let stdout = '';
-  let stderr = '';
-
-  python.stdout.on('data', (data) => {
-    stdout += data.toString();
-  });
-
-  python.stderr.on('data', (data) => {
-    stderr += data.toString();
-  });
-
-  python.on('close', (code) => {
-    console.log('[list-empires] Python script exited with code:', code);
-    console.log('[list-empires] stdout:', stdout);
-    console.log('[list-empires] stderr:', stderr);
-
-    // Clean up uploaded file
-    fs.unlink(designsFilePath, (err) => {
-      if (err) console.error('Failed to delete uploaded file:', err);
-    });
-
-    if (code !== 0) {
-      console.error('[list-empires] ERROR: Python script failed');
-      console.error('Python script error:', stderr);
-      return res.status(500).json({
-        error: 'Failed to parse empire designs file',
-        details: stderr
-      });
+  runImportScript('import_empire_from_designs.py', [req.file.path], (result) => {
+    if (result.code !== 0) {
+      console.error('Python script error:', result.stderr);
+      return failImport(res, 500, 'Failed to parse empire designs file', scriptFailureDetails(result));
     }
 
     try {
       // Parse the JSON array of empire names
-      const empires = JSON.parse(stdout.trim());
-      console.log('[list-empires] SUCCESS: Parsed empires:', empires);
+      const empires = JSON.parse(result.stdout.trim());
+      res.locals.importLog.empireCount = Array.isArray(empires) ? empires.length : null;
       res.json({ empires });
     } catch (error) {
-      console.error('[list-empires] ERROR: JSON parse failed');
       console.error('JSON parse error:', error);
-      res.status(500).json({
-        error: 'Failed to parse empire list',
-        details: error.message,
-        output: stdout
-      });
+      failImport(res, 500, 'Failed to parse empire list', `${error.message}\n${result.stdout}`, { output: result.stdout });
     }
   });
 });
 
 // Extract specific empire from empire designs file
-app.post('/api/import-empire-designs', importGuards, upload.single('designsfile'), (req, res) => {
+app.post('/api/import-empire-designs', trackImport('designs_import'), importGuards, receiveImportFile(upload, 'designsfile'), (req, res) => {
   if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded' });
+    return failImport(res, 400, 'No file uploaded');
   }
 
   const empireName = req.body.empireName;
+  res.locals.importLog.empireName = empireName;
   if (!empireName) {
-    // Clean up file first
-    fs.unlink(req.file.path, () => {});
-    return res.status(400).json({ error: 'Empire name is required' });
+    return failImport(res, 400, 'Empire name is required');
   }
 
-  const designsFilePath = req.file.path;
-  const scriptPath = path.join(__dirname, '../data-extractor/import_empire_from_designs.py');
-
-  // Run Python script to extract specific empire
-  const python = spawn('python3', [scriptPath, designsFilePath, empireName], { timeout: IMPORT_TIMEOUT_MS });
-
-  let stdout = '';
-  let stderr = '';
-
-  python.stdout.on('data', (data) => {
-    stdout += data.toString();
-  });
-
-  python.stderr.on('data', (data) => {
-    stderr += data.toString();
-  });
-
-  python.on('close', (code) => {
-    // Clean up uploaded file
-    fs.unlink(designsFilePath, (err) => {
-      if (err) console.error('Failed to delete uploaded file:', err);
-    });
-
-    if (code !== 0) {
-      console.error('Python script error:', stderr);
-      return res.status(500).json({
-        error: 'Failed to extract empire data',
-        details: stderr
-      });
+  runImportScript('import_empire_from_designs.py', [req.file.path, empireName], (result) => {
+    if (result.code !== 0) {
+      console.error('Python script error:', result.stderr);
+      return failImport(res, 500, 'Failed to extract empire data', scriptFailureDetails(result));
     }
 
     try {
       // Parse the empire data JSON
-      const buildData = JSON.parse(stdout.trim());
+      const buildData = JSON.parse(result.stdout.trim());
       res.json(buildData);
     } catch (error) {
       console.error('JSON parse error:', error);
-      res.status(500).json({
-        error: 'Failed to parse empire data',
-        details: error.message,
-        output: stdout
-      });
+      failImport(res, 500, 'Failed to parse empire data', `${error.message}\n${result.stdout}`, { output: result.stdout });
     }
   });
 });

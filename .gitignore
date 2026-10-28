@@ -19,6 +19,9 @@ playwright-report/
 # Generated social preview images (rebuilt on demand)
 backend/cache/
 
+# Uploaded save / empire designs files kept for debugging imports (user data)
+backend/import_archive/
+
 # Environment files
 .env
 .env.local

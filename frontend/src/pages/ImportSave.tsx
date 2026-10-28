@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { BuildForm } from '../BuildForm';
 import { invalidateBuildsCache } from './Home';
 import { trackEvent } from '../utils/analytics';
+import { useAuth } from '../AuthContext';
 
 const ImportSave: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [buildData, setBuildData] = useState<any>(null);
@@ -31,23 +33,33 @@ const ImportSave: React.FC = () => {
         body: formData,
       });
 
-      const data = await response.json();
+      // An answer that is not ours (nginx error page) has no JSON body
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        setError(data.error || 'Failed to parse save file');
+        trackImportUploaded('error', response.status);
+        setError(data.error || `Failed to parse save file (error ${response.status})`);
         setUploading(false);
         return;
       }
 
+      trackImportUploaded('success');
       // Extract buildData and output from response
       setBuildData(data.buildData || data);
       setScriptOutput(data.output || '');
       setShowPreview(true);
       setUploading(false);
     } catch (err) {
+      trackImportUploaded('error', 'network');
       setError('Network error. Please try again.');
       setUploading(false);
     }
+  };
+
+  // Sent for every upload, whether a build is published afterwards or not. The
+  // server also records each attempt (import_attempts), GA blockers included.
+  const trackImportUploaded = (result: 'success' | 'error', errorStatus?: number | string) => {
+    trackEvent('build_import_uploaded', { method: 'import_save', result, error_status: errorStatus, logged_in: !!user });
   };
 
   const handleBuildCreated = (newBuild: any) => {
