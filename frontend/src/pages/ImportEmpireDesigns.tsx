@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BuildForm } from '../BuildForm';
 import { trackEvent } from '../utils/analytics';
+import { useAuth } from '../AuthContext';
 
 const DESIGNS_FILE = 'user_empire_designs_v3.4.txt';
 
@@ -28,6 +29,7 @@ const DESIGNS_FILE_PATHS = [
 
 const ImportEmpireDesigns: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [copiedOs, setCopiedOs] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,20 +58,34 @@ const ImportEmpireDesigns: React.FC = () => {
         body: formData,
       });
 
-      const data = await response.json();
+      // An answer that is not ours (nginx error page) has no JSON body
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        setError(data.error || 'Failed to parse empire designs file');
+        trackImportStep('build_import_uploaded', 'error', { error_status: response.status });
+        setError(data.error || `Failed to parse empire designs file (error ${response.status})`);
         setUploading(false);
         return;
       }
 
+      trackImportStep('build_import_uploaded', 'success', { empire_count: data.empires?.length ?? 0 });
       setEmpireList(data.empires);
       setUploading(false);
     } catch (err) {
+      trackImportStep('build_import_uploaded', 'error', { error_status: 'network' });
       setError('Network error. Please try again.');
       setUploading(false);
     }
+  };
+
+  // Sent for every upload / empire pick, whether a build is published afterwards or
+  // not. The server also records each attempt (import_attempts), GA blockers included.
+  const trackImportStep = (
+    event: 'build_import_uploaded' | 'build_import_empire_selected',
+    result: 'success' | 'error',
+    params: Record<string, string | number> = {}
+  ) => {
+    trackEvent(event, { method: 'import_designs', result, logged_in: !!user, ...params });
   };
 
   const handleCopyPath = async (os: string, path: string) => {
@@ -102,15 +118,18 @@ const ImportEmpireDesigns: React.FC = () => {
         body: formData,
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        setError(data.error || 'Failed to extract empire data');
+        trackImportStep('build_import_empire_selected', 'error', { error_status: response.status });
+        setError(data.error || `Failed to extract empire data (error ${response.status})`);
         return;
       }
 
+      trackImportStep('build_import_empire_selected', 'success');
       setBuildData(data);
     } catch (err) {
+      trackImportStep('build_import_empire_selected', 'error', { error_status: 'network' });
       setError('Network error. Please try again.');
     }
   };

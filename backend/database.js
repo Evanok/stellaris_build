@@ -335,6 +335,27 @@ const setupDatabase = () => {
       }
     });
 
+    // One row per file import request, failed ones included (see importLog.js)
+    db.run(`CREATE TABLE IF NOT EXISTS import_attempts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      kind TEXT NOT NULL,
+      status INTEGER NOT NULL,
+      error TEXT,
+      details TEXT,
+      empire_name TEXT,
+      empire_count INTEGER,
+      original_name TEXT,
+      file_size INTEGER,
+      file_sha256 TEXT,
+      archived_file TEXT,
+      user_id INTEGER,
+      duration_ms INTEGER,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users (id)
+    )`, (err) => {
+      if (err) console.error('Error creating import_attempts table:', err.message);
+    });
+
     // Create ratings table for build ratings
     db.run(`CREATE TABLE IF NOT EXISTS ratings (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

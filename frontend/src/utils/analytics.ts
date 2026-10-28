@@ -24,7 +24,9 @@ export type AnalyticsEvent =
   | 'build_form_warning'
   | 'build_auth_prompt'
   | 'build_guest_started'
-  | 'build_submit_error';
+  | 'build_submit_error'
+  | 'build_import_uploaded'
+  | 'build_import_empire_selected';
 
 type EventParams = Record<string, string | number | boolean | undefined>;
 
