@@ -26,7 +26,7 @@ _Versions verified against the workspace `package.json` files on 2026-08-18 (maj
 - UI: Bootstrap 5.3 + `react-bootstrap` 2.10 + `bootstrap-icons` (no Tailwind)
 - Routing: `react-router-dom` 7.9
 - SEO/meta: `react-helmet-async` 3
-- Markdown rendering: `react-markdown` 10
+- Markdown rendering: `react-markdown` 10 + `remark-gfm` 4 (tables, strikethrough, task lists, autolinks), wrapped in `components/MarkdownText.tsx` for user-written text (build description, "How to Play" guide); raw HTML is never rendered
 - Charts: `recharts` 3.10 (Stats page)
 - CSS trimming: `@fullhuman/postcss-purgecss` 8
 - Lint: ESLint (`npm run lint -w frontend`) — **script present but `eslint` itself is not in `devDependencies`**, so `npm run lint -w frontend` currently fails with `eslint: not found`; pre-existing, not caused by the dependency upgrade
@@ -168,7 +168,8 @@ The project uses npm workspaces with three main parts:
 - Starting ruler traits (with origin/ethics filtering)
 - Ethics with point limits and compatibility checks
 - Authorities with ethics requirements
-- Civics with conditional filtering (potential/possible)
+- Civics with conditional filtering (potential/possible): 2 at creation, plus an optional third civic (`third_civic`, unlocked later in game - shown on the build page, never exported, still rule-checked with all 3 civics)
+- Description (5k chars) and optional "How to Play" guide (`guide`, 20k chars), both markdown, length enforced while typing (`maxLength` + counter)
 - Recommended Ascension Perks with ordering
 - Recommended Tradition Trees with ordering
 - Game version tracking
@@ -184,7 +185,8 @@ The project uses npm workspaces with three main parts:
 - `Feedback.tsx` - Feedback & bug reports list (col-lg-8) with community chat sidebar (col-lg-4)
 - `GuestSubmitted.tsx` (`/build-submitted`) - Confirmation after a guest submission: claim link + "create an account" pitch
 - `ClaimBuild.tsx` (`/claim/:token`) - Attaches a guest build to the logged-in account (asks to sign in first)
-- `PendingBuilds.tsx` (`/admin/pending`) - Moderation queue (admin only); `/admin/pending/:id` is `BuildDetail.tsx` in `pendingMode` (moderator preview with Approve/Reject, no rating)
+- `PendingBuilds.tsx` (`/admin/pending`) - Moderation page (admin only): pending guest builds + reported comments (View / Dismiss / Delete); `/admin/pending/:id` is `BuildDetail.tsx` in `pendingMode` (moderator preview with Approve/Reject, no rating, no comments)
+- Build comments: `components/BuildComments.tsx`, at the bottom of `BuildDetail.tsx` (see "Build Comments" in Recent Completions)
 - `AdminStats.tsx` (`/admin/stats`) - Admin statistics from the DB only (accounts, builds, and builds published without an account: submitted / approved / rejected / emailed / claimed, plus a weekly published-vs-guest chart). Traffic sources are left to GA. Both admin pages are linked in the navbar for admins only (Moderation shows the pending count)
 
 **Authentication:**
@@ -218,10 +220,12 @@ The project uses npm workspaces with three main parts:
 
 **Database:** `backend/database.js`
 - SQLite database stored at `./stellaris_builds.db` (created at runtime)
-- Tables: `users`, `builds`, `ratings`, `feedback`, `page_views` (legacy, no longer written since 2026-10-19), `chat_messages`, `pending_builds`, `import_attempts`
+- Tables: `users`, `builds`, `ratings`, `feedback`, `page_views` (legacy, no longer written since 2026-10-19), `chat_messages`, `pending_builds`, `import_attempts`, `build_comments`, `comment_reports`
 - Users table: stores OAuth user info (provider, provider_id, username, email, avatar). `provider = 'guest'` rows are not real accounts: they only carry the author name of approved guest builds, cannot log in, and are excluded from signup stats
 - Builds table: stores complete empire configurations with soft delete support and author_id foreign key
 - chat_messages table: community chat (content, author_name, author_id nullable, is_guest, deleted, created_at)
+- build_comments table: comments under a build (build_id, user_id, content, `quote_id` = quoted comment of the same build, deleted, created_at). Flat list, no threads. Content stored raw, rendered as plain text
+- comment_reports table: one row per (comment_id, user_id) report, `UNIQUE`; deleted when an admin dismisses them
 - pending_builds table: builds submitted without an account, waiting for moderation (`data` = sanitized build fields as JSON, `guest_name`, optional `guest_email`, `claim_token_hash`, `claimed_user_id`, `status` pending/approved/rejected, plus a transient `approving` that locks the row during an approval and is reset to `pending` at startup, `build_id` once published). Deliberately separate from `builds`, which many public queries read
 - Schema uses ALTER TABLE for migrations to add new columns without breaking existing data
 
@@ -250,7 +254,13 @@ The project uses npm workspaces with three main parts:
 - `POST /api/builds/guest` - Submits a build without an account to the moderation queue (`guest_name` required, `guest_email` optional, honeypot field `website`). `guestSubmitLimiter`: 5 successful submissions/day per IP (the slot is reserved before the handler runs, so parallel requests cannot bypass it). Emails to `guest_email` are capped by `reserveGuestEmail()` (3/day per address, 50/day in total; beyond, the build is saved but not emailed). Returns the claim token
 - `POST /api/builds/claim` - Attaches a guest build to the logged-in user from its claim token (before or after approval)
 - `GET /api/admin/pending-builds`, `GET /api/admin/pending-builds/:id`, `POST /api/admin/pending-builds/:id/approve|reject` - Moderation (admin only). Approve copies the build into `builds`, after an atomic `pending` -> `approving` transition (a double click cannot publish twice)
-- `GET /api/admin/pending-builds-count` - Pending queue size for the admin navbar badge
+- `GET /api/admin/pending-builds-count` - Admin navbar badge: `count` (pending builds) + `reported_comments` (visible comments with at least one report); the navbar shows the sum
+- `GET /api/builds/:id/comments` - Comments of a build, oldest first, with the quoted excerpt (`quote_content` null when the quoted comment was deleted) and `user_reported`; `report_count` for admins only
+- `POST /api/builds/:id/comments` - Post a comment (login required, 2000 chars, optional `quote_id`), 5 per 5 min per account (in-memory)
+- `DELETE /api/builds/:id/comments/:commentId` - Soft-delete a comment (**admin only** - authors cannot delete their own)
+- `POST /api/builds/:id/comments/:commentId/report` - Report a comment (login required, not your own, once per user, 10 reports/h per account); emails `ADMIN_EMAIL`. The comment author is never notified
+- `DELETE /api/builds/:id/comments/:commentId/reports` - Dismiss the reports of a comment (admin only)
+- `GET /api/admin/reported-comments` - Moderation list of reported comments (admin only)
 - `POST /api/import-build` (`.sav`), `POST /api/list-empires` + `POST /api/import-empire-designs` (empire designs `.txt`) - parse an uploaded file with a Python script and return pre-filled build data. **Open to anonymous visitors**, protected by `importLimiter` (30/h per IP, 60/h per account), max 3 concurrent parses (503 beyond), 60s script timeout. Every request, failed ones included (rate limit, wrong file, parser crash), gets a row in `import_attempts` (status, error, parser output tail, file name/size/sha256), and the uploaded file is kept in `backend/import_archive/{save,designs}/<sha256>.<ext>` (gitignored, deduplicated, 5 GB cap) as test material when a parser breaks - see `backend/importLog.js`
 - `DELETE /api/builds/:id` - Soft deletes a build (sets deleted=1)
 - `GET /api/resources` - Returns curated community resources (YouTube channels, guides, tools, mods, communities)
@@ -583,6 +593,7 @@ After making changes to game data:
 - `backend/index.js` - Auth routes and middleware
 - Sessions stored in SQLite (`sessions.db`, via `connect-sqlite3`)
 - `isAuthenticated` middleware protects routes requiring login
+- Local registration (`/auth/register`) is outside `/api/`, so `apiLimiter` does not cover it: it has its own `registerLimiter` (5 accounts created per hour per IP, failed attempts not counted) and a honeypot field (`components/HoneypotField.tsx`, also the pattern of the guest build form): a filled `website` gets a fake 201, no account. Every per-account limit (comments, ratings, builds) relies on account creation being limited
 - Rate limiters (`security.js`) are skipped for requests from the machine itself (`isLocalRequest`, based on `req.ip`). **Never base such checks on `req.hostname`**: behind nginx with `trust proxy`, it comes from `X-Forwarded-Host`, which any client can set
 - Custom display names: OAuth users can set unique display_name (3-30 chars, alphanumeric + underscore/dash)
 - Collision prevention: display_name uniqueness enforced across all users (both usernames and display_names)
@@ -621,7 +632,7 @@ After making changes to game data:
 
 Planned features (not yet implemented):
 - User profiles and build history
-- Build rating and comments
+- Notify a build author of new comments
 - Advanced search and filtering
 - Build comparison tools
 - Community features (favorites, build of the month)
@@ -631,6 +642,29 @@ Planned features (not yet implemented):
 ---
 
 ## Recent Completions
+
+### Build Comments, Third Civic, How to Play Guide, Markdown, Signup Protection (2026-10-31)
+Mostly from community feedback (Feedback page suggestions).
+
+**Build comments** (`components/BuildComments.tsx`, routes in `backend/index.js` "Build comments"):
+- Flat list at the bottom of every build page, login required to post (visitors see them + a login link that brings them back via `setPostLoginRedirect`). Quote button: `quote_id` must be a visible comment of the same build; the excerpt is resolved at read time, so deleting a comment also blanks it in quotes ("Quoted comment was deleted")
+- **Only admins delete** (soft delete). Authors cannot - decided on purpose; moderation goes through reports
+- **Report**: flag button for logged-in users on others' comments, admin emailed with the text and two links (`/build/:id#comment-:cid`, which `BuildComments.tsx` scrolls to once comments load, and `/admin/pending`). Reported comments are listed on the Moderation page; admins also see a red "Reported (N)" badge + Dismiss in place. **Nobody but admins sees reports, and the author is never told** - decided on purpose
+- Not shown in the moderator preview of pending builds. No notification to the build author yet
+
+**Third civic** (`builds.third_civic`): the game allows 2 civics at creation, a third slot unlocks later. In `BuildForm.tsx` a third check fills it once 2 starting civics are picked ("3rd civic - unlocked later, not exported" badge). Shown with a badge on the build page, **never exported**, rule-checked with all 3 civics (form warnings + `check_build_rules.js`). Backend rejects a third civic equal to a starting one. Legacy builds with 3 starting civics are **not migrated**: displayed as before, and the edit form moves `civics[2]` into the third slot so the author can confirm on save
+
+**How to Play guide** (`builds.guide`): optional markdown field, 20k chars, separate from the 5k-char description so a long guide does not push the build data down the page (it renders in its own card below the traits/civics/traditions). Sanitized like `description`. Both textareas block at the limit with a `123/5000` counter (backend validates the raw length, before HTML escaping, so the two always agree). The empty-description warning on create still fires even when a guide is filled
+
+**Markdown**: description was already markdown but nothing said so; now hinted under both fields, and `remark-gfm` adds tables (Bootstrap dark `table-responsive`), strikethrough, task lists and autolinks. Links in user markdown open in a new tab with `nofollow`. Prod: `npm install` after pull (new dependency)
+
+**Signup protection**: `registerLimiter` + honeypot on `/auth/register` (see Authentication System). A per-IP comment limit was considered and dropped (redundant once account creation is limited)
+
+**Home cards blur fix** (`pages/Home.css`): hover used `scale(1.02)` on a `will-change`/`translateZ(0)` layer, which resamples the rasterized card (blurry text/icons). Now `translateY(-3px)`, which stays sharp
+
+**Search Console** (API access, details in `CLAUDE.local.md`): the data lives in the **URL-prefix** property `https://stellaris-build.com/`; the domain property `sc-domain:stellaris-build.com` (added 2026-10-30) is empty - do not delete the URL-prefix one. Traffic peaked June-July 2026 (4.4/Nomads), ~-30% since August with stable positions (demand, not a penalty). Biggest unexploited queries: "stellaris <origin name>" (thousands of impressions at position 8-9, served by single build pages) - per-origin landing pages were proposed and declined for now
+
+**Key files:** `frontend/src/components/{BuildComments,MarkdownText,HoneypotField}.tsx`, `frontend/src/pages/{BuildDetail,PendingBuilds,Login,Home}.tsx`, `frontend/src/pages/Home.css`, `frontend/src/BuildForm.tsx`, `frontend/src/components/{AuthModal,Navbar}.tsx`, `backend/index.js`, `backend/security.js`, `backend/database.js`, `backend/check_build_rules.js`
 
 ### Imports, Guest Mode Review Fixes, Admin Stats, Test Suite (2026-10-19)
 
@@ -699,7 +733,7 @@ Started from a GA4 audit (Data API, via a service account - access details in `C
 - gtag.js is only injected after a human signal (pointer/key/scroll/touch/wheel, or 5s of *visible* page time) and never for `navigator.webdriver`; `gtag()` calls are queued in `dataLayer` meanwhile. Production domain only (see Testing).
 - `send_page_view: false` on `config`: the landing page was counted twice (automatic + manual page_view).
 - The manual page_view waits (max 1.5s) for react-helmet-async to update `<title>`, which used to report the previous page's title.
-- Custom events through `trackEvent()` (typed list in `utils/analytics.ts`): `build_created` (`method`: manual/import_save/import_designs), `build_updated`, `build_exported`, `rating_submitted`, `search`, `filter_used` (`filter_type`/`filter_value`, home filters + resource categories), `login`/`sign_up` (`method`; for Google/Steam it is the click, success happens on the provider side), `feedback_opened`, `feedback_submitted`, `chat_message_sent`, `resource_clicked`, `build_import_uploaded` / `build_import_empire_selected` (`method`, `result`, `error_status`, `empire_count`; sent for every upload, published or not). Events right before a full page load use `trackEventThenNavigate()` (waits for GA, max 500ms).
+- Custom events through `trackEvent()` (typed list in `utils/analytics.ts`): `build_created` (`method`: manual/import_save/import_designs), `build_updated`, `build_exported`, `rating_submitted`, `search`, `filter_used` (`filter_type`/`filter_value`, home filters + resource categories), `login`/`sign_up` (`method`; for Google/Steam it is the click, success happens on the provider side), `feedback_opened`, `feedback_submitted`, `chat_message_sent`, `comment_posted` (`build_id`), `resource_clicked`, `build_import_uploaded` / `build_import_empire_selected` (`method`, `result`, `error_status`, `empire_count`; sent for every upload, published or not). Events right before a full page load use `trackEventThenNavigate()` (waits for GA, max 500ms).
 - Event parameters only show in GA reports once registered as custom dimensions/metrics (GA Admin > Custom definitions) - done for all of the above; `build_created` and `sign_up` are key events. **A new event parameter needs the same registration.**
 
 **SEO fix:** the home page JSON-LD `ItemList` linked to `/builds/:id` (plural, no such route; Google indexed it as blank pages). Fixed to `/build/:id`, and the backend 301-redirects `/builds/:id` -> `/build/:id`.
