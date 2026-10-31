@@ -174,6 +174,19 @@ function checkBuild(build) {
     getFailingConditions(civic.potential, ctx).forEach(r => issues.push(`civic "${civicId}" potential violated: ${r}`));
   }
 
+  // Optional third civic, picked later in the game: not part of the creation
+  // checks above, but it must still fit the empire (evaluated with all 3 civics)
+  if (build.third_civic) {
+    const civic = civicById[build.third_civic];
+    if (!civic) {
+      issues.push(`third civic "${build.third_civic}" not found in ${dataVersion} data (removed/renamed?)`);
+    } else {
+      const thirdCtx = { ...ctx, civics: [...ctx.civics, build.third_civic] };
+      getFailingConditions(civic.possible, thirdCtx).forEach(r => issues.push(`third civic "${build.third_civic}" possible violated: ${r}`));
+      getFailingConditions(civic.potential, thirdCtx).forEach(r => issues.push(`third civic "${build.third_civic}" potential violated: ${r}`));
+    }
+  }
+
   return { issues, dataVersion, verified };
 }
 

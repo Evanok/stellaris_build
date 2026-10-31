@@ -15,11 +15,14 @@ import { Shipset, getCityGraphicalCulture } from '../utils/shipsetRules';
 import { PlanetClass, PlanetRuleInput, getEffectivePlanetClass, getForcedPlanetClass, getTraitPlanetConflicts, getSpeciesPlanetConflict } from '../utils/planetRules';
 import { trackEvent } from '../utils/analytics';
 import { reviewPendingBuild } from '../utils/moderation';
+import BuildComments from '../components/BuildComments';
+import MarkdownText from '../components/MarkdownText';
 
 interface Build {
   id: number;
   name: string;
   description: string;
+  guide?: string | null;
   game_version: string;
   youtube_url?: string;
   source_url?: string;
@@ -30,6 +33,7 @@ interface Build {
   authority: string;
   ethics: string;
   civics: string;
+  third_civic?: string | null;
   traits: string;
   secondary_traits?: string;
   ascension_perks: string;
@@ -827,7 +831,7 @@ export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode =
               {build.description && (
                 // Capped line length: the page goes wide on large screens, but prose stays readable
                 <div className="text-light fs-5" style={{ maxWidth: '80ch' }}>
-                  <ReactMarkdown>{decodeHtmlEntities(build.description)}</ReactMarkdown>
+                  <MarkdownText>{decodeHtmlEntities(build.description)}</MarkdownText>
                 </div>
               )}
             </div>
@@ -1329,7 +1333,7 @@ export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode =
           )}
 
           {/* Civics */}
-          {build.civics && (
+          {(build.civics || build.third_civic) && (
             <div className="card bg-dark border-secondary mb-4">
               <div className="card-header bg-secondary">
                 <h4 className="mb-0 text-white">
@@ -1338,15 +1342,27 @@ export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode =
                 </h4>
               </div>
               <div className="card-body">
-                {parseList(build.civics).map((civicId, idx) => {
+                {[...parseList(build.civics), ...(build.third_civic ? [build.third_civic] : [])].map((civicId, idx) => {
                   const civic = getCivicData(civicId);
                   const effectsText = civic?.effects || civic?.tooltip || '';
+                  const isThird = !!build.third_civic && civicId === build.third_civic;
                   return (
                     <div key={idx} className="mb-3 pb-3 border-bottom border-secondary">
                       <div className="d-flex align-items-start">
                         <GameIcon type="civics" id={civicId} size={48} />
                         <div className="flex-grow-1" style={{ minWidth: 0 }}>
-                          <h5 className="text-info mb-1">{civic?.name || civicId}</h5>
+                          <h5 className="text-info mb-1">
+                            {civic?.name || civicId}
+                            {isThird && (
+                              <span
+                                className="badge bg-info text-dark ms-2 align-middle"
+                                style={{ fontSize: '0.7rem' }}
+                                title="The game allows 2 civics at empire creation; a third slot unlocks later. Not included in the export."
+                              >
+                                3rd civic - unlocked later
+                              </span>
+                            )}
+                          </h5>
                           {civic?.description && (
                             <p className="text-light mb-2">{civic.description}</p>
                           )}
@@ -1489,6 +1505,21 @@ export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode =
         </div>
       </div>
 
+      {/* How to Play guide (optional) */}
+      {build.guide && build.guide.trim() && (
+        <div className="card bg-dark border-secondary mb-4">
+          <div className="card-header bg-secondary">
+            <h4 className="mb-0 text-white">
+              <i className="bi bi-signpost-split me-2"></i>
+              How to Play
+            </h4>
+          </div>
+          <div className="card-body text-light build-guide">
+            <MarkdownText>{decodeHtmlEntities(build.guide)}</MarkdownText>
+          </div>
+        </div>
+      )}
+
       {/* Actions */}
       <div className="row mb-4">
         <div className="col-12">
@@ -1529,6 +1560,9 @@ export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode =
           )}
         </div>
       </div>
+
+      {/* Comments (not in the moderator preview: the build is not published yet) */}
+      {!pendingMode && id && <BuildComments buildId={id} buildAuthorId={build.author_id} />}
 
       {/* Export to Stellaris Modal */}
       {showExportModal && (

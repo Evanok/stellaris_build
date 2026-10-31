@@ -217,6 +217,22 @@ const setupDatabase = () => {
       }
     });
 
+    // Optional "How to play" guide (markdown), kept apart from the short
+    // description, which also feeds home cards and link previews
+    db.run(`ALTER TABLE builds ADD COLUMN guide TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding guide column:', err.message);
+      }
+    });
+
+    // Optional third civic: only 2 civics at empire creation, a third slot
+    // unlocks during the game. Shown on the build page, never exported.
+    db.run(`ALTER TABLE builds ADD COLUMN third_civic TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding third_civic column:', err.message);
+      }
+    });
+
     // Add reset_token columns for password recovery (local accounts)
     db.run(`ALTER TABLE users ADD COLUMN reset_token TEXT`, (err) => {
       if (err && !err.message.includes('duplicate column')) {
@@ -291,6 +307,41 @@ const setupDatabase = () => {
       if (err) {
         console.error('Error creating chat_messages table:', err.message);
       }
+    });
+
+    // Comments under a build page. Flat list (no threads); quote_id points to an
+    // earlier comment of the same build that this one quotes. Content is stored
+    // raw and rendered as plain text by React (never as HTML/markdown).
+    db.run(`CREATE TABLE IF NOT EXISTS build_comments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      build_id INTEGER NOT NULL,
+      user_id INTEGER NOT NULL,
+      content TEXT NOT NULL,
+      quote_id INTEGER,
+      deleted INTEGER DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (build_id) REFERENCES builds (id) ON DELETE CASCADE,
+      FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+      FOREIGN KEY (quote_id) REFERENCES build_comments (id)
+    )`, (err) => {
+      if (err) {
+        console.error('Error creating build_comments table:', err.message);
+        return;
+      }
+      db.run(`CREATE INDEX IF NOT EXISTS idx_build_comments_build ON build_comments (build_id, created_at)`);
+    });
+
+    // One row per (comment, reporter). Cleared by an admin who dismisses the reports.
+    db.run(`CREATE TABLE IF NOT EXISTS comment_reports (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      comment_id INTEGER NOT NULL,
+      user_id INTEGER NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (comment_id) REFERENCES build_comments (id) ON DELETE CASCADE,
+      FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+      UNIQUE(comment_id, user_id)
+    )`, (err) => {
+      if (err) console.error('Error creating comment_reports table:', err.message);
     });
 
     // Builds submitted without an account, waiting for a moderator. Kept out of the

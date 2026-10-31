@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { setPostLoginRedirect } from '../utils/postLoginRedirect';
+import HoneypotField from './HoneypotField';
 
 interface AuthModalProps {
   show: boolean;
@@ -16,6 +17,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ show, onClose, onSuccess, 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  // Honeypot (see HoneypotField)
+  const [website, setWebsite] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -34,7 +37,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ show, onClose, onSuccess, 
       const response = await fetch('/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ username, email, password, website }),
       });
 
       const data = await response.json();
@@ -289,6 +292,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ show, onClose, onSuccess, 
                     required
                   />
                 </div>
+                <HoneypotField id="modal-register-website" value={website} onChange={setWebsite} />
                 <button
                   type="submit"
                   className="btn btn-success w-100"

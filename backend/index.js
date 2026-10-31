@@ -48,7 +48,7 @@ const { setupDatabase, db } = require('./database');
 const { renderBuildOgImage } = require('./ogImage');
 const passport = require('./auth');
 const { trackImport, failImport, receiveImportFile } = require('./importLog');
-const { apiLimiter, createBuildLimiter, importLimiter, guestSubmitLimiter, reserveGuestEmail, validateBuildData, sanitizeBuildData } = require('./security');
+const { apiLimiter, registerLimiter, createBuildLimiter, importLimiter, guestSubmitLimiter, reserveGuestEmail, validateBuildData, sanitizeBuildData } = require('./security');
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -184,8 +184,15 @@ app.get('/auth/logout', (req, res) => {
 });
 
 // Register route (create local account)
-app.post('/auth/register', async (req, res) => {
+app.post('/auth/register', registerLimiter, async (req, res) => {
   const { username, password, email } = req.body;
+
+  // Honeypot: a field hidden from humans (HoneypotField.tsx), only bots fill it in.
+  // Pretend it worked, so the bot has no reason to adapt. No account and no session
+  // are created; the 201 still counts against registerLimiter.
+  if (req.body.website) {
+    return res.status(201).json({ success: true, user: { id: 0, username: String(username || ''), provider: 'local' } });
+  }
 
   // Validation
   if (!username || !password || !email) {
@@ -1061,9 +1068,9 @@ app.post('/api/builds/:id/rating', isAuthenticated, (req, res) => {
 // Inserts a sanitized build (output of sanitizeBuildData) and returns the stored row.
 // Shared by POST /api/builds and the approval of builds submitted without an account.
 function insertBuild(data, authorId, callback) {
-  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture } = data;
-  const sql = `INSERT INTO builds (name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-  const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, planet_class || null, graphical_culture || null, authorId];
+  const { name, description, guide, game_version, youtube_url, source_url, difficulty, civics, third_civic, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture } = data;
+  const sql = `INSERT INTO builds (name, description, guide, game_version, youtube_url, source_url, difficulty, civics, third_civic, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  const params = [name, description, guide || null, game_version, youtube_url, source_url, difficulty, civics, third_civic || null, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, planet_class || null, graphical_culture || null, authorId];
 
   db.run(sql, params, function(err) {
     if (err) return callback(err);
@@ -1288,11 +1295,43 @@ app.post('/api/builds/guest', guestSubmitLimiter, (req, res) => {
 
 // Size of the moderation queue, for the admin navbar badge (fetched on every
 // navigation, so a COUNT instead of the whole queue)
+// Navbar badge: pending builds + reported comments still visible
 app.get('/api/admin/pending-builds-count', isAdmin, (req, res) => {
-  db.get(`SELECT COUNT(*) as count FROM pending_builds WHERE status = 'pending'`, (err, row) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ count: row.count });
-  });
+  db.get(
+    `SELECT
+       (SELECT COUNT(*) FROM pending_builds WHERE status = 'pending') AS count,
+       (SELECT COUNT(DISTINCT r.comment_id) FROM comment_reports r
+          JOIN build_comments c ON c.id = r.comment_id
+          WHERE c.deleted = 0) AS reported_comments`,
+    (err, row) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ count: row.count, reported_comments: row.reported_comments });
+    }
+  );
+});
+
+// Moderation: comments that have at least one report and are still visible
+app.get('/api/admin/reported-comments', isAdmin, (req, res) => {
+  db.all(
+    `SELECT c.id, c.build_id, c.content, c.created_at,
+            COALESCE(u.display_name, u.username) AS author_name,
+            b.name AS build_name,
+            COUNT(r.id) AS report_count,
+            MAX(r.created_at) AS last_reported_at,
+            GROUP_CONCAT(COALESCE(ru.display_name, ru.username), ', ') AS reporters
+     FROM comment_reports r
+     JOIN build_comments c ON c.id = r.comment_id AND c.deleted = 0
+     JOIN users u ON u.id = c.user_id
+     JOIN builds b ON b.id = c.build_id
+     LEFT JOIN users ru ON ru.id = r.user_id
+     GROUP BY c.id
+     ORDER BY last_reported_at ASC`,
+    [],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ comments: rows || [] });
+    }
+  );
 });
 
 // Moderation queue
@@ -1534,7 +1573,7 @@ app.put('/api/builds/:id', isAuthenticated, createBuildLimiter, (req, res) => {
 
   // Sanitize input data to prevent XSS
   const sanitizedData = sanitizeBuildData(req.body);
-  const { name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture } = sanitizedData;
+  const { name, description, guide, game_version, youtube_url, source_url, difficulty, civics, third_civic, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture } = sanitizedData;
 
   // First, check if the build exists and belongs to the user
   db.get('SELECT * FROM builds WHERE id = ? AND deleted = 0', [id], (err, build) => {
@@ -1564,11 +1603,13 @@ app.put('/api/builds/:id', isAuthenticated, createBuildLimiter, (req, res) => {
       const sql = `UPDATE builds SET
         name = ?,
         description = ?,
+        guide = ?,
         game_version = ?,
         youtube_url = ?,
         source_url = ?,
         difficulty = ?,
         civics = ?,
+        third_civic = ?,
         traits = ?,
         secondary_traits = ?,
         origin = ?,
@@ -1587,7 +1628,7 @@ app.put('/api/builds/:id', isAuthenticated, createBuildLimiter, (req, res) => {
         graphical_culture = ?
       WHERE id = ?`;
 
-      const params = [name, description, game_version, youtube_url, source_url, difficulty, civics, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, planet_class || null, graphical_culture || null, id];
+      const params = [name, description, guide || null, game_version, youtube_url, source_url, difficulty, civics, third_civic || null, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, planet_class || null, graphical_culture || null, id];
 
       db.run(sql, params, function(err) {
         if (err) {
@@ -2348,6 +2389,207 @@ app.delete('/api/chat/:id', isAdmin, (req, res) => {
     function(err) {
       if (err) return res.status(500).json({ error: 'Failed to delete message' });
       if (this.changes === 0) return res.status(404).json({ error: 'Message not found' });
+      res.json({ success: true });
+    }
+  );
+});
+
+// ── Build comments ──────────────────────────────────────────────────────────
+// Flat list per build, login required to post. A comment can quote an earlier
+// comment of the same build (quote_id); the quoted excerpt is resolved at read
+// time, so deleting the quoted comment also hides its text in the quotes.
+
+const COMMENT_MAX_LENGTH = 2000;
+const COMMENT_WINDOW_MS = 5 * 60 * 1000;
+const COMMENT_MAX_PER_WINDOW = 5;
+const commentRateLimit = new Map();
+
+function allowComment(userId) {
+  const now = Date.now();
+  const recent = (commentRateLimit.get(userId) || []).filter(t => now - t < COMMENT_WINDOW_MS);
+  if (recent.length >= COMMENT_MAX_PER_WINDOW) return false;
+  recent.push(now);
+  commentRateLimit.set(userId, recent);
+  return true;
+}
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, timestamps] of commentRateLimit.entries()) {
+    const recent = timestamps.filter(t => now - t < COMMENT_WINDOW_MS);
+    if (recent.length === 0) commentRateLimit.delete(key);
+    else commentRateLimit.set(key, recent);
+  }
+}, 10 * 60 * 1000);
+
+app.get('/api/builds/:id/comments', (req, res) => {
+  const buildId = parseInt(req.params.id, 10);
+  if (!Number.isInteger(buildId)) return res.status(400).json({ error: 'Invalid build id' });
+  res.set('Cache-Control', 'no-store');
+  const viewerId = req.isAuthenticated() ? req.user.id : 0;
+  const viewerIsAdmin = req.isAuthenticated() && req.user.is_admin === 1;
+  db.all(
+    `SELECT c.id, c.content, c.created_at, c.user_id,
+            COALESCE(u.display_name, u.username) AS author_name, u.avatar,
+            c.quote_id,
+            CASE WHEN q.deleted = 0 THEN q.content END AS quote_content,
+            COALESCE(qu.display_name, qu.username) AS quote_author,
+            (SELECT COUNT(*) FROM comment_reports r WHERE r.comment_id = c.id) AS report_count,
+            EXISTS (SELECT 1 FROM comment_reports r WHERE r.comment_id = c.id AND r.user_id = ?) AS user_reported
+     FROM build_comments c
+     JOIN users u ON u.id = c.user_id
+     LEFT JOIN build_comments q ON q.id = c.quote_id
+     LEFT JOIN users qu ON qu.id = q.user_id
+     WHERE c.build_id = ? AND c.deleted = 0
+     ORDER BY c.created_at ASC, c.id ASC`,
+    [viewerId, buildId],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: 'Failed to fetch comments' });
+      // Report counts are for moderators only
+      res.json((rows || []).map(({ report_count, ...row }) =>
+        viewerIsAdmin ? { ...row, report_count } : row
+      ));
+    }
+  );
+});
+
+// Report a comment to the moderator. One report per user and comment; the admin
+// is emailed on the first report of each user (capped per reporter, so a single
+// account cannot flood the mailbox).
+const REPORT_WINDOW_MS = 60 * 60 * 1000;
+const REPORT_MAX_PER_WINDOW = 10;
+const reportRateLimit = new Map();
+
+app.post('/api/builds/:id/comments/:commentId/report', isAuthenticated, (req, res) => {
+  const buildId = parseInt(req.params.id, 10);
+  const commentId = parseInt(req.params.commentId, 10);
+  if (!Number.isInteger(buildId) || !Number.isInteger(commentId)) {
+    return res.status(400).json({ error: 'Invalid id' });
+  }
+  db.get(
+    `SELECT c.id, c.content, c.user_id, COALESCE(u.display_name, u.username) AS author_name, b.name AS build_name
+     FROM build_comments c
+     JOIN users u ON u.id = c.user_id
+     JOIN builds b ON b.id = c.build_id
+     WHERE c.id = ? AND c.build_id = ? AND c.deleted = 0`,
+    [commentId, buildId],
+    (err, comment) => {
+      if (err) return res.status(500).json({ error: 'Failed to report comment' });
+      if (!comment) return res.status(404).json({ error: 'Comment not found' });
+      if (comment.user_id === req.user.id) {
+        return res.status(400).json({ error: 'You cannot report your own comment' });
+      }
+
+      const now = Date.now();
+      const recent = (reportRateLimit.get(req.user.id) || []).filter(t => now - t < REPORT_WINDOW_MS);
+      if (recent.length >= REPORT_MAX_PER_WINDOW) {
+        return res.status(429).json({ error: 'Too many reports, please try again later' });
+      }
+
+      db.run(
+        `INSERT OR IGNORE INTO comment_reports (comment_id, user_id) VALUES (?, ?)`,
+        [commentId, req.user.id],
+        function(insertErr) {
+          if (insertErr) return res.status(500).json({ error: 'Failed to report comment' });
+          if (this.changes === 0) return res.json({ success: true, already: true });
+          recent.push(now);
+          reportRateLimit.set(req.user.id, recent);
+          notifyModeratorOfReportedComment(buildId, comment, req.user.display_name || req.user.username);
+          res.json({ success: true });
+        }
+      );
+    }
+  );
+});
+
+// Admin: dismiss the reports of a comment judged fine
+app.delete('/api/builds/:id/comments/:commentId/reports', isAdmin, (req, res) => {
+  const commentId = parseInt(req.params.commentId, 10);
+  if (!Number.isInteger(commentId)) return res.status(400).json({ error: 'Invalid id' });
+  db.run('DELETE FROM comment_reports WHERE comment_id = ?', [commentId], function(err) {
+    if (err) return res.status(500).json({ error: 'Failed to dismiss reports' });
+    res.json({ success: true });
+  });
+});
+
+// Best effort, like the pending build notification
+function notifyModeratorOfReportedComment(buildId, comment, reporterName) {
+  if (!process.env.SMTP_HOST || !process.env.ADMIN_EMAIL) return;
+  const link = `${SITE_URL}/build/${buildId}#comment-${comment.id}`;
+  const buildName = decodeStoredEntities(comment.build_name);
+  createMailTransporter().sendMail({
+    from: process.env.SMTP_FROM || 'Stellaris Build <noreply@stellaris-build.com>',
+    to: process.env.ADMIN_EMAIL,
+    subject: `Comment reported on "${buildName}"`,
+    text: `${reporterName} reported a comment by ${comment.author_name} on "${buildName}":\n\n${comment.content}\n\nSee it: ${link}\nModeration: ${SITE_URL}/admin/pending`,
+    html: `<p><strong>${escapeHtmlAttr(reporterName)}</strong> reported a comment by <strong>${escapeHtmlAttr(comment.author_name)}</strong> on <strong>${escapeHtmlAttr(buildName)}</strong>:</p>`
+      + `<blockquote style="white-space:pre-wrap">${escapeHtmlAttr(comment.content)}</blockquote>`
+      + `<p><a href="${link}">See it on the build page</a> - <a href="${SITE_URL}/admin/pending">Moderation page</a></p>`,
+  }).catch(err => console.error('Failed to send comment report notification:', err.message));
+}
+
+app.post('/api/builds/:id/comments', isAuthenticated, (req, res) => {
+  const buildId = parseInt(req.params.id, 10);
+  if (!Number.isInteger(buildId)) return res.status(400).json({ error: 'Invalid build id' });
+
+  const content = typeof req.body.content === 'string' ? req.body.content.trim() : '';
+  if (!content) return res.status(400).json({ error: 'Comment cannot be empty' });
+  if (content.length > COMMENT_MAX_LENGTH) {
+    return res.status(400).json({ error: `Comment too long (max ${COMMENT_MAX_LENGTH} characters)` });
+  }
+  const rawQuote = req.body.quote_id;
+  const quoteId = rawQuote == null ? null : parseInt(rawQuote, 10);
+  if (rawQuote != null && !Number.isInteger(quoteId)) {
+    return res.status(400).json({ error: 'Invalid quote' });
+  }
+
+  db.get('SELECT id FROM builds WHERE id = ? AND deleted = 0', [buildId], (err, build) => {
+    if (err) return res.status(500).json({ error: 'Failed to post comment' });
+    if (!build) return res.status(404).json({ error: 'Build not found' });
+
+    const insert = () => {
+      if (!allowComment(req.user.id)) {
+        return res.status(429).json({ error: `Too many comments - max ${COMMENT_MAX_PER_WINDOW} per 5 minutes` });
+      }
+      db.run(
+        `INSERT INTO build_comments (build_id, user_id, content, quote_id) VALUES (?, ?, ?, ?)`,
+        [buildId, req.user.id, content, quoteId],
+        function(insertErr) {
+          if (insertErr) return res.status(500).json({ error: 'Failed to post comment' });
+          res.status(201).json({ id: this.lastID });
+        }
+      );
+    };
+
+    if (quoteId == null) return insert();
+    // A quote must target a visible comment of the same build
+    db.get(
+      'SELECT id FROM build_comments WHERE id = ? AND build_id = ? AND deleted = 0',
+      [quoteId, buildId],
+      (qErr, quoted) => {
+        if (qErr) return res.status(500).json({ error: 'Failed to post comment' });
+        if (!quoted) return res.status(400).json({ error: 'The quoted comment no longer exists' });
+        insert();
+      }
+    );
+  });
+});
+
+// Soft delete, admin only (authors cannot delete their own comments: a reply
+// quoting them would lose its context, and moderation goes through reports)
+app.delete('/api/builds/:id/comments/:commentId', isAdmin, (req, res) => {
+  const buildId = parseInt(req.params.id, 10);
+  const commentId = parseInt(req.params.commentId, 10);
+  if (!Number.isInteger(buildId) || !Number.isInteger(commentId)) {
+    return res.status(400).json({ error: 'Invalid id' });
+  }
+  db.run(
+    `UPDATE build_comments SET deleted = 1
+     WHERE id = ? AND build_id = ? AND deleted = 0`,
+    [commentId, buildId],
+    function(err) {
+      if (err) return res.status(500).json({ error: 'Failed to delete comment' });
+      if (this.changes === 0) return res.status(404).json({ error: 'Comment not found' });
       res.json({ success: true });
     }
   );
