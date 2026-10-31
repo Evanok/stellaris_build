@@ -48,7 +48,7 @@ const { setupDatabase, db } = require('./database');
 const { renderBuildOgImage } = require('./ogImage');
 const passport = require('./auth');
 const { trackImport, failImport, receiveImportFile } = require('./importLog');
-const { apiLimiter, createBuildLimiter, importLimiter, guestSubmitLimiter, reserveGuestEmail, validateBuildData, sanitizeBuildData } = require('./security');
+const { apiLimiter, registerLimiter, createBuildLimiter, importLimiter, guestSubmitLimiter, reserveGuestEmail, validateBuildData, sanitizeBuildData } = require('./security');
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -184,7 +184,7 @@ app.get('/auth/logout', (req, res) => {
 });
 
 // Register route (create local account)
-app.post('/auth/register', async (req, res) => {
+app.post('/auth/register', registerLimiter, async (req, res) => {
   const { username, password, email } = req.body;
 
   // Validation

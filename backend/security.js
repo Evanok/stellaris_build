@@ -18,6 +18,7 @@ const buildCreationStore = new Map();
 const importStore = new Map();
 const guestSubmitStore = new Map();
 const guestEmailStore = new Map();
+const registerStore = new Map();
 
 // Clean up old entries every 15 minutes
 setInterval(() => {
@@ -41,6 +42,11 @@ setInterval(() => {
   for (const [key, data] of guestSubmitStore.entries()) {
     if (now - data.resetTime > 24 * oneHour) {
       guestSubmitStore.delete(key);
+    }
+  }
+  for (const [key, data] of registerStore.entries()) {
+    if (now - data.resetTime > oneHour) {
+      registerStore.delete(key);
     }
   }
   for (const [key, data] of guestEmailStore.entries()) {
@@ -402,8 +408,38 @@ const reserveGuestEmail = (address) => {
   return true;
 };
 
+// Local account creation, per IP. /auth/register is outside /api/ (apiLimiter
+// does not apply), and every other per-account limit (comments, ratings, chat,
+// builds) is worthless if a bot can create accounts at will.
+const REGISTER_LIMIT_PER_HOUR = 5;
+
+const registerLimiter = (req, res, next) => {
+  if (isLocalRequest(req)) return next();
+  const key = req.ip || 'unknown';
+  const now = Date.now();
+  const oneHour = 60 * 60 * 1000;
+
+  let entry = registerStore.get(key);
+  if (!entry || now - entry.resetTime > oneHour) {
+    entry = { count: 0, resetTime: now };
+    registerStore.set(key, entry);
+  }
+
+  if (entry.count >= REGISTER_LIMIT_PER_HOUR) {
+    return res.status(429).json({ error: 'Too many accounts created from this network. Please try again later.' });
+  }
+  // Reserved before the async handler (parallel requests), released unless the
+  // account was actually created: a typo or a taken username costs nothing
+  entry.count += 1;
+  res.on('finish', () => {
+    if (res.statusCode !== 201) entry.count = Math.max(0, entry.count - 1);
+  });
+  next();
+};
+
 module.exports = {
   apiLimiter,
+  registerLimiter,
   importLimiter,
   guestSubmitLimiter,
   reserveGuestEmail,
