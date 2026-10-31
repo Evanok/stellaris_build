@@ -16,6 +16,7 @@ export type AnalyticsEvent =
   | 'feedback_opened'
   | 'feedback_submitted'
   | 'chat_message_sent'
+  | 'comment_posted'
   | 'resource_clicked'
   | 'build_submitted_guest'
   | 'build_claimed'

@@ -293,6 +293,28 @@ const setupDatabase = () => {
       }
     });
 
+    // Comments under a build page. Flat list (no threads); quote_id points to an
+    // earlier comment of the same build that this one quotes. Content is stored
+    // raw and rendered as plain text by React (never as HTML/markdown).
+    db.run(`CREATE TABLE IF NOT EXISTS build_comments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      build_id INTEGER NOT NULL,
+      user_id INTEGER NOT NULL,
+      content TEXT NOT NULL,
+      quote_id INTEGER,
+      deleted INTEGER DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (build_id) REFERENCES builds (id) ON DELETE CASCADE,
+      FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+      FOREIGN KEY (quote_id) REFERENCES build_comments (id)
+    )`, (err) => {
+      if (err) {
+        console.error('Error creating build_comments table:', err.message);
+        return;
+      }
+      db.run(`CREATE INDEX IF NOT EXISTS idx_build_comments_build ON build_comments (build_id, created_at)`);
+    });
+
     // Builds submitted without an account, waiting for a moderator. Kept out of the
     // builds table on purpose: builds is read by many public queries (home, detail,
     // sitemap, stats, OG images...), and a pending row leaking through any of them

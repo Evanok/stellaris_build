@@ -15,6 +15,7 @@ import { Shipset, getCityGraphicalCulture } from '../utils/shipsetRules';
 import { PlanetClass, PlanetRuleInput, getEffectivePlanetClass, getForcedPlanetClass, getTraitPlanetConflicts, getSpeciesPlanetConflict } from '../utils/planetRules';
 import { trackEvent } from '../utils/analytics';
 import { reviewPendingBuild } from '../utils/moderation';
+import BuildComments from '../components/BuildComments';
 
 interface Build {
   id: number;
@@ -1529,6 +1530,9 @@ export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode =
           )}
         </div>
       </div>
+
+      {/* Comments (not in the moderator preview: the build is not published yet) */}
+      {!pendingMode && id && <BuildComments buildId={id} buildAuthorId={build.author_id} />}
 
       {/* Export to Stellaris Modal */}
       {showExportModal && (

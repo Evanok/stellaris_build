@@ -2353,6 +2353,125 @@ app.delete('/api/chat/:id', isAdmin, (req, res) => {
   );
 });
 
+// ── Build comments ──────────────────────────────────────────────────────────
+// Flat list per build, login required to post. A comment can quote an earlier
+// comment of the same build (quote_id); the quoted excerpt is resolved at read
+// time, so deleting the quoted comment also hides its text in the quotes.
+
+const COMMENT_MAX_LENGTH = 2000;
+const COMMENT_WINDOW_MS = 5 * 60 * 1000;
+const COMMENT_MAX_PER_WINDOW = 5;
+const commentRateLimit = new Map();
+
+function allowComment(userId) {
+  const now = Date.now();
+  const recent = (commentRateLimit.get(userId) || []).filter(t => now - t < COMMENT_WINDOW_MS);
+  if (recent.length >= COMMENT_MAX_PER_WINDOW) return false;
+  recent.push(now);
+  commentRateLimit.set(userId, recent);
+  return true;
+}
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, timestamps] of commentRateLimit.entries()) {
+    const recent = timestamps.filter(t => now - t < COMMENT_WINDOW_MS);
+    if (recent.length === 0) commentRateLimit.delete(key);
+    else commentRateLimit.set(key, recent);
+  }
+}, 10 * 60 * 1000);
+
+app.get('/api/builds/:id/comments', (req, res) => {
+  const buildId = parseInt(req.params.id, 10);
+  if (!Number.isInteger(buildId)) return res.status(400).json({ error: 'Invalid build id' });
+  res.set('Cache-Control', 'no-store');
+  db.all(
+    `SELECT c.id, c.content, c.created_at, c.user_id,
+            COALESCE(u.display_name, u.username) AS author_name, u.avatar,
+            c.quote_id,
+            CASE WHEN q.deleted = 0 THEN q.content END AS quote_content,
+            COALESCE(qu.display_name, qu.username) AS quote_author
+     FROM build_comments c
+     JOIN users u ON u.id = c.user_id
+     LEFT JOIN build_comments q ON q.id = c.quote_id
+     LEFT JOIN users qu ON qu.id = q.user_id
+     WHERE c.build_id = ? AND c.deleted = 0
+     ORDER BY c.created_at ASC, c.id ASC`,
+    [buildId],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: 'Failed to fetch comments' });
+      res.json(rows || []);
+    }
+  );
+});
+
+app.post('/api/builds/:id/comments', isAuthenticated, (req, res) => {
+  const buildId = parseInt(req.params.id, 10);
+  if (!Number.isInteger(buildId)) return res.status(400).json({ error: 'Invalid build id' });
+
+  const content = typeof req.body.content === 'string' ? req.body.content.trim() : '';
+  if (!content) return res.status(400).json({ error: 'Comment cannot be empty' });
+  if (content.length > COMMENT_MAX_LENGTH) {
+    return res.status(400).json({ error: `Comment too long (max ${COMMENT_MAX_LENGTH} characters)` });
+  }
+  const rawQuote = req.body.quote_id;
+  const quoteId = rawQuote == null ? null : parseInt(rawQuote, 10);
+  if (rawQuote != null && !Number.isInteger(quoteId)) {
+    return res.status(400).json({ error: 'Invalid quote' });
+  }
+
+  db.get('SELECT id FROM builds WHERE id = ? AND deleted = 0', [buildId], (err, build) => {
+    if (err) return res.status(500).json({ error: 'Failed to post comment' });
+    if (!build) return res.status(404).json({ error: 'Build not found' });
+
+    const insert = () => {
+      if (!allowComment(req.user.id)) {
+        return res.status(429).json({ error: `Too many comments - max ${COMMENT_MAX_PER_WINDOW} per 5 minutes` });
+      }
+      db.run(
+        `INSERT INTO build_comments (build_id, user_id, content, quote_id) VALUES (?, ?, ?, ?)`,
+        [buildId, req.user.id, content, quoteId],
+        function(insertErr) {
+          if (insertErr) return res.status(500).json({ error: 'Failed to post comment' });
+          res.status(201).json({ id: this.lastID });
+        }
+      );
+    };
+
+    if (quoteId == null) return insert();
+    // A quote must target a visible comment of the same build
+    db.get(
+      'SELECT id FROM build_comments WHERE id = ? AND build_id = ? AND deleted = 0',
+      [quoteId, buildId],
+      (qErr, quoted) => {
+        if (qErr) return res.status(500).json({ error: 'Failed to post comment' });
+        if (!quoted) return res.status(400).json({ error: 'The quoted comment no longer exists' });
+        insert();
+      }
+    );
+  });
+});
+
+// Soft delete: the comment's author or an admin
+app.delete('/api/builds/:id/comments/:commentId', isAuthenticated, (req, res) => {
+  const buildId = parseInt(req.params.id, 10);
+  const commentId = parseInt(req.params.commentId, 10);
+  if (!Number.isInteger(buildId) || !Number.isInteger(commentId)) {
+    return res.status(400).json({ error: 'Invalid id' });
+  }
+  const isAdminUser = req.user.is_admin === 1;
+  db.run(
+    `UPDATE build_comments SET deleted = 1
+     WHERE id = ? AND build_id = ? AND deleted = 0 AND (user_id = ? OR ? = 1)`,
+    [commentId, buildId, req.user.id, isAdminUser ? 1 : 0],
+    function(err) {
+      if (err) return res.status(500).json({ error: 'Failed to delete comment' });
+      if (this.changes === 0) return res.status(404).json({ error: 'Comment not found' });
+      res.json({ success: true });
+    }
+  );
+});
+
 // --- Social link previews (Open Graph / Twitter Cards) ----------------------
 // Link-preview crawlers (Slack, Discord, Facebook, Twitter, WhatsApp) do not run
 // JavaScript, so the per-build tags that BuildDetail.tsx sets through
