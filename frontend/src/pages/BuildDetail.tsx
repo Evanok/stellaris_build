@@ -21,6 +21,7 @@ interface Build {
   id: number;
   name: string;
   description: string;
+  guide?: string | null;
   game_version: string;
   youtube_url?: string;
   source_url?: string;
@@ -1502,6 +1503,21 @@ export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode =
           )}
         </div>
       </div>
+
+      {/* How to Play guide (optional) */}
+      {build.guide && build.guide.trim() && (
+        <div className="card bg-dark border-secondary mb-4">
+          <div className="card-header bg-secondary">
+            <h4 className="mb-0 text-white">
+              <i className="bi bi-signpost-split me-2"></i>
+              How to Play
+            </h4>
+          </div>
+          <div className="card-body text-light build-guide">
+            <ReactMarkdown>{decodeHtmlEntities(build.guide)}</ReactMarkdown>
+          </div>
+        </div>
+      )}
 
       {/* Actions */}
       <div className="row mb-4">

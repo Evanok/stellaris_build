@@ -269,6 +269,18 @@ const MAX_ETHICS_POINTS = 3;
 // country_government_civic_points_add, but those aren't real creation-time
 // picks, so this stays a flat 2.
 const MAX_CIVIC_SLOTS = 2;
+// Same limits as validateBuildData() in backend/security.js
+const DESCRIPTION_MAX_LENGTH = 5000;
+const GUIDE_MAX_LENGTH = 20000;
+
+// "123/5000", turning orange near the limit and red at it
+const CharCounter: React.FC<{ length: number; max: number }> = ({ length, max }) => (
+  <span
+    className={`text-nowrap ${length >= max ? 'text-danger fw-bold' : length >= max * 0.9 ? 'text-warning' : 'text-muted'}`}
+  >
+    {length}/{max}
+  </span>
+);
 // A third civic slot unlocks during the game: builds can recommend one, shown on
 // the build page but never exported (the game rejects 3 civics at creation)
 
@@ -301,6 +313,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   // Form fields state
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [guide, setGuide] = useState('');
   const [game_version, setGameVersion] = useState('4.5');
   const [youtube_url, setYoutubeUrl] = useState('');
   const [source_url, setSourceUrl] = useState('');
@@ -560,6 +573,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       // Set basic fields - decode HTML entities for proper display in form inputs
       if (initialData.name) setName(decodeHtmlEntities(initialData.name));
       if (initialData.description) setDescription(decodeHtmlEntities(initialData.description));
+      if (initialData.guide) setGuide(decodeHtmlEntities(initialData.guide));
       if (initialData.game_version) setGameVersion(initialData.game_version);
       if (initialData.youtube_url) setYoutubeUrl(initialData.youtube_url);
       if (initialData.source_url) setSourceUrl(initialData.source_url);
@@ -1103,6 +1117,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     const formData = {
       name,
       description,
+      guide,
       game_version,
       youtube_url,
       source_url,
@@ -1137,6 +1152,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         const formData = JSON.parse(savedData);
         setName(formData.name || '');
         setDescription(formData.description || '');
+        setGuide(formData.guide || '');
         setGameVersion(formData.game_version || '4.5');
         setYoutubeUrl(formData.youtube_url || '');
         setSourceUrl(formData.source_url || '');
@@ -1344,6 +1360,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const getBuildPayload = () => ({
     name,
     description,
+    guide,
     game_version,
     youtube_url,
     source_url,
@@ -1513,6 +1530,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       // Reset form
       setName('');
       setDescription('');
+      setGuide('');
       setGameVersion('4.5'); // Reset to latest version
       setYoutubeUrl('');
       setSourceUrl('');
@@ -1564,7 +1582,27 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
           </div>
           <div className="mb-3">
             <label htmlFor="buildDescription" className="form-label">Description</label>
-            <textarea className="form-control bg-secondary text-white border-secondary" id="buildDescription" rows={3} value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+            <textarea className="form-control bg-secondary text-white border-secondary" id="buildDescription" rows={3} maxLength={DESCRIPTION_MAX_LENGTH} value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+            <div className="form-text text-light d-flex justify-content-between gap-2">
+              <span>A short summary of the build. Markdown supported.</span>
+              <CharCounter length={description.length} max={DESCRIPTION_MAX_LENGTH} />
+            </div>
+          </div>
+          <div className="mb-3">
+            <label htmlFor="buildGuide" className="form-label">How to Play (Optional)</label>
+            <textarea
+              className="form-control bg-secondary text-white border-secondary"
+              id="buildGuide"
+              rows={8}
+              maxLength={GUIDE_MAX_LENGTH}
+              placeholder={'## Early game\n- First techs to research...\n\n## Mid game\n...'}
+              value={guide}
+              onChange={(e) => setGuide(e.target.value)}
+            ></textarea>
+            <div className="form-text text-light d-flex justify-content-between gap-2">
+              <span>Explain how to play this build: priorities for each phase of the game, key techs, tips. Markdown supported (<code>## Heading</code>, <code>**bold**</code>, <code>- list</code>).</span>
+              <CharCounter length={guide.length} max={GUIDE_MAX_LENGTH} />
+            </div>
           </div>
 
           <div className="mb-3">

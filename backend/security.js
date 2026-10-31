@@ -178,6 +178,15 @@ const validateBuildData = (data) => {
     }
   }
 
+  // How to play guide (optional, markdown)
+  if (data.guide !== undefined && data.guide !== null && data.guide !== '') {
+    if (typeof data.guide !== 'string') {
+      errors.push('Guide must be text');
+    } else if (data.guide.length > 20000) {
+      errors.push('Guide must be less than 20000 characters');
+    }
+  }
+
   // Game version validation
   if (data.game_version && typeof data.game_version === 'string') {
     if (data.game_version.length > 20) {
@@ -284,7 +293,7 @@ const sanitizeBuildData = (data) => {
   const sanitized = { ...data };
 
   // Sanitize string fields
-  const stringFields = ['name', 'description', 'game_version'];
+  const stringFields = ['name', 'description', 'guide', 'game_version'];
   stringFields.forEach(field => {
     if (sanitized[field] && typeof sanitized[field] === 'string') {
       sanitized[field] = sanitizeString(sanitized[field]);

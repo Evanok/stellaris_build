@@ -217,6 +217,14 @@ const setupDatabase = () => {
       }
     });
 
+    // Optional "How to play" guide (markdown), kept apart from the short
+    // description, which also feeds home cards and link previews
+    db.run(`ALTER TABLE builds ADD COLUMN guide TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding guide column:', err.message);
+      }
+    });
+
     // Optional third civic: only 2 civics at empire creation, a third slot
     // unlocks during the game. Shown on the build page, never exported.
     db.run(`ALTER TABLE builds ADD COLUMN third_civic TEXT`, (err) => {
