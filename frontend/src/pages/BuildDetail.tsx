@@ -16,6 +16,7 @@ import { PlanetClass, PlanetRuleInput, getEffectivePlanetClass, getForcedPlanetC
 import { trackEvent } from '../utils/analytics';
 import { reviewPendingBuild } from '../utils/moderation';
 import BuildComments from '../components/BuildComments';
+import MarkdownText from '../components/MarkdownText';
 
 interface Build {
   id: number;
@@ -830,7 +831,7 @@ export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode =
               {build.description && (
                 // Capped line length: the page goes wide on large screens, but prose stays readable
                 <div className="text-light fs-5" style={{ maxWidth: '80ch' }}>
-                  <ReactMarkdown>{decodeHtmlEntities(build.description)}</ReactMarkdown>
+                  <MarkdownText>{decodeHtmlEntities(build.description)}</MarkdownText>
                 </div>
               )}
             </div>
@@ -1514,7 +1515,7 @@ export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode =
             </h4>
           </div>
           <div className="card-body text-light build-guide">
-            <ReactMarkdown>{decodeHtmlEntities(build.guide)}</ReactMarkdown>
+            <MarkdownText>{decodeHtmlEntities(build.guide)}</MarkdownText>
           </div>
         </div>
       )}

@@ -1600,7 +1600,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
               onChange={(e) => setGuide(e.target.value)}
             ></textarea>
             <div className="form-text text-light d-flex justify-content-between gap-2">
-              <span>Explain how to play this build: priorities for each phase of the game, key techs, tips. Markdown supported (<code>## Heading</code>, <code>**bold**</code>, <code>- list</code>).</span>
+              <span>Explain how to play this build: priorities for each phase of the game, key techs, tips. Markdown supported (<code>## Heading</code>, <code>**bold**</code>, <code>- list</code>, tables).</span>
               <CharCounter length={guide.length} max={GUIDE_MAX_LENGTH} />
             </div>
           </div>
