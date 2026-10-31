@@ -14,6 +14,8 @@ interface BuildComment {
   quote_id: number | null;
   quote_content: string | null; // null when the quoted comment was deleted
   quote_author: string | null;
+  user_reported: number;
+  report_count?: number; // admins only
 }
 
 const MAX_LENGTH = 2000;
@@ -71,6 +73,8 @@ export const BuildComments: React.FC<{ buildId: string; buildAuthorId?: number |
   const [posting, setPosting] = useState(false);
   const [error, setError] = useState('');
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
+  const [reportTarget, setReportTarget] = useState<number | null>(null);
+  const [notice, setNotice] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const fetchComments = async () => {
@@ -93,6 +97,20 @@ export const BuildComments: React.FC<{ buildId: string; buildAuthorId?: number |
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [buildId]);
 
+  // Links like /build/42#comment-7 (report emails) - comments load after the page
+  const hashHandledRef = useRef(false);
+  useEffect(() => {
+    if (!loaded || hashHandledRef.current) return;
+    const match = window.location.hash.match(/^#comment-(\d+)$/);
+    if (match) {
+      hashHandledRef.current = true;
+      scrollToComment(Number(match[1]));
+    } else if (window.location.hash === '#comments') {
+      hashHandledRef.current = true;
+      document.getElementById('comments')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [loaded, comments]);
+
   const handleQuote = (comment: BuildComment) => {
     setQuoted(comment);
     textareaRef.current?.focus();
@@ -104,7 +122,7 @@ export const BuildComments: React.FC<{ buildId: string; buildAuthorId?: number |
     if (!el) return;
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     el.classList.add('border-info');
-    setTimeout(() => el.classList.remove('border-info'), 1500);
+    setTimeout(() => el.classList.remove('border-info'), 2000);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -151,6 +169,30 @@ export const BuildComments: React.FC<{ buildId: string; buildAuthorId?: number |
     }
   };
 
+  const handleReport = async () => {
+    if (reportTarget === null) return;
+    setError('');
+    try {
+      const res = await fetch(`/api/builds/${buildId}/comments/${reportTarget}/report`, { method: 'POST' });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) setError(data.error || 'Failed to report comment');
+      else setNotice('Thanks, the comment was reported to the moderators.');
+    } catch {
+      setError('Network error, please try again');
+    } finally {
+      setReportTarget(null);
+      await fetchComments();
+    }
+  };
+
+  const handleDismissReports = async (commentId: number) => {
+    try {
+      await fetch(`/api/builds/${buildId}/comments/${commentId}/reports`, { method: 'DELETE' });
+    } finally {
+      await fetchComments();
+    }
+  };
+
   return (
     <div className="card bg-dark border-secondary mb-4" id="comments">
       <div className="card-header bg-secondary">
@@ -165,8 +207,10 @@ export const BuildComments: React.FC<{ buildId: string; buildAuthorId?: number |
         )}
 
         {comments.map(comment => {
-          const canDelete = !!user && (isAdmin || comment.user_id === user.id);
+          const canDelete = isAdmin;
           const isBuildAuthor = buildAuthorId != null && comment.user_id === buildAuthorId;
+          const canReport = !!user && comment.user_id !== user.id;
+          const reportCount = comment.report_count ?? 0;
           return (
             <div
               key={comment.id}
@@ -180,6 +224,19 @@ export const BuildComments: React.FC<{ buildId: string; buildAuthorId?: number |
                   <span className="fw-semibold text-info">{comment.author_name}</span>
                   {isBuildAuthor && <span className="badge bg-primary">Author</span>}
                   <small className="text-muted">{formatDate(comment.created_at)}</small>
+                  {isAdmin && reportCount > 0 && (
+                    <span className="badge bg-danger">
+                      <i className="bi bi-flag-fill me-1"></i>Reported ({reportCount})
+                      <button
+                        type="button"
+                        className="btn btn-link p-0 ms-2 text-white small"
+                        title="Dismiss the reports (the comment is fine)"
+                        onClick={() => handleDismissReports(comment.id)}
+                      >
+                        Dismiss
+                      </button>
+                    </span>
+                  )}
                   <div className="ms-auto d-flex gap-2">
                     {user && (
                       <button
@@ -190,6 +247,22 @@ export const BuildComments: React.FC<{ buildId: string; buildAuthorId?: number |
                       >
                         <i className="bi bi-quote me-1"></i>Quote
                       </button>
+                    )}
+                    {canReport && (
+                      comment.user_reported ? (
+                        <small className="text-muted" title="You reported this comment">
+                          <i className="bi bi-flag-fill"></i>
+                        </small>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn btn-link btn-sm p-0 text-muted"
+                          title="Report this comment to the moderators"
+                          onClick={() => setReportTarget(comment.id)}
+                        >
+                          <i className="bi bi-flag"></i>
+                        </button>
+                      )
                     )}
                     {canDelete && (
                       <button
@@ -219,6 +292,12 @@ export const BuildComments: React.FC<{ buildId: string; buildAuthorId?: number |
         })}
 
         {error && <div className="alert alert-danger py-2 small">{error}</div>}
+        {notice && (
+          <div className="alert alert-success py-2 small d-flex justify-content-between align-items-center">
+            {notice}
+            <button type="button" className="btn-close btn-close-white btn-sm" onClick={() => setNotice('')} />
+          </div>
+        )}
 
         {user ? (
           <form onSubmit={handleSubmit}>
@@ -267,6 +346,26 @@ export const BuildComments: React.FC<{ buildId: string; buildAuthorId?: number |
           </p>
         )}
       </div>
+
+      {reportTarget !== null && (
+        <div
+          className="modal show d-block"
+          style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
+          onClick={e => { if (e.target === e.currentTarget) setReportTarget(null); }}
+        >
+          <div className="modal-dialog modal-dialog-centered modal-sm">
+            <div className="modal-content bg-dark border-secondary">
+              <div className="modal-body text-center py-4">
+                <i className="bi bi-flag text-warning fs-3 d-block mb-2"></i>
+                <p className="text-white mb-1">Report this comment?</p>
+                <p className="text-muted small mb-3">A moderator will review it (spam, insults, off-topic...).</p>
+                <button className="btn btn-warning btn-sm me-2" onClick={handleReport}>Report</button>
+                <button className="btn btn-secondary btn-sm" onClick={() => setReportTarget(null)}>Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {deleteTarget !== null && (
         <div

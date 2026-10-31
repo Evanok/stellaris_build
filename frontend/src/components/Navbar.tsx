@@ -10,13 +10,14 @@ export const Navbar: React.FC = () => {
   const location = useLocation();
   const isAdmin = user?.is_admin === 1;
 
-  // Admins only: how many builds submitted without an account wait for review.
+  // Admins only: how many builds submitted without an account wait for review,
+  // plus reported comments not handled yet.
   // Refreshed on navigation so it drops after reviewing.
   useEffect(() => {
     if (!isAdmin) return;
     fetch('/api/admin/pending-builds-count')
       .then(res => (res.ok ? res.json() : null))
-      .then(data => setPendingCount(data?.count || 0))
+      .then(data => setPendingCount((data?.count || 0) + (data?.reported_comments || 0)))
       .catch(() => setPendingCount(0));
   }, [isAdmin, location.pathname]);
 

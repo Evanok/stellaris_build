@@ -315,6 +315,19 @@ const setupDatabase = () => {
       db.run(`CREATE INDEX IF NOT EXISTS idx_build_comments_build ON build_comments (build_id, created_at)`);
     });
 
+    // One row per (comment, reporter). Cleared by an admin who dismisses the reports.
+    db.run(`CREATE TABLE IF NOT EXISTS comment_reports (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      comment_id INTEGER NOT NULL,
+      user_id INTEGER NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (comment_id) REFERENCES build_comments (id) ON DELETE CASCADE,
+      FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+      UNIQUE(comment_id, user_id)
+    )`, (err) => {
+      if (err) console.error('Error creating comment_reports table:', err.message);
+    });
+
     // Builds submitted without an account, waiting for a moderator. Kept out of the
     // builds table on purpose: builds is read by many public queries (home, detail,
     // sitemap, stats, OG images...), and a pending row leaking through any of them
