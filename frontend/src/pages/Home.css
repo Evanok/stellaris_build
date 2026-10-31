@@ -4,16 +4,16 @@
 }
 
 .build-card {
-  will-change: transform;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   cursor: pointer;
-  transform: translateZ(0);
   background-color: #0a1410 !important;
   border-color: #4a8a4a !important;
 }
 
+/* Lift by a whole number of pixels rather than scale(): scaling a composited
+   layer resamples it, which made the card text and icons blurry on hover */
 .build-card:hover {
-  transform: scale(1.02) translateZ(0);
+  transform: translateY(-3px);
   box-shadow: 0 4px 16px rgba(74, 200, 74, 0.6);
 }
 
