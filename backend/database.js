@@ -217,6 +217,14 @@ const setupDatabase = () => {
       }
     });
 
+    // Optional third civic: only 2 civics at empire creation, a third slot
+    // unlocks during the game. Shown on the build page, never exported.
+    db.run(`ALTER TABLE builds ADD COLUMN third_civic TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding third_civic column:', err.message);
+      }
+    });
+
     // Add reset_token columns for password recovery (local accounts)
     db.run(`ALTER TABLE users ADD COLUMN reset_token TEXT`, (err) => {
       if (err && !err.message.includes('duplicate column')) {

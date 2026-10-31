@@ -238,6 +238,15 @@ const validateBuildData = (data) => {
     }
   });
 
+  // Third civic (optional, unlocked during the game): a single civic id
+  if (data.third_civic !== undefined && data.third_civic !== null && data.third_civic !== '') {
+    if (typeof data.third_civic !== 'string' || !/^[a-z][a-z0-9_]{1,100}$/.test(data.third_civic)) {
+      errors.push('Invalid third civic');
+    } else if (typeof data.civics === 'string' && data.civics.split(',').map(c => c.trim()).includes(data.third_civic)) {
+      errors.push('The third civic is already one of the starting civics');
+    }
+  }
+
   // Homeworld planet class (optional): a game id like "pc_desert". Not checked
   // against planet_classes.json - the rule evaluator handles game validity,
   // this only keeps arbitrary strings out of the column.

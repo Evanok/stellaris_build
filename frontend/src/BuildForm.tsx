@@ -269,6 +269,8 @@ const MAX_ETHICS_POINTS = 3;
 // country_government_civic_points_add, but those aren't real creation-time
 // picks, so this stays a flat 2.
 const MAX_CIVIC_SLOTS = 2;
+// A third civic slot unlocks during the game: builds can recommend one, shown on
+// the build page but never exported (the game rejects 3 civics at creation)
 
 // Nomads DLC was introduced in 4.4 "Pegasus"
 const supportsNomadic = (version: string) => parseFloat(version) >= 4.4;
@@ -339,6 +341,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   // Civics data from API
   const [allCivics, setAllCivics] = useState<Civic[]>([]);
   const [selectedCivics, setSelectedCivics] = useState<string[]>([]);
+  const [thirdCivic, setThirdCivic] = useState('');
   const [civicsSearchQuery, setCivicsSearchQuery] = useState('');
 
   // Traditions data from API
@@ -537,6 +540,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setSelectedEthics(prev => prev.filter((id: string) => validEthicIds.has(id)));
         setSelectedAuthority(prev => (prev && validAuthorityIds.has(prev) ? prev : ''));
         setSelectedCivics(prev => prev.filter((id: string) => validCivicIds.has(id)));
+        setThirdCivic(prev => (prev && validCivicIds.has(prev) ? prev : ''));
         setSelectedAscensionPerks(prev => prev.filter((id: string) => validPerkIds.has(id)));
         setSelectedTraditions(prev => prev.filter((id: string) => validTreeNames.has(id)));
         setSelectedRulerTrait(prev => (prev && validRulerTraitIds.has(prev) ? prev : ''));
@@ -578,7 +582,13 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
       // Handle civics (array of strings) - trim whitespace
       if (Array.isArray(initialData.civics)) {
-        setSelectedCivics(initialData.civics.map((c: string) => c.trim()));
+        const civics = initialData.civics.map((c: string) => c.trim()).filter(Boolean);
+        // Builds published before 2026-08-10 could hold 3 starting civics: the
+        // extra one moves to the third civic slot, where the author can review it
+        setSelectedCivics(civics.slice(0, MAX_CIVIC_SLOTS));
+        setThirdCivic(initialData.third_civic || civics[MAX_CIVIC_SLOTS] || '');
+      } else if (initialData.third_civic) {
+        setThirdCivic(initialData.third_civic);
       }
 
       // Handle traits (array of strings) - trim whitespace
@@ -743,7 +753,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   // Check if a civic can be selected based on current selections
   const canSelectCivic = (civic: Civic): boolean => {
     // Already selected
-    if (selectedCivics.includes(civic.id)) {
+    if (selectedCivics.includes(civic.id) || thirdCivic === civic.id) {
       return true;
     }
 
@@ -757,8 +767,9 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       return false;
     }
 
-    // Only check if at max slots - no complex compatibility rules
-    if (selectedCivics.length >= MAX_CIVIC_SLOTS) {
+    // Only check if at max slots (2 starting civics + the optional third one) -
+    // no complex compatibility rules
+    if (selectedCivics.length >= MAX_CIVIC_SLOTS && thirdCivic) {
       return false;
     }
 
@@ -979,14 +990,22 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     if (!civic) return;
 
     // If deselecting, always allow
+    if (thirdCivic === civicId) {
+      setThirdCivic('');
+      return;
+    }
     if (selectedCivics.includes(civicId)) {
       setSelectedCivics(prev => prev.filter(c => c !== civicId));
       return;
     }
 
-    // If selecting, check if it's allowed
+    // If selecting, check if it's allowed: starting slots first, then the third one
     if (canSelectCivic(civic)) {
-      setSelectedCivics(prev => [...prev, civicId]);
+      if (selectedCivics.length < MAX_CIVIC_SLOTS) {
+        setSelectedCivics(prev => [...prev, civicId]);
+      } else {
+        setThirdCivic(civicId);
+      }
     }
   };
 
@@ -1102,6 +1121,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       selectedEthics,
       selectedAuthority,
       selectedCivics,
+      thirdCivic,
       selectedAscensionPerks,
       selectedTraditions,
       selectedRulerTrait,
@@ -1135,6 +1155,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setSelectedPlanetClass(formData.selectedPlanetClass || '');
         setSelectedShipset(formData.selectedShipset || '');
         setSelectedCivics(formData.selectedCivics || []);
+        setThirdCivic(formData.thirdCivic || '');
         setSelectedAscensionPerks(formData.selectedAscensionPerks || []);
         setSelectedTraditions(formData.selectedTraditions || []);
         setSelectedRulerTrait(formData.selectedRulerTrait || '');
@@ -1295,6 +1316,15 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       addWarnings(`Civic "${civic.name}"`, civic.potential);
     }
 
+    // The third civic is picked later in the game, but must still fit the empire
+    const third = allCivics.find(c => c.id === thirdCivic);
+    if (third) {
+      const thirdCtx = { ...ctx, civics: [...selectedCivics, third.id] };
+      getFailingNodes(third.possible, thirdCtx).concat(getFailingNodes(third.potential, thirdCtx)).forEach(failing =>
+        warnings.push(`Third civic "${third.name}" requires ${describePredicateHuman(failing, resolveRuleLabel)}`)
+      );
+    }
+
     return warnings;
   };
 
@@ -1319,6 +1349,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     source_url,
     difficulty,
     civics: selectedCivics.join(', '), // Convert array to comma-separated string
+    third_civic: thirdCivic,
     dlcs,
     tags,
     traits: selectedTraits.join(', '), // Convert array to comma-separated string
@@ -1498,6 +1529,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       setSelectedPlanetClass('');
       setSelectedShipset('');
       setSelectedCivics([]);
+      setThirdCivic('');
       setSelectedAscensionPerks([]);
       setSelectedTraditions([]);
       setSelectedRulerTrait('');
@@ -2550,8 +2582,12 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
           {/* Civics Selection */}
           <div className="mb-3">
             <label className="form-label">
-              Civics ({selectedCivics.length}/{MAX_CIVIC_SLOTS} selected)
+              Civics ({selectedCivics.length}/{MAX_CIVIC_SLOTS} selected{thirdCivic ? ' + 1 for later' : ''})
             </label>
+            <div className="form-text text-light mb-2">
+              {MAX_CIVIC_SLOTS} civics at empire creation. Once both are picked, you can add an optional
+              third civic, unlocked later in the game: it is shown on the build page but not exported.
+            </div>
 
             {/* Info about civic selection */}
             {selectedEthics.length === 0 && !selectedAuthority && (
@@ -2564,7 +2600,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
             )}
 
             {/* Display selected civics */}
-            {selectedCivics.length > 0 && (
+            {(selectedCivics.length > 0 || thirdCivic) && (
               <div className="alert alert-success mb-2">
                 <strong>Selected Civics:</strong>
                 <div className="mt-1">
@@ -2576,6 +2612,11 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                       </span>
                     );
                   })}
+                  {thirdCivic && (
+                    <span className="badge bg-info text-dark me-1 mb-1" title="Unlocked later in the game, not exported">
+                      3rd (later): {allCivics.find(c => c.id === thirdCivic)?.name || thirdCivic}
+                    </span>
+                  )}
                 </div>
               </div>
             )}
@@ -2591,8 +2632,10 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
               <div className="card-body">
                 {filteredCivics.length > 0 ? (
                   filteredCivics.map(civic => {
-                    const isSelected = selectedCivics.includes(civic.id);
+                    const isThird = thirdCivic === civic.id;
+                    const isSelected = selectedCivics.includes(civic.id) || isThird;
                     const canSelect = canSelectCivic(civic);
+                    const slotsFull = selectedCivics.length >= MAX_CIVIC_SLOTS && !!thirdCivic;
                     const isDisabled = !isSelected && !canSelect;
 
                     return (
@@ -2620,10 +2663,13 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                           {!civic.can_modify && (
                             <span className="badge bg-warning text-dark ms-2">Permanent</span>
                           )}
-                          {isDisabled && !isSelected && selectedCivics.length >= MAX_CIVIC_SLOTS && (
+                          {isThird && (
+                            <span className="badge bg-info text-dark ms-2">3rd civic - unlocked later, not exported</span>
+                          )}
+                          {isDisabled && !isSelected && slotsFull && (
                             <span className="badge bg-danger ms-2">Max slots reached</span>
                           )}
-                          {isDisabled && !isSelected && selectedCivics.length < MAX_CIVIC_SLOTS && (
+                          {isDisabled && !isSelected && !slotsFull && (
                             <span className="badge bg-warning text-dark ms-2">Requirements not met</span>
                           )}
                           {civic.effects && (
