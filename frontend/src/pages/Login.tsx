@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { trackEvent, trackEventThenNavigate } from '../utils/analytics';
 import { consumePostLoginRedirect } from '../utils/postLoginRedirect';
+import HoneypotField from '../components/HoneypotField';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -12,6 +13,8 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  // Honeypot (see HoneypotField)
+  const [website, setWebsite] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -38,7 +41,7 @@ const Login: React.FC = () => {
       const response = await fetch('/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ username, email, password, website }),
       });
 
       const data = await response.json();
@@ -301,6 +304,7 @@ const Login: React.FC = () => {
                       required
                     />
                   </div>
+                  <HoneypotField id="register-website" value={website} onChange={setWebsite} />
                   <button
                     type="submit"
                     className="btn btn-success w-100"

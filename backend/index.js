@@ -187,6 +187,13 @@ app.get('/auth/logout', (req, res) => {
 app.post('/auth/register', registerLimiter, async (req, res) => {
   const { username, password, email } = req.body;
 
+  // Honeypot: a field hidden from humans (HoneypotField.tsx), only bots fill it in.
+  // Pretend it worked, so the bot has no reason to adapt. No account and no session
+  // are created; the 201 still counts against registerLimiter.
+  if (req.body.website) {
+    return res.status(201).json({ success: true, user: { id: 0, username: String(username || ''), provider: 'local' } });
+  }
+
   // Validation
   if (!username || !password || !email) {
     return res.status(400).json({ error: 'Username, email and password are required.' });
