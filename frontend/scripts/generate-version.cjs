@@ -4,15 +4,20 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
+// A production deploy builds from a `git archive` with no .git: the deploy kit
+// resolves these on the dev machine and passes them in the environment.
+const fromDeploy = (name) => (process.env[name] || '').trim();
+const git = (command) => execSync(command, { encoding: 'utf-8' }).trim();
+
 try {
-  // Get the latest git tag
-  const version = execSync('git describe --tags --abbrev=0', { encoding: 'utf-8' }).trim();
+  // Latest git tag
+  const version = fromDeploy('DEPLOY_LATEST_TAG') || git('git describe --tags --abbrev=0');
 
-  // Get the commit hash
-  const commitHash = execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).trim();
+  // Commit hash
+  const commitHash = fromDeploy('DEPLOY_REVISION').slice(0, 7) || git('git rev-parse --short HEAD');
 
-  // Get the commit date
-  const commitDate = execSync('git log -1 --format=%ci', { encoding: 'utf-8' }).trim();
+  // Commit date
+  const commitDate = fromDeploy('DEPLOY_COMMIT_DATE') || git('git log -1 --format=%ci');
 
   const versionInfo = {
     version,

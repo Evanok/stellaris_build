@@ -19,10 +19,19 @@ scp "$CONF_FILE" "$PROD_HOST:/tmp/stellaris-build.conf"
 
 echo "Installing config and reloading nginx on $PROD_HOST ..."
 # -t forces a pseudo-terminal so sudo can prompt for your password interactively
+# nginx serves every site on this server: a broken file left in sites-available would
+# take all of them down at the next reload/restart (certbot renewals reload nginx).
+# So the previous file is kept, and put back if the new one fails `nginx -t`.
 ssh -t "$PROD_HOST" '
   set -e
-  sudo cp /tmp/stellaris-build.conf /etc/nginx/sites-available/stellaris-build
-  sudo nginx -t
+  live=/etc/nginx/sites-available/stellaris-build
+  sudo cp "$live" "$live.previous"
+  sudo cp /tmp/stellaris-build.conf "$live"
+  if ! sudo nginx -t; then
+    sudo cp "$live.previous" "$live"
+    echo "nginx -t FAILED: previous config restored, nothing reloaded." >&2
+    exit 1
+  fi
   sudo systemctl reload nginx
-  echo "nginx config deployed and reloaded successfully."
+  echo "nginx config deployed and reloaded successfully (previous one kept as $live.previous)."
 '

@@ -1,11 +1,12 @@
 const sqlite3 = require('sqlite3').verbose();
+const { DB_PATH } = require('./dbPath');
 
 // Connect to DB
-const db = new sqlite3.Database('./stellaris_builds.db', (err) => {
+const db = new sqlite3.Database(DB_PATH, (err) => {
   if (err) {
     return console.error(err.message);
   }
-  console.log('Connected to the stellaris_builds.db SQLite database.');
+  console.log(`Connected to the SQLite database at ${DB_PATH}.`);
 });
 
 // WAL mode: writers no longer take an exclusive lock that blocks concurrent readers.

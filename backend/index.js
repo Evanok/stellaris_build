@@ -40,6 +40,7 @@ async function sendResetEmail(toEmail, resetUrl) {
 const express = require('express');
 const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
+const { SESSIONS_DIR } = require('./dbPath');
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
@@ -83,7 +84,7 @@ app.use(
   session({
     store: new SQLiteStore({
       db: 'sessions.db',
-      dir: __dirname,
+      dir: SESSIONS_DIR, // see dbPath.js
       concurrentDb: true, // WAL mode: readers no longer block behind the per-request session touch write
     }),
     secret: process.env.SESSION_SECRET || 'stellaris-build-secret-change-in-production',

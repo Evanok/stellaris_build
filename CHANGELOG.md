@@ -7,6 +7,22 @@ a feature matters.
 
 Add new entries at the top: `## <Title> (YYYY-MM-DD)`.
 
+## Deploy kit migration prep (2026-11-01)
+
+- Deploys move to the shared deploy kit (`./deploy.sh` from the dev machine, `deploy/deploy.conf`):
+  release directories in `~/apps/stellaris_build`, shared state (`backend/.env`, `backend/db/`, `cache/`,
+  `import_archive/`), pre-deploy backup, health check on real data, automatic rollback.
+  `deploy/staging.conf` rehearses the migration on :3002 without touching production.
+- `backend/dbPath.js`: `DB_PATH` / `SESSIONS_DIR` (defaults unchanged). Paths no longer depend on the
+  working directory, which removes the "stray empty DB at the repo root" failure mode.
+- `generate-version.cjs` takes `DEPLOY_LATEST_TAG` / `DEPLOY_REVISION` / `DEPLOY_COMMIT_DATE` (a release
+  has no `.git`).
+- `backup_db.sh`: shared paths, `predeploy` mode, configurable Drive target (`STELLARIS_GDRIVE_DIR`).
+- nginx: static files from `current/` with fallback to Node (no 404 on new asset hashes during a deploy);
+  `infra/deploy_nginx.sh` restores the previous config if `nginx -t` fails.
+- `frontend/public/googlecd04003f2c5c632e.html` (Search Console verification) committed: it only existed
+  on the server and would have been lost with the old checkout.
+
 ## Changelog split out of CLAUDE.md (2026-11-01)
 
 - The "Recent Completions" section of `CLAUDE.md` (about 60% of the file) moved here unchanged, headings

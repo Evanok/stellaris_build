@@ -80,32 +80,45 @@ npm run build -w frontend  # Runs TypeScript compiler + Vite build
 
 **Production Server:**
 - Domain: https://stellaris-build.com
-- Connection details (IP, user, SSH/SCP commands): see `CLAUDE.local.md` (not committed — ask the project owner if you don't have it)
+- Connection details: see `CLAUDE.local.md` (not committed). The deploy kit reads the host from
+  `deploy/.env` (gitignored, `DEPLOY_HOST=user@host`).
+
+Deployed **from the dev machine** with the shared deploy kit (`~/work/deploy_kit`, see its README):
 
 ```bash
-# On production server (stellaris-build.com)
-
-# Standard deploy - always wrapped in the maintenance scripts (repo root):
-cd ~/work/stellaris_build
-./enable_maintenance.sh      # pm2 stop -> nginx serves maintenance.html (502 error_page)
-git pull
-npm install
-npm run build -w frontend    # REQUIRED for frontend changes
-./disable_maintenance.sh     # pm2 restart -> site live again
-
-# Useful commands:
-pm2 status                  # Check app status
-pm2 logs stellaris-build    # View logs
-pm2 restart stellaris-build # Restart (backend changes only)
-sudo systemctl restart nginx # Restart nginx (if config changed)
+./deploy.sh            # local gate (backend syntax, frontend build, Playwright E2E), then a new release
+./deploy.sh status     # current release, pm2, health
+./deploy.sh rollback   # previous release (code only: the database is shared, never rolled back)
+DEPLOY_CONF=deploy/staging.conf ./deploy.sh   # rehearsal app on :3002 (see deploy/staging.conf)
 ```
 
-**Important:**
-- Frontend changes require `npm run build -w frontend` before restart
-- Backend changes only need `pm2 restart stellaris-build`
-- Database is at `/home/arthur/work/stellaris_build/backend/stellaris_builds.db`
+- Settings: `deploy/deploy.conf`. Only the commit pushed to `origin/master` can be deployed.
+- On the VPS: `~/apps/stellaris_build/releases/<date>_<sha>/`, `current` (what PM2 runs as
+  `stellaris-build`, from `current/backend`) and `shared/`. Symlinked into each release:
+  `backend/.env`, `backend/db/` (`stellaris_builds.db` + `sessions.db` and their `-wal`/`-shm`),
+  `backend/cache/`, `backend/import_archive/`. Also in `shared/`: `backups/` (used by `backup_db.sh`).
+- The database location comes from `DB_PATH` / `SESSIONS_DIR` (`backend/dbPath.js`, resolved
+  against `backend/`): `db/stellaris_builds.db` and `db` in production (set in `PM2_START`),
+  `backend/stellaris_builds.db` and `backend/` by default (development).
+- Each deploy: build in the new release (`npm ci`, frontend build, `version.json` from the
+  `DEPLOY_*` variables since a release has no `.git`), pre-deploy DB backup, switch, PM2 restart
+  (nginx shows `maintenance.html` for the few seconds Node is down), health check on
+  `/api/builds?limit=1` that must return a real build (`HEALTH_EXPECT`), automatic rollback if not.
+- PM2 refuses to start the app if the database file is missing: SQLite would otherwise silently
+  create an empty one, and the site would answer 200 with zero builds.
+- `enable_maintenance.sh` / `disable_maintenance.sh` (pm2 stop/restart) remain for manual maintenance.
 
-**nginx config:** Tracked in the repo at `infra/nginx/stellaris-build.conf` (mirrors the live prod config — edit this file, not the server directly). Deploy changes with `infra/deploy_nginx.sh` (requires `PROD_HOST`, see `CLAUDE.local.md`).
+**Backups:** `backup_db.sh` (cron 03:00): 7 daily + 4 weekly (Sunday) gzip backups in
+`shared/backups`, mirrored to `gdrive:backups/stellaris_build` with `rclone sync` (a mirror: it
+deletes on Drive what is not local, so anything that is not production must set
+`STELLARIS_GDRIVE_DIR`). `predeploy` mode runs before every deploy (own folder, last 5).
+
+**nginx config:** Tracked in the repo at `infra/nginx/stellaris-build.conf` (mirrors the live prod
+config — edit this file, not the server directly). Static paths are served from
+`~/apps/stellaris_build/current/frontend/dist` and fall back to Node when a file is not there, so a
+deploy never serves a page whose assets 404. Deploy changes with `infra/deploy_nginx.sh` (requires
+`PROD_HOST`, see `CLAUDE.local.md`); it restores the previous file if `nginx -t` fails, since that
+nginx also serves the other sites on the server.
 
 ### OAuth Setup (Development)
 
@@ -219,7 +232,7 @@ The project uses npm workspaces with three main parts:
 - Stores provider info (google/steam), username, email, and avatar
 
 **Database:** `backend/database.js`
-- SQLite database stored at `./stellaris_builds.db` (created at runtime)
+- SQLite database at `DB_PATH` (`backend/dbPath.js`; default `backend/stellaris_builds.db`, production `shared/backend/db/`), created at runtime
 - Tables: `users`, `builds`, `ratings`, `feedback`, `page_views` (legacy, no longer written since 2026-10-19), `chat_messages`, `pending_builds`, `import_attempts`, `build_comments`, `comment_reports`
 - Users table: stores OAuth user info (provider, provider_id, username, email, avatar). `provider = 'guest'` rows are not real accounts: they only carry the author name of approved guest builds, cannot log in, and are excluded from signup stats
 - Builds table: stores complete empire configurations with soft delete support and author_id foreign key
@@ -569,8 +582,8 @@ All extracted data must be:
 **Issue**: Backend doesn't pick up data changes
 **Solution**: Nodemon only watches .js files. Manually restart: `killall node && npm run dev -w backend`
 
-**Issue**: Server starts fine but the site shows zero builds, and a `stellaris_builds.db` appears at the repo root
-**Solution**: `database.js` opens `./stellaris_builds.db` — a path relative to the **current working directory**, not to the file. Launching with `node backend/index.js` from the repo root silently creates a fresh empty DB there instead of using `backend/stellaris_builds.db`. Always start from the backend folder (`cd backend && node index.js`) or via `npm run dev -w backend`. Delete the stray root DB if one was created. PM2 sets its own cwd, so prod is unaffected.
+**Issue**: Server starts fine but the site shows zero builds
+**Solution**: The app is not reading the expected database: SQLite silently creates an empty file wherever it is pointed. Check the `Connected to the SQLite database at ...` startup log against `DB_PATH` (`backend/dbPath.js`; paths are resolved against `backend/`, whatever the working directory). In production, PM2's start command refuses to run without the file and the deploy health check requires a real build.
 
 ## Testing
 

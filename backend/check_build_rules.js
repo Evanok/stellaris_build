@@ -218,7 +218,7 @@ function cmdCheckFile(filePath) {
 
 function cmdCheckId(id) {
   const sqlite3 = require('sqlite3').verbose();
-  const db = new sqlite3.Database(path.join(__dirname, 'stellaris_builds.db'), sqlite3.OPEN_READONLY);
+  const db = new sqlite3.Database(require('./dbPath').DB_PATH, sqlite3.OPEN_READONLY);
   db.get('SELECT * FROM builds WHERE id = ?', [id], (err, build) => {
     if (err) { console.error(err); db.close(); return; }
     if (!build) { console.error(`No build with id ${id}`); db.close(); return; }
@@ -229,7 +229,7 @@ function cmdCheckId(id) {
 
 function cmdAudit() {
   const sqlite3 = require('sqlite3').verbose();
-  const db = new sqlite3.Database(path.join(__dirname, 'stellaris_builds.db'), sqlite3.OPEN_READONLY);
+  const db = new sqlite3.Database(require('./dbPath').DB_PATH, sqlite3.OPEN_READONLY);
   db.all('SELECT * FROM builds WHERE deleted = 0', (err, builds) => {
     if (err) { console.error(err); db.close(); return; }
     console.log(`Auditing ${builds.length} builds\n`);

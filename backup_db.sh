@@ -1,8 +1,20 @@
 #!/bin/bash
 
 # Configuration
-DB_PATH="/home/arthur/work/stellaris_build/backend/stellaris_builds.db"
-BACKUP_DIR="/home/arthur/work/stellaris_build/backups"
+# Usage: backup_db.sh            nightly backup (crontab): 7 daily + 4 weekly (Sunday)
+#        backup_db.sh predeploy  one-off copy before a deploy, own folder, last 5 kept
+#                                (so a few deploys in a day never evict a nightly backup)
+KIND="${1:-daily}"
+DB_PATH="${STELLARIS_DB_PATH:-/home/arthur/apps/stellaris_build/shared/backend/db/stellaris_builds.db}"
+BACKUP_ROOT="${STELLARIS_BACKUP_DIR:-/home/arthur/apps/stellaris_build/shared/backups}"
+# Google Drive mirror of BACKUP_ROOT (rclone sync: deletes what is not local). Anything
+# that is not production (a rehearsal) MUST point it elsewhere, or it wipes prod's history.
+GDRIVE_DIR="${STELLARIS_GDRIVE_DIR:-gdrive:backups/stellaris_build}"
+case "$KIND" in
+  daily)     BACKUP_DIR="$BACKUP_ROOT"; KEEP=7 ;;
+  predeploy) BACKUP_DIR="$BACKUP_ROOT/predeploy"; KEEP=5 ;;
+  *) echo "Usage: $0 [daily|predeploy]" >&2; exit 64 ;;
+esac
 DATE=$(date +%Y%m%d_%H%M%S)
 BACKUP_FILE="$BACKUP_DIR/stellaris_builds_$DATE.db"
 
@@ -42,27 +54,28 @@ fi
 # Compresser le backup
 gzip "$BACKUP_FILE"
 
-# Garder seulement les 7 derniers backups quotidiens
+# Keep only the last KEEP backups of this kind
 cd "$BACKUP_DIR"
-ls -t stellaris_builds_*.db.gz | tail -n +8 | xargs -r rm
+ls -t stellaris_builds_*.db.gz | tail -n +$((KEEP + 1)) | xargs -r rm
 
-# Créer un backup hebdomadaire le dimanche
-if [ $(date +%u) -eq 7 ]; then
-    WEEKLY_BACKUP="$BACKUP_DIR/weekly/stellaris_builds_$(date +%Y_week%V).db.gz"
-    mkdir -p "$BACKUP_DIR/weekly"
+# Weekly backup on Sundays (nightly run only)
+if [[ "$KIND" == daily && $(date +%u) -eq 7 ]]; then
+    WEEKLY_BACKUP="$BACKUP_ROOT/weekly/stellaris_builds_$(date +%Y_week%V).db.gz"
+    mkdir -p "$BACKUP_ROOT/weekly"
     cp "$BACKUP_FILE.gz" "$WEEKLY_BACKUP"
 
     # Garder seulement les 4 derniers backups hebdomadaires
-    cd "$BACKUP_DIR/weekly"
+    cd "$BACKUP_ROOT/weekly"
     ls -t stellaris_builds_*.db.gz | tail -n +5 | xargs -r rm
 fi
 
 echo "Backup completed: $BACKUP_FILE.gz"
 
 # Sync vers Google Drive (miroir des backups locaux, y compris rotation)
-if rclone sync "$BACKUP_DIR" "gdrive:backups/stellaris_build"; then
+if rclone sync "$BACKUP_ROOT" "$GDRIVE_DIR" --exclude "*.log"; then
     echo "Synced to Google Drive"
 else
-    send_alert "Google Drive sync FAILED" "rclone sync vers gdrive:backups/stellaris_build a échoué le $(date). Le backup local existe toujours dans $BACKUP_DIR mais n'est plus répliqué sur Drive."
+    send_alert "Google Drive sync FAILED" "rclone sync vers $GDRIVE_DIR a échoué le $(date). Le backup local existe toujours dans $BACKUP_DIR mais n'est plus répliqué sur Drive."
     echo "Google Drive sync FAILED"
+    exit 1
 fi
