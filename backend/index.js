@@ -109,6 +109,10 @@ app.use('/portraits', express.static(path.join(__dirname, '../frontend/dist/port
 app.use('/loading_screens', express.static(path.join(__dirname, '../frontend/dist/loading_screens'), staticOpts));
 // Vite assets have content-hash filenames — safe to cache aggressively
 app.use('/assets', express.static(path.join(__dirname, '../frontend/dist/assets'), staticOpts));
+// A file missing under these prefixes is a real 404, not the SPA's index.html with a 200
+// (nginx falls back to Node for files missing from the live release). Answered here rather
+// than with express.static's `fallthrough: false`, which logs a stack trace per miss.
+app.use(['/icons', '/portraits', '/loading_screens', '/assets'], (req, res) => res.status(404).end());
 // index.html must never be cached — always serve fresh so users get the latest bundle hashes
 app.use(express.static(path.join(__dirname, '../frontend/dist'), {
   setHeaders: (res, filePath) => {
