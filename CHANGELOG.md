@@ -7,6 +7,12 @@ a feature matters.
 
 Add new entries at the top: `## <Title> (YYYY-MM-DD)`.
 
+## Faster deploys: dependency reuse (2026-11-01)
+
+- `deploy.conf` splits `INSTALL_CMD` (npm ci) from `REMOTE_BUILD`; with `REUSE_DEPS`, the deploy kit copies the
+  live release's `node_modules` when the lock, the `package.json` files and the node version are unchanged.
+- Skips the ~7 min sqlite3 compile on most deploys (a dependency change still runs the full `npm ci`).
+
 ## nginx config through the deploy kit (2026-11-01)
 
 - `infra/nginx/stellaris-build.conf` moved to `deploy/nginx.conf`; `infra/deploy_nginx.sh` replaced by

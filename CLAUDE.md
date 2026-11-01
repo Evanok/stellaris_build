@@ -101,7 +101,9 @@ DEPLOY_CONF=deploy/staging.conf ./deploy.sh   # rehearsal app on :3002 (see depl
   against `backend/`): `db/stellaris_builds.db` and `db` in production (set in `PM2_START`),
   `backend/stellaris_builds.db` and `backend/` by default (development).
 - Local copy of the prod database: `./infra/fetch_prod_db.sh` (host from `deploy/.env`).
-- Each deploy: build in the new release (`npm ci`, frontend build, `version.json` from the
+- Each deploy: build in the new release (`npm ci` — or, when the lock, every workspace `package.json` and
+  the node version are unchanged, a copy of the live release's `node_modules`, which skips the ~7 min
+  sqlite3 compile — then the frontend build, `version.json` from the
   `DEPLOY_*` variables since a release has no `.git`), pre-deploy DB backup, switch, PM2 restart
   (nginx shows `maintenance.html` for the few seconds Node is down), health check on
   `/api/builds?limit=1` that must return a real build (`HEALTH_EXPECT`), automatic rollback if not.
