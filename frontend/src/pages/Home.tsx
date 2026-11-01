@@ -129,23 +129,13 @@ export const Home: React.FC = () => {
   // What's New data
   const latestNews: NewsItem[] = [
     {
+      date: '1 Nov 2026',
+      title: 'Comments on builds, optional 3rd civic and better markdown support',
+      type: 'feature'
+    },
+    {
       date: '19 Oct 2026',
       title: 'Improved build import, you can now start a build without logging in',
-      type: 'update'
-    },
-    {
-      date: '17 Oct 2026',
-      title: 'Pick your Homeworld and Ship Appearance in builds',
-      type: 'feature'
-    },
-    {
-      date: '10 Oct 2026',
-      title: 'Build Tags + Clearer Difficulty Ratings',
-      type: 'feature'
-    },
-    {
-      date: '23 Sep 2026',
-      title: 'Stellaris 4.5 "Cygnus" Support',
       type: 'update'
     }
   ];

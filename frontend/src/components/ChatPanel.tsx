@@ -28,7 +28,6 @@ const ChatPanel: React.FC = () => {
   const [isPosting, setIsPosting] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
 
-  const bottomRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
   const fetchMessages = async () => {
@@ -51,19 +50,25 @@ const ChatPanel: React.FC = () => {
     return () => clearInterval(id);
   }, []);
 
-  // Scroll to bottom on first load and when new messages arrive if already near bottom
-  const prevLengthRef = useRef(0);
+  // Scroll to bottom on first load and when new messages arrive if the user was near the bottom.
+  // Only the list container is scrolled: scrollIntoView() would also scroll the window
+  // (every poll, since polling replaces the array), nudging the whole page down.
+  const lastMessageIdRef = useRef<number | null>(null);
+  const nearBottomRef = useRef(true);
+  const handleListScroll = () => {
+    const list = listRef.current;
+    if (list) nearBottomRef.current = list.scrollHeight - list.scrollTop - list.clientHeight < 80;
+  };
   useEffect(() => {
     if (messages.length === 0) return;
+    const lastId = messages[messages.length - 1].id;
+    if (lastId === lastMessageIdRef.current) return; // poll returned nothing new
+    const isFirstLoad = lastMessageIdRef.current === null;
+    lastMessageIdRef.current = lastId;
     const list = listRef.current;
-    const isFirstLoad = prevLengthRef.current === 0;
-    const wasAtBottom = list
-      ? list.scrollHeight - list.scrollTop - list.clientHeight < 80
-      : true;
-    if (isFirstLoad || wasAtBottom) {
-      bottomRef.current?.scrollIntoView({ behavior: isFirstLoad ? 'auto' : 'smooth' });
+    if (list && (isFirstLoad || nearBottomRef.current)) {
+      list.scrollTo({ top: list.scrollHeight, behavior: isFirstLoad ? 'auto' : 'smooth' });
     }
-    prevLengthRef.current = messages.length;
   }, [messages]);
 
   const handleSend = async () => {
@@ -163,6 +168,7 @@ const ChatPanel: React.FC = () => {
       {/* Message list */}
       <div
         ref={listRef}
+        onScroll={handleListScroll}
         className="flex-grow-1 overflow-auto p-2"
         style={{ maxHeight: '420px' }}
       >
@@ -217,7 +223,6 @@ const ChatPanel: React.FC = () => {
             </div>
           ))
         )}
-        <div ref={bottomRef} />
       </div>
 
       {/* Input area */}
