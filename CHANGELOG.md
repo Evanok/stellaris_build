@@ -7,6 +7,13 @@ a feature matters.
 
 Add new entries at the top: `## <Title> (YYYY-MM-DD)`.
 
+## nginx config through the deploy kit (2026-11-01)
+
+- `infra/nginx/stellaris-build.conf` moved to `deploy/nginx.conf`; `infra/deploy_nginx.sh` replaced by
+  `./deploy.sh nginx` / `./deploy.sh nginx-diff` (same safety: previous file restored if `nginx -t` fails).
+- `infra/fetch_prod_db.sh` read the old checkout's database, frozen since the migration: now reads
+  `~/apps/stellaris_build/shared/backend/db/`, host from `deploy/.env`.
+
 ## Deploy kit migration prep (2026-11-01)
 
 - Deploys move to the shared deploy kit (`./deploy.sh` from the dev machine, `deploy/deploy.conf`):

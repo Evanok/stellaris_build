@@ -2,10 +2,8 @@
 # Fetches a fresh, consistent snapshot of the production app database and
 # installs it locally, so the local dev server can be tested against real data.
 #
-# This script never hardcodes the server address (repo is public) - pass it via
-# PROD_HOST, e.g.:
-#   PROD_HOST=user@1.2.3.4 ./infra/fetch_prod_db.sh
-# (see CLAUDE.local.md for the actual value)
+# This script never hardcodes the server address (repo is public): it uses PROD_HOST,
+# or else DEPLOY_HOST from deploy/.env (gitignored, the deploy kit's host file).
 #
 # Only stellaris_builds.db is fetched - never sessions.db, which holds live
 # session tokens for real users and has no value for local testing.
@@ -15,12 +13,16 @@
 # never commit or share it.
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -z "${PROD_HOST:-}" ] && [ -f "$SCRIPT_DIR/../deploy/.env" ]; then
+  PROD_HOST="$(sed -n 's/^DEPLOY_HOST=//p' "$SCRIPT_DIR/../deploy/.env")"
+fi
 if [ -z "${PROD_HOST:-}" ]; then
-  echo "Error: PROD_HOST is not set. Usage: PROD_HOST=user@host ./infra/fetch_prod_db.sh" >&2
+  echo "Error: no host. Set PROD_HOST=user@host, or DEPLOY_HOST in deploy/.env" >&2
   exit 1
 fi
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Live database since the deploy kit migration (2026-11-01); ~/work/stellaris_build is a stale copy.
+PROD_DB="~/apps/stellaris_build/shared/backend/db/stellaris_builds.db"
 LOCAL_DB="$SCRIPT_DIR/../backend/stellaris_builds.db"
 REMOTE_TMP="/tmp/stellaris_builds_fetch_$$.db"
 LOCAL_TMP="$(mktemp)"
@@ -28,7 +30,7 @@ LOCAL_TMP="$(mktemp)"
 echo "Creating a consistent snapshot of the prod DB on $PROD_HOST ..."
 # sqlite3's .backup is the Online Backup API - safe to run against a live,
 # actively-written database (WAL or not), always yields a consistent copy.
-ssh "$PROD_HOST" "sqlite3 ~/work/stellaris_build/backend/stellaris_builds.db \".backup '$REMOTE_TMP'\" && chmod 600 '$REMOTE_TMP'"
+ssh "$PROD_HOST" "sqlite3 $PROD_DB \".backup '$REMOTE_TMP'\" && chmod 600 '$REMOTE_TMP'"
 
 echo "Downloading snapshot ..."
 scp "$PROD_HOST:$REMOTE_TMP" "$LOCAL_TMP"

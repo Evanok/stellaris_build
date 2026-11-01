@@ -100,6 +100,7 @@ DEPLOY_CONF=deploy/staging.conf ./deploy.sh   # rehearsal app on :3002 (see depl
 - The database location comes from `DB_PATH` / `SESSIONS_DIR` (`backend/dbPath.js`, resolved
   against `backend/`): `db/stellaris_builds.db` and `db` in production (set in `PM2_START`),
   `backend/stellaris_builds.db` and `backend/` by default (development).
+- Local copy of the prod database: `./infra/fetch_prod_db.sh` (host from `deploy/.env`).
 - Each deploy: build in the new release (`npm ci`, frontend build, `version.json` from the
   `DEPLOY_*` variables since a release has no `.git`), pre-deploy DB backup, switch, PM2 restart
   (nginx shows `maintenance.html` for the few seconds Node is down), health check on
@@ -113,12 +114,12 @@ DEPLOY_CONF=deploy/staging.conf ./deploy.sh   # rehearsal app on :3002 (see depl
 deletes on Drive what is not local, so anything that is not production must set
 `STELLARIS_GDRIVE_DIR`). `predeploy` mode runs before every deploy (own folder, last 5).
 
-**nginx config:** Tracked in the repo at `infra/nginx/stellaris-build.conf` (mirrors the live prod
-config — edit this file, not the server directly). Static paths are served from
-`~/apps/stellaris_build/current/frontend/dist` and fall back to Node when a file is not there, so a
-deploy never serves a page whose assets 404. Deploy changes with `infra/deploy_nginx.sh` (requires
-`PROD_HOST`, see `CLAUDE.local.md`); it restores the previous file if `nginx -t` fails, since that
-nginx also serves the other sites on the server.
+**nginx config:** `deploy/nginx.conf` mirrors the live prod config (certbot's HTTPS lines included) —
+edit this file, not the server. `./deploy.sh nginx-diff` shows any drift (read only); `./deploy.sh nginx`
+installs it (sudo password asked: run it in a real terminal). It restores the previous file if
+`nginx -t` fails, since that nginx also serves the other sites on the server. Static paths are served
+from `~/apps/stellaris_build/current/frontend/dist` and fall back to Node when a file is not there, so a
+deploy never serves a page whose assets 404.
 
 ### OAuth Setup (Development)
 
