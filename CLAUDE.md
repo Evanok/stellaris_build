@@ -198,7 +198,7 @@ The project uses npm workspaces with three main parts:
 - `BuildDetail.tsx` - Individual build view with all details, embedded YouTube videos, and soft delete button
 - `Login.tsx` - Login page, tabs Login (default) / Register / Google / Steam - email login is deliberately the default, OAuth buttons put some visitors off
 - `Resources.tsx` - Curated community resources page with categorized links to guides, tools, YouTubers, mods, and communities
-- `Feedback.tsx` - Feedback & bug reports list (col-lg-8) with community chat sidebar (col-lg-4)
+- `Feedback.tsx` - Feedback & bug reports list (col-lg-8) with a sidebar (col-lg-4): community chat, then `RecentComments.tsx` (the 10 latest build comments across all builds, each linking to `/build/:id#comment-:commentId`). The sidebar is sticky on large screens and scrolls on its own when taller than the viewport (`.feedback-sidebar` in `index.css`); on mobile it stacks at the bottom of the page
 - `GuestSubmitted.tsx` (`/build-submitted`) - Confirmation after a guest submission: claim link + "create an account" pitch
 - `ClaimBuild.tsx` (`/claim/:token`) - Attaches a guest build to the logged-in account (asks to sign in first)
 - `PendingBuilds.tsx` (`/admin/pending`) - Moderation page (admin only): pending guest builds + reported comments (View / Dismiss / Delete); `/admin/pending/:id` is `BuildDetail.tsx` in `pendingMode` (moderator preview with Approve/Reject, no rating, no comments)
@@ -271,6 +271,7 @@ The project uses npm workspaces with three main parts:
 - `POST /api/builds/claim` - Attaches a guest build to the logged-in user from its claim token (before or after approval)
 - `GET /api/admin/pending-builds`, `GET /api/admin/pending-builds/:id`, `POST /api/admin/pending-builds/:id/approve|reject` - Moderation (admin only). Approve copies the build into `builds`, after an atomic `pending` -> `approving` transition (a double click cannot publish twice)
 - `GET /api/admin/pending-builds-count` - Admin navbar badge: `count` (pending builds) + `reported_comments` (visible comments with at least one report); the navbar shows the sum
+- `GET /api/comments/recent` - The 10 latest visible comments on visible builds, newest first, with build name, author and a 160-char excerpt (`truncated` flag) - Feedback page widget
 - `GET /api/builds/:id/comments` - Comments of a build, oldest first, with the quoted excerpt (`quote_content` null when the quoted comment was deleted) and `user_reported`; `report_count` for admins only
 - `POST /api/builds/:id/comments` - Post a comment (login required, 2000 chars, optional `quote_id`), 5 per 5 min per account (in-memory)
 - `DELETE /api/builds/:id/comments/:commentId` - Soft-delete a comment (**admin only** - authors cannot delete their own)

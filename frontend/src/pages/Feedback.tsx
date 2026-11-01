@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../AuthContext';
 import ChatPanel from '../components/ChatPanel';
+import RecentComments from '../components/RecentComments';
 
 interface FeedbackItem {
   id: number;
@@ -224,10 +225,11 @@ const Feedback: React.FC = () => {
             )}
           </div>
 
-          {/* Chat sidebar */}
+          {/* Chat sidebar + latest build comments */}
           <div className="col-lg-4 mt-4 mt-lg-0">
-            <div style={{ position: 'sticky', top: '1rem' }}>
+            <div className="feedback-sidebar">
               <ChatPanel />
+              <RecentComments />
             </div>
           </div>
         </div>

@@ -2427,6 +2427,31 @@ setInterval(() => {
   }
 }, 10 * 60 * 1000);
 
+// Latest comments across every build (Feedback page widget), newest first. Only
+// visible comments on visible builds; the text is cut server-side since the
+// widget only shows an excerpt.
+const RECENT_COMMENTS_LIMIT = 10;
+const RECENT_COMMENT_EXCERPT = 160;
+app.get('/api/comments/recent', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  db.all(
+    `SELECT c.id, c.build_id, b.name AS build_name, c.created_at,
+            substr(c.content, 1, ?) AS excerpt, length(c.content) > ? AS truncated,
+            COALESCE(u.display_name, u.username) AS author_name, u.avatar
+     FROM build_comments c
+     JOIN builds b ON b.id = c.build_id
+     JOIN users u ON u.id = c.user_id
+     WHERE c.deleted = 0 AND b.deleted = 0
+     ORDER BY c.created_at DESC, c.id DESC
+     LIMIT ?`,
+    [RECENT_COMMENT_EXCERPT, RECENT_COMMENT_EXCERPT, RECENT_COMMENTS_LIMIT],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: 'Failed to fetch recent comments' });
+      res.json(rows || []);
+    }
+  );
+});
+
 app.get('/api/builds/:id/comments', (req, res) => {
   const buildId = parseInt(req.params.id, 10);
   if (!Number.isInteger(buildId)) return res.status(400).json({ error: 'Invalid build id' });

@@ -7,6 +7,17 @@ a feature matters.
 
 Add new entries at the top: `## <Title> (YYYY-MM-DD)`.
 
+## Latest Build Comments on the Feedback page (2026-11-01)
+
+- New sidebar widget under the community chat: the 10 latest comments across all builds, newest first
+  ("author on build", relative time, 2-line excerpt). A click opens the build on that comment
+  (`/build/:id#comment-:commentId`, scroll + highlight already handled by `BuildComments.tsx`). Polls every 60 s.
+- `GET /api/comments/recent`: visible comments on visible builds only, excerpt cut server-side (160 chars).
+- The Feedback sidebar is now sticky only on large screens, with its own scroll when taller than the viewport
+  (otherwise the widget under the chat was unreachable until the bottom of the page). On mobile it stacks at the
+  bottom, after the feedback list.
+- Analytics event `recent_comment_click`.
+
 ## Faster deploys: dependency reuse (2026-11-01)
 
 - `deploy.conf` splits `INSTALL_CMD` (npm ci) from `REMOTE_BUILD`; with `REUSE_DEPS`, the deploy kit copies the
