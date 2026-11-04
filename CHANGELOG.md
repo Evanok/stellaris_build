@@ -7,6 +7,26 @@ a feature matters.
 
 Add new entries at the top: `## <Title> (YYYY-MM-DD)`.
 
+## Visitor and comment statistics (2026-11-04)
+
+- **Daily visitors, logged in vs anonymous** (`/admin/stats`): new `daily_visitors` table, one row per
+  (UTC day, visitor). `visitor_hash` = HMAC(`SESSION_SECRET`, day + IP + user agent), so no raw IP is
+  stored and rows of different days cannot be linked; `user_id` is filled once the visitor is logged in
+  (logging in during the day upgrades the row, an anonymous hit never clears it). Pruned after 180 days.
+- Fed by `POST /api/visit` (`backend/visitors.js`), sent by `utils/visitBeacon.ts` from `AuthContext.tsx`
+  once the auth state is known and again when it changes, and only once the visitor looks human (same
+  heuristic as the GA loader: interaction or 5 s visible; `navigator.webdriver` skipped, so Playwright never
+  writes rows). Admins are not counted. Counted by the site itself, independent of GA / ad blockers.
+- Shown: today, 7-day daily average, distinct active accounts over 7 / 30 days, stacked 30-day bar chart.
+  Anonymous visitors cannot be deduplicated across days (by design), hence no "unique over 30 days" for them.
+- **Comment stats**: visible / deleted / this month, commenters, builds commented, share quoting another
+  comment, reports (link to moderation when some are open), comments per week, 5 most commented builds.
+- **GA**: `comment_posted` now carries `has_quote`, `first_comment`, `comment_length`; new events
+  `comment_reported` and `comment_login_click` (anonymous visitor clicking "Log in" under the comments);
+  `build_exported` gains `logged_in`. New user property `visitor_logged_in` (yes/no) set on every page, so
+  any GA report can be split logged in vs anonymous (named so to avoid clashing with the event-scoped
+  `logged_in` dimension). Custom dimensions/metric registered with `~/.config/ga/ga_admin.py --apply`.
+
 ## Latest Build Comments on the Feedback page (2026-11-01)
 
 - New sidebar widget under the community chat: the 10 latest comments across all builds, newest first

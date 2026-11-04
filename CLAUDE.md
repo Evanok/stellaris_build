@@ -203,7 +203,7 @@ The project uses npm workspaces with three main parts:
 - `ClaimBuild.tsx` (`/claim/:token`) - Attaches a guest build to the logged-in account (asks to sign in first)
 - `PendingBuilds.tsx` (`/admin/pending`) - Moderation page (admin only): pending guest builds + reported comments (View / Dismiss / Delete); `/admin/pending/:id` is `BuildDetail.tsx` in `pendingMode` (moderator preview with Approve/Reject, no rating, no comments)
 - Build comments: `components/BuildComments.tsx`, at the bottom of `BuildDetail.tsx` (see "Build Comments" in `CHANGELOG.md`)
-- `AdminStats.tsx` (`/admin/stats`) - Admin statistics from the DB only (accounts, builds, and builds published without an account: submitted / approved / rejected / emailed / claimed, plus a weekly published-vs-guest chart). Traffic sources are left to GA. Both admin pages are linked in the navbar for admins only (Moderation shows the pending count)
+- `AdminStats.tsx` (`/admin/stats`) - Admin statistics from the DB only (accounts, builds, builds published without an account: submitted / approved / rejected / emailed / claimed, a weekly published-vs-guest chart, daily visitors logged in vs anonymous, and build comments). Traffic sources are left to GA. Both admin pages are linked in the navbar for admins only (Moderation shows the pending count)
 
 **Authentication:**
 - `AuthContext.tsx` - React context providing authentication state and user info
@@ -236,7 +236,7 @@ The project uses npm workspaces with three main parts:
 
 **Database:** `backend/database.js`
 - SQLite database at `DB_PATH` (`backend/dbPath.js`; default `backend/stellaris_builds.db`, production `shared/backend/db/`), created at runtime
-- Tables: `users`, `builds`, `ratings`, `feedback`, `page_views` (legacy, no longer written since 2026-10-19), `chat_messages`, `pending_builds`, `import_attempts`, `build_comments`, `comment_reports`
+- Tables: `users`, `builds`, `ratings`, `feedback`, `page_views` (legacy, no longer written since 2026-10-19), `chat_messages`, `pending_builds`, `import_attempts`, `build_comments`, `comment_reports`, `daily_visitors` (unique visitors per day, logged in vs anonymous, hashed - see `backend/visitors.js`)
 - Users table: stores OAuth user info (provider, provider_id, username, email, avatar). `provider = 'guest'` rows are not real accounts: they only carry the author name of approved guest builds, cannot log in, and are excluded from signup stats
 - Builds table: stores complete empire configurations with soft delete support and author_id foreign key
 - chat_messages table: community chat (content, author_name, author_id nullable, is_guest, deleted, created_at)
@@ -271,6 +271,7 @@ The project uses npm workspaces with three main parts:
 - `POST /api/builds/claim` - Attaches a guest build to the logged-in user from its claim token (before or after approval)
 - `GET /api/admin/pending-builds`, `GET /api/admin/pending-builds/:id`, `POST /api/admin/pending-builds/:id/approve|reject` - Moderation (admin only). Approve copies the build into `builds`, after an atomic `pending` -> `approving` transition (a double click cannot publish twice)
 - `GET /api/admin/pending-builds-count` - Admin navbar badge: `count` (pending builds) + `reported_comments` (visible comments with at least one report); the navbar shows the sum
+- `POST /api/visit` - Daily unique visitor beacon (`utils/visitBeacon.ts`, sent once the visitor looks human; admins ignored) feeding the visitors section of `/admin/stats`
 - `GET /api/comments/recent` - The 10 latest visible comments on visible builds, newest first, with build name, author and a 160-char excerpt (`truncated` flag) - Feedback page widget
 - `GET /api/builds/:id/comments` - Comments of a build, oldest first, with the quoted excerpt (`quote_content` null when the quoted comment was deleted) and `user_reported`; `report_count` for admins only
 - `POST /api/builds/:id/comments` - Post a comment (login required, 2000 chars, optional `quote_id`), 5 per 5 min per account (in-memory)
