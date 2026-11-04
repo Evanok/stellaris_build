@@ -142,7 +142,12 @@ export const BuildComments: React.FC<{ buildId: string; buildAuthorId?: number |
         setError(data.error || 'Failed to post comment');
         return;
       }
-      trackEvent('comment_posted', { build_id: buildId });
+      trackEvent('comment_posted', {
+        build_id: buildId,
+        has_quote: quoted !== null,
+        first_comment: comments.length === 0, // started the discussion on this build
+        comment_length: content.length,
+      });
       setInput('');
       setQuoted(null);
       await fetchComments();
@@ -176,7 +181,10 @@ export const BuildComments: React.FC<{ buildId: string; buildAuthorId?: number |
       const res = await fetch(`/api/builds/${buildId}/comments/${reportTarget}/report`, { method: 'POST' });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) setError(data.error || 'Failed to report comment');
-      else setNotice('Thanks, the comment was reported to the moderators.');
+      else {
+        setNotice('Thanks, the comment was reported to the moderators.');
+        trackEvent('comment_reported', { build_id: buildId });
+      }
     } catch {
       setError('Network error, please try again');
     } finally {
@@ -338,7 +346,10 @@ export const BuildComments: React.FC<{ buildId: string; buildAuthorId?: number |
             <Link
               to="/login"
               className="text-decoration-none"
-              onClick={() => setPostLoginRedirect(`/build/${buildId}#comments`)}
+              onClick={() => {
+                setPostLoginRedirect(`/build/${buildId}#comments`);
+                trackEvent('comment_login_click', { build_id: buildId });
+              }}
             >
               Log in
             </Link>{' '}

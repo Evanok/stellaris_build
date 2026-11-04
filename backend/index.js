@@ -49,6 +49,7 @@ const { setupDatabase, db } = require('./database');
 const { renderBuildOgImage } = require('./ogImage');
 const passport = require('./auth');
 const { trackImport, failImport, receiveImportFile } = require('./importLog');
+const { recordVisit } = require('./visitors');
 const { apiLimiter, registerLimiter, createBuildLimiter, importLimiter, guestSubmitLimiter, reserveGuestEmail, validateBuildData, sanitizeBuildData } = require('./security');
 const app = express();
 const port = process.env.PORT || 3001;
@@ -381,6 +382,9 @@ app.get('/api/user', (req, res) => {
     res.json({ user: null });
   }
 });
+
+// Daily unique visitor beacon (admin statistics), see visitors.js
+app.post('/api/visit', recordVisit);
 
 // Update display name (OAuth users only)
 app.patch('/api/user/display-name', isAuthenticated, (req, res) => {
@@ -2193,6 +2197,73 @@ app.get('/api/admin/stats', isAdmin, async (req, res) => {
       );
     });
     stats.guestSubmissionsPerWeek = guestSubmissionsPerWeek;
+
+    const dbGet = (sql, params = []) => new Promise((resolve, reject) => {
+      db.get(sql, params, (err, row) => (err ? reject(err) : resolve(row)));
+    });
+    const dbAll = (sql, params = []) => new Promise((resolve, reject) => {
+      db.all(sql, params, (err, rows) => (err ? reject(err) : resolve(rows)));
+    });
+
+    // 9. Build comments (all time, on builds of any state)
+    stats.comments = await dbGet(
+      `SELECT
+        COALESCE(SUM(deleted = 0), 0) as visible,
+        COALESCE(SUM(deleted = 1), 0) as deleted,
+        COALESCE(SUM(deleted = 0 AND created_at >= date('now', 'start of month')), 0) as thisMonth,
+        COALESCE(SUM(deleted = 0 AND quote_id IS NOT NULL), 0) as withQuote,
+        COUNT(DISTINCT CASE WHEN deleted = 0 THEN user_id END) as commenters,
+        COUNT(DISTINCT CASE WHEN deleted = 0 THEN build_id END) as buildsCommented
+       FROM build_comments`
+    );
+    stats.comments.reports = await dbGet(
+      `SELECT
+        COUNT(*) as total,
+        COUNT(DISTINCT CASE WHEN c.deleted = 0 THEN r.comment_id END) as openComments
+       FROM comment_reports r
+       JOIN build_comments c ON c.id = r.comment_id`
+    );
+
+    // 10. Comments per week (last 12 weeks)
+    stats.commentsPerWeek = await dbAll(
+      `SELECT strftime('%Y-W%W', created_at) as week, COUNT(*) as count
+       FROM build_comments
+       WHERE created_at >= date('now', '-84 days') AND deleted = 0
+       GROUP BY week
+       ORDER BY week`
+    );
+
+    // 11. Most commented visible builds
+    stats.topCommentedBuilds = await dbAll(
+      `SELECT b.id, b.name, COUNT(*) as count, MAX(c.created_at) as lastCommentAt
+       FROM build_comments c
+       JOIN builds b ON b.id = c.build_id AND b.deleted = 0
+       WHERE c.deleted = 0
+       GROUP BY b.id
+       ORDER BY count DESC, lastCommentAt DESC
+       LIMIT 5`
+    );
+
+    // 12. Unique visitors per day, logged in vs anonymous (last 30 days, see visitors.js).
+    // A logged-in user on two devices is counted once; anonymous visitors cannot be
+    // deduplicated across days, so there is no "unique over 30 days" figure.
+    stats.visitorsPerDay = await dbAll(
+      `SELECT day,
+        COUNT(DISTINCT user_id) as loggedIn,
+        COALESCE(SUM(user_id IS NULL), 0) as anonymous
+       FROM daily_visitors
+       WHERE day >= date('now', '-29 days')
+       GROUP BY day
+       ORDER BY day`
+    );
+    // Distinct accounts seen over the period (logged-in visitors can be deduplicated)
+    stats.activeUsers = await dbGet(
+      `SELECT
+        COUNT(DISTINCT CASE WHEN day >= date('now', '-6 days') THEN user_id END) as last7Days,
+        COUNT(DISTINCT user_id) as last30Days
+       FROM daily_visitors
+       WHERE day >= date('now', '-29 days')`
+    );
 
     res.json(stats);
   } catch (error) {

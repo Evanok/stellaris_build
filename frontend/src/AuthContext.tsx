@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo, useCallback } from 'react';
+import { sendVisitBeacon } from './utils/visitBeacon';
+import { setAnalyticsUser } from './utils/analytics';
 
 interface User {
   id: number;
@@ -49,6 +51,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
+
+  // Once the auth state is known (and again when it changes): count the visit as
+  // logged in or anonymous, and tag every following GA hit with the same split
+  const userId = user?.id ?? null;
+  useEffect(() => {
+    if (loading) return;
+    sendVisitBeacon();
+    setAnalyticsUser(userId !== null);
+  }, [loading, userId]);
 
   // Memoize the context value to prevent unnecessary re-renders
   const value = useMemo(() => ({ user, loading, logout, refreshUser }), [user, loading, logout, refreshUser]);

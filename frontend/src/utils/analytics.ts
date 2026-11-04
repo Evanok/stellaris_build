@@ -18,6 +18,8 @@ export type AnalyticsEvent =
   | 'chat_message_sent'
   | 'recent_comment_click'
   | 'comment_posted'
+  | 'comment_reported'
+  | 'comment_login_click'
   | 'resource_clicked'
   | 'build_submitted_guest'
   | 'build_claimed'
@@ -34,6 +36,12 @@ type EventParams = Record<string, string | number | boolean | undefined>;
 
 export function trackEvent(name: AnalyticsEvent, params: EventParams = {}): void {
   window.gtag?.('event', name, params);
+}
+
+// GA4 user property: lets every GA report (users, pages, events) be split between
+// logged-in and anonymous visitors. Registered as a user-scoped custom dimension.
+export function setAnalyticsUser(loggedIn: boolean): void {
+  window.gtag?.('set', 'user_properties', { visitor_logged_in: loggedIn ? 'yes' : 'no' });
 }
 
 // For events fired right before a full page load (login redirects, OAuth links):

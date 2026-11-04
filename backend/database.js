@@ -425,6 +425,20 @@ const setupDatabase = () => {
       }
     });
 
+    // Unique visitors per day, logged-in vs anonymous (admin statistics). One row per
+    // (day, visitor): visitor_hash is an HMAC of IP + user agent keyed by the day, so
+    // no raw IP is stored and a hash cannot be linked across days. user_id is filled
+    // once the visitor is logged in (a visitor who logs in during the day counts as
+    // logged in for that day). Pruned after VISITOR_RETENTION_DAYS (backend/visitors.js).
+    db.run(`CREATE TABLE IF NOT EXISTS daily_visitors (
+      day TEXT NOT NULL,
+      visitor_hash TEXT NOT NULL,
+      user_id INTEGER,
+      PRIMARY KEY (day, visitor_hash)
+    )`, (err) => {
+      if (err) console.error('Error creating daily_visitors table:', err.message);
+    });
+
     console.log('Database tables checked/created.');
   });
 };

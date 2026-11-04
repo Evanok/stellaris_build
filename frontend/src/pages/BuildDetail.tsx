@@ -679,7 +679,7 @@ export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode =
     }
     setExportCopied(true);
     setTimeout(() => setExportCopied(false), 2000);
-    trackEvent('build_exported', { build_id: id, game_version: build?.game_version });
+    trackEvent('build_exported', { build_id: id, game_version: build?.game_version, logged_in: !!user });
   };
 
   const handleDelete = async () => {
