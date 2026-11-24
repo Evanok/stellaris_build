@@ -1077,9 +1077,9 @@ app.post('/api/builds/:id/rating', isAuthenticated, (req, res) => {
 // Inserts a sanitized build (output of sanitizeBuildData) and returns the stored row.
 // Shared by POST /api/builds and the approval of builds submitted without an account.
 function insertBuild(data, authorId, callback) {
-  const { name, description, guide, game_version, youtube_url, source_url, difficulty, civics, third_civic, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture } = data;
-  const sql = `INSERT INTO builds (name, description, guide, game_version, youtube_url, source_url, difficulty, civics, third_civic, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-  const params = [name, description, guide || null, game_version, youtube_url, source_url, difficulty, civics, third_civic || null, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, planet_class || null, graphical_culture || null, authorId];
+  const { name, description, guide, game_version, youtube_url, source_url, difficulty, civics, third_civic, absolute_ethic, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture } = data;
+  const sql = `INSERT INTO builds (name, description, guide, game_version, youtube_url, source_url, difficulty, civics, third_civic, absolute_ethic, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  const params = [name, description, guide || null, game_version, youtube_url, source_url, difficulty, civics, third_civic || null, absolute_ethic || null, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, planet_class || null, graphical_culture || null, authorId];
 
   db.run(sql, params, function(err) {
     if (err) return callback(err);
@@ -1582,7 +1582,7 @@ app.put('/api/builds/:id', isAuthenticated, createBuildLimiter, (req, res) => {
 
   // Sanitize input data to prevent XSS
   const sanitizedData = sanitizeBuildData(req.body);
-  const { name, description, guide, game_version, youtube_url, source_url, difficulty, civics, third_civic, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture } = sanitizedData;
+  const { name, description, guide, game_version, youtube_url, source_url, difficulty, civics, third_civic, absolute_ethic, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic, ark_type, planet_class, graphical_culture } = sanitizedData;
 
   // First, check if the build exists and belongs to the user
   db.get('SELECT * FROM builds WHERE id = ? AND deleted = 0', [id], (err, build) => {
@@ -1619,6 +1619,7 @@ app.put('/api/builds/:id', isAuthenticated, createBuildLimiter, (req, res) => {
         difficulty = ?,
         civics = ?,
         third_civic = ?,
+        absolute_ethic = ?,
         traits = ?,
         secondary_traits = ?,
         origin = ?,
@@ -1637,7 +1638,7 @@ app.put('/api/builds/:id', isAuthenticated, createBuildLimiter, (req, res) => {
         graphical_culture = ?
       WHERE id = ?`;
 
-      const params = [name, description, guide || null, game_version, youtube_url, source_url, difficulty, civics, third_civic || null, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, planet_class || null, graphical_culture || null, id];
+      const params = [name, description, guide || null, game_version, youtube_url, source_url, difficulty, civics, third_civic || null, absolute_ethic || null, traits, secondary_traits, origin, ethics, authority, ascension_perks, traditions, ruler_trait, species_class, portrait, dlcs, tags, is_nomadic ? 1 : 0, ark_type || null, planet_class || null, graphical_culture || null, id];
 
       db.run(sql, params, function(err) {
         if (err) {

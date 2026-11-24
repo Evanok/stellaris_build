@@ -182,7 +182,7 @@ The project uses npm workspaces with three main parts:
 - Species traits with point/pick validation and origin bonuses
 - Origins with trait bonuses
 - Starting ruler traits (with origin/ethics filtering)
-- Ethics with point limits and compatibility checks
+- Ethics with point limits and compatibility checks (one ethic per axis), plus an optional Absolute ethic (`absolute_ethic`, 4.6 Willpower: the Absolute form of the build's fanatic ethic, adopted later in game - shown on the build page, never exported)
 - Authorities with ethics requirements
 - Civics with conditional filtering (potential/possible): 2 at creation, plus an optional third civic (`third_civic`, unlocked later in game - shown on the build page, never exported, still rule-checked with all 3 civics)
 - Description (5k chars) and optional "How to Play" guide (`guide`, 20k chars), both markdown, length enforced while typing (`maxLength` + counter)

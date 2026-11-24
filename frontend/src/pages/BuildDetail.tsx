@@ -34,6 +34,7 @@ interface Build {
   ethics: string;
   civics: string;
   third_civic?: string | null;
+  absolute_ethic?: string | null;
   traits: string;
   secondary_traits?: string;
   ascension_perks: string;
@@ -81,6 +82,7 @@ interface Ethic {
   description: string;
   cost: number;
   effects: string;
+  fanatic_variant?: string;
 }
 
 interface Authority {
@@ -1185,6 +1187,10 @@ export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode =
               <div className="card-body">
                 {parseList(build.ethics).map((ethicId, idx) => {
                   const ethic = getEthicData(ethicId);
+                  // The Absolute ethic (adopted later in game) hangs under the
+                  // fanatic ethic it comes from
+                  const absolute = build.absolute_ethic ? getEthicData(build.absolute_ethic) : undefined;
+                  const showAbsolute = !!build.absolute_ethic && absolute?.fanatic_variant === ethicId;
                   return (
                     <div key={idx} className="mb-3 pb-3 border-bottom border-secondary">
                       <div className="d-flex align-items-start">
@@ -1203,6 +1209,37 @@ export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode =
                             <p className="text-info mb-0">
                               <strong>Effects:</strong> {ethic.effects}
                             </p>
+                          )}
+
+                          {showAbsolute && (
+                            <div
+                              className="mt-3 ps-3 py-2 rounded-end"
+                              style={{ borderLeft: '3px solid #e8a838', backgroundColor: 'rgba(232, 168, 56, 0.08)' }}
+                            >
+                              <div className="small text-uppercase fw-semibold mb-2" style={{ color: '#e8a838', letterSpacing: '0.04em' }}>
+                                <i className="bi bi-arrow-return-right me-1"></i>
+                                Later in game: becomes Absolute
+                              </div>
+                              <div className="d-flex align-items-start">
+                                <GameIcon type="ethics" id={build.absolute_ethic!} size={32} />
+                                <div className="flex-grow-1" style={{ minWidth: 0 }}>
+                                  <h6
+                                    className="text-warning mb-1"
+                                    title="Adopted during the game (Willpower) once the Ideology is strong enough. It replaces all the other ethics. Not included in the export."
+                                  >
+                                    {absolute?.name || build.absolute_ethic}
+                                  </h6>
+                                  {absolute?.description && (
+                                    <p className="text-light small mb-1">{absolute.description}</p>
+                                  )}
+                                  {absolute?.effects && (
+                                    <p className="text-info small mb-0">
+                                      <strong>Effects:</strong> {absolute.effects}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
                           )}
                         </div>
                       </div>

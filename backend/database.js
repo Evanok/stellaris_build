@@ -234,6 +234,15 @@ const setupDatabase = () => {
       }
     });
 
+    // Optional Absolute ethic (4.6 Willpower): adopted in game once the
+    // Ideology is strong enough, never at creation. Shown on the build page,
+    // never exported. Must be the Absolute form of the build's fanatic ethic.
+    db.run(`ALTER TABLE builds ADD COLUMN absolute_ethic TEXT`, (err) => {
+      if (err && !err.message.includes('duplicate column')) {
+        console.error('Error adding absolute_ethic column:', err.message);
+      }
+    });
+
     // Add reset_token columns for password recovery (local accounts)
     db.run(`ALTER TABLE users ADD COLUMN reset_token TEXT`, (err) => {
       if (err && !err.message.includes('duplicate column')) {

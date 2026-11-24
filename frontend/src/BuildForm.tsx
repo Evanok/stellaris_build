@@ -343,6 +343,10 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
   // Ethics data from API
   const [allEthics, setAllEthics] = useState<Ethic[]>([]);
+  // Absolute ethics (4.6+), kept apart: never a starting ethic, only the
+  // optional "adopted in game" goal of a build with the matching fanatic ethic
+  const [absoluteEthics, setAbsoluteEthics] = useState<Ethic[]>([]);
+  const [absoluteEthic, setAbsoluteEthic] = useState('');
   const [selectedEthics, setSelectedEthics] = useState<string[]>([]);
   const [ethicsSearchQuery, setEthicsSearchQuery] = useState('');
 
@@ -509,6 +513,9 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
       // Absolute ethics (4.6 Willpower) are only reachable in game, never at
       // empire creation: they are not starting ethics
+      setAbsoluteEthics(ethicsRaw
+        .filter((e: any) => isAbsoluteEthic(e.id))
+        .map((e: any) => ({ ...e, effects: typeof e.effects === 'string' ? e.effects : '', description: typeof e.description === 'string' ? e.description : '', tags: Array.isArray(e.tags) ? e.tags : [] })));
       const sanitizedEthics = ethicsRaw
         .filter((e: any) => !isAbsoluteEthic(e.id))
         .map((e: any) => ({ ...e, effects: typeof e.effects === 'string' ? e.effects : '', description: typeof e.description === 'string' ? e.description : '', tags: Array.isArray(e.tags) ? e.tags : [], cost: typeof e.cost === 'number' ? e.cost : 1 }))
@@ -599,6 +606,9 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       // Handle ethics (array of strings) - trim whitespace
       if (Array.isArray(initialData.ethics)) {
         setSelectedEthics(initialData.ethics.map((e: string) => e.trim()));
+      }
+      if (typeof initialData.absolute_ethic === 'string') {
+        setAbsoluteEthic(initialData.absolute_ethic);
       }
 
       // Handle civics (array of strings) - trim whitespace
@@ -728,6 +738,12 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   };
 
   const currentEthicsPoints = calculateEthicsPoints();
+
+  // The Absolute form of the selected fanatic ethic, if this game version has
+  // one. The stored choice only counts while it still matches (changing the
+  // fanatic ethic or the game version silently drops it from the payload).
+  const availableAbsoluteEthic = absoluteEthics.find(a => selectedEthics.includes(a.fanatic_variant));
+  const effectiveAbsoluteEthic = availableAbsoluteEthic && absoluteEthic === availableAbsoluteEthic.id ? absoluteEthic : '';
   const exceedsEthicsPoints = currentEthicsPoints > MAX_ETHICS_POINTS;
 
   // Homeworld planet rules (see utils/planetRules.ts). The planet is optional:
@@ -1147,6 +1163,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       selectedSecondaryTraits,
       selectedOrigin,
       selectedEthics,
+      absoluteEthic,
       selectedAuthority,
       selectedCivics,
       thirdCivic,
@@ -1178,6 +1195,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setSelectedSecondaryTraits(formData.selectedSecondaryTraits || []);
         setSelectedOrigin(formData.selectedOrigin || '');
         setSelectedEthics(formData.selectedEthics || []);
+        setAbsoluteEthic(formData.absoluteEthic || '');
         setSelectedAuthority(formData.selectedAuthority || '');
         setIsNomadic(!!formData.isNomadic);
         setArkType(formData.arkType || '');
@@ -1386,6 +1404,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     secondary_traits: selectedSecondaryTraits.join(', '), // Convert array to comma-separated string
     origin: selectedOrigin,
     ethics: selectedEthics.join(', '), // Convert array to comma-separated string
+    absolute_ethic: effectiveAbsoluteEthic,
     authority: selectedAuthority,
     ascension_perks: selectedAscensionPerks.join(', '), // Convert array to comma-separated string
     traditions: selectedTraditions.join(', '), // Convert array to comma-separated string
@@ -1554,6 +1573,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       setSelectedSecondaryTraits([]);
       setSelectedOrigin('');
       setSelectedEthics([]);
+      setAbsoluteEthic('');
       setSelectedAuthority('');
       setIsNomadic(false);
       setArkType('');
@@ -2455,6 +2475,49 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                 )}
               </div>
             </div>
+
+            {/* Absolute ethic (4.6 Willpower): optional goal adopted in game, never exported */}
+            {absoluteEthics.length > 0 && (
+              availableAbsoluteEthic ? (
+                <div
+                  className="card border-2 mt-2"
+                  style={{ borderColor: effectiveAbsoluteEthic ? '#e8a838' : '#6c757d', backgroundColor: effectiveAbsoluteEthic ? 'rgba(232, 168, 56, 0.08)' : undefined }}
+                >
+                  <div className="card-body p-3">
+                    <div className="form-check mb-0">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="absolute-ethic"
+                        checked={!!effectiveAbsoluteEthic}
+                        onChange={(e) => setAbsoluteEthic(e.target.checked ? availableAbsoluteEthic.id : '')}
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="absolute-ethic"
+                        style={{ cursor: 'pointer' }}
+                        title={availableAbsoluteEthic.description || 'No description available'}
+                      >
+                        <GameIcon type="ethics" id={availableAbsoluteEthic.id} size={32} />
+                        <strong className="text-white">Aim for {availableAbsoluteEthic.name}</strong>
+                        <span className="badge bg-secondary ms-2">Later in game</span>
+                        <small className="d-block text-light mt-1">
+                          Adopted during the game (Willpower), once your Ideology is strong enough: it replaces all your other ethics.
+                          Shown on the build page, not part of the empire export.
+                        </small>
+                        {effectiveAbsoluteEthic && (
+                          <small className="d-block text-light mt-1">{availableAbsoluteEthic.effects || 'No effects listed'}</small>
+                        )}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <small className="d-block text-muted mt-2">
+                  Pick a fanatic ethic to plan its Absolute form, adopted later in game (Willpower).
+                </small>
+              )
+            )}
           </div>
 
           {/* Nomadic Empire (Nomads DLC) — only available in 4.4+ */}

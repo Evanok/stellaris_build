@@ -23,7 +23,13 @@ Add new entries at the top: `## <Title> (YYYY-MM-DD)`.
   Idyll vs Megacity Architects, Fear of the Dark vs Open Stars Sovereignty.
 - **Absolute ethics** cost 3 points and replace every other ethic; they are adopted in game (Ideology
   strong enough + Unity), never at creation. `BuildForm.tsx` drops them from the starting ethics list and
-  `check_build_rules.js` flags them. A separate "Absolute ethic (in game)" field, like `third_civic`, is planned.
+  `check_build_rules.js` flags them as starting ethics.
+- **Absolute ethic field** (`builds.absolute_ethic`, added by `database.js` at startup), modeled on
+  `third_civic`: optional, offered only when the build has a fanatic ethic and the game version has
+  Absolute ethics, as "Aim for Absolute X" under the ethics list. The form only sends it while it still
+  matches the fanatic ethic (changing ethics or version drops it). Validated in `security.js`
+  (`ethic_absolute_<x>` needs `ethic_fanatic_<x>`) and in `check_build_rules.js`. On the build page it is a
+  sub-block under its fanatic ethic ("Later in game: becomes Absolute"), never in the empire export.
 - **Ideologies** are not a creation choice (derived from a fanatic ethic in game, only a game setup
   toggle), so no new build field.
 - **Bug fix, ethics**: the form only checked the 3-point budget, so Xenophile + Fanatic Xenophile or

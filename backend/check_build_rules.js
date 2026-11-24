@@ -113,6 +113,15 @@ function checkBuild(build) {
   ctx.ethics.filter(id => id.startsWith('ethic_absolute_')).forEach(id => {
     issues.push(`ethics: "${id}" is an Absolute ethic, only adopted in game, not at empire creation`);
   });
+  // Absolute ethic adopted later in game: the Absolute form of the fanatic ethic
+  if (build.absolute_ethic) {
+    const absolute = ethicById[build.absolute_ethic];
+    if (!absolute) {
+      issues.push(`absolute ethic "${build.absolute_ethic}" not found in ${dataVersion} data`);
+    } else if (!ctx.ethics.includes(absolute.fanatic_variant)) {
+      issues.push(`absolute ethic "${build.absolute_ethic}" needs "${absolute.fanatic_variant}" among the starting ethics`);
+    }
+  }
 
   // Trait point/pick budget differs per archetype (e.g. MACHINE: 1 point/5
   // traits, ROBOT: 0 points/4 traits) - double-checked here independently of
