@@ -53,6 +53,11 @@ Add new entries at the top: `## <Title> (YYYY-MM-DD)`.
 - 4.5 re-extracted the same way from a 4.5.4 install (Steam beta branch): 640 texts changed. One rule
   changed too, and it is a correction: `ap_hydrocentric` `possible` no longer accepts
   `trait_auto_hab_preference` (in 4.5.4 that alternative is in `potential`; the previous file came from 4.5.0).
+- 4.4 re-extracted from 4.4.6: 655 texts changed, plus what the June 2026 extraction (4.4.0, before the
+  planet/shipset work) lacked: `allowed_planet_classes` on traits, `granted_traits` on civics/origins, and
+  the 4.4.x rule changes (16 civics, 15 origins, `ap_cosmogenesis`, `tr_domestication`; all added
+  restrictions, e.g. Beacon of Liberty / Worker Cooperative not xenophobe, Endbringers not gestalt). Audit
+  impact: still 31 violating builds, two already-flagged ones (#49, #66) get one more message.
 - **Rule warnings, unset species**: `species_archetype` / `species_class` joined the evaluator's
   `OPTIONAL_FIELDS` (backend `rules/predicateEvaluator.js` and frontend `utils/ruleEvaluator.ts`): with no
   species picked (optional in the form), "Machine Intelligence requires a Machine species" was a false

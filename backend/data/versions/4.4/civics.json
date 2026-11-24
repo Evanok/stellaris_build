@@ -56,7 +56,7 @@
       "pop_resettlement_cost_mult": -0.1,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Waives all Unity costs for Pop Resettlement. | planet_resettlement_unemployed_mult: +15.0%; planet_jobs_worker_produces_mult: +10.0%; pop_resettlement_cost_mult: -10.0%",
+    "effects": "- Waives all Unity costs for Pop Resettlement. | Automatic Resettlement Chance: +15%; Worker Pop Resource Output: +10%; Resettlement Cost: -10%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -71,7 +71,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- Ruler's Home Planet has additional individuals individuals Jobs",
+    "tooltip": "- Ruler's Home Planet has additional Priest Jobs",
     "negative_tooltip": "",
     "potential": {
       "all": [
@@ -127,7 +127,7 @@
     "modifier": {
       "country_edict_fund_add": 100
     },
-    "effects": "- Ruler's Home Planet has additional individuals individuals Jobs | country_edict_fund_add: +100",
+    "effects": "- Ruler's Home Planet has additional Priest Jobs | Edict Fund: +100",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -181,6 +181,21 @@
         },
         {
           "not": {
+            "any": [
+              {
+                "field": "ethics",
+                "value": "ethic_xenophobe"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_fanatic_xenophobe"
+              }
+            ]
+          },
+          "tooltip": "civic_tooltip_not_xenophobe"
+        },
+        {
+          "not": {
             "field": "civics",
             "value": "civic_crusader_spirit"
           }
@@ -194,7 +209,7 @@
       "refugee_attraction": 0.25,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "country_unity_produces_mult: +10.0%; empire_size_pops_mult: -10.0%; refugee_attraction: +0.25",
+    "effects": "Monthly Unity: +10%; Empire Size from Pops: -10%; Refugee Attraction: +25%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -260,7 +275,7 @@
     "modifier": {
       "planet_bureaucrats_unity_produces_add": 1
     },
-    "effects": "- Politician Jobs are converted to High Priests The Citadel of Faith grants additional High Priests jobs. | planet_bureaucrats_unity_produces_add: +1",
+    "effects": "- Politician Jobs are converted to High Priests The Citadel of Faith grants additional High Priests jobs. | Unity Produced per 100 Bureaucrats: +1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -314,7 +329,7 @@
     "modifier": {
       "ruler_skill_add": 5
     },
-    "effects": "ruler_skill_add: +5",
+    "effects": "Effective Ruler Skill: +5",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -369,7 +384,7 @@
       "planet_jobs_specialist_produces_mult": 0.1,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "planet_jobs_specialist_produces_mult: +10.0%",
+    "effects": "Specialist Pop Resource Output: +10%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -418,6 +433,12 @@
           "tooltip": "civic_tooltip_militarist"
         },
         {
+          "not": {
+            "field": "ethics",
+            "value": "ethic_fanatic_xenophile"
+          }
+        },
+        {
           "any": [
             {
               "field": "authority",
@@ -452,7 +473,7 @@
       "planet_soldiers_unity_produces_add": 2,
       "add_attunement_the_eater_of_worlds": "@civic_attunement1"
     },
-    "effects": "Grants access to the Recruitment Office Holding | country_naval_cap_mult: +15.0%; planet_soldiers_unity_produces_add: +2",
+    "effects": "Grants access to the Recruitment Office Holding | Naval Capacity: +15%; Unity Produced per 100 Soldiers: +2",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -514,7 +535,7 @@
       "country_scientist_cap_add": 1,
       "country_official_cap_add": -1
     },
-    "effects": "- Politician Jobs are converted to Science Directors - The Research Institute grants additional Science Directors Jobs - Scientists start with random Expertise trait - Expertise traits have additional effects - Start with an additional Scientist as the Governor of your Homeworld | num_tech_alternatives_add: +1; country_scientist_cap_add: +1; country_official_cap_add: -1",
+    "effects": "- Politician Jobs are converted to Science Directors - The Research Institute grants additional Science Directors Jobs - Scientists start with random Expertise trait - Expertise traits have additional effects - Start with an additional Scientist as the Governor of your Homeworld | Num Tech Alternatives: +1; Scientist Capacity: +1; Official Capacity: -1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -562,7 +583,7 @@
       "country_subject_acceptance_add": 25,
       "add_attunement_the_eater_of_worlds": "@civic_attunement1"
     },
-    "effects": "- Ignore Diplomatic Requirements when proposing Subjugation - Your Subjects cannot have the following Agreement Terms:  Expansion Prohibited  Do not join subject wars  Limited Diplomacy | country_naval_capacity_contribution_from_subjects_mult: +5.0%; divided_patrongage_max_subjects: +1; country_subject_acceptance_add: +25",
+    "effects": "- Ignore Diplomatic Requirements when proposing Subjugation - Your Subjects cannot have the following Agreement Terms:  Expansion Prohibited  Do not join subject wars  Limited Diplomacy | Subject Naval Capacity Contribution: +5%; Subjects Exempt from Divided Patronage: +1; Subjugation Acceptance: +25",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -618,7 +639,7 @@
       "enforcer_jobs_bonus_workforce_mult": 0.1,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "planet_stability_add: +3; planet_enforcers_unity_produces_add: +1; enforcer_jobs_bonus_workforce_mult: +10.0%",
+    "effects": "Stability: +3; Unity Produced per 100 Enforcers: +1; Job Efficiency for Enforcers: +10%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -674,7 +695,7 @@
       "refugee_attraction": 0.1,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "pop_citizen_happiness: +0.1; refugee_attraction: +0.1",
+    "effects": "Citizen Pop Happiness: +10%; Refugee Attraction: +10%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -715,6 +736,12 @@
         },
         {
           "not": {
+            "field": "civics",
+            "value": "civic_dystopian_society"
+          }
+        },
+        {
+          "not": {
             "any": [
               {
                 "field": "civics",
@@ -735,7 +762,7 @@
       "planet_pops_consumer_goods_upkeep_mult": -0.2,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Available Buildings: Ranger Lodge  - Additional Starting Buildings: Ranger Lodge  - Available Holdings: Ranger Lodge | planet_pops_consumer_goods_upkeep_mult: -20.0%",
+    "effects": "- Available Buildings: Ranger Lodge  - Additional Starting Buildings: Ranger Lodge  - Available Holdings: Ranger Lodge | Pop Consumer Goods Upkeep: -20%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -805,7 +832,7 @@
       "refugee_attraction": -0.25,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "pop_slave_bonus_workforce_mult: +15.0%; refugee_attraction: -0.25",
+    "effects": "Job Efficiency for Slaves: +15%; Refugee Attraction: -25%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -886,6 +913,12 @@
         },
         {
           "not": {
+            "field": "civics",
+            "value": "civic_pompous_purists"
+          }
+        },
+        {
+          "not": {
             "any": [
               {
                 "field": "civics",
@@ -943,7 +976,7 @@
       "intel_encryption_add": 1,
       "intel_decryption_add": -1
     },
-    "effects": "Cannot have Rivals Cannot form Defensive Pacts Cannot form Migration Treaties Cannot form Research Agreements Cannot form Commercial Pacts Cannot Guarantee Independence Cannot join Federations Cannot Infiltrate pre-FTLs Cannot have forced Subjects Cannot use Unrestricted Wars policy | country_unity_produces_mult: +20.0%; founder_species_growth_mult: +10.0%; country_edict_fund_add: +50; pop_citizen_happiness: +0.05; refugee_attraction: -0.5; envoys_add: -1; intel_encryption_add: +1; intel_decryption_add: -1",
+    "effects": "Cannot have Rivals Cannot form Defensive Pacts Cannot form Migration Treaties Cannot form Research Agreements Cannot form Commercial Pacts Cannot Guarantee Independence Cannot join Federations Cannot Infiltrate pre-FTLs Cannot have forced Subjects Cannot use Unrestricted Wars policy | Monthly Unity: +20%; Pop Growth (or Assembly) Speed: +10%; Edict Fund: +50; Citizen Pop Happiness: +5%; Refugee Attraction: -50%; Envoys: -1; Encryption: +1; Codebreaking: -1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": 1000,
@@ -1013,7 +1046,7 @@
       "country_war_exhaustion_mult": -0.1,
       "add_attunement_the_eater_of_worlds": "@civic_attunement1"
     },
-    "effects": "- Replaces Entertainer Jobs with Duelist Jobs. - Duelists turn Alloys into Unity, Amenities, and Naval Capacity. - Replaces Conserved Fauna Jobs with Gladiatorial Beast Jobs. | army_damage_mult: +20.0%; country_war_exhaustion_mult: -10.0%",
+    "effects": "- Replaces Entertainer Jobs with Duelist Jobs. - Duelists turn Alloys into Unity, Amenities, and Naval Capacity. - Replaces Conserved Fauna Jobs with Gladiatorial Beast Jobs. | Army Damage: +20%; War Exhaustion Gain: -10%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -1071,7 +1104,7 @@
       "commander_initial_skill": 2,
       "add_attunement_the_eater_of_worlds": "@civic_attunement1"
     },
-    "effects": "ship_fire_rate_mult: +10.0%; leader_commanders_upkeep_mult: -25.0%; command_limit_mult: +20.0%; commander_initial_skill: +2",
+    "effects": "Ship Fire Rate: +10%; Commander Upkeep: -25%; Fleet Command Limit: +20%; Commander Starting Skill Level: +2",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -1142,7 +1175,7 @@
       "refugee_attraction": 0.5,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "planet_resettlement_unemployed_destination_mult: +25.0%; pop_cat_worker_happiness: +0.05; refugee_attraction: +0.5",
+    "effects": "Automatic Resettlement Destination Chance: +25%; Worker Happiness: +5%; Refugee Attraction: +50%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -1184,7 +1217,7 @@
       "intel_decryption_add": 1,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "edicts_upkeep_mult: -20.0%; intel_decryption_add: +1",
+    "effects": "Edict Upkeep: -20%; Codebreaking: +1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -1246,7 +1279,7 @@
       "external_leader_pool_add": 1,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "Starts with the Offworld Trade Companies technology already unlocked Unlocks Ship Type: Private Colony Ship | external_leader_pool_add: +1",
+    "effects": "Starts with the Offworld Trade Companies technology already unlocked Unlocks Ship Type: Private Colony Ship | External Leader Pool: +1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_uncommon_random_weight",
@@ -1429,7 +1462,7 @@
       "spy_network_daily_value_mult": 0.1,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "election_term_variance_add: +5; country_election_cost_mult: -75.0%; councilor_skill_add: +1; intel_decryption_add: +1; spy_network_daily_value_mult: +10.0%",
+    "effects": "Election Term Variance (Years): +5; Country Election Cost: -75%; Effective Councilor Skill: +1; Codebreaking: +1; Infiltration Speed: +10%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -1481,7 +1514,7 @@
       "planet_miners_minerals_produces_add": 1,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "planet_miners_minerals_produces_add: +1",
+    "effects": "Minerals Produced per 100 Miners: +1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -1567,7 +1600,7 @@
       "faction_demands_unmet_mult": 0.5,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "- Factions will form in your empire shortly after the game starts, but Faction Output is reduced for the first ten years. | pop_factions_produces_mult: +20.0%; faction_demands_unmet_mult: +50.0%",
+    "effects": "- Factions will form in your empire shortly after the game starts, but Faction Output is reduced for the first ten years. | Faction Resource Output: +20%; Disapproval from Unmet Faction Demands: +50%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -1582,7 +1615,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "Bureaucrats and individuals individuals provide Edict Fund scaling with their Unity production.",
+    "tooltip": "Bureaucrats and Priests provide Edict Fund scaling with their Unity production.",
     "negative_tooltip": "",
     "potential": {
       "all": [
@@ -1608,7 +1641,7 @@
       "planet_bureaucrats_upkeep_mult": -0.2,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "Bureaucrats and individuals individuals provide Edict Fund scaling with their Unity production. | planet_bureaucrats_upkeep_mult: -20.0%",
+    "effects": "Bureaucrats and Priests provide Edict Fund scaling with their Unity production. | Upkeep for Bureaucrats: -20%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -1669,7 +1702,7 @@
       "diplo_weight_rivals_mult": 0.05,
       "add_attunement_the_eater_of_worlds": "@civic_attunement1"
     },
-    "effects": "country_war_exhaustion_mult: -20.0%; country_claim_influence_cost_mult: -15.0%; diplo_weight_rivals_mult: +5.0%",
+    "effects": "War Exhaustion Gain: -20%; Claim Influence Cost: -15%; Diplomatic Weight Per Rival: +5%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -1711,7 +1744,7 @@
       "planet_building_build_speed_mult": 0.15,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Waives Technology requirements for Basic District Specializations | planet_structures_cost_mult: -15.0%; planet_building_build_speed_mult: +15.0%",
+    "effects": "- Waives Technology requirements for Basic District Specializations | Infrastructure Cost: -15%; Infrastructure Build Speed: +15%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -1788,7 +1821,7 @@
       "leaders_upkeep_mult": 0.1,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Politician Jobs are converted into Noble Jobs - Can construct Noble Estates buildings that add additional Noble Jobs - Grants access to the Noble Chateaus Holding - Leaders have a 20% chance to start with an additional positive and negative trait. | pop_cat_ruler_bonus_workforce_mult: +10.0%; leaders_upkeep_mult: +10.0%",
+    "effects": "- Politician Jobs are converted into Noble Jobs - Can construct Noble Estates buildings that add additional Noble Jobs - Grants access to the Noble Chateaus Holding - Leaders have a 20% chance to start with an additional positive and negative trait. | Job Efficiency for Elites: +10%; Leader Upkeep: +10%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -1840,6 +1873,10 @@
           "tooltip": "civic_tooltip_not_xenophobe"
         },
         {
+          "field": "ethics",
+          "value": "ethic_fanatic_egalitarian"
+        },
+        {
           "not": {
             "all": [
               {
@@ -1860,7 +1897,7 @@
       "planet_stability_add": 5,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "Allows Shared Burdens Living Standard, under which all Pops have moderate Consumer Goods Upkeep regardless of Strata Disables the use of most other Living Standards Grants access to the Communal Housing Outreach Holding | planet_stability_add: +5",
+    "effects": "Allows Shared Burdens Living Standard, under which all Pops have moderate Consumer Goods Upkeep regardless of Strata Disables the use of most other Living Standards Grants access to the Communal Housing Outreach Holding | Stability: +5",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_rare_base_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -1906,6 +1943,10 @@
               "value": "ethic_spiritualist"
             }
           ]
+        },
+        {
+          "field": "ethics",
+          "value": "ethic_fanatic_xenophobe"
         },
         {
           "not": {
@@ -2027,7 +2068,7 @@
       "add_attunement_the_eater_of_worlds": "@civic_attunement1",
       "the_cradle_of_souls_attunement_mult": -0.25
     },
-    "effects": "Cannot engage in Diplomacy with other species! Cannot access the Galactic Market Has the 'Purification' casus belli on other species Xeno Pops will always be purged Gains Unity from purging Xeno Pops May use Armageddon bombardment stance | ship_fire_rate_mult: +33.0%; army_damage_mult: +33.0%; starbase_shipyard_build_cost_mult: -15.0%; country_naval_cap_mult: +33.0%; the_cradle_of_souls_attunement_mult: -25.0%",
+    "effects": "Cannot engage in Diplomacy with other species! Cannot access the Galactic Market Has the 'Purification' casus belli on other species Xeno Pops will always be purged Gains Unity from purging Xeno Pops May use Armageddon bombardment stance | Ship Fire Rate: +33%; Army Damage: +33%; Ship Build Cost: -15%; Naval Capacity: +33%; The Cradle of Souls Attunement: -25%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1000,
@@ -2106,6 +2147,20 @@
           "not": {
             "any": [
               {
+                "field": "ethics",
+                "value": "ethic_xenophile"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_fanatic_xenophile"
+              }
+            ]
+          }
+        },
+        {
+          "not": {
+            "any": [
+              {
                 "field": "civics",
                 "value": "civic_fanatic_purifiers"
               },
@@ -2170,7 +2225,7 @@
       "planet_bureaucrats_unity_produces_add": 1,
       "planet_bureaucrats_stability_produces_add": 1
     },
-    "effects": "planet_bureaucrats_unity_produces_add: +1; planet_bureaucrats_stability_produces_add: +1",
+    "effects": "Unity Produced per 100 Bureaucrats: +1; Mod Planet Stability Add Produced per 100 Bureaucrats: +1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_uncommon_base_weight",
     "random_weight": "@civic_uncommon_random_weight",
@@ -2324,7 +2379,7 @@
       "add_attunement_the_eater_of_worlds": "@civic_attunement1",
       "pop_soldier_bonus_workforce_mult": 0.1
     },
-    "effects": "- Soldiers are replaced with Necromancers - Available Buildings: Dread Encampment - Available Holdings: Dread Outpost - Defeated Organic Armies are sometimes resurrected as Undead Armies - Defeated organic Leviathans can sometimes be resurrected - Controlled cloned organic Space Fauna can be reanimated | pop_soldier_bonus_workforce_mult: +10.0%",
+    "effects": "- Soldiers are replaced with Necromancers - Available Buildings: Dread Encampment - Available Holdings: Dread Outpost - Defeated Organic Armies are sometimes resurrected as Undead Armies - Defeated organic Leviathans can sometimes be resurrected - Controlled cloned organic Space Fauna can be reanimated | Job Efficiency for Soldiers: +10%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_uncommon_base_weight",
     "random_weight": "@civic_uncommon_random_weight",
@@ -2388,7 +2443,7 @@
       "envoy_improve_relations_mult": 0.75,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "envoys_add: +2; diplo_weight_mult: +15.0%; country_trust_cap_add: +40; envoy_improve_relations_mult: +75.0%",
+    "effects": "Envoys: +2; Diplomatic Weight: +15%; Trust Cap: +40; Envoy Improve Relations: +75%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_uncommon_base_weight",
     "random_weight": "@civic_uncommon_random_weight",
@@ -2495,7 +2550,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- Can build Sanctuary of Repose - Sanctuaries of Repose improve Governing Ethics Attraction on Tomb Worlds and Relic Worlds - Death Chroniclers turn Consumer Goods into Unity and Stability, and inherit the Ethics-based modifiers of [civilian.GetIcon] [civilian.GetNamePlural]",
+    "tooltip": "- Can build Sanctuary of Repose - Sanctuaries of Repose improve Governing Ethics Attraction on Tomb Worlds and Relic Worlds - Death Chroniclers turn Consumer Goods into Unity and Stability, and inherit the Ethics-based modifiers of Civilians",
     "negative_tooltip": "",
     "playable_conditions": "{'host_has_dlc': 'Necroids Species Pack'}",
     "potential": {
@@ -2555,7 +2610,7 @@
     "modifier": {
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Can build Sanctuary of Repose - Sanctuaries of Repose improve Governing Ethics Attraction on Tomb Worlds and Relic Worlds - Death Chroniclers turn Consumer Goods into Unity and Stability, and inherit the Ethics-based modifiers of [civilian.GetIcon] [civilian.GetNamePlural]",
+    "effects": "- Can build Sanctuary of Repose - Sanctuaries of Repose improve Governing Ethics Attraction on Tomb Worlds and Relic Worlds - Death Chroniclers turn Consumer Goods into Unity and Stability, and inherit the Ethics-based modifiers of Civilians",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -2570,7 +2625,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- [foundry.GetIcon] [foundry.GetNamePlural] are replaced with Catalytic Technicians  - [foundry.GetIcon] [artisan.GetIcon] Industrial Jobs have their Minerals Upkeep replaced with Food Upkeep.",
+    "tooltip": "- Metallurgists are replaced with Catalytic Technicians  - Industrial Jobs have their Minerals Upkeep replaced with Food Upkeep.",
     "negative_tooltip": "",
     "playable_conditions": "{'host_has_dlc': 'Plantoids Species Pack'}",
     "potential": {
@@ -2619,7 +2674,7 @@
         "add_attunement_the_composer_of_strands": "@civic_attunement1"
       }
     ],
-    "effects": "- [foundry.GetIcon] [foundry.GetNamePlural] are replaced with Catalytic Technicians  - [foundry.GetIcon] [artisan.GetIcon] Industrial Jobs have their Minerals Upkeep replaced with Food Upkeep.",
+    "effects": "- Metallurgists are replaced with Catalytic Technicians  - Industrial Jobs have their Minerals Upkeep replaced with Food Upkeep.",
     "enforced_traits": [],
     "ai_weight": 0,
     "random_weight": "@civic_default_random_weight",
@@ -2931,6 +2986,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_aquatic"
+    ],
     "can_add": true,
     "can_remove": true,
     "modifier": {
@@ -3006,6 +3064,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_robot_aquatic"
+    ],
     "can_modify": false,
     "modifier": {
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
@@ -3095,7 +3156,7 @@
       "refugee_attraction": -0.25,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "Can only engage in Diplomacy with other empires if they are the proposer. | envoy_improve_relations_mult: +25.0%; envoys_add: +1; diplo_weight_opposing_mult: +15.0%; external_leader_pool_add: -1; refugee_attraction: -0.25",
+    "effects": "Can only engage in Diplomacy with other empires if they are the proposer. | Envoy Improve Relations: +25%; Envoys: +1; Diplomatic Weight When Opposing Resolutions: +15%; External Leader Pool: -1; Refugee Attraction: -25%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_uncommon_base_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -3327,7 +3388,7 @@
       "planet_building_refund_mult": 0.1,
       "megastructure_dismantle_refund_mult": 0.1
     },
-    "effects": "- Researching Debris grants both Research and a portion of other Resource Costs of the destroyed fleet - Ships can be salvaged from some Debris | ships_alloys_upkeep_mult: -5.0%; planet_building_refund_mult: +10.0%; megastructure_dismantle_refund_mult: +10.0%",
+    "effects": "- Researching Debris grants both Research and a portion of other Resource Costs of the destroyed fleet - Ships can be salvaged from some Debris | Ships Alloys Upkeep: -5%; Colony Infrastructure Refund: +10%; Megastructure Refund: +10%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -3390,7 +3451,7 @@
       "tradition_cost_empire_size_mult": -0.25,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Colonies have +1 Ascension Tier on game start. | planetary_ascension_effect_mult: +25.0%; planetary_ascension_cost_mult: -10.0%; tradition_cost_empire_size_mult: -25.0%",
+    "effects": "- Colonies have +1 Ascension Tier on game start. | Colony Ascension Effects: +25%; Colony Ascension Cost: -10%; Tradition Cost from Empire Size: -25%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_uncommon_base_weight",
     "random_weight": "@civic_uncommon_random_weight",
@@ -3440,7 +3501,7 @@
       "leader_initial_skill": 1,
       "leader_trait_selection_options_add": 1
     },
-    "effects": "Can build unique Vaults of Knowledge Vaults of Knowledge produce Unity and increase Leader Experience Gain based on Destiny Traits acquired. | councilor_skill_add: +1; leader_initial_skill: +1; leader_trait_selection_options_add: +1",
+    "effects": "Can build unique Vaults of Knowledge Vaults of Knowledge produce Unity and increase Leader Experience Gain based on Destiny Traits acquired. | Effective Councilor Skill: +1; Leader Starting Skill Level: +1; Additional Leader Trait Options: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 3,
@@ -3509,6 +3570,21 @@
           "not": {
             "any": [
               {
+                "field": "ethics",
+                "value": "ethic_pacifist"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_fanatic_pacifist"
+              }
+            ]
+          },
+          "tooltip": "civic_tooltip_not_pacifist"
+        },
+        {
+          "not": {
+            "any": [
+              {
                 "field": "civics",
                 "value": "civic_fanatic_purifiers"
               },
@@ -3531,7 +3607,7 @@
       "starbase_shipyard_build_speed_mult": 0.05,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "Commanders start with the Crusader Trait Can only use Liberation Wars policy | ship_weapon_damage: +0.05; starbase_shipyard_build_speed_mult: +5.0%",
+    "effects": "Commanders start with the Crusader Trait Can only use Liberation Wars policy | Ship Weapons Damage: +5%; Ship Build Speed: +5%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -3576,7 +3652,7 @@
       "ship_anomaly_generation_chance_mult": 0.05,
       "category_voidcraft_draw_chance_mult": 0.5
     },
-    "effects": "Start with 2 Exploration Vessels and an Engineering Vessel equipped with Subspace Drives, making them incapable of Hyperlane travel but granting limited Jump Drive abilities. Gain an increased chance to discover FTL Travel Technologies | ship_speed_mult: +15.0%; science_ship_survey_speed: +20.0%; ship_anomaly_generation_chance_mult: +5.0%; category_voidcraft_draw_chance_mult: +50.0%",
+    "effects": "Start with 2 Exploration Vessels and an Engineering Vessel equipped with Subspace Drives, making them incapable of Hyperlane travel but granting limited Jump Drive abilities. Gain an increased chance to discover FTL Travel Technologies | Sublight Speed: +15%; Science Ship Survey Speed: +20%; Anomaly Discovery Chance: +5%; Chance for Voidcraft Research Options: +50%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 0,
@@ -3656,7 +3732,7 @@
       "country_physics_tech_research_speed": 0.15,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "Hyperlane Breach Points is Guaranteed Research Option. Has Low Intel on all systems within 3 Hyperlanes of your starting system. | planet_sensor_range_add: +2; ship_speed_mult: +10.0%; country_physics_tech_research_speed: +15.0%",
+    "effects": "Hyperlane Breach Points is Guaranteed Research Option. Has Low Intel on all systems within 3 Hyperlanes of your starting system. | Colony Sensor Range: +2; Sublight Speed: +10%; Research Speed (Physics): +15%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -3718,7 +3794,7 @@
       "planet_bureaucrats_physics_research_produces_add": 1,
       "rare_tech_draw_chance_mult": 0.1
     },
-    "effects": "- Available Starbase Buildings: Dimensional Shrine | planet_bureaucrats_physics_research_produces_add: +1; rare_tech_draw_chance_mult: +10.0% | - Chance for Astral Rifts in Controlled Systems: +100%",
+    "effects": "- Available Starbase Buildings: Dimensional Shrine | Physics Research Produced per 100 Bureaucrats: +1; Rare Tech Draw Chance: +10% | - Chance for Astral Rifts in Controlled Systems: +100%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -3768,7 +3844,7 @@
       "country_commander_cap_add": 1,
       "country_scientist_cap_add": 1
     },
-    "effects": "country_official_cap_add: +1; country_commander_cap_add: +1; country_scientist_cap_add: +1",
+    "effects": "Official Capacity: +1; Commander Capacity: +1; Scientist Capacity: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 4,
@@ -3849,7 +3925,7 @@
       "refugee_attraction": -0.25,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Enforcers are Elites instead of Specialists - Only Elites can produce Amenities and have Amenities Upkeep - Forces Dystopian Society Living Standard, under which non-Elite Pops have decreased Consumer Goods Upkeep - Non-Elite Pops generate additional Crime - Cannot build Holo-Theatres | country_commander_cap_add: +1; leaders_upkeep_mult: -20.0%; refugee_attraction: -0.25",
+    "effects": "- Enforcers are Elites instead of Specialists - Only Elites can produce Amenities and have Amenities Upkeep - Forces Dystopian Society Living Standard, under which non-Elite Pops have decreased Consumer Goods Upkeep - Non-Elite Pops generate additional Crime - Cannot build Holo-Theatres | Commander Capacity: +1; Leader Upkeep: -20%; Refugee Attraction: -25%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_rare_random_weight",
@@ -3944,7 +4020,7 @@
       "citizen_pop_same_species_class_happiness": 0.075,
       "citizen_pop_different_species_class_happiness": 0.025
     },
-    "effects": "Opinion of Empires with shared Species Class: +100 Opinion of other Empires: -50 Refugee Attraction with our Species Class: +30% Refugee Attraction with other Species Classes: -20%   Pops of our Species Class have Full Citizenship Other Pops are barred from Full Citizenship | citizen_pop_same_species_class_happiness: +0.075; citizen_pop_different_species_class_happiness: +0.025",
+    "effects": "Opinion of Empires with shared Species Class: +100 Opinion of other Empires: -50 Refugee Attraction with our Species Class: +30% Refugee Attraction with other Species Classes: -20%   Pops of our Species Class have Full Citizenship Other Pops are barred from Full Citizenship | Citizen Happiness while sharing planet with same Species Class: +7.5%; Citizen Happiness while oppressing other Species Classes: +2.5%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 4,
@@ -4072,6 +4148,12 @@
         },
         {
           "not": {
+            "field": "civics",
+            "value": "civic_guided_sapience"
+          }
+        },
+        {
+          "not": {
             "any": [
               {
                 "field": "civics",
@@ -4108,7 +4190,7 @@
       "BIOLOGICAL_species_trait_points_add": 2,
       "planet_doctors_society_research_produces_add": 0.5
     },
-    "effects": "Available Buildings: Genomic Services Center | BIOLOGICAL_species_trait_picks_add: +2; BIOLOGICAL_species_trait_points_add: +2; planet_doctors_society_research_produces_add: +50.0%",
+    "effects": "Available Buildings: Genomic Services Center | Organic Species Trait Picks: +2; Organic Species Modification Points: +2; Society Research Produced per 100 Medical Workers: +0.5",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_rare_random_weight",
@@ -4242,7 +4324,7 @@
       "planet_soldiers_unity_produces_add": "@sovereign_guardianship_soldier_unity",
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "Unlocks Fanatic Guardians as defense armies. Allows building a Reloading Bay in starbases. Enables Inner Focus Edict, converting Influence into Unity. | empire_size_colonies_mult: +75.0%; empire_size_branch_office_mult: +1; empire_size_systems_mult: +1.5; empire_size_pops_mult: -25.0%; empire_size_districts_mult: -50.0%; diplo_weight_mult: +20.0%",
+    "effects": "Unlocks Fanatic Guardians as defense armies. Allows building a Reloading Bay in starbases. Enables Inner Focus Edict, converting Influence into Unity. | Empire Size from Colonies: +75%; Empire Size from Branch Offices: +100%; Empire Size from Systems: +150%; Empire Size from Pops: -25%; Empire Size from Districts: -50%; Diplomatic Weight: +20%",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -4360,7 +4442,7 @@
       "terraform_speed_mult": 0.25,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Available Colony Ships: Genesis Ark - Planets Colonized with Genesis Arks:  - Pre-Sapient Pops: +300   - Planetary Features: Genesis Preserve  - Gains Unity from uplifting Pre-Sapient Species | terraforming_cost_mult: -25.0%; terraform_speed_mult: +25.0%",
+    "effects": "- Available Colony Ships: Genesis Ark - Planets Colonized with Genesis Arks:  - Pre-Sapient Pops: +300   - Planetary Features: Genesis Preserve  - Gains Unity from uplifting Pre-Sapient Species | Terraforming Cost: -25%; Terraform Speed: +25%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_rare_random_weight",
@@ -4462,7 +4544,7 @@
     "modifier": {
       "planet_pop_assembly_mult": 0.2
     },
-    "effects": "planet_pop_assembly_mult: +20.0%",
+    "effects": "Mechanical Pop Assembly Speed: +20%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -4508,7 +4590,7 @@
       "intel_decryption_add": 1,
       "councilor_research_exp_gain": 0.1
     },
-    "effects": "num_tech_alternatives_add: +1; intel_decryption_add: +1; councilor_research_exp_gain: +0.1",
+    "effects": "Num Tech Alternatives: +1; Codebreaking: +1; Head of Research Experience Gain: +10%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -4563,7 +4645,7 @@
       "leader_commanders_upkeep_mult": -0.25,
       "add_attunement_the_eater_of_worlds": "@civic_attunement1"
     },
-    "effects": "army_damage_mult: +20.0%; armies_upkeep_mult: -20.0%; commander_initial_skill: +2; leader_commanders_upkeep_mult: -25.0%",
+    "effects": "Army Damage: +20%; Army Upkeep: -20%; Commander Starting Skill Level: +2; Commander Upkeep: -25%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -4646,13 +4728,16 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_storm_touched"
+    ],
     "can_add": true,
     "can_remove": true,
     "modifier": {
       "capital_storm_diplo_weight_mult": 0.2,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Available Buildings: Storm Summoning Theater - Replaces Entertainer Jobs with Storm Dancer Jobs - Species Traits: Storm Touched | capital_storm_diplo_weight_mult: +20.0%",
+    "effects": "- Available Buildings: Storm Summoning Theater - Replaces Entertainer Jobs with Storm Dancer Jobs - Species Traits: Storm Touched | Diplomatic Weight while Capital is affected by a Cosmic Storm: +20%",
     "enforced_traits": [
       "trait_storm_touched"
     ],
@@ -4807,7 +4892,7 @@
       "planet_clear_blocker_speed_mult": 0.25,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Additional Starting Technologies: Technologies to remove Natural Blockers on the Homeworld - Technologies to remove Natural Blockers are granted as Permanent Research Options upon Colonization - Mastery of Nature Ascension Perk replaced with Cultivated Worldscaping Planetary Decision - For each Natural Blocker on Colonized Planets:  - Resources from Jobs: -10%  - Pop Growth Speed: -10%  - Pop Upkeep: +15% | planet_jobs_produces_mult: +10.0%; founder_species_growth_mult: +10.0%; planet_pops_upkeep_mult: -15.0%; planet_clear_blocker_speed_mult: +25.0%",
+    "effects": "- Additional Starting Technologies: Technologies to remove Natural Blockers on the Homeworld - Technologies to remove Natural Blockers are granted as Permanent Research Options upon Colonization - Mastery of Nature Ascension Perk replaced with Cultivated Worldscaping Planetary Decision - For each Natural Blocker on Colonized Planets:  - Resources from Jobs: -10%  - Pop Growth Speed: -10%  - Pop Upkeep: +15% | Resources from Jobs: +10%; Pop Growth (or Assembly) Speed: +10%; Pop Upkeep: -15%; Clear Blocker Speed: +25%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -4822,7 +4907,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- Guaranteed Research Options: Galactic Archivism - Initial Specimens: One §0Common of each Collection Category  - Gain Unity each time you find a Specimen or complete an Archaeological Site  - Purchases from the Curator Enclave: $@galactic_curators_curator_enclave_purchase_cost|%0$ - Enables the Decentralized Research Edict, increasing Research Station Output but decreasing individuals Job Output - Replaces Entertainer Jobs with Museum Curator Jobs",
+    "tooltip": "- Guaranteed Research Options: Galactic Archivism - Initial Specimens: One Common of each Collection Category  - Gain Unity each time you find a Specimen or complete an Archaeological Site  - Purchases from the Curator Enclave: -25% - Enables the Decentralized Research Edict, increasing Research Station Output but decreasing Researcher Job Output - Replaces Entertainer Jobs with Museum Curator Jobs",
     "negative_tooltip": "",
     "playable_conditions": "{'has_grand_archive_dlc': True}",
     "potential": {
@@ -4859,7 +4944,7 @@
       "megastructures_grand_archive_cost_mult": "@galactic_curators_grand_archive_cost_mult",
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Guaranteed Research Options: Galactic Archivism - Initial Specimens: One §0Common of each Collection Category  - Gain Unity each time you find a Specimen or complete an Archaeological Site  - Purchases from the Curator Enclave: $@galactic_curators_curator_enclave_purchase_cost|%0$ - Enables the Decentralized Research Edict, increasing Research Station Output but decreasing individuals Job Output - Replaces Entertainer Jobs with Museum Curator Jobs",
+    "effects": "- Guaranteed Research Options: Galactic Archivism - Initial Specimens: One Common of each Collection Category  - Gain Unity each time you find a Specimen or complete an Archaeological Site  - Purchases from the Curator Enclave: -25% - Enables the Decentralized Research Edict, increasing Research Station Output but decreasing Researcher Job Output - Replaces Entertainer Jobs with Museum Curator Jobs",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -4874,7 +4959,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- Additional Starting Technologies:  - Gravity Snares  - Artificial Breeding  - Available Starbase Buildings: Beastports  - Home System: Start with a Beastport  - Starting Military Ships are replaced with Space Amoebas  - Starting Genetic Material:  - §0Common Space Amoeba",
+    "tooltip": "- Additional Starting Technologies:  - Gravity Snares  - Artificial Breeding  - Available Starbase Buildings: Beastports  - Home System: Start with a Beastport  - Starting Military Ships are replaced with Space Amoebas  - Starting Genetic Material:  - Common Space Amoeba",
     "negative_tooltip": "",
     "playable_conditions": "{'has_grand_archive_dlc': True}",
     "potential": {
@@ -4932,7 +5017,7 @@
       "space_fauna_ship_upkeep_mult": -0.1,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Additional Starting Technologies:  - Gravity Snares  - Artificial Breeding  - Available Starbase Buildings: Beastports  - Home System: Start with a Beastport  - Starting Military Ships are replaced with Space Amoebas  - Starting Genetic Material:  - §0Common Space Amoeba | starbase_shipyard_artificial_build_cost_mult: +2.0; ship_military_artificial_upkeep_mult: +2.0; space_fauna_ship_cost_mult: -15.0%; space_fauna_ship_upkeep_mult: -10.0%",
+    "effects": "- Additional Starting Technologies:  - Gravity Snares  - Artificial Breeding  - Available Starbase Buildings: Beastports  - Home System: Start with a Beastport  - Starting Military Ships are replaced with Space Amoebas  - Starting Genetic Material:  - Common Space Amoeba | Artificial Military Ship Build Cost: +200%; Artificial Military Ship Upkeep Cost: +200%; Space Fauna Ship Cloning Cost: -15%; Space Fauna Ship Upkeep: -10%",
     "enforced_traits": [],
     "ai_weight": 10,
     "random_weight": 10,
@@ -4995,7 +5080,7 @@
       "intel_encryption_add": 1,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "planet_bureaucrats_society_research_produces_add: +1.5; planet_crime_mult: -15.0%; intel_encryption_add: +1",
+    "effects": "Society Research Produced per 100 Bureaucrats: +1.5; Crime: -15%; Encryption: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -5271,7 +5356,7 @@
       "leaders_upkeep_mult": -0.5,
       "leader_lifespan_mult": 0.5
     },
-    "effects": "- Enables the following Edicts:  - Energy Drain  - Sanguine Council  - Convergence of Will - Can construct: Leeching Tower. - Leaders start with the Psychic trait. | planet_jobs_produces_mult: -10.0%; all_technology_research_speed: -10.0%; logistic_growth_mult: -10.0%; planet_pop_assembly_mult: -10.0%; leaders_upkeep_mult: -50.0%; leader_lifespan_mult: +50.0% | - Energy Credits per 100 Psionic Pops: +0.5",
+    "effects": "- Enables the following Edicts:  - Energy Drain  - Sanguine Council  - Convergence of Will - Can construct: Leeching Tower. - Leaders start with the Psychic trait. | Resources from Jobs: -10%; All Technology Research Speed: -10%; Pop Growth Speed: -10%; Mechanical Pop Assembly Speed: -10%; Leader Upkeep: -50%; Leader Lifespan: +50% | - Energy Credits per 100 Psionic Pops: +0.5",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -5428,7 +5513,7 @@
     "modifier": {
       "refugee_attraction": -0.15
     },
-    "effects": "Starts with Experimental Testing situation, which grants technology insight upon completion. Can construct and starts with: Experimentation Chambers. All non-Machine slaves get access to the Orderlies Slave Job. Access to Slave Army: Abominations | refugee_attraction: -0.15",
+    "effects": "Starts with Experimental Testing situation, which grants technology insight upon completion. Can construct and starts with: Experimentation Chambers. All non-Machine slaves get access to the Orderlies Slave Job. Access to Slave Army: Abominations | Refugee Attraction: -15%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -5443,7 +5528,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "Clandestine Factions will emerge after contacting other empires. Starts with the ability to conduct Proxy Wars. [bureaucrat.GetIcon] [bureaucrat.GetNamePlural] will produce Unity per active and successful Proxy War. Starts in First Contact with two neighboring empires. Infiltration Level gained on empires after First Contact: +$@secret_society_infiltration_gain|0$",
+    "tooltip": "Clandestine Factions will emerge after contacting other empires. Starts with the ability to conduct Proxy Wars. Bureaucrats will produce Unity per active and successful Proxy War. Starts in First Contact with two neighboring empires. Infiltration Level gained on empires after First Contact: +40",
     "negative_tooltip": "",
     "playable_conditions": "{'has_shroud_dlc': True}",
     "potential": {
@@ -5543,7 +5628,7 @@
       "envoys_add": 1,
       "intel_encryption_add": 1
     },
-    "effects": "Clandestine Factions will emerge after contacting other empires. Starts with the ability to conduct Proxy Wars. [bureaucrat.GetIcon] [bureaucrat.GetNamePlural] will produce Unity per active and successful Proxy War. Starts in First Contact with two neighboring empires. Infiltration Level gained on empires after First Contact: +$@secret_society_infiltration_gain|0$ | proxy_war_cost_mult: -25.0%; operations_cost_mult: -50.0%; envoys_add: +1; intel_encryption_add: +1",
+    "effects": "Clandestine Factions will emerge after contacting other empires. Starts with the ability to conduct Proxy Wars. Bureaucrats will produce Unity per active and successful Proxy War. Starts in First Contact with two neighboring empires. Infiltration Level gained on empires after First Contact: +40 | Proxy War Influence Cost: -25%; Operation Cost: -50%; Envoys: +1; Encryption: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -5657,7 +5742,7 @@
     "modifier": {
       "psionic_aura_intensity_add": 10
     },
-    "effects": "- Starts the game in contact with a Shroud Patron. - Additional Starting Technologies: Psionic Aura | psionic_aura_intensity_add: +10 | - Gain Unity scaling with Attunement to the Shroud",
+    "effects": "- Starts the game in contact with a Shroud Patron. - Additional Starting Technologies: Psionic Aura | Psionic Aura Intensity Gain: +10 | - Gain Unity scaling with Attunement to the Shroud",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -5672,7 +5757,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "Adds the Tankbound trait. [farmer.GetIcon] [farmer.GetNamePlural], [miner.GetIcon] [miner.GetNamePlural], and [technician.GetIcon] [technician.GetNamePlural] are fully Automated.  Colonist Jobs are Specialists.  Urban Districts have additional Production Overseers jobs.",
+    "tooltip": "Adds the Tankbound trait. Farmers, Miners, and Technicians are fully Automated.  Colonist Jobs are Specialists.  Urban Districts have additional Production Overseers jobs.",
     "negative_tooltip": "- Start with 2K fewer Pops than normal",
     "playable_conditions": "{'has_shroud_dlc': True}",
     "potential": {
@@ -5786,6 +5871,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_tankbound"
+    ],
     "can_add": true,
     "can_remove": true,
     "modifier": {
@@ -5794,7 +5882,7 @@
       "job_miner_automated_workforce_mult": 1.0,
       "job_technician_automated_workforce_mult": 1.0
     },
-    "effects": "Adds the Tankbound trait. [farmer.GetIcon] [farmer.GetNamePlural], [miner.GetIcon] [miner.GetNamePlural], and [technician.GetIcon] [technician.GetNamePlural] are fully Automated.  Colonist Jobs are Specialists.  Urban Districts have additional Production Overseers jobs. | job_farmer_automated_workforce_mult: +1.0; job_miner_automated_workforce_mult: +1.0; job_technician_automated_workforce_mult: +1.0",
+    "effects": "Adds the Tankbound trait. Farmers, Miners, and Technicians are fully Automated.  Colonist Jobs are Specialists.  Urban Districts have additional Production Overseers jobs. | Farmers Automated Workforce: +100%; Miners Automated Workforce: +100%; Technicians Automated Workforce: +100%",
     "enforced_traits": [
       "trait_tankbound"
     ],
@@ -5848,6 +5936,21 @@
             }
           ],
           "tooltip": "civic_tooltip_xenophobe"
+        },
+        {
+          "not": {
+            "any": [
+              {
+                "field": "ethics",
+                "value": "ethic_pacifist"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_fanatic_pacifist"
+              }
+            ]
+          },
+          "tooltip": "civic_tooltip_not_pacifist"
         },
         {
           "not": {
@@ -6002,7 +6105,7 @@
       "army_health": 0.4,
       "category_materials_research_speed_mult": 0.5
     },
-    "effects": "- Cannot engage in Diplomacy except with Thermophiles. - Cannot access the Galactic Market. - Grants the 'Cleansing Blaze' casus belli on other species. - Gains Unity when bombarding with the Firestorm bombardment stance. - Creates special blockers with the Seismic Carpet Bombing bombardment stance on the planet below.  - Non-Thermophile Species are restricted to Slavery or worse. | ship_weapon_range_mult: +15.0%; ship_armor_mult: +15.0%; starbase_shipyard_build_speed_mult: +15.0%; country_naval_cap_mult: +50.0%; army_health: +0.4; category_materials_research_speed_mult: +50.0%",
+    "effects": "- Cannot engage in Diplomacy except with Thermophiles. - Cannot access the Galactic Market. - Grants the 'Cleansing Blaze' casus belli on other species. - Gains Unity when bombarding with the Firestorm bombardment stance. - Creates special blockers with the Seismic Carpet Bombing bombardment stance on the planet below.  - Non-Thermophile Species are restricted to Slavery or worse. | Ship Weapons Range: +15%; Armor Hit Points: +15%; Ship Build Speed: +15%; Naval Capacity: +50%; Army Health: +40%; Research Speed (Materials): +50%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1000,
@@ -6067,6 +6170,12 @@
         },
         {
           "not": {
+            "field": "civics",
+            "value": "civic_idyllic_bloom"
+          }
+        },
+        {
+          "not": {
             "any": [
               {
                 "field": "civics",
@@ -6108,7 +6217,7 @@
       "pc_volcanic_max_districts_add": 3,
       "pc_volcanic_habitability": 0.2
     },
-    "effects": "- Unlocks starting planet: Volcanic World.  - Guaranteed Research Options: Volcanic Forge.  - Can construct Volcanic Forge building which adds Thermotechnic Mentors.  - Planets with a Volcanic Forge will gradually turn into a Volcanic World.  - Guaranteed Habitable Worlds will be Dry worlds. | pc_volcanic_max_districts_add: +3; pc_volcanic_habitability: +0.2",
+    "effects": "- Unlocks starting planet: Volcanic World.  - Guaranteed Research Options: Volcanic Forge.  - Can construct Volcanic Forge building which adds Thermotechnic Mentors.  - Planets with a Volcanic Forge will gradually turn into a Volcanic World.  - Guaranteed Habitable Worlds will be Dry worlds. | Max Districts (Volcanic World): +3; Volcanic World Habitability: +20%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -6248,7 +6357,7 @@
     "modifier": {
       "planet_building_refund_mult": 0.75
     },
-    "effects": "- Starts with Living Metal already researched.  - Homeworld has a Living Metal Mass. - Gain access to special Edicts:   - Centrifugal Siphoning   - Modular Growth Compounds  - Gives access to Living Metal components:   - Regenerative Armor   - Reshaping Projectile Accelerator - Has access to Colony Decision: Distribute Living Metal.  - Can recruit the Mimetic Strike Force armies.  - Can build a Offworld Expedition Hub in systems with a Molten World for Offworld Prospector jobs. | planet_building_refund_mult: +75.0%",
+    "effects": "- Starts with Living Metal already researched.  - Homeworld has a Living Metal Mass. - Gain access to special Edicts:   - Centrifugal Siphoning   - Modular Growth Compounds  - Gives access to Living Metal components:   - Regenerative Armor   - Reshaping Projectile Accelerator - Has access to Colony Decision: Distribute Living Metal.  - Can recruit the Mimetic Strike Force armies.  - Can build a Offworld Expedition Hub in systems with a Molten World for Offworld Prospector jobs. | Colony Infrastructure Refund: +75%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_rare_random_weight",
@@ -6298,7 +6407,7 @@
       "starbase_waystations_cost_mult": -0.2,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "- Guaranteed Research Options: Improved Wayline Logistics  - Home System: Start in a richer system with a Waystation already constructed. | country_starbase_capacity_add: +2; country_starbase_capacity_mult: +10.0%; megastructures_waystations_cost_mult: -20.0%; starbase_waystations_cost_mult: -20.0%",
+    "effects": "- Guaranteed Research Options: Improved Wayline Logistics  - Home System: Start in a richer system with a Waystation already constructed. | Station Capacity: +2; Station Capacity: +10%; Waystation Build Cost: -20%; Waystation Upgrade Cost: -20%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -6405,6 +6514,21 @@
           "not": {
             "any": [
               {
+                "field": "ethics",
+                "value": "ethic_xenophile"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_fanatic_xenophile"
+              }
+            ]
+          },
+          "tooltip": "civic_tooltip_not_xenophile"
+        },
+        {
+          "not": {
+            "any": [
+              {
                 "field": "civics",
                 "value": "civic_fanatic_purifiers"
               },
@@ -6433,7 +6557,7 @@
       "ship_military_energy_upkeep_mult": 0.05,
       "add_attunement_the_eater_of_worlds": "@civic_attunement1"
     },
-    "effects": "- Unlocks the Plundering bombardment stance, which allows us to steal resources produced on a planet.  - Additional Waystation Modules: Defenses and Piracy Modules. | ship_military_alloys_cost_mult: -5.0%; ship_military_energy_upkeep_mult: +5.0%",
+    "effects": "- Unlocks the Plundering bombardment stance, which allows us to steal resources produced on a planet.  - Additional Waystation Modules: Defenses and Piracy Modules. | Military Ship Alloys Cost: -5%; Military Ship Energy Upkeep: +5%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_uncommon_random_weight",
@@ -6481,7 +6605,7 @@
       "weapon_type_strike_craft_speed_mult": 0.1,
       "ship_speed_mult": 0.2
     },
-    "effects": "- Additional Starting Technologies: Carrier Operations | weapon_type_strike_craft_speed_mult: +10.0%; ship_speed_mult: +20.0%",
+    "effects": "- Additional Starting Technologies: Carrier Operations | Strike Craft Speed: +10%; Sublight Speed: +20%",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -6590,7 +6714,7 @@
     "modifier": {
       "ship_speed_mult": 0.2
     },
-    "effects": "Available Situation Approach: Celebration Situation Log Entry: Star Journal | ship_speed_mult: +20.0%",
+    "effects": "Available Situation Approach: Celebration Situation Log Entry: Star Journal | Sublight Speed: +20%",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -6637,7 +6761,7 @@
       "country_commander_cap_add": 10,
       "country_government_civic_points_add": 1
     },
-    "effects": "ship_damage_reduction_mult: +10.0%; ship_damage_against_starbases_mult: +50.0%; country_commander_cap_add: +10; country_government_civic_points_add: +1",
+    "effects": "Damage Reduction: +10%; Damage vs Starbases and Waystations: +50%; Commander Capacity: +10; Civic Slots: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -6669,7 +6793,7 @@
     "modifier": {
       "country_naval_cap_mult": 0.15
     },
-    "effects": "- No effect | country_naval_cap_mult: +15.0%",
+    "effects": "- No effect | Naval Capacity: +15%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 0,
@@ -6701,7 +6825,7 @@
     "modifier": {
       "ship_fire_rate_mult": 0.1
     },
-    "effects": "ship_fire_rate_mult: +10.0%",
+    "effects": "Ship Fire Rate: +10%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 0,
@@ -6736,7 +6860,7 @@
       "envoys_add": 1,
       "country_government_civic_points_add": 1
     },
-    "effects": "country_civics_influence_produces_add: +6; diplo_weight_mult: +40.0%; envoys_add: +1; country_government_civic_points_add: +1",
+    "effects": "Monthly Influence: +6; Diplomatic Weight: +40%; Envoys: +1; Civic Slots: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 0,
@@ -6771,7 +6895,7 @@
       "envoys_add": 1,
       "country_government_civic_points_add": 1
     },
-    "effects": "country_civics_influence_produces_add: +6; diplo_weight_mult: +40.0%; envoys_add: +1; country_government_civic_points_add: +1",
+    "effects": "Monthly Influence: +6; Diplomatic Weight: +40%; Envoys: +1; Civic Slots: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 0,
@@ -6809,7 +6933,7 @@
       "country_unity_produces_mult": 0.1,
       "pop_government_ethic_attraction": 0.25
     },
-    "effects": "country_government_civic_points_add: +1; country_unity_produces_mult: +10.0%; pop_government_ethic_attraction: +0.25",
+    "effects": "Civic Slots: +1; Monthly Unity: +10%; Governing Ethics Attraction: +25%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 0,
@@ -6843,7 +6967,7 @@
       "country_naval_cap_mult": 0.15,
       "ship_speed_mult": 0.2
     },
-    "effects": "country_naval_cap_mult: +15.0%; ship_speed_mult: +20.0%",
+    "effects": "Naval Capacity: +15%; Sublight Speed: +20%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -6876,7 +7000,7 @@
       "num_tech_alternatives_add": 1,
       "councilor_gestalt_cognitive_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "num_tech_alternatives_add: +1",
+    "effects": "Num Tech Alternatives: +1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -6911,7 +7035,7 @@
       "pop_amenities_usage_no_happiness_mult": -0.15,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "pop_environment_tolerance: +0.05; pop_amenities_usage_no_happiness_mult: -15.0%",
+    "effects": "Habitability: +5%; Pop Amenities Usage: -15%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -6945,7 +7069,7 @@
       "country_unity_produces_mult": 0.15,
       "negative_traits_country": -1
     },
-    "effects": "country_unity_produces_mult: +15.0%; negative_traits_country: -1",
+    "effects": "Monthly Unity: +15%; Leader Maximum Negative Traits: -1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -6979,7 +7103,7 @@
       "empire_size_penalty_mult": -0.25,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "empire_size_penalty_mult: -25.0%",
+    "effects": "Empire Size Effect: -25%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -7017,7 +7141,7 @@
       "leader_commanders_upkeep_mult": -0.25,
       "add_attunement_the_eater_of_worlds": "@civic_attunement1"
     },
-    "effects": "army_starting_experience_add: +100; army_damage_mult: +20.0%; armies_upkeep_mult: -20.0%; commander_initial_skill: +2; leader_commanders_upkeep_mult: -25.0%",
+    "effects": "Army Starting Experience: +100; Army Damage: +20%; Army Upkeep: -20%; Commander Starting Skill Level: +2; Commander Upkeep: -25%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -7059,7 +7183,7 @@
       "pop_resettlement_cost_mult": -0.5,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "Waives all Unity costs for Drone Resettlement. | empire_size_pops_mult: -10.0%; planet_resettlement_unemployed_mult: +50.0%; country_edict_fund_add: +25; pop_resettlement_cost_mult: -50.0%",
+    "effects": "Waives all Unity costs for Drone Resettlement. | Empire Size from Pops: -10%; Automatic Resettlement Chance: +50%; Edict Fund: +25; Resettlement Cost: -50%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -7094,7 +7218,7 @@
       "country_commander_cap_add": 1,
       "country_scientist_cap_add": 1
     },
-    "effects": "country_official_cap_add: +1; country_commander_cap_add: +1; country_scientist_cap_add: +1",
+    "effects": "Official Capacity: +1; Commander Capacity: +1; Scientist Capacity: +1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -7192,7 +7316,7 @@
       "add_attunement_the_eater_of_worlds": "@civic_attunement1",
       "the_cradle_of_souls_attunement_mult": -0.25
     },
-    "effects": "Cannot engage in Diplomacy with other empires! Cannot access the Galactic Market Has the 'Hunger' casus belli on all other empires Xeno Pops will always be eaten Gains Society Research from eating Xeno Pops | country_starbase_influence_cost_mult: -50.0%; ship_hull_mult: +25.0%; ship_hull_regen_add_perc: +5.0%; ship_armor_regen_add_perc: +5.0%; army_damage_mult: +40.0%; category_biology_research_speed_mult: +20.0%; starbase_shipyard_build_cost_mult: -25.0%; country_naval_cap_mult: +33.0%; the_cradle_of_souls_attunement_mult: -25.0%",
+    "effects": "Cannot engage in Diplomacy with other empires! Cannot access the Galactic Market Has the 'Hunger' casus belli on all other empires Xeno Pops will always be eaten Gains Society Research from eating Xeno Pops | Starbase Influence Cost: -50%; Ship Hull Points: +25%; Daily Hull Regen: +5%; Daily Armor Regen: +5%; Army Damage: +40%; Research Speed (Biology): +20%; Ship Build Cost: -25%; Naval Capacity: +33%; The Cradle of Souls Attunement: -25%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -7251,7 +7375,7 @@
       "envoy_improve_relations_mult": 0.25,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "Reduces the Opinion penalty Gestalts normally have with biological empires. | official_initial_skill: +1; diplo_weight_mult: +20.0%; country_trust_cap_add: +50; envoy_improve_relations_mult: +25.0%",
+    "effects": "Reduces the Opinion penalty Gestalts normally have with biological empires. | Official Starting Skill Level: +1; Diplomatic Weight: +20%; Trust Cap: +50; Envoy Improve Relations: +25%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -7325,7 +7449,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- [alloy_drone.GetIcon] Foundry Drones are replaced with Catalytic Drones  - [fabricator.GetIcon] [artisan_drone.GetIcon] Industrial Jobs have their Minerals Upkeep replaced with Food Upkeep.",
+    "tooltip": "- Foundry Drones are replaced with Catalytic Drones  - Industrial Jobs have their Minerals Upkeep replaced with Food Upkeep.",
     "negative_tooltip": "",
     "playable_conditions": "{'host_has_dlc': 'Plantoids Species Pack'}",
     "potential": {
@@ -7366,7 +7490,7 @@
       "councilor_gestalt_cognitive_exp_gain": "@gestalt_civic_node_xp_rate",
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- [alloy_drone.GetIcon] Foundry Drones are replaced with Catalytic Drones  - [fabricator.GetIcon] [artisan_drone.GetIcon] Industrial Jobs have their Minerals Upkeep replaced with Food Upkeep.",
+    "effects": "- Foundry Drones are replaced with Catalytic Drones  - Industrial Jobs have their Minerals Upkeep replaced with Food Upkeep.",
     "enforced_traits": [],
     "ai_weight": 0,
     "random_weight": "@civic_default_random_weight",
@@ -7516,7 +7640,7 @@
       "tradition_cost_empire_size_mult": -0.25,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Colonies have +1 Ascension Tier on game start. | planetary_ascension_effect_mult: +25.0%; planetary_ascension_cost_mult: -10.0%; tradition_cost_empire_size_mult: -25.0%",
+    "effects": "- Colonies have +1 Ascension Tier on game start. | Colony Ascension Effects: +25%; Colony Ascension Cost: -10%; Tradition Cost from Empire Size: -25%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_uncommon_base_weight",
     "random_weight": "@civic_uncommon_random_weight",
@@ -7553,7 +7677,7 @@
       "space_fauna_ship_damage_mult": 0.1,
       "add_attunement_the_eater_of_worlds": "@civic_attunement1"
     },
-    "effects": "- Start the game with 3 Reanimated Amoebas. - Defeated organic Space Fauna are automatically reanimated. - Some defeated organic Leviathans can be resurrected. - Controlled cloned organic Space Fauna can be reanimated - Gain Genetic Material from killing Space Fauna. | attached_space_fauna_component_damage_mult: +50.0%; attached_space_fauna_component_fire_rate_mult: +50.0%; space_fauna_ship_damage_mult: +10.0%",
+    "effects": "- Start the game with 3 Reanimated Amoebas. - Defeated organic Space Fauna are automatically reanimated. - Some defeated organic Leviathans can be resurrected. - Controlled cloned organic Space Fauna can be reanimated - Gain Genetic Material from killing Space Fauna. | Space Fauna Ship Component Damage: +50%; Space Fauna Ship Component Fire Rate: +50%; Space Fauna Ship Damage: +10%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -7618,6 +7742,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_stargazer"
+    ],
     "can_modify": false,
     "modifier": {
       "councilor_gestalt_legion_exp_gain": "@gestalt_civic_node_xp_rate",
@@ -7625,7 +7752,7 @@
       "ship_hyperlane_range_add": 2,
       "country_starbase_influence_cost_distance_mult": -0.2
     },
-    "effects": "Start with 2 Exploration Vessels and an Engineering Vessel equipped with Subspace Drives, making them incapable of Hyperlane travel but granting limited Jump Drive abilities. Gain an increased chance to discover FTL Travel Technologies Adds the Stargazer trait. Begin with low Intel about your starting cluster. | ship_sensor_range_add: +1; ship_hyperlane_range_add: +2; country_starbase_influence_cost_distance_mult: -20.0%",
+    "effects": "Start with 2 Exploration Vessels and an Engineering Vessel equipped with Subspace Drives, making them incapable of Hyperlane travel but granting limited Jump Drive abilities. Gain an increased chance to discover FTL Travel Technologies Adds the Stargazer trait. Begin with low Intel about your starting cluster. | Sensor Range: +1; Ship Hyperlane Detection Range: +2; Starbase Influence Distance Cost: -20%",
     "enforced_traits": [
       "trait_stargazer"
     ],
@@ -7664,7 +7791,7 @@
       "leader_initial_skill": 1,
       "leader_trait_selection_options_add": 1
     },
-    "effects": "Can build unique Vaults of Knowledge  Vaults of Knowledge produce Unity and increase Leader Experience Gain based on Leaders who acquired Level 8. | restored_node_bonus_skill: +1; councilor_skill_add: +1; leader_initial_skill: +1; leader_trait_selection_options_add: +1",
+    "effects": "Can build unique Vaults of Knowledge  Vaults of Knowledge produce Unity and increase Leader Experience Gain based on Leaders who acquired Level 8. | Restored Node Additional Skill: +1; Effective Councilor Skill: +1; Leader Starting Skill Level: +1; Additional Leader Trait Options: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 4,
@@ -7698,7 +7825,7 @@
       "leader_trait_selection_options_add": 1,
       "councilor_gestalt_regulatory_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "Change 1 Base Unity Leader Upkeep to 2 Food, Minerals or 1 Alloys | leader_trait_selection_options_add: +1",
+    "effects": "Change 1 Base Unity Leader Upkeep to 2 Food, Minerals or 1 Alloys | Additional Leader Trait Options: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -7739,7 +7866,7 @@
       "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate",
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Automatically generate Mining and Research Stations over a random unexploited deposit in a system we own, every four months. - Lacking the technology to exploit a given resource reduces output from it by -75%. - Directly building Mining and Research Stations will have an additional Build Cost of 10 Unity. | megastructures_cost_mult: -5.0%; megastructure_build_speed_mult: +10.0%",
+    "effects": "- Automatically generate Mining and Research Stations over a random unexploited deposit in a system we own, every four months. - Lacking the technology to exploit a given resource reduces output from it by -75%. - Directly building Mining and Research Stations will have an additional Build Cost of 10 Unity. | Megastructure Build Cost: -5%; Megastructure Build Speed: +10%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -7783,7 +7910,7 @@
       "councilor_gestalt_cognitive_exp_gain": "@gestalt_civic_node_xp_rate",
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "Hyperlane Breach Points is Guaranteed Research Option. Has Low Intel on all systems within 3 Hyperlanes of your starting system. | planet_sensor_range_add: +2; ship_speed_mult: +10.0%; country_physics_tech_research_speed: +15.0%",
+    "effects": "Hyperlane Breach Points is Guaranteed Research Option. Has Low Intel on all systems within 3 Hyperlanes of your starting system. | Colony Sensor Range: +2; Sublight Speed: +10%; Research Speed (Physics): +15%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -7842,7 +7969,7 @@
       "planet_soldiers_unity_produces_add": "@sovereign_guardianship_soldier_unity",
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "Unlocks Matrix Units as defense armies. Allows building a Reloading Bay in starbases. Enables Inner Focus Edict, converting Influence into Unity. | empire_size_colonies_mult: +75.0%; empire_size_systems_mult: +1.5; empire_size_pops_mult: -25.0%; empire_size_districts_mult: -50.0%; diplo_weight_mult: +20.0%",
+    "effects": "Unlocks Matrix Units as defense armies. Allows building a Reloading Bay in starbases. Enables Inner Focus Edict, converting Influence into Unity. | Empire Size from Colonies: +75%; Empire Size from Systems: +150%; Empire Size from Pops: -25%; Empire Size from Districts: -50%; Diplomatic Weight: +20%",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -7945,6 +8072,10 @@
               }
             ]
           }
+        },
+        {
+          "field": "authority",
+          "value": "auth_hive_mind"
         }
       ]
     },
@@ -7995,7 +8126,7 @@
       "terraform_speed_mult": 0.25,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Available Colony Ships: Genesis Ark - Planets Colonized with Genesis Arks:  - Pre-Sapient Pops: +300   - Planetary Features: Genesis Preserve  - Gains Unity from uplifting Pre-Sapient Species | terraforming_cost_mult: -25.0%; terraform_speed_mult: +25.0%",
+    "effects": "- Available Colony Ships: Genesis Ark - Planets Colonized with Genesis Arks:  - Pre-Sapient Pops: +300   - Planetary Features: Genesis Preserve  - Gains Unity from uplifting Pre-Sapient Species | Terraforming Cost: -25%; Terraform Speed: +25%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_rare_random_weight",
@@ -8010,7 +8141,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- Additional Starting Technologies:  - Gravity Snares  - Artificial Breeding  - Available Starbase Buildings: Beastports  - Home System: Start with a Beastport  - Starting Military Ships are replaced with Space Amoebas  - Starting Genetic Material:  - §0Common Space Amoeba",
+    "tooltip": "- Additional Starting Technologies:  - Gravity Snares  - Artificial Breeding  - Available Starbase Buildings: Beastports  - Home System: Start with a Beastport  - Starting Military Ships are replaced with Space Amoebas  - Starting Genetic Material:  - Common Space Amoeba",
     "negative_tooltip": "",
     "playable_conditions": "{'has_grand_archive_dlc': True}",
     "potential": {
@@ -8062,7 +8193,7 @@
       "space_fauna_ship_upkeep_mult": -0.1,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Additional Starting Technologies:  - Gravity Snares  - Artificial Breeding  - Available Starbase Buildings: Beastports  - Home System: Start with a Beastport  - Starting Military Ships are replaced with Space Amoebas  - Starting Genetic Material:  - §0Common Space Amoeba | starbase_shipyard_artificial_build_cost_mult: +2.0; ship_military_artificial_upkeep_mult: +2.0; councilor_gestalt_legion_exp_gain: +0.25; space_fauna_ship_cost_mult: -15.0%; space_fauna_ship_upkeep_mult: -10.0%",
+    "effects": "- Additional Starting Technologies:  - Gravity Snares  - Artificial Breeding  - Available Starbase Buildings: Beastports  - Home System: Start with a Beastport  - Starting Military Ships are replaced with Space Amoebas  - Starting Genetic Material:  - Common Space Amoeba | Artificial Military Ship Build Cost: +200%; Artificial Military Ship Upkeep Cost: +200%; Legion Node Legion Node Experience Gain: +25%; Space Fauna Ship Cloning Cost: -15%; Space Fauna Ship Upkeep: -10%",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -8185,7 +8316,7 @@
       "planet_clear_blocker_speed_mult": 0.25,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Additional Starting Technologies: Technologies to remove Natural Blockers on the Homeworld - Technologies to remove Natural Blockers are granted as Permanent Research Options upon Colonization - Mastery of Nature Ascension Perk replaced with Cultivated Worldscaping Planetary Decision - For each Natural Blocker on Colonized Planets:  - Resources from Jobs: -10%  - Pop Assembly: -10%  - Pop Upkeep: +15% | planet_jobs_produces_mult: +10.0%; founder_species_growth_mult: +10.0%; planet_pops_upkeep_mult: -15.0%; planet_clear_blocker_speed_mult: +25.0%",
+    "effects": "- Additional Starting Technologies: Technologies to remove Natural Blockers on the Homeworld - Technologies to remove Natural Blockers are granted as Permanent Research Options upon Colonization - Mastery of Nature Ascension Perk replaced with Cultivated Worldscaping Planetary Decision - For each Natural Blocker on Colonized Planets:  - Resources from Jobs: -10%  - Pop Assembly: -10%  - Pop Upkeep: +15% | Resources from Jobs: +10%; Pop Growth (or Assembly) Speed: +10%; Pop Upkeep: -15%; Clear Blocker Speed: +25%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -8200,7 +8331,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- Guaranteed Research Options: Galactic Archivism - Initial Specimens: One §0Common of each Collection Category  - Gain Unity each time you find a Specimen or complete an Archaeological Site  - Purchases from the Curator Enclave: $@galactic_curators_curator_enclave_purchase_cost|%0$ - Enables the Decentralized Research Edict, increasing Research Station Output but decreasing individuals Job Output",
+    "tooltip": "- Guaranteed Research Options: Galactic Archivism - Initial Specimens: One Common of each Collection Category  - Gain Unity each time you find a Specimen or complete an Archaeological Site  - Purchases from the Curator Enclave: -25% - Enables the Decentralized Research Edict, increasing Research Station Output but decreasing Researcher Job Output",
     "negative_tooltip": "",
     "playable_conditions": "{'has_grand_archive_dlc': True}",
     "potential": {
@@ -8223,7 +8354,7 @@
       "megastructures_grand_archive_cost_mult": "@galactic_curators_grand_archive_cost_mult",
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Guaranteed Research Options: Galactic Archivism - Initial Specimens: One §0Common of each Collection Category  - Gain Unity each time you find a Specimen or complete an Archaeological Site  - Purchases from the Curator Enclave: $@galactic_curators_curator_enclave_purchase_cost|%0$ - Enables the Decentralized Research Edict, increasing Research Station Output but decreasing individuals Job Output",
+    "effects": "- Guaranteed Research Options: Galactic Archivism - Initial Specimens: One Common of each Collection Category  - Gain Unity each time you find a Specimen or complete an Archaeological Site  - Purchases from the Curator Enclave: -25% - Enables the Decentralized Research Edict, increasing Research Station Output but decreasing Researcher Job Output",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -8275,7 +8406,7 @@
       "espionage_operation_difficulty_add": -2,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "Envoys and Officials take on the physical form of the Empires they are assigned to. Trust Required to perform Diplomatic Actions: -50% | envoys_add: +2; spy_network_daily_value_mult: +15.0%; espionage_operation_difficulty_add: -2",
+    "effects": "Envoys and Officials take on the physical form of the Empires they are assigned to. Trust Required to perform Diplomatic Actions: -50% | Envoys: +2; Infiltration Speed: +15%; Operation Difficulty: -2",
     "enforced_traits": [],
     "ai_weight": "@civic_default_random_weight",
     "random_weight": "@civic_default_random_weight",
@@ -8324,7 +8455,7 @@
       "starbase_shipyard_build_speed_mult": 0.1,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- For each Positive main species trait: +2.5% Ship Hull, +0.5% Upkeep. - For each Negative main species trait: +1.5% Ship Fire Rate, +0.5% Upkeep. | starbase_shipyard_build_speed_mult: +10.0%",
+    "effects": "- For each Positive main species trait: +2.5% Ship Hull, +0.5% Upkeep. - For each Negative main species trait: +1.5% Ship Fire Rate, +0.5% Upkeep. | Ship Build Speed: +10%",
     "enforced_traits": [],
     "ai_weight": "@civic_default_random_weight",
     "random_weight": "@civic_default_random_weight",
@@ -8377,7 +8508,7 @@
       "ship_orbital_bombardment_mult": 1,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Biological Ships in orbit of Friendly colonies have -50% ship upkeep. - Friendly colonies with Biological Ships in orbit get increased Build Speed, Amenities, Clear Blocker Speed and potentially Job Output, depending on fleet size. - Biological Ships in orbit of Hostile colonies have -85% ship upkeep. | ship_orbital_bombardment_mult: +1",
+    "effects": "- Biological Ships in orbit of Friendly colonies have -50% ship upkeep. - Friendly colonies with Biological Ships in orbit get increased Build Speed, Amenities, Clear Blocker Speed and potentially Job Output, depending on fleet size. - Biological Ships in orbit of Hostile colonies have -85% ship upkeep. | Orbital Bombardment Damage: +100%",
     "enforced_traits": [],
     "ai_weight": "@civic_default_random_weight",
     "random_weight": "@civic_default_random_weight",
@@ -8448,7 +8579,7 @@
       "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate",
       "operation_smuggle_pops_difficulty_add": -2
     },
-    "effects": "Start the game with 1000 assimilated Pops and the ability to Assimilate organics into the hive mind. Has access to the Prepare Invasion Espionage Mission Gains extra Pops from the Smuggle Population Espionage Mission | operation_smuggle_pops_difficulty_add: -2",
+    "effects": "Start the game with 1000 assimilated Pops and the ability to Assimilate organics into the hive mind. Has access to the Prepare Invasion Espionage Mission Gains extra Pops from the Smuggle Population Espionage Mission | Smuggle Population Operation Difficulty: -2",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -8517,7 +8648,7 @@
       "leader_lifespan_mult": 0.5,
       "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "- Enables the following Edicts:  - Energy Drain  - Sanguine Council  - Convergence of Will - Can construct: Leeching Tower. - Leaders start with the Psychic trait. | planet_jobs_produces_mult: -10.0%; all_technology_research_speed: -10.0%; logistic_growth_mult: -10.0%; planet_pop_assembly_mult: -10.0%; leaders_upkeep_mult: -50.0%; leader_lifespan_mult: +50.0% | - Energy Credits per 100 Psionic Pops: +0.5",
+    "effects": "- Enables the following Edicts:  - Energy Drain  - Sanguine Council  - Convergence of Will - Can construct: Leeching Tower. - Leaders start with the Psychic trait. | Resources from Jobs: -10%; All Technology Research Speed: -10%; Pop Growth Speed: -10%; Mechanical Pop Assembly Speed: -10%; Leader Upkeep: -50%; Leader Lifespan: +50% | - Energy Credits per 100 Psionic Pops: +0.5",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -8651,7 +8782,7 @@
       "psionic_aura_intensity_add": 10,
       "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "- Starts the game in contact with a Shroud Patron. - Additional Starting Technologies: Psionic Aura | psionic_aura_intensity_add: +10 | - Gain Unity scaling with Attunement to the Shroud",
+    "effects": "- Starts the game in contact with a Shroud Patron. - Additional Starting Technologies: Psionic Aura | Psionic Aura Intensity Gain: +10 | - Gain Unity scaling with Attunement to the Shroud",
     "enforced_traits": [],
     "ai_weight": "@civic_default_random_weight",
     "random_weight": "@civic_default_random_weight",
@@ -8817,7 +8948,7 @@
       "army_health": 0.4,
       "category_materials_research_speed_mult": 0.5
     },
-    "effects": "- Cannot engage in Diplomacy except with Thermophiles. - Cannot access the Galactic Market. - Grants the 'Cleansing Blaze' casus belli on other species. - Gains Unity when bombarding with the Firestorm bombardment stance. - Creates special blockers with the Seismic Carpet Bombing bombardment stance on the planet below.  - Non-Thermophile Species are restricted to Slavery or worse. | ship_weapon_range_mult: +15.0%; ship_armor_mult: +15.0%; starbase_shipyard_build_speed_mult: +15.0%; country_naval_cap_mult: +50.0%; army_health: +0.4; category_materials_research_speed_mult: +50.0%",
+    "effects": "- Cannot engage in Diplomacy except with Thermophiles. - Cannot access the Galactic Market. - Grants the 'Cleansing Blaze' casus belli on other species. - Gains Unity when bombarding with the Firestorm bombardment stance. - Creates special blockers with the Seismic Carpet Bombing bombardment stance on the planet below.  - Non-Thermophile Species are restricted to Slavery or worse. | Ship Weapons Range: +15%; Armor Hit Points: +15%; Ship Build Speed: +15%; Naval Capacity: +50%; Army Health: +40%; Research Speed (Materials): +50%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1000,
@@ -8878,7 +9009,7 @@
       "pc_volcanic_habitability": 0.2,
       "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "- Unlocks starting planet: Volcanic World.  - Guaranteed Research Options: Volcanic Forge.  - Can construct Volcanic Forge building which adds Pyroclastic Drones.  - Planets with a Volcanic Forge will gradually turn into a Volcanic World.  - Guaranteed Habitable Worlds will be Dry worlds. | pc_volcanic_max_districts_add: +3; pc_volcanic_habitability: +0.2",
+    "effects": "- Unlocks starting planet: Volcanic World.  - Guaranteed Research Options: Volcanic Forge.  - Can construct Volcanic Forge building which adds Pyroclastic Drones.  - Planets with a Volcanic Forge will gradually turn into a Volcanic World.  - Guaranteed Habitable Worlds will be Dry worlds. | Max Districts (Volcanic World): +3; Volcanic World Habitability: +20%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -8937,7 +9068,7 @@
       "planet_building_refund_mult": 0.75,
       "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "- Starts with Living Metal already researched.  - Homeworld has a Living Metal Mass. - Gain access to special Edicts:   - Centrifugal Siphoning   - Modular Growth Compounds  - Gives access to Living Metal components:   - Regenerative Armor   - Reshaping Projectile Accelerator - Has access to Colony Decision: Distribute Living Metal.  - Can recruit the Mimetic Strike Force armies.  - Can build a Offworld Expedition Hub in systems with a Molten World for Offworld Prospector Drone jobs. | planet_building_refund_mult: +75.0%",
+    "effects": "- Starts with Living Metal already researched.  - Homeworld has a Living Metal Mass. - Gain access to special Edicts:   - Centrifugal Siphoning   - Modular Growth Compounds  - Gives access to Living Metal components:   - Regenerative Armor   - Reshaping Projectile Accelerator - Has access to Colony Decision: Distribute Living Metal.  - Can recruit the Mimetic Strike Force armies.  - Can build a Offworld Expedition Hub in systems with a Molten World for Offworld Prospector Drone jobs. | Colony Infrastructure Refund: +75%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_rare_random_weight",
@@ -8976,7 +9107,7 @@
       "leader_lifespan_mult": 0.1,
       "councilor_gestalt_regulatory_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "- Initial Pops: +3000  - Starting and Future Arkships: Deprecated Cryo Pods: +3 | leader_lifespan_mult: +10.0% | - Grants access to the Prepare the Deep Sleep Colony Decision once Cryo Pods are cleared",
+    "effects": "- Initial Pops: +3000  - Starting and Future Arkships: Deprecated Cryo Pods: +3 | Leader Lifespan: +10% | - Grants access to the Prepare the Deep Sleep Colony Decision once Cryo Pods are cleared",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -9014,7 +9145,7 @@
       "ship_speed_mult": 0.2,
       "councilor_gestalt_cognitive_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "Available Situation Approach: Celebration Situation Log Entry: Star Journal | ship_speed_mult: +20.0%",
+    "effects": "Available Situation Approach: Celebration Situation Log Entry: Star Journal | Sublight Speed: +20%",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -9077,7 +9208,7 @@
       "councilor_gestalt_regulatory_exp_gain": "@gestalt_civic_node_xp_rate",
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "- Start the game with 2K Organic Pops with Bio-Trophy citizenship and Mandatory Pampering living standard  - Available Buildings: Organic Sanctuary  - Available Holdings: Organic Haven | refugee_attraction: +0.3",
+    "effects": "- Start the game with 2K Organic Pops with Bio-Trophy citizenship and Mandatory Pampering living standard  - Available Buildings: Organic Sanctuary  - Available Holdings: Organic Haven | Refugee Attraction: +30%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -9183,7 +9314,7 @@
       "add_attunement_the_eater_of_worlds": "@civic_attunement1",
       "the_cradle_of_souls_attunement_mult": -0.25
     },
-    "effects": "Cannot engage in Diplomacy with organic species! Cannot access the Galactic Market Has the 'Purification' casus belli on organic species Will always Purge Organic Pops Gains Unity from purging Organic Pops May use Armageddon bombardment stance | country_starbase_influence_cost_mult: -30.0%; ship_weapon_damage: +0.25; starbase_shipyard_build_cost_mult: -15.0%; country_naval_cap_mult: +33.0%; the_cradle_of_souls_attunement_mult: -25.0%",
+    "effects": "Cannot engage in Diplomacy with organic species! Cannot access the Galactic Market Has the 'Purification' casus belli on organic species Will always Purge Organic Pops Gains Unity from purging Organic Pops May use Armageddon bombardment stance | Starbase Influence Cost: -30%; Ship Weapons Damage: +25%; Ship Build Cost: -15%; Naval Capacity: +33%; The Cradle of Souls Attunement: -25%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -9288,7 +9419,7 @@
       "planet_building_build_speed_mult": 0.15,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Waives Technology requirements for Basic District Specializations | planet_structures_cost_mult: -15.0%; planet_building_build_speed_mult: +15.0%",
+    "effects": "- Waives Technology requirements for Basic District Specializations | Infrastructure Cost: -15%; Infrastructure Build Speed: +15%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -9323,7 +9454,7 @@
       "country_commander_cap_add": 1,
       "country_scientist_cap_add": 1
     },
-    "effects": "country_official_cap_add: +1; country_commander_cap_add: +1; country_scientist_cap_add: +1",
+    "effects": "Official Capacity: +1; Commander Capacity: +1; Scientist Capacity: +1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -9356,7 +9487,7 @@
       "councilor_gestalt_regulatory_exp_gain": "@gestalt_civic_node_xp_rate",
       "country_unity_produces_mult": 0.15
     },
-    "effects": "country_unity_produces_mult: +15.0%",
+    "effects": "Monthly Unity: +15%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -9395,7 +9526,7 @@
       "planet_miners_minerals_produces_add": 1,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "planet_miners_minerals_produces_add: +1",
+    "effects": "Minerals Produced per 100 Miners: +1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -9431,7 +9562,7 @@
       "ships_upkeep_mult": -0.05,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "planet_pops_robotics_upkeep_mult: -10.0%; planet_structures_upkeep_mult: -10.0%; ships_upkeep_mult: -5.0%",
+    "effects": "Robot Upkeep: -10%; Infrastructure Upkeep: -10%; Ship Upkeep: -5%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -9465,7 +9596,7 @@
       "pop_amenities_usage_no_happiness_mult": -0.15,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "pop_amenities_usage_no_happiness_mult: -15.0%",
+    "effects": "Pop Amenities Usage: -15%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -9506,7 +9637,7 @@
       "country_edict_fund_add": 25,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "Waives all Unity costs for Drone Resettlement. | empire_size_pops_mult: -10.0%; planet_resettlement_unemployed_mult: +50.0%; country_edict_fund_add: +25",
+    "effects": "Waives all Unity costs for Drone Resettlement. | Empire Size from Pops: -10%; Automatic Resettlement Chance: +50%; Edict Fund: +25",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -9550,7 +9681,7 @@
       "leader_commanders_upkeep_mult": -0.25,
       "add_attunement_the_eater_of_worlds": "@civic_attunement1"
     },
-    "effects": "army_damage_mult: +20.0%; armies_upkeep_mult: -20.0%; commander_initial_skill: +2; leader_commanders_upkeep_mult: -25.0%",
+    "effects": "Army Damage: +20%; Army Upkeep: -20%; Commander Starting Skill Level: +2; Commander Upkeep: -25%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -9584,7 +9715,7 @@
       "country_engineering_tech_research_speed": 0.2,
       "intel_encryption_add": 1
     },
-    "effects": "country_engineering_tech_research_speed: +20.0%; intel_encryption_add: +1",
+    "effects": "Research Speed (Engineering): +20%; Encryption: +1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -9618,7 +9749,7 @@
       "country_leader_pool_size": 1,
       "envoys_add": 1
     },
-    "effects": "country_leader_pool_size: +1; envoys_add: +1",
+    "effects": "Recruitable Leaders per Class: +1; Envoys: +1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -9652,7 +9783,7 @@
       "num_tech_alternatives_add": 1,
       "intel_decryption_add": 1
     },
-    "effects": "- The Cognitive Node starts with a random Expertise trait | num_tech_alternatives_add: +1; intel_decryption_add: +1",
+    "effects": "- The Cognitive Node starts with a random Expertise trait | Num Tech Alternatives: +1; Codebreaking: +1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -9685,7 +9816,7 @@
       "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate",
       "planet_pop_assembly_mult": 0.2
     },
-    "effects": "planet_pop_assembly_mult: +20.0%",
+    "effects": "Mechanical Pop Assembly Speed: +20%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -9719,7 +9850,7 @@
       "planet_jobs_simple_drone_produces_mult": 0.05,
       "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "planet_maintenance_drones_unity_produces_add: +1; planet_jobs_simple_drone_produces_mult: +5.0%",
+    "effects": "Unity per 100 Maintenance Drones: +1; Menial Drone Output: +5%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -9787,7 +9918,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- [fabricator.GetIcon] Fabricators are replaced with Catalytic Drones  - [fabricator.GetIcon] [artisan_drone.GetIcon] Industrial Jobs have their Minerals Upkeep replaced with Food Upkeep.",
+    "tooltip": "- Fabricators are replaced with Catalytic Drones  - Industrial Jobs have their Minerals Upkeep replaced with Food Upkeep.",
     "negative_tooltip": "",
     "playable_conditions": "{'host_has_dlc': 'Plantoids Species Pack'}",
     "potential": {
@@ -9813,7 +9944,7 @@
       "councilor_gestalt_cognitive_exp_gain": "@gestalt_civic_node_xp_rate",
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- [fabricator.GetIcon] Fabricators are replaced with Catalytic Drones  - [fabricator.GetIcon] [artisan_drone.GetIcon] Industrial Jobs have their Minerals Upkeep replaced with Food Upkeep.",
+    "effects": "- Fabricators are replaced with Catalytic Drones  - Industrial Jobs have their Minerals Upkeep replaced with Food Upkeep.",
     "enforced_traits": [],
     "ai_weight": 0,
     "random_weight": "@civic_default_random_weight",
@@ -9890,7 +10021,7 @@
       "tradition_cost_empire_size_mult": -0.25,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Colonies have +1 Ascension Tier on game start. | planetary_ascension_effect_mult: +25.0%; planetary_ascension_cost_mult: -10.0%; tradition_cost_empire_size_mult: -25.0%",
+    "effects": "- Colonies have +1 Ascension Tier on game start. | Colony Ascension Effects: +25%; Colony Ascension Cost: -10%; Tradition Cost from Empire Size: -25%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_uncommon_base_weight",
     "random_weight": "@civic_uncommon_random_weight",
@@ -9964,7 +10095,7 @@
       "first_contact_speed_mult": 0.2,
       "station_observers_unity_produces_add": 3
     },
-    "effects": "Start with 2 Exploration Vessels and an Engineering Vessel equipped with Subspace Drives, making them incapable of Hyperlane travel but granting limited Jump Drive abilities. Gain an increased chance to discover FTL Travel Technologies Gain 50% more Insight progress from observing pre-FTL Civilizations. Gain Unity every time you finish establishing first contact. | first_contact_speed_mult: +20.0%; station_observers_unity_produces_add: +3",
+    "effects": "Start with 2 Exploration Vessels and an Engineering Vessel equipped with Subspace Drives, making them incapable of Hyperlane travel but granting limited Jump Drive abilities. Gain an increased chance to discover FTL Travel Technologies Gain 50% more Insight progress from observing pre-FTL Civilizations. Gain Unity every time you finish establishing first contact. | First Contact Speed: +20%; Monthly Unity from Observation Outposts: +3",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 0,
@@ -10008,7 +10139,7 @@
       "councilor_gestalt_cognitive_exp_gain": "@gestalt_civic_node_xp_rate",
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "Hyperlane Breach Points is Guaranteed Research Option. Has Low Intel on all systems within 3 Hyperlanes of your starting system. | planet_sensor_range_add: +2; ship_speed_mult: +10.0%; country_physics_tech_research_speed: +15.0%",
+    "effects": "Hyperlane Breach Points is Guaranteed Research Option. Has Low Intel on all systems within 3 Hyperlanes of your starting system. | Colony Sensor Range: +2; Sublight Speed: +10%; Research Speed (Physics): +15%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -10045,7 +10176,7 @@
       "leader_initial_skill": 1,
       "leader_trait_selection_options_add": 1
     },
-    "effects": "Can build unique Vaults of Knowledge Vaults of Knowledge produce Unity and increase Leader Experience Gain based on Leaders who acquired Level 8. | restored_node_bonus_skill: +1; councilor_skill_add: +1; leader_initial_skill: +1; leader_trait_selection_options_add: +1",
+    "effects": "Can build unique Vaults of Knowledge Vaults of Knowledge produce Unity and increase Leader Experience Gain based on Leaders who acquired Level 8. | Restored Node Additional Skill: +1; Effective Councilor Skill: +1; Leader Starting Skill Level: +1; Additional Leader Trait Options: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 4,
@@ -10079,7 +10210,7 @@
       "leader_trait_selection_options_add": 1,
       "councilor_gestalt_regulatory_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "Change 1 Base Unity Leader Upkeep to 2 Energy Credits | leader_trait_selection_options_add: +1",
+    "effects": "Change 1 Base Unity Leader Upkeep to 2 Energy Credits | Additional Leader Trait Options: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 4,
@@ -10130,7 +10261,7 @@
       "planet_soldiers_unity_produces_add": "@sovereign_guardianship_soldier_unity",
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "Unlocks Matrix Units as defense armies. Allows building a Reloading Bay in starbases. Enables Inner Focus Edict, converting Influence into Unity. | empire_size_colonies_mult: +75.0%; empire_size_systems_mult: +1.5; empire_size_pops_mult: -25.0%; empire_size_districts_mult: -50.0%; diplo_weight_mult: +20.0%",
+    "effects": "Unlocks Matrix Units as defense armies. Allows building a Reloading Bay in starbases. Enables Inner Focus Edict, converting Influence into Unity. | Empire Size from Colonies: +75%; Empire Size from Systems: +150%; Empire Size from Pops: -25%; Empire Size from Districts: -50%; Diplomatic Weight: +20%",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -10173,7 +10304,7 @@
       "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate",
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Commodities Consolidation situation, granting rewards upon completion if production targets are met | pop_artisan_drone_bonus_workforce_mult: +15.0%; country_resource_max_consumer_goods_add: +15000",
+    "effects": "- Commodities Consolidation situation, granting rewards upon completion if production targets are met | Job Efficiency for Artisan Drones: +15%; Consumer Goods Capacity: +15000",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -10218,7 +10349,7 @@
       "envoy_improve_relations_mult": 0.5,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "envoys_add: +2; diplo_weight_mult: +25.0%; country_trust_cap_add: +35; envoy_improve_relations_mult: +50.0%",
+    "effects": "Envoys: +2; Diplomatic Weight: +25%; Trust Cap: +35; Envoy Improve Relations: +50%",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": 1,
@@ -10260,7 +10391,7 @@
       "add_base_country_intel": 20,
       "add_attunement_the_eater_of_worlds": "@civic_attunement1"
     },
-    "effects": "Commanders start with the Tactical Algorithms trait Can trade Commanders to other Empires Can create Mercenary Enclaves Starts game with Military Academy  Military Academy grants Tactical Insights | add_base_country_intel: +20",
+    "effects": "Commanders start with the Tactical Algorithms trait Can trade Commanders to other Empires Can create Mercenary Enclaves Starts game with Military Academy  Military Academy grants Tactical Insights | Base Intel Level: +20",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -10293,6 +10424,10 @@
               }
             ]
           }
+        },
+        {
+          "field": "authority",
+          "value": "auth_machine_intelligence"
         },
         {
           "field": "ethics",
@@ -10341,7 +10476,7 @@
       "terraform_speed_mult": 0.25,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Available Colony Ships: Genesis Ark - Planets Colonized with Genesis Arks:  - Pre-Sapient Pops: +300   - Planetary Features: Genesis Preserve  - Gains Unity from uplifting Pre-Sapient Species | terraforming_cost_mult: -25.0%; terraform_speed_mult: +25.0%",
+    "effects": "- Available Colony Ships: Genesis Ark - Planets Colonized with Genesis Arks:  - Pre-Sapient Pops: +300   - Planetary Features: Genesis Preserve  - Gains Unity from uplifting Pre-Sapient Species | Terraforming Cost: -25%; Terraform Speed: +25%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_rare_random_weight",
@@ -10379,7 +10514,7 @@
       "councilor_gestalt_regulatory_exp_gain": "@gestalt_civic_node_xp_rate",
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "intel_decryption_add: +1; spy_network_daily_value_mult: +25.0%; envoys_add: +1; country_trust_cap_add: -25",
+    "effects": "Codebreaking: +1; Infiltration Speed: +25%; Envoys: +1; Trust Cap: -25",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_uncommon_base_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -10432,7 +10567,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- Additional Starting Technologies:  - Gravity Snares  - Artificial Breeding  - Available Starbase Buildings: Beastports  - Home System: Start with a Beastport  - Starting Military Ships are replaced with Space Amoebas  - Starting Genetic Material:  - §0Common Space Amoeba",
+    "tooltip": "- Additional Starting Technologies:  - Gravity Snares  - Artificial Breeding  - Available Starbase Buildings: Beastports  - Home System: Start with a Beastport  - Starting Military Ships are replaced with Space Amoebas  - Starting Genetic Material:  - Common Space Amoeba",
     "negative_tooltip": "",
     "playable_conditions": "{'has_grand_archive_dlc': True}",
     "potential": {
@@ -10479,7 +10614,7 @@
       "space_fauna_ship_upkeep_mult": -0.1,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Additional Starting Technologies:  - Gravity Snares  - Artificial Breeding  - Available Starbase Buildings: Beastports  - Home System: Start with a Beastport  - Starting Military Ships are replaced with Space Amoebas  - Starting Genetic Material:  - §0Common Space Amoeba | artificial_ship_naval_cap_usage_mult: +2.0; councilor_gestalt_legion_exp_gain: +0.25; space_fauna_ship_cost_mult: -15.0%; space_fauna_ship_upkeep_mult: -10.0%",
+    "effects": "- Additional Starting Technologies:  - Gravity Snares  - Artificial Breeding  - Available Starbase Buildings: Beastports  - Home System: Start with a Beastport  - Starting Military Ships are replaced with Space Amoebas  - Starting Genetic Material:  - Common Space Amoeba | Artificial Ships Naval Capacity Usage: +200%; Legion Node Legion Node Experience Gain: +25%; Space Fauna Ship Cloning Cost: -15%; Space Fauna Ship Upkeep: -10%",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -10591,7 +10726,7 @@
       "planet_clear_blocker_speed_mult": 0.25,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Additional Starting Technologies: Technologies to remove Natural Blockers on the Homeworld - Technologies to remove Natural Blockers are granted as Permanent Research Options upon Colonization - Mastery of Nature Ascension Perk replaced with Cultivated Worldscaping Planetary Decision - For each Natural Blocker on Colonized Planets:  - Resources from Jobs: -10%  - Pop Assembly: -10%  - Pop Upkeep: +15% | planet_jobs_produces_mult: +10.0%; founder_species_growth_mult: +10.0%; planet_pops_upkeep_mult: -15.0%; planet_clear_blocker_speed_mult: +25.0%",
+    "effects": "- Additional Starting Technologies: Technologies to remove Natural Blockers on the Homeworld - Technologies to remove Natural Blockers are granted as Permanent Research Options upon Colonization - Mastery of Nature Ascension Perk replaced with Cultivated Worldscaping Planetary Decision - For each Natural Blocker on Colonized Planets:  - Resources from Jobs: -10%  - Pop Assembly: -10%  - Pop Upkeep: +15% | Resources from Jobs: +10%; Pop Growth (or Assembly) Speed: +10%; Pop Upkeep: -15%; Clear Blocker Speed: +25%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -10606,7 +10741,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- Guaranteed Research Options: Galactic Archivism - Initial Specimens: One §0Common of each Collection Category  - Gain Unity each time you find a Specimen or complete an Archaeological Site  - Purchases from the Curator Enclave: $@galactic_curators_curator_enclave_purchase_cost|%0$ - Enables the Decentralized Research Edict, increasing Research Station Output but decreasing individuals Job Output",
+    "tooltip": "- Guaranteed Research Options: Galactic Archivism - Initial Specimens: One Common of each Collection Category  - Gain Unity each time you find a Specimen or complete an Archaeological Site  - Purchases from the Curator Enclave: -25% - Enables the Decentralized Research Edict, increasing Research Station Output but decreasing Researcher Job Output",
     "negative_tooltip": "",
     "playable_conditions": "{'has_grand_archive_dlc': True}",
     "potential": {
@@ -10629,7 +10764,7 @@
       "megastructures_grand_archive_cost_mult": "@galactic_curators_grand_archive_cost_mult",
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Guaranteed Research Options: Galactic Archivism - Initial Specimens: One §0Common of each Collection Category  - Gain Unity each time you find a Specimen or complete an Archaeological Site  - Purchases from the Curator Enclave: $@galactic_curators_curator_enclave_purchase_cost|%0$ - Enables the Decentralized Research Edict, increasing Research Station Output but decreasing individuals Job Output",
+    "effects": "- Guaranteed Research Options: Galactic Archivism - Initial Specimens: One Common of each Collection Category  - Gain Unity each time you find a Specimen or complete an Archaeological Site  - Purchases from the Curator Enclave: -25% - Enables the Decentralized Research Edict, increasing Research Station Output but decreasing Researcher Job Output",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -10672,7 +10807,7 @@
       "councilor_gestalt_legion_exp_gain": "@gestalt_civic_node_xp_rate",
       "add_attunement_the_eater_of_worlds": "@civic_attunement1"
     },
-    "effects": "defensive_stations_tracking_add: +10; starbases_upkeep_mult: -10.0%; ship_home_territory_fire_rate_mult: +10.0%; ship_disengage_opportunities_add: +1",
+    "effects": "Defensive Stations Tracking: +10; Station Upkeep: -10%; Home Territory Fire Rate: +10%; Disengagement Opportunities: +1",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -10723,7 +10858,7 @@
       "leader_lifespan_mult": 0.5,
       "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "- Enables the following Edicts:  - Energy Drain  - Nexus Charge  - Convergence of Will - Can construct: Siphon Battery. - Leaders start with the Psychic trait. | planet_jobs_produces_mult: -10.0%; all_technology_research_speed: -10.0%; logistic_growth_mult: -10.0%; planet_pop_assembly_mult: -10.0%; leaders_upkeep_mult: -50.0%; leader_lifespan_mult: +50.0% | - Energy Credits per 100 Psionic Pops: +0.5",
+    "effects": "- Enables the following Edicts:  - Energy Drain  - Nexus Charge  - Convergence of Will - Can construct: Siphon Battery. - Leaders start with the Psychic trait. | Resources from Jobs: -10%; All Technology Research Speed: -10%; Pop Growth Speed: -10%; Mechanical Pop Assembly Speed: -10%; Leader Upkeep: -50%; Leader Lifespan: +50% | - Energy Credits per 100 Psionic Pops: +0.5",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -10797,7 +10932,7 @@
       "psionic_aura_intensity_add": 10,
       "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "- Starts the game in contact with a Shroud Patron. - Additional Starting Technologies: Psionic Aura | psionic_aura_intensity_add: +10 | - Gain Unity scaling with Attunement to the Shroud",
+    "effects": "- Starts the game in contact with a Shroud Patron. - Additional Starting Technologies: Psionic Aura | Psionic Aura Intensity Gain: +10 | - Gain Unity scaling with Attunement to the Shroud",
     "enforced_traits": [],
     "ai_weight": "@civic_default_random_weight",
     "random_weight": "@civic_default_random_weight",
@@ -10858,7 +10993,7 @@
       "pc_volcanic_habitability": 0.1,
       "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "- Unlocks starting planet: Volcanic World.  - Guaranteed Research Options: Volcanic Forge.  - Can construct Volcanic Forge building which adds Pyroclastic Drones.  - Planets with a Volcanic Forge will gradually turn into a Volcanic World.  - Guaranteed Habitable Worlds will be Dry worlds. | pc_volcanic_max_districts_add: +3; pc_volcanic_habitability: +0.1",
+    "effects": "- Unlocks starting planet: Volcanic World.  - Guaranteed Research Options: Volcanic Forge.  - Can construct Volcanic Forge building which adds Pyroclastic Drones.  - Planets with a Volcanic Forge will gradually turn into a Volcanic World.  - Guaranteed Habitable Worlds will be Dry worlds. | Max Districts (Volcanic World): +3; Volcanic World Habitability: +10%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -10905,7 +11040,7 @@
       "planet_building_refund_mult": 0.75,
       "councilor_gestalt_growth_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "- Starts with Living Metal already researched.  - Homeworld has a Living Metal Mass. - Gain access to special Edicts:   - Centrifugal Siphoning   - Modular Growth Compounds  - Gives access to Living Metal components:   - Regenerative Armor   - Reshaping Projectile Accelerator - Has access to Colony Decision: Distribute Living Metal.  - Can recruit the Mimetic Strike Force armies.  - Can build a Offworld Expedition Hub in systems with a Molten World for Offworld Prospector Drone jobs. | planet_building_refund_mult: +75.0%",
+    "effects": "- Starts with Living Metal already researched.  - Homeworld has a Living Metal Mass. - Gain access to special Edicts:   - Centrifugal Siphoning   - Modular Growth Compounds  - Gives access to Living Metal components:   - Regenerative Armor   - Reshaping Projectile Accelerator - Has access to Colony Decision: Distribute Living Metal.  - Can recruit the Mimetic Strike Force armies.  - Can build a Offworld Expedition Hub in systems with a Molten World for Offworld Prospector Drone jobs. | Colony Infrastructure Refund: +75%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -10944,7 +11079,7 @@
       "leader_lifespan_mult": 0.1,
       "councilor_gestalt_regulatory_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "- Initial Pops: +3000  - Starting and Future Arkships: Deprecated Cryo Pods: +3 | leader_lifespan_mult: +10.0% | - Grants access to the Prepare the Deep Sleep Colony Decision once Cryo Pods are cleared",
+    "effects": "- Initial Pops: +3000  - Starting and Future Arkships: Deprecated Cryo Pods: +3 | Leader Lifespan: +10% | - Grants access to the Prepare the Deep Sleep Colony Decision once Cryo Pods are cleared",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -10982,7 +11117,7 @@
       "ship_speed_mult": 0.2,
       "councilor_gestalt_cognitive_exp_gain": "@gestalt_civic_node_xp_rate"
     },
-    "effects": "Available Situation Approach: Celebration Situation Log Entry: Star Journal | ship_speed_mult: +20.0%",
+    "effects": "Available Situation Approach: Celebration Situation Log Entry: Star Journal | Sublight Speed: +20%",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -11023,7 +11158,7 @@
       "divided_patrongage_max_subjects": 1,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Your Subjects cannot have the following Agreement Terms:  Expansion Prohibited  Limited Diplomacy  Independent Sensors - Available Holdings: Franchise Headquarters on Subject colonies - The Commercial Forum Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | divided_patrongage_max_subjects: +1",
+    "effects": "- Your Subjects cannot have the following Agreement Terms:  Expansion Prohibited  Limited Diplomacy  Independent Sensors - Available Holdings: Franchise Headquarters on Subject colonies - The Commercial Forum Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Subjects Exempt from Divided Patronage: +1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -11072,7 +11207,7 @@
       "starbase_buildings_trade_produces_add": 2,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "- The Commercial Forum Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | country_starbase_capacity_add: +4; starbase_buildings_trade_produces_add: +2",
+    "effects": "- The Commercial Forum Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Station Capacity: +4; Trade from Starbase Buildings: +2",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -11142,6 +11277,12 @@
         },
         {
           "not": {
+            "field": "civics",
+            "value": "civic_idealistic_foundation"
+          }
+        },
+        {
+          "not": {
             "field": "origin",
             "value": "origin_unplugged"
           }
@@ -11155,7 +11296,7 @@
       "refugee_attraction": 0.1,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "- Factions will form in your empire shortly after the game starts, but Faction Output is reduced for the first ten years. - Faction Unity Output is replaced with Trade Output - The Virtual Entertainment Studios Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | faction_demands_met_mult: +25.0%; faction_demands_unmet_mult: +50.0%; refugee_attraction: +0.1",
+    "effects": "- Factions will form in your empire shortly after the game starts, but Faction Output is reduced for the first ten years. - Faction Unity Output is replaced with Trade Output - The Virtual Entertainment Studios Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Approval from Met Faction Demands: +25%; Disapproval from Unmet Faction Demands: +50%; Refugee Attraction: +10%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -11216,7 +11357,7 @@
       "country_naval_cap_mult": 0.15,
       "add_attunement_the_eater_of_worlds": "@civic_attunement1"
     },
-    "effects": "- The Private Military Industries Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | country_naval_cap_mult: +15.0%",
+    "effects": "- The Private Military Industries Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Naval Capacity: +15%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -11257,7 +11398,7 @@
       "branch_office_value_mult": 0.1,
       "planet_traders_trade_produces_add": 2
     },
-    "effects": "branch_office_value_mult: +10.0%; planet_traders_trade_produces_add: +2",
+    "effects": "Branch Office Value: +10%; Trade Produced per 100 Traders: +2",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -11327,7 +11468,7 @@
       "empire_size_colonies_mult": -0.25,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Unlocks Ship Type: Private Colony Ship - The Private Mining Consortium Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | empire_size_systems_mult: -15.0%; empire_size_colonies_mult: -25.0%",
+    "effects": "- Unlocks Ship Type: Private Colony Ship - The Private Mining Consortium Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Empire Size from Systems: -15%; Empire Size from Colonies: -25%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -11383,7 +11524,7 @@
       "planet_bureaucrats_trade_produces_add": 1,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "Spiritualist Pops give additional Trade on all Colonies and Branch Offices Can build Temple of Prosperity Corporate Building | pop_ethic_spiritualist_attraction_mult: +50.0%; planet_bureaucrats_trade_produces_add: +1",
+    "effects": "Spiritualist Pops give additional Trade on all Colonies and Branch Offices Can build Temple of Prosperity Corporate Building | Spiritualist Ethics Attraction: +50%; Trade Produced per 100 Bureaucrats: +1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -11441,7 +11582,7 @@
       "country_leader_pool_size": 1,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- The Executive Retreat Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | species_leader_exp_gain: +0.1; intel_decryption_add: +1; country_leader_pool_size: +1",
+    "effects": "- The Executive Retreat Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Species Leader Exp Gain: +10%; Codebreaking: +1; Recruitable Leaders per Class: +1",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -11490,7 +11631,7 @@
       "spy_network_daily_value_mult": 0.2,
       "intel_decryption_add": 1
     },
-    "effects": "Can build Branch Offices on the planet of any regular empire they have no war or active truce with Crime on Branch Office Planets increases Branch Office Value Can build special Crime-increasing Corporate Buildings | planet_branch_offices_cost_mult: -20.0%; spy_network_daily_value_mult: +20.0%; intel_decryption_add: +1",
+    "effects": "Can build Branch Offices on the planet of any regular empire they have no war or active truce with Crime on Branch Office Planets increases Branch Office Value Can build special Crime-increasing Corporate Buildings | Branch Office Cost: -20%; Infiltration Speed: +20%; Codebreaking: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -11562,7 +11703,7 @@
       "armies_upkeep_mult": -0.2,
       "add_attunement_the_eater_of_worlds": "@civic_attunement1"
     },
-    "effects": "- The Mercenary Liaison Office Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | commander_initial_skill: +1; army_starting_experience_add: +100; army_damage_mult: +20.0%; armies_upkeep_mult: -20.0%",
+    "effects": "- The Mercenary Liaison Office Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Commander Starting Skill Level: +1; Army Starting Experience: +100; Army Damage: +20%; Army Upkeep: -20%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -11640,7 +11781,7 @@
       "refugee_attraction": -0.25,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- The Private Security Company Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | pop_slave_bonus_workforce_mult: +15.0%; refugee_attraction: -0.25",
+    "effects": "- The Private Security Company Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Job Efficiency for Slaves: +15%; Refugee Attraction: -25%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -11689,7 +11830,7 @@
       "country_edict_fund_add": 25,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "- The Corporate Embassy Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | country_unity_produces_mult: +15.0%; country_edict_fund_add: +25",
+    "effects": "- The Corporate Embassy Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Monthly Unity: +15%; Edict Fund: +25",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -11741,7 +11882,7 @@
       "envoy_improve_relations_mult": 0.3,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "- The Public Relations Firm Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | envoys_add: +2; diplo_weight_mult: +30.0%; country_trust_cap_add: +15; envoy_improve_relations_mult: +30.0%",
+    "effects": "- The Public Relations Firm Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Envoys: +2; Diplomatic Weight: +30%; Trust Cap: +15; Envoy Improve Relations: +30%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -11833,7 +11974,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- [foundry.GetIcon] [foundry.GetNamePlural] are replaced with Catalytic Technicians  - [foundry.GetIcon] [artisan.GetIcon] Industrial Jobs have their Minerals Upkeep replaced with Food Upkeep.   - The Private Military Industries Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
+    "tooltip": "- Metallurgists are replaced with Catalytic Technicians  - Industrial Jobs have their Minerals Upkeep replaced with Food Upkeep.   - The Private Military Industries Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
     "negative_tooltip": "",
     "playable_conditions": "{'host_has_dlc': 'Plantoids Species Pack'}",
     "potential": {
@@ -11879,7 +12020,7 @@
     "modifier": {
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- [foundry.GetIcon] [foundry.GetNamePlural] are replaced with Catalytic Technicians  - [foundry.GetIcon] [artisan.GetIcon] Industrial Jobs have their Minerals Upkeep replaced with Food Upkeep.   - The Private Military Industries Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
+    "effects": "- Metallurgists are replaced with Catalytic Technicians  - Industrial Jobs have their Minerals Upkeep replaced with Food Upkeep.   - The Private Military Industries Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
     "enforced_traits": [],
     "ai_weight": 0,
     "random_weight": "@civic_default_random_weight",
@@ -12041,6 +12182,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_aquatic"
+    ],
     "can_add": true,
     "can_remove": true,
     "modifier": {
@@ -12116,6 +12260,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_robot_aquatic"
+    ],
     "can_modify": false,
     "modifier": {
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
@@ -12184,7 +12331,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "Can build Posthumous Employment Center  [reassigner.GetNamePlural] turn Consumer Goods and Food (or equivalent) into Monthly Organic Pop Growth. All assembled Pops have the Zombie trait.  Grants access to the Reemployment Center Holding.  Some defeated organic Leviathans can be resurrected. The Fast Food Chain Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
+    "tooltip": "Can build Posthumous Employment Center  Reassigners turn Consumer Goods and Food (or equivalent) into Monthly Organic Pop Growth. All assembled Pops have the Zombie trait.  Grants access to the Reemployment Center Holding.  Some defeated organic Leviathans can be resurrected. The Fast Food Chain Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
     "negative_tooltip": "",
     "playable_conditions": "{'host_has_dlc': 'Necroids Species Pack'}",
     "potential": {
@@ -12262,7 +12409,7 @@
     "modifier": {
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "Can build Posthumous Employment Center  [reassigner.GetNamePlural] turn Consumer Goods and Food (or equivalent) into Monthly Organic Pop Growth. All assembled Pops have the Zombie trait.  Grants access to the Reemployment Center Holding.  Some defeated organic Leviathans can be resurrected. The Fast Food Chain Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
+    "effects": "Can build Posthumous Employment Center  Reassigners turn Consumer Goods and Food (or equivalent) into Monthly Organic Pop Growth. All assembled Pops have the Zombie trait.  Grants access to the Reemployment Center Holding.  Some defeated organic Leviathans can be resurrected. The Fast Food Chain Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_uncommon_base_weight",
     "random_weight": "@civic_uncommon_random_weight",
@@ -12486,7 +12633,7 @@
       "planet_building_refund_mult": 0.1,
       "megastructure_dismantle_refund_mult": 0.1
     },
-    "effects": "- Researching Debris grants both Research and a portion of other Resource Costs of the destroyed fleet - Ships can be salvaged from some Debris - The Industrial Subsidiary Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | ships_alloys_upkeep_mult: -5.0%; planet_building_refund_mult: +10.0%; megastructure_dismantle_refund_mult: +10.0%",
+    "effects": "- Researching Debris grants both Research and a portion of other Resource Costs of the destroyed fleet - Ships can be salvaged from some Debris - The Industrial Subsidiary Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Ships Alloys Upkeep: -5%; Colony Infrastructure Refund: +10%; Megastructure Refund: +10%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -12549,7 +12696,7 @@
       "tradition_cost_empire_size_mult": -0.25,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Colonies have +1 Ascension Tier on game start.  - The Public Relations Firm Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | planetary_ascension_effect_mult: +25.0%; planetary_ascension_cost_mult: -10.0%; tradition_cost_empire_size_mult: -25.0%",
+    "effects": "- Colonies have +1 Ascension Tier on game start.  - The Public Relations Firm Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Colony Ascension Effects: +25%; Colony Ascension Cost: -10%; Tradition Cost from Empire Size: -25%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_uncommon_base_weight",
     "random_weight": "@civic_uncommon_random_weight",
@@ -12638,6 +12785,12 @@
         },
         {
           "not": {
+            "field": "civics",
+            "value": "civic_eager_explorers"
+          }
+        },
+        {
+          "not": {
             "any": [
               {
                 "field": "civics",
@@ -12716,7 +12869,7 @@
       "station_gatherers_produces_mult": 0.25,
       "station_researchers_produces_mult": 0.25
     },
-    "effects": "Start with 2 Exploration Vessels and an Engineering Vessel equipped with Subspace Drives, making them incapable of Hyperlane travel but granting limited Jump Drive abilities. Gain an increased chance to discover FTL Travel Technologies Start with the Starhold technology and a Starhold already built in your home system. The Private Mining Consortium Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | starbase_building_build_speed_mult: +30.0%; starbase_module_build_speed_mult: +30.0%; starbase_upgrade_speed_mult: +30.0%; station_gatherers_produces_mult: +25.0%; station_researchers_produces_mult: +25.0%",
+    "effects": "Start with 2 Exploration Vessels and an Engineering Vessel equipped with Subspace Drives, making them incapable of Hyperlane travel but granting limited Jump Drive abilities. Gain an increased chance to discover FTL Travel Technologies Start with the Starhold technology and a Starhold already built in your home system. The Private Mining Consortium Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Station Building Build Speed: +30%; Station Module Build Speed: +30%; Station Upgrade Speed: +30%; Resources Produced from Mining Stations: +25%; Resources Produced from Research Stations: +25%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 0,
@@ -12796,7 +12949,7 @@
       "country_physics_tech_research_speed": 0.15,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "Hyperlane Breach Points is Guaranteed Research Option. Has Low Intel on all systems within 3 Hyperlanes of your starting system. The Amusement Megaplex Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | planet_sensor_range_add: +2; ship_speed_mult: +10.0%; country_physics_tech_research_speed: +15.0%",
+    "effects": "Hyperlane Breach Points is Guaranteed Research Option. Has Low Intel on all systems within 3 Hyperlanes of your starting system. The Amusement Megaplex Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Colony Sensor Range: +2; Sublight Speed: +10%; Research Speed (Physics): +15%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -12864,7 +13017,7 @@
       "planet_bureaucrats_physics_research_produces_add": 1,
       "rare_tech_draw_chance_mult": 0.1
     },
-    "effects": "- Available Starbase Buildings: Dimensional Shrine   - The Xeno-Outreach Agency Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | planet_bureaucrats_physics_research_produces_add: +1; rare_tech_draw_chance_mult: +10.0% | - Chance for Astral Rifts in Controlled Systems: +100%",
+    "effects": "- Available Starbase Buildings: Dimensional Shrine   - The Xeno-Outreach Agency Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Physics Research Produced per 100 Bureaucrats: +1; Rare Tech Draw Chance: +10% | - Chance for Astral Rifts in Controlled Systems: +100%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -12926,6 +13079,21 @@
             }
           ],
           "tooltip": "civic_tooltip_authoritarian_or_militarist"
+        },
+        {
+          "not": {
+            "any": [
+              {
+                "field": "ethics",
+                "value": "ethic_pacifist"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_fanatic_pacifist"
+              }
+            ]
+          },
+          "tooltip": "civic_tooltip_not_pacifist"
         }
       ]
     },
@@ -12933,7 +13101,7 @@
     "modifier": {
       "ships_upkeep_mult": -0.05
     },
-    "effects": "Commanders start with the Material Liberator trait Has the 'Pirate Raid' casus belli on all other empires. The Mercenary Liaison Office Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | ships_upkeep_mult: -5.0%",
+    "effects": "Commanders start with the Material Liberator trait Has the 'Pirate Raid' casus belli on all other empires. The Mercenary Liaison Office Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Ship Upkeep: -5%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 4,
@@ -12982,7 +13150,7 @@
       "country_commander_cap_add": 1,
       "country_scientist_cap_add": 1
     },
-    "effects": "- The Executive Retreat Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | country_official_cap_add: +1; country_commander_cap_add: +1; country_scientist_cap_add: +1",
+    "effects": "- The Executive Retreat Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Official Capacity: +1; Commander Capacity: +1; Scientist Capacity: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 4,
@@ -12997,7 +13165,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- Capital Buildings provide +100 [healthcare.GetIcon] [healthcare.GetName] Jobs - Amenities from [healthcare.GetIcon] [healthcare.GetNamePlural]: +2 - Trade from [healthcare.GetIcon] [healthcare.GetNamePlural]: +4 - Can build Corporate Clinic Corporate Building - The Corporate Clinic Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
+    "tooltip": "- Capital Buildings provide +100 Medical Worker Jobs - Amenities from Medical Workers: +2 - Trade from Medical Workers: +4 - Can build Corporate Clinic Corporate Building - The Corporate Clinic Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
     "negative_tooltip": "",
     "playable_conditions": "{'host_has_dlc': 'Galactic Paragons'}",
     "potential": {
@@ -13052,7 +13220,7 @@
       "planet_doctors_trade_produces_add": 4,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Capital Buildings provide +100 [healthcare.GetIcon] [healthcare.GetName] Jobs - Amenities from [healthcare.GetIcon] [healthcare.GetNamePlural]: +2 - Trade from [healthcare.GetIcon] [healthcare.GetNamePlural]: +4 - Can build Corporate Clinic Corporate Building - The Corporate Clinic Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | leader_lifespan_add: +10; planet_doctors_trade_produces_add: +4",
+    "effects": "- Capital Buildings provide +100 Medical Worker Jobs - Amenities from Medical Workers: +2 - Trade from Medical Workers: +4 - Can build Corporate Clinic Corporate Building - The Corporate Clinic Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Leader Lifespan: +10; Trade Produced per 100 Medical Workers: +4",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 4,
@@ -13108,7 +13276,7 @@
       "leader_initial_skill": 1,
       "leader_trait_selection_options_add": 1
     },
-    "effects": "Can build unique Vaults of Knowledge Vaults of Knowledge produce Unity and Trade based on Destiny Traits acquired. The Commercial Forum Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | councilor_skill_add: +1; leader_initial_skill: +1; leader_trait_selection_options_add: +1",
+    "effects": "Can build unique Vaults of Knowledge Vaults of Knowledge produce Unity and Trade based on Destiny Traits acquired. The Commercial Forum Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Effective Councilor Skill: +1; Leader Starting Skill Level: +1; Additional Leader Trait Options: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 4,
@@ -13160,6 +13328,21 @@
           "not": {
             "any": [
               {
+                "field": "ethics",
+                "value": "ethic_xenophobe"
+              },
+              {
+                "field": "ethics",
+                "value": "ethic_fanatic_xenophobe"
+              }
+            ]
+          },
+          "tooltip": "civic_tooltip_not_xenophobe"
+        },
+        {
+          "not": {
+            "any": [
+              {
                 "field": "civics",
                 "value": "civic_corporate_hedonism"
               },
@@ -13194,7 +13377,7 @@
       "pop_ethic_egalitarian_attraction_mult": 0.5,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "- Allows Employee Ownership Living Standard, under which all Pops have high Consumer Goods Upkeep regardless of Strata   - Disables the use of most other Living Standards   - Available Policies: Mutual Aid   - Replaces Executive and Manager Jobs with Steward Jobs   - The Corporate Embassy Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | election_term_years_mult: -50.0%; pop_ethic_egalitarian_attraction_mult: +50.0%",
+    "effects": "- Allows Employee Ownership Living Standard, under which all Pops have high Consumer Goods Upkeep regardless of Strata   - Disables the use of most other Living Standards   - Available Policies: Mutual Aid   - Replaces Executive and Manager Jobs with Steward Jobs   - The Corporate Embassy Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Election Term Length (Years): -50%; Egalitarian Ethics Attraction: +50%",
     "enforced_traits": [],
     "ai_weight": "@ai_civic_default_base_weight",
     "random_weight": "@civic_default_random_weight",
@@ -13350,7 +13533,7 @@
     "modifier": {
       "planet_augmentors_trade_produces_add": 4
     },
-    "effects": "- Species Traits: Allows selection of Universal Augmentations Traits  - Available Buildings: Augmentation Bazaar - Available Holdings: Offworld Implant Hub  - Executives are replaced with Augmentation Merchants | planet_augmentors_trade_produces_add: +4",
+    "effects": "- Species Traits: Allows selection of Universal Augmentations Traits  - Available Buildings: Augmentation Bazaar - Available Holdings: Offworld Implant Hub  - Executives are replaced with Augmentation Merchants | Trade Produced per 100 Job Augmentor Augmentors: +4",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 4,
@@ -13482,7 +13665,7 @@
       "planet_soldiers_unity_produces_add": "@sovereign_guardianship_soldier_unity",
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "Unlocks Fanatic Guardians as defense armies. Allows building a Reloading Bay in starbases. Enables Inner Focus Edict, converting Influence into Unity. | empire_size_colonies_mult: +75.0%; empire_size_branch_office_mult: +1; empire_size_systems_mult: +1.5; empire_size_pops_mult: -25.0%; empire_size_districts_mult: -50.0%; diplo_weight_mult: +20.0%",
+    "effects": "Unlocks Fanatic Guardians as defense armies. Allows building a Reloading Bay in starbases. Enables Inner Focus Edict, converting Influence into Unity. | Empire Size from Colonies: +75%; Empire Size from Branch Offices: +100%; Empire Size from Systems: +150%; Empire Size from Pops: -25%; Empire Size from Districts: -50%; Diplomatic Weight: +20%",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -13588,7 +13771,7 @@
       "terraform_speed_mult": 0.25,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Available Colony Ships: Genesis Ark - Planets Colonized with Genesis Arks:  - Pre-Sapient Pops: +300   - Planetary Features: Genesis Preserve  - Gains Unity from uplifting Pre-Sapient Species - The Xeno-Outreach Agency Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | terraforming_cost_mult: -25.0%; terraform_speed_mult: +25.0%",
+    "effects": "- Available Colony Ships: Genesis Ark - Planets Colonized with Genesis Arks:  - Pre-Sapient Pops: +300   - Planetary Features: Genesis Preserve  - Gains Unity from uplifting Pre-Sapient Species - The Xeno-Outreach Agency Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Terraforming Cost: -25%; Terraform Speed: +25%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_rare_random_weight",
@@ -13729,13 +13912,16 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_storm_touched"
+    ],
     "can_add": true,
     "can_remove": true,
     "modifier": {
       "capital_storm_diplo_weight_mult": 0.2,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Available Buildings: Storm Summoning Theater - Replaces Entertainer Jobs with Storm Dancer Jobs - Species Traits: Storm Touched - The Amusement Megaplex Corporate Building generates additional Branch Office Value and adds +50 Merchant jobs to our Capital. | capital_storm_diplo_weight_mult: +20.0%",
+    "effects": "- Available Buildings: Storm Summoning Theater - Replaces Entertainer Jobs with Storm Dancer Jobs - Species Traits: Storm Touched - The Amusement Megaplex Corporate Building generates additional Branch Office Value and adds +50 Merchant jobs to our Capital. | Diplomatic Weight while Capital is affected by a Cosmic Storm: +20%",
     "enforced_traits": [
       "trait_storm_touched"
     ],
@@ -13882,7 +14068,7 @@
       "planet_clear_blocker_speed_mult": 0.25,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Additional Starting Technologies: Technologies to remove Natural Blockers on the Homeworld - Technologies to remove Natural Blockers are granted as Permanent Research Options upon Colonization - Mastery of Nature Ascension Perk replaced with Cultivated Worldscaping Planetary Decision - For each Natural Blocker on Colonized Planets:  - Resources from Jobs: -10%  - Pop Growth Speed: -10%  - Pop Upkeep: +15% - The Executive Retreat Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | planet_jobs_produces_mult: +10.0%; founder_species_growth_mult: +10.0%; planet_pops_upkeep_mult: -15.0%; planet_clear_blocker_speed_mult: +25.0%",
+    "effects": "- Additional Starting Technologies: Technologies to remove Natural Blockers on the Homeworld - Technologies to remove Natural Blockers are granted as Permanent Research Options upon Colonization - Mastery of Nature Ascension Perk replaced with Cultivated Worldscaping Planetary Decision - For each Natural Blocker on Colonized Planets:  - Resources from Jobs: -10%  - Pop Growth Speed: -10%  - Pop Upkeep: +15% - The Executive Retreat Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Resources from Jobs: +10%; Pop Growth (or Assembly) Speed: +10%; Pop Upkeep: -15%; Clear Blocker Speed: +25%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -13897,7 +14083,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- Guaranteed Research Options: Galactic Archivism - Initial Specimens: One §0Common of each Collection Category  - Gain Unity each time you find a Specimen or complete an Archaeological Site  - Purchases from the Curator Enclave: $@galactic_curators_curator_enclave_purchase_cost|%0$ - Enables the Decentralized Research Edict, increasing Research Station Output but decreasing individuals Job Output - Replaces Entertainer Jobs with Museum Curator Jobs - The Public Relations Firm Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
+    "tooltip": "- Guaranteed Research Options: Galactic Archivism - Initial Specimens: One Common of each Collection Category  - Gain Unity each time you find a Specimen or complete an Archaeological Site  - Purchases from the Curator Enclave: -25% - Enables the Decentralized Research Edict, increasing Research Station Output but decreasing Researcher Job Output - Replaces Entertainer Jobs with Museum Curator Jobs - The Public Relations Firm Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
     "negative_tooltip": "",
     "playable_conditions": "{'has_grand_archive_dlc': True}",
     "potential": {
@@ -13935,7 +14121,7 @@
       "megastructures_grand_archive_cost_mult": "@galactic_curators_grand_archive_cost_mult",
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- Guaranteed Research Options: Galactic Archivism - Initial Specimens: One §0Common of each Collection Category  - Gain Unity each time you find a Specimen or complete an Archaeological Site  - Purchases from the Curator Enclave: $@galactic_curators_curator_enclave_purchase_cost|%0$ - Enables the Decentralized Research Edict, increasing Research Station Output but decreasing individuals Job Output - Replaces Entertainer Jobs with Museum Curator Jobs - The Public Relations Firm Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | country_specimen_selling_cost_mult: +1.0; country_exhibit_unlocking_cost_mult: -50.0%",
+    "effects": "- Guaranteed Research Options: Galactic Archivism - Initial Specimens: One Common of each Collection Category  - Gain Unity each time you find a Specimen or complete an Archaeological Site  - Purchases from the Curator Enclave: -25% - Enables the Decentralized Research Edict, increasing Research Station Output but decreasing Researcher Job Output - Replaces Entertainer Jobs with Museum Curator Jobs - The Public Relations Firm Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Specimen Selling Cost: +100%; Exhibit Unlocking Cost: -50%",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -13950,7 +14136,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- Additional Starting Technologies:  - Gravity Snares  - Artificial Breeding  - Available Starbase Buildings: Beastports  - Home System: Start with a Beastport  - Starting Military Ships are replaced with Space Amoebas  - Starting Genetic Material:  - §0Common Space Amoeba  - The Fast Food Chain Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
+    "tooltip": "- Additional Starting Technologies:  - Gravity Snares  - Artificial Breeding  - Available Starbase Buildings: Beastports  - Home System: Start with a Beastport  - Starting Military Ships are replaced with Space Amoebas  - Starting Genetic Material:  - Common Space Amoeba  - The Fast Food Chain Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
     "negative_tooltip": "",
     "playable_conditions": "{'has_grand_archive_dlc': True}",
     "potential": {
@@ -14008,7 +14194,7 @@
       "space_fauna_ship_upkeep_mult": -0.1,
       "add_attunement_the_composer_of_strands": "@civic_attunement1"
     },
-    "effects": "- Additional Starting Technologies:  - Gravity Snares  - Artificial Breeding  - Available Starbase Buildings: Beastports  - Home System: Start with a Beastport  - Starting Military Ships are replaced with Space Amoebas  - Starting Genetic Material:  - §0Common Space Amoeba  - The Fast Food Chain Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | starbase_shipyard_artificial_build_cost_mult: +2.0; ship_military_artificial_upkeep_mult: +2.0; space_fauna_ship_cost_mult: -15.0%; space_fauna_ship_upkeep_mult: -10.0%",
+    "effects": "- Additional Starting Technologies:  - Gravity Snares  - Artificial Breeding  - Available Starbase Buildings: Beastports  - Home System: Start with a Beastport  - Starting Military Ships are replaced with Space Amoebas  - Starting Genetic Material:  - Common Space Amoeba  - The Fast Food Chain Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Artificial Military Ship Build Cost: +200%; Artificial Military Ship Upkeep Cost: +200%; Space Fauna Ship Cloning Cost: -15%; Space Fauna Ship Upkeep: -10%",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -14077,7 +14263,7 @@
       "intel_encryption_add": 1,
       "add_attunement_the_instrument_of_desire": "@civic_attunement1"
     },
-    "effects": "- The Private Security Company Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | planet_bureaucrats_society_research_produces_add: +1.5; planet_crime_mult: -15.0%; intel_encryption_add: +1",
+    "effects": "- The Private Security Company Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Society Research Produced per 100 Bureaucrats: +1.5; Crime: -15%; Encryption: +1",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -14307,7 +14493,7 @@
       "leaders_upkeep_mult": -0.5,
       "leader_lifespan_mult": 0.5
     },
-    "effects": "- Enables the following Edicts:  - Energy Drain  - Sanguine Council  - Convergence of Will - Can construct: Synergy Headquarters. -Leaders start with the Psychic trait. - The Executive Retreat Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | planet_jobs_produces_mult: -10.0%; all_technology_research_speed: -10.0%; logistic_growth_mult: -10.0%; planet_pop_assembly_mult: -10.0%; leaders_upkeep_mult: -50.0%; leader_lifespan_mult: +50.0% | - Energy Credits per 100 Psionic Pops: +0.5",
+    "effects": "- Enables the following Edicts:  - Energy Drain  - Sanguine Council  - Convergence of Will - Can construct: Synergy Headquarters. -Leaders start with the Psychic trait. - The Executive Retreat Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Resources from Jobs: -10%; All Technology Research Speed: -10%; Pop Growth Speed: -10%; Mechanical Pop Assembly Speed: -10%; Leader Upkeep: -50%; Leader Lifespan: +50% | - Energy Credits per 100 Psionic Pops: +0.5",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -14460,7 +14646,7 @@
     "modifier": {
       "refugee_attraction": -0.15
     },
-    "effects": "Starts with Experimental Testing situation, which grants technology insight upon completion. Can construct and starts with: Experimentation Chambers. Can construct Experimentation Offices Corporate Building. All non-Machine slaves get access to the Orderlies Slave Job. Access to Slave Army: Abominations | refugee_attraction: -0.15",
+    "effects": "Starts with Experimental Testing situation, which grants technology insight upon completion. Can construct and starts with: Experimentation Chambers. Can construct Experimentation Offices Corporate Building. All non-Machine slaves get access to the Orderlies Slave Job. Access to Slave Army: Abominations | Refugee Attraction: -15%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -14475,7 +14661,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "Clandestine Factions will emerge after contacting other empires. Starts with the ability to conduct Proxy Wars. [bureaucrat.GetIcon] [bureaucrat.GetNamePlural] will produce Unity per active and successful Proxy War. Starts in First Contact with two neighboring empires. Infiltration Level gained on empires after First Contact: +$@secret_society_infiltration_gain|0$ The Corporate Embassy Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
+    "tooltip": "Clandestine Factions will emerge after contacting other empires. Starts with the ability to conduct Proxy Wars. Bureaucrats will produce Unity per active and successful Proxy War. Starts in First Contact with two neighboring empires. Infiltration Level gained on empires after First Contact: +40 The Corporate Embassy Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
     "negative_tooltip": "",
     "playable_conditions": "{'has_shroud_dlc': True}",
     "potential": {
@@ -14571,7 +14757,7 @@
       "envoys_add": 1,
       "intel_encryption_add": 1
     },
-    "effects": "Clandestine Factions will emerge after contacting other empires. Starts with the ability to conduct Proxy Wars. [bureaucrat.GetIcon] [bureaucrat.GetNamePlural] will produce Unity per active and successful Proxy War. Starts in First Contact with two neighboring empires. Infiltration Level gained on empires after First Contact: +$@secret_society_infiltration_gain|0$ The Corporate Embassy Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | proxy_war_cost_mult: -25.0%; operations_cost_mult: -50.0%; envoys_add: +1; intel_encryption_add: +1",
+    "effects": "Clandestine Factions will emerge after contacting other empires. Starts with the ability to conduct Proxy Wars. Bureaucrats will produce Unity per active and successful Proxy War. Starts in First Contact with two neighboring empires. Infiltration Level gained on empires after First Contact: +40 The Corporate Embassy Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Proxy War Influence Cost: -25%; Operation Cost: -50%; Envoys: +1; Encryption: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -14669,7 +14855,7 @@
     "modifier": {
       "psionic_aura_intensity_add": 10
     },
-    "effects": "- Starts the game in contact with a Shroud Patron. - Additional Starting Technologies: Psionic Aura - The Psionic Offices Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | psionic_aura_intensity_add: +10 | - Gain Unity scaling with Attunement to the Shroud",
+    "effects": "- Starts the game in contact with a Shroud Patron. - Additional Starting Technologies: Psionic Aura - The Psionic Offices Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Psionic Aura Intensity Gain: +10 | - Gain Unity scaling with Attunement to the Shroud",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_default_random_weight",
@@ -14684,7 +14870,7 @@
     "is_origin": false,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "Adds the Tankbound trait. [farmer.GetIcon] [farmer.GetNamePlural], [miner.GetIcon] [miner.GetNamePlural], and [technician.GetIcon] [technician.GetNamePlural] are fully Automated.  Colonist Jobs are Specialists.  Urban Districts have additional Production Overseers jobs. The Virtual Entertainment Studios Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
+    "tooltip": "Adds the Tankbound trait. Farmers, Miners, and Technicians are fully Automated.  Colonist Jobs are Specialists.  Urban Districts have additional Production Overseers jobs. The Virtual Entertainment Studios Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital.",
     "negative_tooltip": "- Start with 2K fewer Pops than normal",
     "playable_conditions": "{'has_shroud_dlc': True}",
     "potential": {
@@ -14796,6 +14982,9 @@
         }
       ]
     },
+    "granted_traits": [
+      "trait_tankbound"
+    ],
     "can_add": true,
     "can_remove": true,
     "modifier": {
@@ -14804,7 +14993,7 @@
       "job_miner_automated_workforce_mult": 1.0,
       "job_technician_automated_workforce_mult": 1.0
     },
-    "effects": "Adds the Tankbound trait. [farmer.GetIcon] [farmer.GetNamePlural], [miner.GetIcon] [miner.GetNamePlural], and [technician.GetIcon] [technician.GetNamePlural] are fully Automated.  Colonist Jobs are Specialists.  Urban Districts have additional Production Overseers jobs. The Virtual Entertainment Studios Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | job_farmer_automated_workforce_mult: +1.0; job_miner_automated_workforce_mult: +1.0; job_technician_automated_workforce_mult: +1.0",
+    "effects": "Adds the Tankbound trait. Farmers, Miners, and Technicians are fully Automated.  Colonist Jobs are Specialists.  Urban Districts have additional Production Overseers jobs. The Virtual Entertainment Studios Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Farmers Automated Workforce: +100%; Miners Automated Workforce: +100%; Technicians Automated Workforce: +100%",
     "enforced_traits": [
       "trait_tankbound"
     ],
@@ -14896,7 +15085,7 @@
       "pc_volcanic_max_districts_add": 3,
       "pc_volcanic_habitability": 0.2
     },
-    "effects": "- Unlocks starting planet: Volcanic World.  - Guaranteed Research Options: Volcanic Forge.  - Can construct Volcanic Forge building which adds Thermotechnic Mentors.  - Planets with a Volcanic Forge will gradually turn into a Volcanic World.  - Guaranteed Habitable Worlds will be Dry worlds. | pc_volcanic_max_districts_add: +3; pc_volcanic_habitability: +0.2",
+    "effects": "- Unlocks starting planet: Volcanic World.  - Guaranteed Research Options: Volcanic Forge.  - Can construct Volcanic Forge building which adds Thermotechnic Mentors.  - Planets with a Volcanic Forge will gradually turn into a Volcanic World.  - Guaranteed Habitable Worlds will be Dry worlds. | Max Districts (Volcanic World): +3; Volcanic World Habitability: +20%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -14961,7 +15150,7 @@
     "modifier": {
       "planet_building_refund_mult": 0.75
     },
-    "effects": "- Starts with Living Metal already researched.  - Homeworld has a Living Metal Mass. - Gain access to special Edicts:   - Centrifugal Siphoning   - Modular Growth Compounds  - Gives access to Living Metal components:   - Regenerative Armor   - Reshaping Projectile Accelerator - Has access to Colony Decision: Distribute Living Metal.  - Can recruit the Mimetic Strike Force armies.  - Can build a Offworld Expedition Hub in systems with a Molten World for Offworld Prospector jobs.  - Can build the Living Metal Enhancement Clinic Corporate Building. | planet_building_refund_mult: +75.0%",
+    "effects": "- Starts with Living Metal already researched.  - Homeworld has a Living Metal Mass. - Gain access to special Edicts:   - Centrifugal Siphoning   - Modular Growth Compounds  - Gives access to Living Metal components:   - Regenerative Armor   - Reshaping Projectile Accelerator - Has access to Colony Decision: Distribute Living Metal.  - Can recruit the Mimetic Strike Force armies.  - Can build a Offworld Expedition Hub in systems with a Molten World for Offworld Prospector jobs.  - Can build the Living Metal Enhancement Clinic Corporate Building. | Colony Infrastructure Refund: +75%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": "@civic_rare_random_weight",
@@ -15017,7 +15206,7 @@
       "starbase_waystations_cost_mult": -0.2,
       "add_attunement_the_cradle_of_souls": "@civic_attunement1"
     },
-    "effects": "- Guaranteed Research Options: Improved Wayline Logistics  - Home System: Start in a richer system with a Waystation already constructed.   - The Commercial Forum Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | country_starbase_capacity_add: +2; country_starbase_capacity_mult: +10.0%; megastructures_waystations_cost_mult: -20.0%; starbase_waystations_cost_mult: -20.0%",
+    "effects": "- Guaranteed Research Options: Improved Wayline Logistics  - Home System: Start in a richer system with a Waystation already constructed.   - The Commercial Forum Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Station Capacity: +2; Station Capacity: +10%; Waystation Build Cost: -20%; Waystation Upgrade Cost: -20%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -15121,7 +15310,7 @@
       "weapon_type_strike_craft_weapon_fire_rate_mult": 0.15,
       "ship_speed_mult": 0.1
     },
-    "effects": "- Additional Starting Technologies: Carrier Operations  - The Mercenary Liaison Office Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | weapon_type_strike_craft_weapon_fire_rate_mult: +15.0%; ship_speed_mult: +10.0%",
+    "effects": "- Additional Starting Technologies: Carrier Operations  - The Mercenary Liaison Office Corporate Building generates additional Trade and adds +200 Trader jobs to our Capital. | Strike Craft Fire Rate: +15%; Sublight Speed: +10%",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
@@ -15241,7 +15430,7 @@
     "modifier": {
       "ship_speed_mult": 0.2
     },
-    "effects": "Available Situation Approach: Celebration Situation Log Entry: Star Journal | ship_speed_mult: +20.0%",
+    "effects": "Available Situation Approach: Celebration Situation Log Entry: Star Journal | Sublight Speed: +20%",
     "enforced_traits": [],
     "ai_weight": "@civic_rare_random_weight",
     "random_weight": "@civic_rare_random_weight",
