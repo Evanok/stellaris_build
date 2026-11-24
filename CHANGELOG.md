@@ -36,6 +36,14 @@ Add new entries at the top: `## <Title> (YYYY-MM-DD)`.
   Xenophile + Xenophobe could be picked. Now one ethic per axis (`category`: col/xen/mil/spi), in
   `BuildForm.tsx` and in `check_build_rules.js` (which now also checks the ethic point budget). No
   existing build in the local DB copy was affected.
+- **Rule warnings, unset species**: `species_archetype` / `species_class` joined the evaluator's
+  `OPTIONAL_FIELDS` (backend `rules/predicateEvaluator.js` and frontend `utils/ruleEvaluator.ts`): with no
+  species picked (optional in the form), "Machine Intelligence requires a Machine species" was a false
+  warning; it is now "unknown", like the planet and shipset. Checked against the 54 prescripted empires
+  of the game (0 flagged, while 5 deliberately broken copies all are).
+- **Graying incompatible civics in the form: decided against.** Since the submit-time warning shipped
+  (2026-08-10), 27 of the 28 builds published in prod are clean (the last one is a real violation the
+  author kept), so blocking would mostly add the risk of a parser false positive blocking a legit build.
 - `extract_icons.py` now reads the latest `output/versions/X.Y/` instead of the stale `output/*.json`.
 - **Effects text cleanup** (`localization_parser.py`): scripted variables are now resolved
   (`$@social_concord_starting_opinion|0$` -> `25`, `|%0` -> percentage, `+` -> sign), from every

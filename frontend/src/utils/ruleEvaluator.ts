@@ -31,8 +31,9 @@ export interface BuildContext {
 // Optional build fields: when the build leaves one unset, a condition on it is
 // neither true nor false but unknown (see evaluateTriState). Without this,
 // "requires a Biological shipset" would fail on every build that simply did
-// not pick a shipset.
-const OPTIONAL_FIELDS: Array<keyof BuildContext> = ['preferred_planet_class', 'graphical_culture'];
+// not pick a shipset. Same for the species (optional in the form): "Machine
+// Intelligence requires a Machine species" must not fail when none is picked.
+const OPTIONAL_FIELDS: Array<keyof BuildContext> = ['preferred_planet_class', 'graphical_culture', 'species_archetype', 'species_class'];
 
 function evaluateField(field: string, value: unknown, ctx: BuildContext): boolean | null {
   if ((OPTIONAL_FIELDS as string[]).includes(field) && !ctx[field as keyof BuildContext]) return null;
