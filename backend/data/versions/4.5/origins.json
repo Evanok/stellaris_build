@@ -62,7 +62,7 @@
       "ship_repair_hull_mult": 0.5,
       "ship_repair_armor_mult": 0.5
     },
-    "effects": "- Nomadic Origin - Start with an additional Logistic Ship | arkship_action_speed: +20.0%; science_ship_survey_speed: +20.0%; megastructure_waystation_megastructure_build_speed_mult: +20.0%; category_voidcraft_draw_chance_mult: +20.0%; category_voidcraft_research_speed_mult: +20.0%; ship_repair_hull_mult: +50.0%; ship_repair_armor_mult: +50.0%",
+    "effects": "- Nomadic Origin - Start with an additional Logistic Ship | Arkship Action Speed: +20%; Science Ship Survey Speed: +20%; Waystation Build Speed: +20%; Chance for Voidcraft Research Options: +20%; Research Speed (Voidcraft): +20%; Docked Ship Hull Repair Speed: +50%; Docked Ship Armor Repair Speed: +50%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -173,7 +173,7 @@
       "ship_windup_mult": -0.3,
       "ship_base_speed_mult": 0.3
     },
-    "effects": "- Nomadic Origin - Periodically chased by Hostile Marauder ships - May become the Khan, if they can survive - Can Create Satrapy Vassals | ship_windup_mult: -30.0%; ship_base_speed_mult: +30.0%",
+    "effects": "- Nomadic Origin - Periodically chased by Hostile Marauder ships - May become the Khan, if they can survive - Can Create Satrapy Vassals | Hyper Jump Charge Time: -30%; Base Ship Speed: +30%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -395,7 +395,7 @@
     "modifier": {
       "pc_volcanic_habitability": 0.2
     },
-    "effects": "- Homeworld: Volcanic World (Size: 20) | pc_volcanic_habitability: +0.2",
+    "effects": "- Homeworld: Volcanic World (Size: 20) | Volcanic World Habitability: +20%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -607,7 +607,7 @@
       "ROBOT_species_trait_picks_add": 1,
       "ROBOT_species_trait_points_add": 1
     },
-    "effects": "- Homeworld:  - Shroud-Touched Region: +4  - Start with 1000 Shroud-Forged Pops - Start with Situation: Forged by the Shroud - Additional Starting Technologies: Zro Distillation - Unique Building: Shroud Observation Tower - Available Colony Decision: Pierce the Shroud | ROBOT_species_trait_picks_add: +1; ROBOT_species_trait_points_add: +1",
+    "effects": "- Homeworld:  - Shroud-Touched Region: +4  - Start with 1000 Shroud-Forged Pops - Start with Situation: Forged by the Shroud - Additional Starting Technologies: Zro Distillation - Unique Building: Shroud Observation Tower - Available Colony Decision: Pierce the Shroud | Mechanical Species Trait Picks: +1; Mechanical Modification Points: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 0,
@@ -714,7 +714,7 @@
       "damage_vs_psionic_empires_mult": 0.25,
       "evasion_vs_psionic_empires_mult": 0.25
     },
-    "effects": "- Additional Starting Technologies: Starhold - Home System: Start with a Starhold. - Homeworld: Ancient Ward - Gain access to the Psionic Containment Casus Belli against psionically ascended Empires. - Guaranteed Habitable Worlds do not appear. - Mindwarden Enclaves are not generated at the start of game. | intel_encryption_add: +2; damage_vs_psionic_empires_mult: +25.0%; evasion_vs_psionic_empires_mult: +25.0%",
+    "effects": "- Additional Starting Technologies: Starhold - Home System: Start with a Starhold. - Homeworld: Ancient Ward - Gain access to the Psionic Containment Casus Belli against psionically ascended Empires. - Guaranteed Habitable Worlds do not appear. - Mindwarden Enclaves are not generated at the start of game. | Encryption: +2; Damage to Psionic Empires: +25%; Evasion vs Psionic Empires: +25%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -927,7 +927,7 @@
     "modifier": {
       "BIOLOGICAL_species_trait_picks_add": 1
     },
-    "effects": "- Species Traits: Malleable Genes - Situation: Adaptive Evolution - Homeworld: Genetic Soup | BIOLOGICAL_species_trait_picks_add: +1",
+    "effects": "- Species Traits: Malleable Genes - Situation: Adaptive Evolution - Homeworld: Genetic Soup | Organic Species Trait Picks: +1",
     "enforced_traits": [
       "trait_malleable_genes"
     ],
@@ -981,7 +981,7 @@
       "deep_space_citadel_limit_add": 1,
       "country_starbase_capacity_add": 3
     },
-    "effects": "- Home System:   - Deep Space Citadel I at the edge of the gravity well   - Strange Portal leading to an unknown system  - Homeworld:   - Citadel Uplink   - Biological Ship Remains   - Invasion Site: +2  - Additional Starting Technologies: Deep Space Citadel | country_megastructure_build_cap_add: +1; deep_space_citadel_limit_add: +1; country_starbase_capacity_add: +3",
+    "effects": "- Home System:   - Deep Space Citadel I at the edge of the gravity well   - Strange Portal leading to an unknown system  - Homeworld:   - Citadel Uplink   - Biological Ship Remains   - Invasion Site: +2  - Additional Starting Technologies: Deep Space Citadel | Megastructure Build Capacity: +1; Deep Space Citadel System Capacity: +1; Station Capacity: +3",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -1106,7 +1106,7 @@
     "modifier": {
       "planet_building_capacity_add": 5
     },
-    "effects": "- Species Trait: Wilderness - Replaces all standard Buildings, Districts, and District Specialization with bespoke ones - Replaces Colony Ship Colonization with Terraforming - Unlocks new Resource: Biomass  - Homeworld:  - Size: 18  - Scorched Plains | planet_building_capacity_add: +5",
+    "effects": "- Species Trait: Wilderness - Replaces all standard Buildings, Districts, and District Specialization with bespoke ones - Replaces Colony Ship Colonization with Terraforming - Unlocks new Resource: Biomass  - Homeworld:  - Size: 18  - Scorched Plains | Build Queue Capacity: +5",
     "enforced_traits": [
       "trait_wilderness"
     ],
@@ -1228,7 +1228,7 @@
       "gravity_snare_cooldown_mult": -0.25,
       "country_vivarium_max_capacity_mult": 0.25
     },
-    "effects": "- Homeworld:  - Colony Modifiers: Untamed Wilds - Available Buildings: Wildlife Ranch - Can choose a special Stance regarding Space Fauna upon First Contact - Additional Starting Technologies: Genome Mapping - Guaranteed Research Options: Xenology - Gain insight on Gravity Snares after First Contact with Space Fauna - Gain insight on Artificial Breeding after capturing Space Fauna - Gain insight on Controlled Mutations after cloning Space Fauna | ship_damage_against_space_fauna_mult: +15.0%; space_fauna_ship_armor_mult: +15.0%; space_fauna_ship_speed_mult: +10.0%; country_capture_chance_add: +15.0%; gravity_snare_cooldown_mult: -25.0%; country_vivarium_max_capacity_mult: +25.0%",
+    "effects": "- Homeworld:  - Colony Modifiers: Untamed Wilds - Available Buildings: Wildlife Ranch - Can choose a special Stance regarding Space Fauna upon First Contact - Additional Starting Technologies: Genome Mapping - Guaranteed Research Options: Xenology - Gain insight on Gravity Snares after First Contact with Space Fauna - Gain insight on Artificial Breeding after capturing Space Fauna - Gain insight on Controlled Mutations after cloning Space Fauna | Damage to Space Fauna: +15%; Space Fauna Ship Armor: +15%; Space Fauna Ship Sublight Speed: +10%; Fauna Capture Chance: +0.15; Gravity Snare Cooldown: -25%; Vivarium Max Capacity: +25%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 0,
@@ -1244,7 +1244,7 @@
     "is_origin": true,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- Leader Traits: Storm Rider - Planet Unity from Jobs per Storm Building: +$@storm_chasers_storm_building_unity_produces_mult|%0$ - Capital Buildings automatically provide the modifiers of Storm Shelters once the required technologies are researched.  - Cosmic Storm Appearance Chance Within Borders: +100%  - Cosmic Storm Technology Research Option Chance: +175% - Storm Attraction Buildings Rare resource cost and upkeep: -100% - Access to the Weather Forecasting Mode - Additional Starting Technologies:  - Cosmic Weather Models",
+    "tooltip": "- Leader Traits: Storm Rider - Planet Unity from Jobs per Storm Building: +5% - Capital Buildings automatically provide the modifiers of Storm Shelters once the required technologies are researched.  - Cosmic Storm Appearance Chance Within Borders: +100%  - Cosmic Storm Technology Research Option Chance: +175% - Storm Attraction Buildings Rare resource cost and upkeep: -100% - Access to the Weather Forecasting Mode - Additional Starting Technologies:  - Cosmic Weather Models",
     "negative_tooltip": "",
     "picture": "GFX_origin_storm_chasers",
     "playable_conditions": "{'has_cosmic_storms_dlc': True}",
@@ -1287,7 +1287,7 @@
       "planet_storm_devastation_mult": -0.15,
       "storm_ship_hull_breaker_mult": -0.1
     },
-    "effects": "- Leader Traits: Storm Rider - Planet Unity from Jobs per Storm Building: +$@storm_chasers_storm_building_unity_produces_mult|%0$ - Capital Buildings automatically provide the modifiers of Storm Shelters once the required technologies are researched.  - Cosmic Storm Appearance Chance Within Borders: +100%  - Cosmic Storm Technology Research Option Chance: +175% - Storm Attraction Buildings Rare resource cost and upkeep: -100% - Access to the Weather Forecasting Mode - Additional Starting Technologies:  - Cosmic Weather Models | planet_storm_devastation_mult: -15.0%; storm_ship_hull_breaker_mult: -10.0%",
+    "effects": "- Leader Traits: Storm Rider - Planet Unity from Jobs per Storm Building: +5% - Capital Buildings automatically provide the modifiers of Storm Shelters once the required technologies are researched.  - Cosmic Storm Appearance Chance Within Borders: +100%  - Cosmic Storm Technology Research Option Chance: +175% - Storm Attraction Buildings Rare resource cost and upkeep: -100% - Access to the Weather Forecasting Mode - Additional Starting Technologies:  - Cosmic Weather Models | Planetary Cosmic Storm Devastation Reduction: -15%; Negative Effects from Cosmic Storms on Ship Defenses: -10%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,
@@ -1617,7 +1617,7 @@
     "modifier": {
       "category_computing_research_speed_mult": 0.15
     },
-    "effects": "- Initial Pops: +900  - Species Traits: Pathogenic Genes - Homeworld:   - Size: 20   - Abandoned Cities: +2   - Identity Repository   - Abandoned Gene Clinic  - Situation: Rapid Identity Preservation  - Additional Starting Technologies: AI Technologies  - Guaranteed Research Options: Artificial Workforce | category_computing_research_speed_mult: +15.0%",
+    "effects": "- Initial Pops: +900  - Species Traits: Pathogenic Genes - Homeworld:   - Size: 20   - Abandoned Cities: +2   - Identity Repository   - Abandoned Gene Clinic  - Situation: Rapid Identity Preservation  - Additional Starting Technologies: AI Technologies  - Guaranteed Research Options: Artificial Workforce | Research Speed (Computing): +15%",
     "enforced_traits": [
       "trait_pathogenic_genes"
     ],
@@ -1655,7 +1655,7 @@
       "country_megastructure_build_cap_add": 1,
       "arc_furnace_limit_add": 1
     },
-    "effects": "- Homeworld: Initial Mining Districts replaced with Generator Districts  - Home System: Arc Furnace: Equatorial Band constructed around a Molten World  - Additional Starting Technologies: Arc Furnace  - Guaranteed Research Options: Mega-Engineering upon constructing a second Arc Furnace | country_megastructure_build_cap_add: +1; arc_furnace_limit_add: +1",
+    "effects": "- Homeworld: Initial Mining Districts replaced with Generator Districts  - Home System: Arc Furnace: Equatorial Band constructed around a Molten World  - Additional Starting Technologies: Arc Furnace  - Guaranteed Research Options: Mega-Engineering upon constructing a second Arc Furnace | Megastructure Build Capacity: +1; Arc Furnace Capacity: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 2,
@@ -1686,7 +1686,7 @@
       "country_astral_rift_speed_mult": 0.25,
       "country_astral_rift_fail_mult": -0.5
     },
-    "effects": "- Homeworld: Ancient Crater Archaeology Site - Colonized Planets in systems with [ 'concept_astral_rift',Astral Rifts]: Rift Affinity - Chance for Astral Rifts to appear in systems you control: +100% - Science Ships can explore Astral Rifts in unowned Systems. | country_astral_rift_speed_mult: +25.0%; country_astral_rift_fail_mult: -50.0%",
+    "effects": "- Homeworld: Ancient Crater Archaeology Site - Colonized Planets in systems with [ 'concept_astral_rift',Astral Rifts]: Rift Affinity - Chance for Astral Rifts to appear in systems you control: +100% - Science Ships can explore Astral Rifts in unowned Systems. | Astral Rift Exploration Speed: +25%; Astral Rift Fail Probability: -50%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 2,
@@ -1849,7 +1849,7 @@
     "modifier": {
       "damage_vs_superior_empires_mult": 0.15
     },
-    "effects": "- Homeworld:   - Advanced Infrastructure  - Colony Modifiers: Unified Purpose - Home System: The Aftermath of Battle Archaeology Site - One Advanced AI Empire and several Pre-FTL Civilizations regardless of the Galaxy Settings  - One Pre-FTL Civilization: Uplifted with the Broken Shackles origin | damage_vs_superior_empires_mult: +15.0%",
+    "effects": "- Homeworld:   - Advanced Infrastructure  - Colony Modifiers: Unified Purpose - Home System: The Aftermath of Battle Archaeology Site - One Advanced AI Empire and several Pre-FTL Civilizations regardless of the Galaxy Settings  - One Pre-FTL Civilization: Uplifted with the Broken Shackles origin | Damage to Militarily Superior Empires: +15%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 0,
@@ -2015,7 +2015,7 @@
       "spy_network_daily_value_mult": 0.2,
       "refugee_attraction": 1
     },
-    "effects": "- Initial Pops: Species from Pre-FTL Civilizations across the galaxy  - Starting Planet:   - Free at Last Planetary Modifier   - Crashed Slaver Ship Planetary Feature   - Spaceship Wreckage  - Starting System: Crashed Slaver Ship Archaeology Site  - One Advanced AI Empire and several Pre-FTL Civilization regardless of the Galaxy Settings  - One Pre-FTL Civilization: Will be this empire's species and homeworld  - One Pre-FTL Civilization: Uplifted with the Payback origin | envoys_add: +1; first_contact_speed_mult: +20.0%; spy_network_daily_value_mult: +20.0%; refugee_attraction: +1",
+    "effects": "- Initial Pops: Species from Pre-FTL Civilizations across the galaxy  - Starting Planet:   - Free at Last Planetary Modifier   - Crashed Slaver Ship Planetary Feature   - Spaceship Wreckage  - Starting System: Crashed Slaver Ship Archaeology Site  - One Advanced AI Empire and several Pre-FTL Civilization regardless of the Galaxy Settings  - One Pre-FTL Civilization: Will be this empire's species and homeworld  - One Pre-FTL Civilization: Uplifted with the Payback origin | Envoys: +1; First Contact Speed: +20%; Infiltration Speed: +20%; Refugee Attraction: +100%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 0,
@@ -2133,7 +2133,7 @@
       "country_leader_pool_size": -1,
       "refugee_attraction": -0.1
     },
-    "effects": "- Home System: Pre-FTL Civilization created by a Separatist Faction, formerly part of your Empire, granting events and benefits | ship_anomaly_generation_chance_mult: +10.0%; ship_anomaly_research_speed_mult: +20.0%; num_tech_alternatives_add: -1; country_leader_pool_size: -1; refugee_attraction: -0.1",
+    "effects": "- Home System: Pre-FTL Civilization created by a Separatist Faction, formerly part of your Empire, granting events and benefits | Anomaly Discovery Chance: +10%; Ship Anomaly Research Speed: +20%; Num Tech Alternatives: -1; Recruitable Leaders per Class: -1; Refugee Attraction: -10%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 5,
@@ -2211,7 +2211,7 @@
       "BIOLOGICAL_species_trait_points_add": 2,
       "BIOLOGICAL_species_trait_picks_add": 1
     },
-    "effects": "- Species Traits: Access to Overtuned Traits - Overtuned Traits:  - Can be boosted by the Damn the Consequences Edict  - Can be added and removed through Genetic Modification - Additional Starting Technologies: Gene Tailoring | BIOLOGICAL_species_trait_points_add: +2; BIOLOGICAL_species_trait_picks_add: +1",
+    "effects": "- Species Traits: Access to Overtuned Traits - Overtuned Traits:  - Can be boosted by the Damn the Consequences Edict  - Can be added and removed through Genetic Modification - Additional Starting Technologies: Gene Tailoring | Organic Species Modification Points: +2; Organic Species Trait Picks: +1",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 0,
@@ -2329,7 +2329,7 @@
       "owned_ship_fire_rate_mult": -0.5,
       "owned_ship_accuracy_mult": -0.5
     },
-    "effects": "- Spawning Pools replaced with Offspring Nest - Available Holdings: Offspring Nest - If Devouring Swarm Civic is NOT selected: Sectors can be released as Subjects - Assigned Leaders: Gain additional passive experience - Available Starbase Buildings: Offspring Outlook - Can construct Offspring Ships | ship_military_speed_mult: -50.0%; owned_ship_evasion_mult: -50.0%; owned_ship_fire_rate_mult: -50.0%; owned_ship_accuracy_mult: -50.0%",
+    "effects": "- Spawning Pools replaced with Offspring Nest - Available Holdings: Offspring Nest - If Devouring Swarm Civic is NOT selected: Sectors can be released as Subjects - Assigned Leaders: Gain additional passive experience - Available Starbase Buildings: Offspring Outlook - Can construct Offspring Ships | Military Ship Sublight Speed: -50%; Evasion Chance: -50%; Ship Fire Rate: -50%; Accuracy: -50%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 2,
@@ -2386,7 +2386,7 @@
       "planet_storm_devastation_mult": -0.25,
       "planet_non_artificial_max_districts_add": 2
     },
-    "effects": "- Species Traits: Cave Dweller  - Mining Districts: Uncapped - Available District Specializations: Subterranean Urbanization for Mining Districts - Homeworld starts with a Subterranean Urbanization already built. | mining_district_housing_add: +200; planet_orbital_bombardment_damage: -0.75; planet_structures_cost_mult: +10.0%; planet_structures_upkeep_mult: +10.0%; planet_building_build_speed_mult: -10.0%; planet_storm_devastation_mult: -25.0%; planet_non_artificial_max_districts_add: +2",
+    "effects": "- Species Traits: Cave Dweller  - Mining Districts: Uncapped - Available District Specializations: Subterranean Urbanization for Mining Districts - Homeworld starts with a Subterranean Urbanization already built. | Housing from Mining Districts: +200; Orbital Bombardment Damage: -75%; Infrastructure Cost: +10%; Infrastructure Upkeep: +10%; Infrastructure Build Speed: -10%; Planetary Cosmic Storm Devastation Reduction: -25%; Max Districts (Non-artificial planets only): +2",
     "enforced_traits": [
       "trait_cave_dweller"
     ],
@@ -2441,7 +2441,7 @@
       "planet_storm_devastation_mult": -0.25,
       "planet_non_artificial_max_districts_add": 2
     },
-    "effects": "- Species Traits: Molebots  - Mining Districts: Uncapped - Available District Specializations: Subterranean Urbanization for Mining Districts - Homeworld starts with a Subterranean Urbanization already built. | mining_district_housing_add: +200; planet_orbital_bombardment_damage: -0.75; planet_structures_cost_mult: +10.0%; planet_structures_upkeep_mult: +10.0%; planet_building_build_speed_mult: -10.0%; planet_storm_devastation_mult: -25.0%; planet_non_artificial_max_districts_add: +2",
+    "effects": "- Species Traits: Molebots  - Mining Districts: Uncapped - Available District Specializations: Subterranean Urbanization for Mining Districts - Homeworld starts with a Subterranean Urbanization already built. | Housing from Mining Districts: +200; Orbital Bombardment Damage: -75%; Infrastructure Cost: +10%; Infrastructure Upkeep: +10%; Infrastructure Build Speed: -10%; Planetary Cosmic Storm Devastation Reduction: -25%; Max Districts (Non-artificial planets only): +2",
     "enforced_traits": [
       "trait_robot_cave_dweller"
     ],
@@ -2480,7 +2480,7 @@
       "starbase_outpost_cost_mult": -0.15,
       "catapult_spread_mult": 0.5
     },
-    "effects": "- Home System: Nearby ruined Quantum Catapult Twin Arrays with the Logs from the Quantum Architect Archaeology Site - Quantic Ambush Effects: Increased to +50% Ship Fire Rate | country_starbase_influence_cost_distance_mult: -75.0%; starbase_outpost_cost_mult: -15.0%; catapult_spread_mult: +50.0%",
+    "effects": "- Home System: Nearby ruined Quantum Catapult Twin Arrays with the Logs from the Quantum Architect Archaeology Site - Quantic Ambush Effects: Increased to +50% Ship Fire Rate | Starbase Influence Distance Cost: -75%; Outpost Build Cost: -15%; Catapult Accuracy: +50%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 0,
@@ -2962,7 +2962,7 @@
     "modifier": {
       "refugee_attraction": -0.25
     },
-    "effects": "- Homeworld: Chamber of Elevation  - Species Traits: Necrophage  - Prepatent Pops: 2.4K  - Guaranteed Habitable Worlds: Replaced with Pre-FTL Civilizations | refugee_attraction: -0.25",
+    "effects": "- Homeworld: Chamber of Elevation  - Species Traits: Necrophage  - Prepatent Pops: 2.4K  - Guaranteed Habitable Worlds: Replaced with Pre-FTL Civilizations | Refugee Attraction: -25%",
     "enforced_traits": [
       "trait_necrophage"
     ],
@@ -2980,7 +2980,7 @@
     "is_origin": true,
     "playable": true,
     "pickable_at_start": true,
-    "tooltip": "- Homeworld:  - Relic World (Size: 22)  - Ruined Arcology: +6 individuals",
+    "tooltip": "- Homeworld:  - Relic World (Size: 22)  - Ruined Arcology: +6",
     "negative_tooltip": "",
     "picture": "GFX_origin_remnants",
     "playable_conditions": "{'OR': {'has_ancrel': True, 'host_has_dlc': 'Federations'}}",
@@ -3004,7 +3004,7 @@
     "starting_colony": "pc_relic",
     "can_modify": true,
     "modifier": {},
-    "effects": "- Homeworld:  - Relic World (Size: 22)  - Ruined Arcology: +6 individuals",
+    "effects": "- Homeworld:  - Relic World (Size: 22)  - Ruined Arcology: +6",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 5,
@@ -3169,7 +3169,7 @@
       "habitat_districts_minor_add": 0.25,
       "habitat_district_jobs_mult": 0.5
     },
-    "effects": "- Homeworld: Orbital Habitat - Species Traits:  - Void Dweller  - Habitat Preference - Additional Starting Technologies: Orbital Habitats - Guaranteed Research Options: Habitat Expansion - Guaranteed Habitable Worlds: Resource-rich systems instead of Colonizable Planets  - Can construct advanced housing buildings on Habitats - Waives Technology requirements for Basic District Specialization on Habitats | habitat_max_districts_add: +2; megastructures_habitat_cost_mult: -25.0%; planet_districts_hab_cost_mult: -25.0%; habitat_districts_minor_add: +25.0%; habitat_district_jobs_mult: +50.0%",
+    "effects": "- Homeworld: Orbital Habitat - Species Traits:  - Void Dweller  - Habitat Preference - Additional Starting Technologies: Orbital Habitats - Guaranteed Research Options: Habitat Expansion - Guaranteed Habitable Worlds: Resource-rich systems instead of Colonizable Planets  - Can construct advanced housing buildings on Habitats - Waives Technology requirements for Basic District Specialization on Habitats | Habitat Max Districts: +2; Habitat Build Cost: -25%; Habitat Districts Cost: -25%; Habitat Max Districts from Minor Celestial Bodies: +0.25; Jobs from Habitat Districts: +50%",
     "enforced_traits": [
       "trait_void_dweller_1"
     ],
@@ -3253,7 +3253,7 @@
       "habitat_districts_minor_add": 0.25,
       "habitat_district_jobs_mult": 0.5
     },
-    "effects": "- Homeworld: Orbital Habitat - Species Traits:  - Zero-G Optimized  - Habitat Preference - Additional Starting Technologies: Orbital Habitats - Guaranteed Research Options: Habitat Expansion - Guaranteed Habitable Worlds: Resource-rich systems instead of Colonizable Planets  - Can construct advanced housing buildings on Habitats - Waives Technology requirements for Basic District Specialization on Habitats | habitat_max_districts_add: +2; megastructures_habitat_cost_mult: -25.0%; planet_districts_hab_cost_mult: -25.0%; habitat_districts_minor_add: +25.0%; habitat_district_jobs_mult: +50.0%",
+    "effects": "- Homeworld: Orbital Habitat - Species Traits:  - Zero-G Optimized  - Habitat Preference - Additional Starting Technologies: Orbital Habitats - Guaranteed Research Options: Habitat Expansion - Guaranteed Habitable Worlds: Resource-rich systems instead of Colonizable Planets  - Can construct advanced housing buildings on Habitats - Waives Technology requirements for Basic District Specialization on Habitats | Habitat Max Districts: +2; Habitat Build Cost: -25%; Habitat Districts Cost: -25%; Habitat Max Districts from Minor Celestial Bodies: +0.25; Jobs from Habitat Districts: +50%",
     "enforced_traits": [
       "trait_void_dweller_2"
     ],
@@ -4441,7 +4441,7 @@
       "ROBOT_species_trait_picks_add": 1,
       "ROBOT_species_trait_points_add": 2
     },
-    "effects": "- Robot Pops: 800  - Mechanical Trait: Adaptive Frames - Homeworld: Robot Assembly Plant - Additional Starting Technologies:  - Powered Exoskeletons  - Artificial Workforce - Guaranteed Research Options: Machine Template System | planet_pop_assembly_mult: +15.0%; ROBOT_species_trait_picks_add: +1; ROBOT_species_trait_points_add: +2",
+    "effects": "- Robot Pops: 800  - Mechanical Trait: Adaptive Frames - Homeworld: Robot Assembly Plant - Additional Starting Technologies:  - Powered Exoskeletons  - Artificial Workforce - Guaranteed Research Options: Machine Template System | Mechanical Pop Assembly Speed: +15%; Mechanical Species Trait Picks: +1; Mechanical Modification Points: +2",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 10,
@@ -4580,7 +4580,7 @@
       "ship_colonizer_food_cost_add": 500,
       "ship_colonizer_alloys_cost_mult": -0.5
     },
-    "effects": "- Homeworld: Tree of Life - Colonized Planets: Tree of Life Sapling Planetary Feature - Colonies without the Tree of Life Sapling: Transplant Tree of Life Colony Decision - Available Holdings: Tree of Life Sprout on Subject colonies | ship_colonizer_food_cost_add: +500; ship_colonizer_alloys_cost_mult: -50.0%",
+    "effects": "- Homeworld: Tree of Life - Colonized Planets: Tree of Life Sapling Planetary Feature - Colonies without the Tree of Life Sapling: Transplant Tree of Life Colony Decision - Available Holdings: Tree of Life Sprout on Subject colonies | Colony Ship Food Build Cost: +500; Colony Ship Alloys Build Cost: -50%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 5,
@@ -4698,7 +4698,7 @@
       "megastructures_gateways_cost_mult": -0.25,
       "megastructure_build_speed_mult": 0.05
     },
-    "effects": "- Home System: Dormant Gateway | megastructures_gateways_cost_mult: -25.0%; megastructure_build_speed_mult: +5.0%",
+    "effects": "- Home System: Dormant Gateway | Gateway Build Cost: -25%; Megastructure Build Speed: +5%",
     "enforced_traits": [],
     "ai_weight": 1,
     "random_weight": 1,

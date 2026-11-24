@@ -50,6 +50,9 @@ Add new entries at the top: `## <Title> (YYYY-MM-DD)`.
   specific kind of empire; DLC-only texts with `default = BLANK_STRING` take the DLC variant, as the site
   assumes every DLC). The game spells the block `defined_text`, `define_text` and `defined_txt`.
 - 4.6 re-extracted with both: 623 texts changed (only `effects`, `tooltip`, `description`), no rule or value.
+- 4.5 re-extracted the same way from a 4.5.4 install (Steam beta branch): 640 texts changed. One rule
+  changed too, and it is a correction: `ap_hydrocentric` `possible` no longer accepts
+  `trait_auto_hab_preference` (in 4.5.4 that alternative is in `potential`; the previous file came from 4.5.0).
 - **Rule warnings, unset species**: `species_archetype` / `species_class` joined the evaluator's
   `OPTIONAL_FIELDS` (backend `rules/predicateEvaluator.js` and frontend `utils/ruleEvaluator.ts`): with no
   species picked (optional in the form), "Machine Intelligence requires a Machine species" was a false
