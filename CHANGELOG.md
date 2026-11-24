@@ -42,9 +42,14 @@ Add new entries at the top: `## <Title> (YYYY-MM-DD)`.
   `@name = value` under `common/` (3873 of them); `[foundry.GetNamePlural]` style references become the job
   name (`Metallurgists`), `.GetIcon` ones are dropped, `[Ruler.GetTitle]` -> `Ruler`; `§0` style color codes
   (digit) are stripped. Fixed 11 traits, 23 civics and 1 origin in 4.6 (older versions not re-extracted).
-- Not done yet: Great Mosaic grants an extra civic at creation (`country_government_civic_points_add = 1`),
-  so 3 starting civics (4 with Galactic Administration), while the form and the rules checker still cap
-  creation at 2.
+- **Great Mosaic civics**: starting civic slots are now 2 + the origin's `country_government_civic_points_add`
+  (Great Mosaic: +1, so 3 starting civics, all exported), in `BuildForm.tsx` (`maxCivicSlots`), the
+  `BuildDetail.tsx` export warning and `check_build_rules.js`. The optional "later" civic (`third_civic`)
+  stays on top of that and is labelled by its rank (4th with Great Mosaic). It is the slot of the
+  Galactic Administration technology (no ascension perk or tradition grants a civic slot). In game that
+  tech only gives the slot to non-gestalt empires; deliberately not enforced. When the origin changes, a
+  starting civic beyond the new limit moves to the "later" slot if it is free, else it is dropped; this
+  waits for the origins to load, so editing a Great Mosaic build keeps its 3 starting civics.
 
 ## Visitor and comment statistics (2026-11-04)
 

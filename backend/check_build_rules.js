@@ -89,10 +89,12 @@ function checkBuild(build) {
   const issues = [];
 
   // GOVERNMENT_CIVIC_POINTS_BASE in common/defines/00_defines.txt - 2 civics
-  // max at creation, confirmed in-game. BuildForm.tsx used to allow 3
-  // (MAX_CIVIC_SLOTS) until 2026-08-10 - about 40% of existing builds have 3.
-  if (ctx.civics.length > 2) {
-    issues.push(`civics: ${ctx.civics.length} selected, but the game only allows 2 at empire creation`);
+  // at creation, confirmed in-game, plus the origin's
+  // country_government_civic_points_add (Great Mosaic, 4.6: +1). BuildForm.tsx
+  // used to allow 3 for everyone until 2026-08-10 - about 40% of existing builds have 3.
+  const maxCivics = 2 + (Number(buildOrigin && buildOrigin.modifier && buildOrigin.modifier.country_government_civic_points_add) || 0);
+  if (ctx.civics.length > maxCivics) {
+    issues.push(`civics: ${ctx.civics.length} selected, but the game only allows ${maxCivics} at empire creation`);
   }
 
   // Ethics: 3 points at creation, one ethic per axis (`category`: Xenophile

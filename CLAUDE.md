@@ -184,7 +184,7 @@ The project uses npm workspaces with three main parts:
 - Starting ruler traits (with origin/ethics filtering)
 - Ethics with point limits and compatibility checks (one ethic per axis), plus an optional Absolute ethic (`absolute_ethic`, 4.6 Willpower: the Absolute form of the build's fanatic ethic, adopted later in game - shown on the build page, never exported)
 - Authorities with ethics requirements
-- Civics with conditional filtering (potential/possible): 2 at creation, plus an optional third civic (`third_civic`, unlocked later in game - shown on the build page, never exported, still rule-checked with all 3 civics)
+- Civics with conditional filtering (potential/possible): 2 at creation (+ the origin's `country_government_civic_points_add`: 3 with Great Mosaic), plus an optional "later" civic (`third_civic`, the Galactic Administration tech slot - shown on the build page, never exported, still rule-checked with all civics)
 - Description (5k chars) and optional "How to Play" guide (`guide`, 20k chars), both markdown, length enforced while typing (`maxLength` + counter)
 - Recommended Ascension Perks with ordering
 - Recommended Tradition Trees with ordering

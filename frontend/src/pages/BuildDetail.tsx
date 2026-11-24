@@ -356,6 +356,9 @@ export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode =
   const getSpeciesClassData = (classId: string) => allSpeciesClasses.find(sc => sc.id === classId);
   const getTraitData = (traitId: string) => allTraits.find(t => t.id === traitId);
   const getOriginData = (originId: string) => allOrigins.find(o => o.id === originId);
+  // Starting civic slots: 2 + the origin's country_government_civic_points_add (Great Mosaic)
+  const getMaxStartingCivics = (originId?: string | null) =>
+    2 + (Number((originId && getOriginData(originId)?.modifier?.country_government_civic_points_add) || 0));
   const planetLabel = (planetId: string) => allPlanetClasses.find(p => p.id === planetId)?.name || planetId;
 
   // Homeworld the build plays on (forced by Nomadic / the origin, else the
@@ -595,9 +598,11 @@ export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode =
     };
 
     // GOVERNMENT_CIVIC_POINTS_BASE in common/defines/00_defines.txt - 2 civics
-    // max at creation, confirmed in-game. Mirrors BuildForm.tsx's MAX_CIVIC_SLOTS.
-    if (civics.length > 2) {
-      warnings.push(`Civics: ${civics.length} selected, but the game only allows 2 at empire creation`);
+    // at creation, plus the origin's country_government_civic_points_add (Great
+    // Mosaic: +1). Mirrors BuildForm.tsx's maxCivicSlots.
+    const maxCivics = getMaxStartingCivics(b.origin);
+    if (civics.length > maxCivics) {
+      warnings.push(`Civics: ${civics.length} selected, but the game only allows ${maxCivics} at empire creation`);
     }
 
     if (speciesArchetype) {
@@ -1394,9 +1399,9 @@ export const BuildDetail: React.FC<{ pendingMode?: boolean }> = ({ pendingMode =
                               <span
                                 className="badge bg-info text-dark ms-2 align-middle"
                                 style={{ fontSize: '0.7rem' }}
-                                title="The game allows 2 civics at empire creation; a third slot unlocks later. Not included in the export."
+                                title="Slot unlocked later in the game by the Galactic Administration technology. Not included in the export."
                               >
-                                3rd civic - unlocked later
+                                {(() => { const n = parseList(build.civics).length + 1; return `${n}${n === 3 ? 'rd' : 'th'}`; })()} civic - unlocked later
                               </span>
                             )}
                           </h5>

@@ -264,11 +264,14 @@ const BASE_MAX_TRAIT_POINTS = 2;
 const BASE_MAX_TRAIT_COUNT = 5;
 const MAX_ETHICS_POINTS = 3;
 // GOVERNMENT_CIVIC_POINTS_BASE in common/defines/00_defines.txt - confirmed
-// in-game. A handful of narrative/mid-game civics (Great Khan's Vision,
-// Galactic Sovereign, Psionic Sovereign) grant +1 via
-// country_government_civic_points_add, but those aren't real creation-time
-// picks, so this stays a flat 2.
-const MAX_CIVIC_SLOTS = 2;
+// in-game. An origin can add starting slots through its modifier
+// country_government_civic_points_add (Great Mosaic, 4.6: +1), see
+// getMaxCivicSlots(). A handful of narrative/mid-game civics (Great Khan's
+// Vision, Galactic Sovereign, Psionic Sovereign) also grant +1, but those
+// aren't creation-time picks. The optional "later" civic is the slot from the
+// Galactic Administration technology.
+const BASE_CIVIC_SLOTS = 2;
+const ordinal = (n: number) => `${n}${n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th'}`;
 // Same limits as validateBuildData() in backend/security.js
 const DESCRIPTION_MAX_LENGTH = 5000;
 const GUIDE_MAX_LENGTH = 20000;
@@ -614,10 +617,11 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       // Handle civics (array of strings) - trim whitespace
       if (Array.isArray(initialData.civics)) {
         const civics = initialData.civics.map((c: string) => c.trim()).filter(Boolean);
-        // Builds published before 2026-08-10 could hold 3 starting civics: the
-        // extra one moves to the third civic slot, where the author can review it
-        setSelectedCivics(civics.slice(0, MAX_CIVIC_SLOTS));
-        setThirdCivic(initialData.third_civic || civics[MAX_CIVIC_SLOTS] || '');
+        // Builds published before 2026-08-10 could hold 3 starting civics: once
+        // the origins are loaded, any civic beyond the origin's starting slots
+        // moves to the "later" slot (see the normalization effect below)
+        setSelectedCivics(civics);
+        setThirdCivic(initialData.third_civic || '');
       } else if (initialData.third_civic) {
         setThirdCivic(initialData.third_civic);
       }
@@ -668,6 +672,23 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   };
 
   // Get origin bonuses for current species type
+  // Starting civic slots: 2, plus the origin's country_government_civic_points_add
+  const selectedOriginData = allOrigins.find(o => o.id === selectedOrigin);
+  const maxCivicSlots = BASE_CIVIC_SLOTS + (Number(selectedOriginData?.modifier?.country_government_civic_points_add) || 0);
+  const laterCivicLabel = ordinal(maxCivicSlots + 1);
+
+  // More starting civics than the origin allows (legacy 3-civic builds, an
+  // import, or switching away from Great Mosaic): the extra one moves to the
+  // "later" slot if it is free, otherwise it is dropped. Waits for the origins,
+  // or a Great Mosaic build being loaded would lose its 3rd starting civic.
+  useEffect(() => {
+    if (allOrigins.length === 0 || (selectedOrigin && !selectedOriginData)) return;
+    if (selectedCivics.length <= maxCivicSlots) return;
+    const extra = selectedCivics.slice(maxCivicSlots);
+    setSelectedCivics(selectedCivics.slice(0, maxCivicSlots));
+    if (!thirdCivic) setThirdCivic(extra[0]);
+  }, [allOrigins, selectedOrigin, selectedOriginData, selectedCivics, maxCivicSlots, thirdCivic]);
+
   const getOriginTraitBonuses = () => {
     if (!selectedOrigin) {
       return { pointsBonus: 0, picksBonus: 0 };
@@ -748,7 +769,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
   // Homeworld planet rules (see utils/planetRules.ts). The planet is optional:
   // with no pick and nothing forcing one, every planet check below is skipped.
-  const selectedOriginData = allOrigins.find(o => o.id === selectedOrigin);
+  // (selectedOriginData is defined above, with the civic slots)
   const traitById: Record<string, Trait> = Object.fromEntries(allTraits.map(t => [t.id, t]));
   const planetLabel = (planetId: string) => allPlanetClasses.find(p => p.id === planetId)?.name || planetId;
   const speciesLabel = (classId: string) => allSpeciesClasses.find(sc => sc.id === classId)?.name || classId;
@@ -806,7 +827,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
     // Only check if at max slots (2 starting civics + the optional third one) -
     // no complex compatibility rules
-    if (selectedCivics.length >= MAX_CIVIC_SLOTS && thirdCivic) {
+    if (selectedCivics.length >= maxCivicSlots && thirdCivic) {
       return false;
     }
 
@@ -1044,7 +1065,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
     // If selecting, check if it's allowed: starting slots first, then the third one
     if (canSelectCivic(civic)) {
-      if (selectedCivics.length < MAX_CIVIC_SLOTS) {
+      if (selectedCivics.length < maxCivicSlots) {
         setSelectedCivics(prev => [...prev, civicId]);
       } else {
         setThirdCivic(civicId);
@@ -1295,11 +1316,11 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       );
     };
 
-    // Double-check civic count independently of the live MAX_CIVIC_SLOTS
+    // Double-check civic count independently of the live maxCivicSlots
     // disable - matters for edit mode, where a build published before this
     // was fixed (2026-08-10, was flat 3) can still have 3 loaded in.
-    if (selectedCivics.length > MAX_CIVIC_SLOTS) {
-      warnings.push(`Civics: ${selectedCivics.length} selected, but the game only allows ${MAX_CIVIC_SLOTS} at empire creation`);
+    if (selectedCivics.length > maxCivicSlots) {
+      warnings.push(`Civics: ${selectedCivics.length} selected, but the game only allows ${maxCivicSlots} at empire creation`);
     }
 
     // Double-check the archetype trait budget independently of the live
@@ -2696,11 +2717,12 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
           {/* Civics Selection */}
           <div className="mb-3">
             <label className="form-label">
-              Civics ({selectedCivics.length}/{MAX_CIVIC_SLOTS} selected{thirdCivic ? ' + 1 for later' : ''})
+              Civics ({selectedCivics.length}/{maxCivicSlots} selected{thirdCivic ? ' + 1 for later' : ''})
             </label>
             <div className="form-text text-light mb-2">
-              {MAX_CIVIC_SLOTS} civics at empire creation. Once both are picked, you can add an optional
-              third civic, unlocked later in the game: it is shown on the build page but not exported.
+              {maxCivicSlots} civics at empire creation{maxCivicSlots > BASE_CIVIC_SLOTS && selectedOriginData ? ` (+${maxCivicSlots - BASE_CIVIC_SLOTS} from ${selectedOriginData.name})` : ''}.
+              Once they are all picked, you can add an optional {laterCivicLabel} civic, unlocked later in the game
+              (Galactic Administration technology): it is shown on the build page but not exported.
             </div>
 
             {/* Info about civic selection */}
@@ -2728,7 +2750,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                   })}
                   {thirdCivic && (
                     <span className="badge bg-info text-dark me-1 mb-1" title="Unlocked later in the game, not exported">
-                      3rd (later): {allCivics.find(c => c.id === thirdCivic)?.name || thirdCivic}
+                      {laterCivicLabel} (later): {allCivics.find(c => c.id === thirdCivic)?.name || thirdCivic}
                     </span>
                   )}
                 </div>
@@ -2749,7 +2771,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                     const isThird = thirdCivic === civic.id;
                     const isSelected = selectedCivics.includes(civic.id) || isThird;
                     const canSelect = canSelectCivic(civic);
-                    const slotsFull = selectedCivics.length >= MAX_CIVIC_SLOTS && !!thirdCivic;
+                    const slotsFull = selectedCivics.length >= maxCivicSlots && !!thirdCivic;
                     const isDisabled = !isSelected && !canSelect;
 
                     return (
@@ -2778,7 +2800,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                             <span className="badge bg-warning text-dark ms-2">Permanent</span>
                           )}
                           {isThird && (
-                            <span className="badge bg-info text-dark ms-2">3rd civic - unlocked later, not exported</span>
+                            <span className="badge bg-info text-dark ms-2">{laterCivicLabel} civic - unlocked later, not exported</span>
                           )}
                           {isDisabled && !isSelected && slotsFull && (
                             <span className="badge bg-danger ms-2">Max slots reached</span>
