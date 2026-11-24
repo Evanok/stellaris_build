@@ -136,7 +136,8 @@ def resolve_engine_functions(text: str, localizations: Dict[str, str]) -> str:
         words = re.sub(r'(?<!^)(?=[A-Z])', ' ', name).lower()
         return words
     for _ in range(2):  # a resolved key can hold another call
-        text = re.sub(r'\[Get([A-Za-z]+)\]', replace, text)
+        # Optional scope path before the call: [Owner.Species.GetFleshTypeCyberCreed]
+        text = re.sub(r'\[(?:[A-Z][A-Za-z]*\.)*Get([A-Za-z]+)\]', replace, text)
     return text
 
 

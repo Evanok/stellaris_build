@@ -98,6 +98,10 @@ def _clean_label(raw: str) -> str:
 
 def modifier_label(key: str) -> str:
     raw = _localization_lookup(f'mod_{key}')
+    # A label built from the game state ([This.GetCradleColor] -> "an Unknown
+    # Entity" until met) says less than the key itself: use the key instead
+    if raw and '[This.' in raw:
+        raw = None
     if raw:
         label = _clean_label(raw)
         if label and not re.search(r'[$\[\]]|individuals', label):

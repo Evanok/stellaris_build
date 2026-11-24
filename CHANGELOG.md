@@ -58,6 +58,16 @@ Add new entries at the top: `## <Title> (YYYY-MM-DD)`.
   the 4.4.x rule changes (16 civics, 15 origins, `ap_cosmogenesis`, `tr_domestication`; all added
   restrictions, e.g. Beacon of Liberty / Worker Cooperative not xenophobe, Endbringers not gestalt). Audit
   impact: still 31 violating builds, two already-flagged ones (#49, #66) get one more message.
+- 4.3 re-extracted from 4.3.7 (previous file: 4.3.0, March 2026): 643 texts changed, same missing fields
+  added as 4.4, 4.3.x balance changes (e.g. Sovereign Guardianship colony empire size 1 -> 0.75), `pc_ark`
+  gone from planet classes (Nomads came in 4.4; the old file was a copy of 4.5's). In 4.3.7 Galactic
+  Wonders is a single `ap_galactic_wonders`: the three 4.3.0 variants (`_utopia`, `_megacorp`,
+  `_utopia_and_megacorp`) were re-added from the previous file, since builds #43/#44 use
+  `ap_galactic_wonders_megacorp` (the form dedupes perks by name, so it still offers one). Audit unchanged.
+- Parser: scoped engine calls (`[Owner.Species.GetFleshTypeCyberCreed]` -> "flesh") are resolved too; a
+  modifier label built from the game state (`[This.GetCradleColor]` -> "an Unknown Entity" until met)
+  falls back to the key ("The Cradle of Souls Attunement").
+- 4.2 (also used for 4.0/4.1 builds) deliberately not re-extracted: 4.3+ covers 65 of 91 builds.
 - **Rule warnings, unset species**: `species_archetype` / `species_class` joined the evaluator's
   `OPTIONAL_FIELDS` (backend `rules/predicateEvaluator.js` and frontend `utils/ruleEvaluator.ts`): with no
   species picked (optional in the form), "Machine Intelligence requires a Machine species" was a false

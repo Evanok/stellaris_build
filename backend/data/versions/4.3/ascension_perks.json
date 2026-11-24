@@ -75,10 +75,6 @@
       "is_path_perk": false,
       "has_variants": true,
       "potential": {
-        "OR": {
-          "has_utopia": true,
-          "has_biogenesis_dlc": true
-        },
         "NOR": {
           "has_ascension_perk": "ap_engineered_evolution",
           "is_machine_empire": true,
@@ -153,10 +149,6 @@
       "is_path_perk": false,
       "has_variants": false,
       "potential": {
-        "OR": {
-          "has_utopia": true,
-          "has_machine_age_dlc": true
-        },
         "NOR": {
           "has_ascension_perk": "ap_the_flesh_is_weak",
           "has_origin": [
@@ -233,10 +225,6 @@
       "is_path_perk": false,
       "has_variants": false,
       "potential": {
-        "OR": {
-          "has_utopia": true,
-          "has_machine_age_dlc": true
-        },
         "NOR": {
           "has_ascension_perk": "ap_organo_machine_interfacing",
           "has_origin": [
@@ -296,10 +284,6 @@
       "is_path_perk": false,
       "has_variants": false,
       "potential": {
-        "OR": {
-          "has_utopia": true,
-          "has_machine_age_dlc": true
-        },
         "NOR": {
           "has_ascension_perk": "ap_organo_machine_interfacing_assimilator",
           "has_origin": "origin_endbringers"
@@ -356,10 +340,6 @@
       "is_path_perk": true,
       "has_variants": false,
       "potential": {
-        "OR": {
-          "has_utopia": true,
-          "has_machine_age_dlc": true
-        },
         "NOR": {
           "has_ascension_perk": "ap_synthetic_evolution",
           "is_machine_empire": true,
@@ -503,29 +483,6 @@
       "is_path_perk": false,
       "has_variants": true,
       "potential": {
-        "OR": [
-          {
-            "has_utopia": true,
-            "has_shroud_dlc": true
-          },
-          {
-            "has_shroud_dlc": true,
-            "AND": {
-              "is_gestalt": false,
-              "is_mechanical_empire": false,
-              "OR": {
-                "is_cyborg_empire": false,
-                "AND": {
-                  "has_origin": "origin_unplugged",
-                  "NOT": {
-                    "has_country_flag": "is_cyberized"
-                  }
-                }
-              },
-              "is_individual_machine": false
-            }
-          }
-        ],
         "NOR": {
           "has_country_flag": "ratling_country",
           "has_ascension_perk": "ap_mind_over_matter",
@@ -539,6 +496,23 @@
             "origin_endbringers"
           ],
           "has_valid_civic": "civic_augmentation_bazaars"
+        },
+        "OR": {
+          "has_shroud_dlc": true,
+          "AND": {
+            "is_gestalt": false,
+            "is_mechanical_empire": false,
+            "OR": {
+              "is_cyborg_empire": false,
+              "AND": {
+                "has_origin": "origin_unplugged",
+                "NOT": {
+                  "has_country_flag": "is_cyberized"
+                }
+              }
+            },
+            "is_individual_machine": false
+          }
         },
         "is_natural_design_empire": false,
         "if": {
@@ -596,16 +570,10 @@
       "is_path_perk": true,
       "has_variants": true,
       "potential": {
-        "OR": [
-          {
-            "has_synthetic_dawn": true,
-            "has_machine_age_dlc": true
-          },
-          {
-            "is_machine_empire": true,
-            "is_individual_machine": true
-          }
-        ],
+        "OR": {
+          "is_machine_empire": true,
+          "is_individual_machine": true
+        },
         "NOR": {
           "has_ascension_perk": "ap_synthetic_age",
           "has_origin": [
@@ -633,7 +601,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 3,
-      "effects": "damage_vs_country_type_synth_queen_mult: +50.0%; damage_vs_country_type_awakened_synth_queen_mult: +50.0%; damage_vs_country_type_synth_queen_convoys_mult: +50.0%; damage_vs_country_type_synth_queen_outposts_mult: +50.0%; damage_vs_country_type_swarm_mult: +50.0%; damage_vs_country_type_extradimensional_mult: +50.0%; damage_vs_country_type_extradimensional_2_mult: +50.0%; damage_vs_country_type_extradimensional_3_mult: +50.0%; damage_vs_country_type_ai_empire_mult: +50.0%; damage_vs_country_type_gray_goo_mult: +50.0%; damage_vs_player_crisis_mult: +50.0%",
+      "effects": "Damage to Cetana: +50%; Damage to Cetana, The Synthetic Queen: +50%; Damage to Cetana's Convoys: +50%; Damage to Cetana's Outposts: +50%; Damage to Prethoryn Creatures: +50%; Damage to the Unbidden: +50%; Damage to the Aberrant: +50%; Damage to the Vehement: +50%; Damage to the Contingency: +50%; Damage to Nanites: +50%; Damage to Crisis-Seeking Civilizations: +50%",
       "modifier": {
         "damage_vs_country_type_synth_queen_mult": 0.5,
         "damage_vs_country_type_awakened_synth_queen_mult": 0.5,
@@ -734,7 +702,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "refugee_attraction: -0.5",
+      "effects": "Refugee Attraction: -50%",
       "modifier": {
         "refugee_attraction": -0.5
       },
@@ -781,7 +749,7 @@
         ]
       },
       "prerequisites": [],
-      "effects": "refugee_attraction: -0.5",
+      "effects": "Refugee Attraction: -50%",
       "modifier": {
         "refugee_attraction": -0.5
       },
@@ -834,7 +802,7 @@
         "is_pacifist": false
       },
       "prerequisites": [],
-      "effects": "refugee_attraction: -0.5",
+      "effects": "Refugee Attraction: -50%",
       "modifier": {
         "refugee_attraction": -0.5
       },
@@ -888,7 +856,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "refugee_attraction: -0.5",
+      "effects": "Refugee Attraction: -50%",
       "modifier": {
         "refugee_attraction": -0.5
       },
@@ -921,7 +889,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "country_scientist_cap_add: +1; weapon_archaeotech_weapon_damage_mult: +33.0%; starbase_shipyard_build_minor_artifacts_cost_mult: -20.0%",
+      "effects": "Scientist Capacity: +1; Archaeotech Weapon Damage: +33%; Minor Artifact Ship Cost: -20%",
       "modifier": {
         "country_scientist_cap_add": 1,
         "weapon_archaeotech_weapon_damage_mult": 0.33,
@@ -945,7 +913,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_enclave_capacity_add: +1; diplo_weight_naval_mult: +25.0%",
+      "effects": "Enclave Capacity: +1; Diplomatic Weight From Fleet Power: +25%",
       "modifier": {
         "country_enclave_capacity_add": 1,
         "diplo_weight_naval_mult": 0.25
@@ -985,7 +953,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "terraforming_ocean_cost_mult: -25.0%",
+      "effects": "Ocean Terraforming Cost: -25%",
       "modifier": {
         "terraforming_ocean_cost_mult": -0.25,
         "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
@@ -1021,7 +989,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 1,
-      "effects": "intel_encryption_add: +2",
+      "effects": "Encryption: +2",
       "modifier": {
         "intel_encryption_add": 2,
         "add_attunement_the_cradle_of_souls": "@ascension_perk_attunement1"
@@ -1085,7 +1053,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 3,
-      "effects": "country_war_exhaustion_mult: -15.0%; ships_upkeep_mult: -5.0%",
+      "effects": "War Exhaustion Gain: -15%; Ship Upkeep: -5%",
       "modifier": {
         "country_war_exhaustion_mult": -0.15,
         "ships_upkeep_mult": -0.05,
@@ -1120,7 +1088,7 @@
         ]
       },
       "prerequisites": [],
-      "effects": "terraforming_cost_mult: -25.0%",
+      "effects": "Terraforming Cost: -25%",
       "modifier": {
         "terraforming_cost_mult": -0.25,
         "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
@@ -1161,7 +1129,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 2,
-      "effects": "country_power_projection_influence_produces_add: +2; country_commander_cap_add: +1; country_naval_cap_add: +150; command_limit_mult: +20.0%",
+      "effects": "Max Influence from Power Projection: +2; Commander Capacity: +1; Naval Capacity: +150; Fleet Command Limit: +20%",
       "modifier": {
         "country_power_projection_influence_produces_add": 2,
         "country_commander_cap_add": 1,
@@ -1186,7 +1154,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_starbase_influence_cost_mult: -20.0%; country_claim_influence_cost_mult: -20.0%; empire_size_systems_mult: -25.0%",
+      "effects": "Starbase Influence Cost: -20%; Claim Influence Cost: -20%; Empire Size from Systems: -25%",
       "modifier": {
         "country_starbase_influence_cost_mult": -0.2,
         "country_claim_influence_cost_mult": -0.2,
@@ -1216,7 +1184,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 1,
-      "effects": "country_starbase_capacity_add: +5",
+      "effects": "Starbase Capacity: +5",
       "modifier": {
         "country_starbase_capacity_add": 5,
         "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
@@ -1246,7 +1214,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "country_commander_cap_add: +1; shipclass_starbase_damage_mult: +25.0%; shipclass_starbase_hull_mult: +25.0%; shipclass_military_station_damage_mult: +25.0%; starbase_defense_platform_capacity_add: +5; ship_military_station_small_upkeep_mult: -50.0%; ship_home_territory_fire_rate_mult: +20.0%",
+      "effects": "Commander Capacity: +1; Starbase Damage: +25%; Starbase Hull Points: +25%; Defense Platform Damage: +25%; Defense Platforms Cap: +5; Defense Platform Upkeep: -50%; Home Territory Fire Rate: +20%",
       "modifier": {
         "country_commander_cap_add": 1,
         "shipclass_starbase_damage_mult": 0.25,
@@ -1280,7 +1248,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 3,
-      "effects": "diplo_weight_mult: +20.0%",
+      "effects": "Diplomatic Weight: +20%",
       "modifier": {
         "diplo_weight_mult": 0.2,
         "damage_vs_country_type_fallen_empire_mult": "@ap_galactic_contender_dmg_mult",
@@ -1314,7 +1282,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "rare_tech_draw_chance_mult: +50.0%",
+      "effects": "Rare Tech Draw Chance: +50%",
       "modifier": {
         "rare_tech_draw_chance_mult": 0.5
       },
@@ -1335,7 +1303,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_unity_produces_mult: +10.0%",
+      "effects": "Monthly Unity: +10%",
       "modifier": {
         "country_unity_produces_mult": 0.1
       },
@@ -1379,7 +1347,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "deposit_blockers_cost_mult: -33.0%",
+      "effects": "Clear Blocker Cost: -33%",
       "modifier": {
         "deposit_blockers_cost_mult": -0.33,
         "add_attunement_the_instrument_of_desire": "@ascension_perk_attunement1"
@@ -1402,7 +1370,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "empire_size_colonies_mult: -25.0%; country_official_cap_add: +2",
+      "effects": "Empire Size from Planets: -25%; Official Capacity: +2",
       "modifier": {
         "empire_size_colonies_mult": -0.25,
         "country_official_cap_add": 2
@@ -1425,7 +1393,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_edict_fund_add: +100; council_agenda_progress_speed: +15.0%",
+      "effects": "Edict Fund: +100; Council Agenda Speed: +15%",
       "modifier": {
         "country_edict_fund_add": 100,
         "council_agenda_progress_speed": 0.15,
@@ -1448,7 +1416,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_scientist_cap_add: +2; species_leader_exp_gain: +0.25; leaders_upkeep_mult: -15.0%",
+      "effects": "Scientist Capacity: +2; Species Leader Exp Gain: +25%; Leader Upkeep: -15%",
       "modifier": {
         "country_scientist_cap_add": 2,
         "species_leader_exp_gain": 0.25,
@@ -1471,7 +1439,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "divided_patrongage_max_subjects: +1; specialist_subject_conversion_time_mult: -20.0%; envoys_add: +2",
+      "effects": "Subjects Exempt from Divided Patronage: +1; Specialist Subject Conversion Time: -20%; Envoys: +2",
       "modifier": {
         "divided_patrongage_max_subjects": 1,
         "specialist_subject_conversion_time_mult": -0.2,
@@ -1504,7 +1472,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "habitat_max_districts_add: +2; megastructures_habitat_cost_mult: -20.0%; planet_districts_hab_cost_mult: -20.0%; habitat_districts_minor_add: +25.0%; habitat_district_jobs_mult: +50.0%",
+      "effects": "Habitat Max Districts: +2; Habitat Build Cost: -20%; Habitat Districts Cost: -20%; Habitat Max Districts from Minor Celestial Bodies: +0.25; Jobs from Habitat Districts: +50%",
       "modifier": {
         "habitat_max_districts_add": 2,
         "megastructures_habitat_cost_mult": -0.2,
@@ -1515,7 +1483,6 @@
       "is_path_perk": false,
       "has_variants": false,
       "potential": {
-        "host_has_dlc": "Utopia",
         "is_void_dweller_empire": false,
         "is_wilderness_empire": false
       },
@@ -1540,7 +1507,7 @@
         ]
       },
       "prerequisites": [],
-      "effects": "megastructure_build_speed_mult: +50.0%; country_megastructure_build_cap_add: +1",
+      "effects": "Megastructure Build Speed: +50%; Megastructure Build Capacity: +1",
       "modifier": {
         "megastructure_build_speed_mult": 0.5,
         "country_megastructure_build_cap_add": 1
@@ -1548,12 +1515,320 @@
       "is_path_perk": false,
       "has_variants": false,
       "potential": {
-        "host_has_dlc": "Utopia",
         "NOT": {
           "has_ascension_perk": "ap_master_builders"
         }
       },
       "ai_weight": 10
+    },
+    {
+      "id": "ap_galactic_wonders",
+      "name": "Galactic Wonders",
+      "description": "Megastructures are rightfully regarded as the wonders of our time. The scope of such a project would have been unimaginable mere generations ago.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "requires_mega_engineering",
+            "has_technology": "tech_mega_engineering"
+          },
+          {
+            "fail_text": "requires_built_or_repaired_megastructure",
+            "has_country_flag": "has_built_or_repaired_megastructure"
+          }
+        ]
+      },
+      "prerequisites": [],
+      "effects": "",
+      "modifier": {},
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "NOT": {
+          "has_ascension_perk": "ap_galactic_wonders"
+        }
+      },
+      "ai_weight": 20
+    },
+    {
+      "id": "ap_machine_worlds",
+      "name": "Machine Worlds",
+      "description": "We shall shape our worlds into a mirror image of ourselves, replacing the frailty of biology with the immutable perfection of metal.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "requires_technology_tech_climate_restoration",
+            "OR": {
+              "has_technology": "tech_climate_restoration",
+              "has_origin": "origin_machine"
+            }
+          },
+          {
+            "fail_text": "requires_ascension_perks_2",
+            "num_ascension_perks": 1
+          }
+        ]
+      },
+      "prerequisites": [],
+      "effects": "",
+      "modifier": {
+        "add_attunement_the_instrument_of_desire": "@ascension_perk_attunement1"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "is_machine_empire": true,
+        "NOT": {
+          "has_ascension_perk": "ap_machine_worlds"
+        }
+      },
+      "ai_weight": 100
+    },
+    {
+      "id": "ap_hive_worlds",
+      "name": "Hive Worlds",
+      "description": "We shall create living worlds that are every bit as much a part of the Hive as the drones that inhabit them.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "requires_technology_tech_climate_restoration",
+            "has_technology": "tech_climate_restoration"
+          },
+          {
+            "fail_text": "requires_ascension_perks_2",
+            "OR": {
+              "num_ascension_perks": 1,
+              "has_origin": "origin_fallen_empire_hive"
+            }
+          }
+        ]
+      },
+      "prerequisites": [],
+      "effects": "",
+      "modifier": {
+        "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "is_hive_empire": true,
+        "NOT": {
+          "has_ascension_perk": "ap_hive_worlds"
+        },
+        "is_lithoid_devouring_swarm": false,
+        "is_wilderness_empire": false
+      },
+      "ai_weight": 100
+    },
+    {
+      "id": "ap_arcology_project",
+      "name": "Arcology Project",
+      "description": "Thus shall we make a world of the city, and a city of the world.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "requires_technology_housing_2",
+            "has_technology": "tech_housing_2"
+          },
+          {
+            "fail_text": "requires_ascension_perks_2",
+            "num_ascension_perks": 1
+          }
+        ]
+      },
+      "prerequisites": [],
+      "effects": "",
+      "modifier": {
+        "add_attunement_the_instrument_of_desire": "@ascension_perk_attunement1"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "host_has_dlc": "Megacorp",
+        "OR": {
+          "is_regular_empire": true,
+          "has_valid_civic": "civic_machine_servitor"
+        },
+        "NOT": [
+          {
+            "has_valid_civic": "civic_agrarian_idyll"
+          },
+          {
+            "has_ascension_perk": "ap_arcology_project"
+          }
+        ]
+      },
+      "ai_weight": 10
+    },
+    {
+      "id": "ap_xeno_compatibility",
+      "name": "Xeno-Compatibility",
+      "description": "The invention of universal sexual biology has revolutionized society. Even if it sometimes requires awkward rotations to make a connection.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "requires_xenophile",
+            "is_xenophile": true
+          },
+          {
+            "fail_text": "requires_xeno_species",
+            "any_owned_pop_group": {
+              "NOR": {
+                "is_same_species": "root.owner",
+                "has_trait": [
+                  "trait_mechanical",
+                  "trait_machine_unit",
+                  "trait_hive_mind"
+                ]
+              }
+            }
+          },
+          {
+            "fail_text": "requires_technology_gene_tailoring",
+            "has_technology": "tech_gene_tailoring"
+          }
+        ]
+      },
+      "prerequisites": [],
+      "effects": "Automatic Resettlement Destination Chance: +33%; Refugee Attraction: +100%",
+      "modifier": {
+        "planet_resettlement_unemployed_destination_mult": 0.33,
+        "refugee_attraction": 1,
+        "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "host_has_dlc": "Megacorp",
+        "NOT": {
+          "has_ascension_perk": "ap_xeno_compatibility"
+        },
+        "is_regular_empire": true,
+        "is_wilderness_empire": false
+      },
+      "ai_weight": 10
+    },
+    {
+      "id": "ap_universal_transactions",
+      "name": "Universal Transactions",
+      "description": "We shall extend our brand and our business to every solar system in the galaxy. Prosperity is eternal!",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {},
+      "prerequisites": [],
+      "effects": "Official Capacity: +1; Branch Office Cost: -15%",
+      "modifier": {
+        "country_official_cap_add": 1,
+        "planet_branch_offices_cost_mult": -0.15,
+        "add_attunement_the_instrument_of_desire": "@ascension_perk_attunement1"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "host_has_dlc": "Megacorp",
+        "NOT": {
+          "has_ascension_perk": "ap_universal_transactions"
+        },
+        "is_megacorp": true,
+        "is_criminal_syndicate": false
+      },
+      "ai_weight": 20
+    },
+    {
+      "id": "ap_detox",
+      "name": "Detox",
+      "description": "Our newest advancements in terraforming allow us to breathe new life into a class of planets formerly considered irrevocably deadly and beyond salvation.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": {
+          "fail_text": "requires_technology_tech_climate_restoration",
+          "has_technology": "tech_climate_restoration"
+        }
+      },
+      "prerequisites": [],
+      "effects": "",
+      "modifier": {
+        "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "host_has_dlc": "Toxoids Species Pack",
+        "NOT": {
+          "has_ascension_perk": "ap_detox",
+          "has_country_flag": "knights_detox"
+        }
+      },
+      "ai_weight": 20
+    },
+    {
+      "id": "ap_mechromancy",
+      "name": "Mechromancy",
+      "description": "Biologicals are merely a different kind of machine. We can stimulate the appropriate synapses and reanimate these creatures, for our own benefit.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {},
+      "prerequisites": [],
+      "effects": "Large Slot Weapon Damage: +15%; Extra Large Slot Weapon Damage: +15%; Titan Slot Weapon Damage: +15%",
+      "modifier": {
+        "l_slot_weapon_damage_mult": 0.15,
+        "x_slot_weapon_damage_mult": 0.15,
+        "t_slot_weapon_damage_mult": 0.15,
+        "add_attunement_the_eater_of_worlds": "@ascension_perk_attunement1"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "has_necroids": true,
+        "is_machine_empire": true,
+        "NOT": {
+          "has_ascension_perk": "ap_mechromancy"
+        }
+      },
+      "ai_weight": 4
+    },
+    {
+      "id": "ap_weather_control",
+      "name": "Galactic Weather Control",
+      "description": "Our latest advances in astrometeorology grant us the ability to manifest Cosmic Storms on command. With the right technology, we can even choose the type of storm to create.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "requires_technology_tech_advanced_storm_manipulation",
+            "has_technology": "tech_advanced_storm_manipulation"
+          },
+          {
+            "fail_text": "requires_ascension_perks_1",
+            "num_ascension_perks": 0
+          }
+        ]
+      },
+      "prerequisites": [],
+      "effects": "",
+      "modifier": {
+        "add_attunement_the_cradle_of_souls": "@ascension_perk_attunement1"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "has_cosmic_storms_dlc": true,
+        "NOT": {
+          "has_ascension_perk": "ap_weather_control"
+        }
+      },
+      "ai_weight": 0
     },
     {
       "id": "ap_galactic_wonders_utopia",
@@ -1652,287 +1927,6 @@
         }
       },
       "ai_weight": 20
-    },
-    {
-      "id": "ap_machine_worlds",
-      "name": "Machine Worlds",
-      "description": "We shall shape our worlds into a mirror image of ourselves, replacing the frailty of biology with the immutable perfection of metal.",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {
-        "custom_tooltip": [
-          {
-            "fail_text": "requires_technology_tech_climate_restoration",
-            "OR": {
-              "has_technology": "tech_climate_restoration",
-              "has_origin": "origin_machine"
-            }
-          },
-          {
-            "fail_text": "requires_ascension_perks_2",
-            "num_ascension_perks": 1
-          }
-        ]
-      },
-      "prerequisites": [],
-      "effects": "",
-      "modifier": {
-        "add_attunement_the_instrument_of_desire": "@ascension_perk_attunement1"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "host_has_dlc": "Synthetic Dawn Story Pack",
-        "is_machine_empire": true,
-        "NOT": {
-          "has_ascension_perk": "ap_machine_worlds"
-        }
-      },
-      "ai_weight": 100
-    },
-    {
-      "id": "ap_hive_worlds",
-      "name": "Hive Worlds",
-      "description": "We shall create living worlds that are every bit as much a part of the Hive as the drones that inhabit them.",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {
-        "custom_tooltip": [
-          {
-            "fail_text": "requires_technology_tech_climate_restoration",
-            "has_technology": "tech_climate_restoration"
-          },
-          {
-            "fail_text": "requires_ascension_perks_2",
-            "OR": {
-              "num_ascension_perks": 1,
-              "has_origin": "origin_fallen_empire_hive"
-            }
-          }
-        ]
-      },
-      "prerequisites": [],
-      "effects": "",
-      "modifier": {
-        "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "host_has_dlc": "Utopia",
-        "is_hive_empire": true,
-        "NOT": {
-          "has_ascension_perk": "ap_hive_worlds"
-        },
-        "is_lithoid_devouring_swarm": false,
-        "is_wilderness_empire": false
-      },
-      "ai_weight": 100
-    },
-    {
-      "id": "ap_arcology_project",
-      "name": "Arcology Project",
-      "description": "Thus shall we make a world of the city, and a city of the world.",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {
-        "custom_tooltip": [
-          {
-            "fail_text": "requires_technology_housing_2",
-            "has_technology": "tech_housing_2"
-          },
-          {
-            "fail_text": "requires_ascension_perks_2",
-            "num_ascension_perks": 1
-          }
-        ]
-      },
-      "prerequisites": [],
-      "effects": "",
-      "modifier": {
-        "add_attunement_the_instrument_of_desire": "@ascension_perk_attunement1"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "host_has_dlc": "Megacorp",
-        "OR": {
-          "is_regular_empire": true,
-          "has_valid_civic": "civic_machine_servitor"
-        },
-        "NOT": [
-          {
-            "has_valid_civic": "civic_agrarian_idyll"
-          },
-          {
-            "has_ascension_perk": "ap_arcology_project"
-          }
-        ]
-      },
-      "ai_weight": 10
-    },
-    {
-      "id": "ap_xeno_compatibility",
-      "name": "Xeno-Compatibility",
-      "description": "The invention of universal sexual biology has revolutionized society. Even if it sometimes requires awkward rotations to make a connection.",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {
-        "custom_tooltip": [
-          {
-            "fail_text": "requires_xenophile",
-            "is_xenophile": true
-          },
-          {
-            "fail_text": "requires_xeno_species",
-            "any_owned_pop_group": {
-              "NOR": {
-                "is_same_species": "root.owner",
-                "has_trait": [
-                  "trait_mechanical",
-                  "trait_machine_unit",
-                  "trait_hive_mind"
-                ]
-              }
-            }
-          },
-          {
-            "fail_text": "requires_technology_gene_tailoring",
-            "has_technology": "tech_gene_tailoring"
-          }
-        ]
-      },
-      "prerequisites": [],
-      "effects": "planet_resettlement_unemployed_destination_mult: +33.0%; refugee_attraction: +1",
-      "modifier": {
-        "planet_resettlement_unemployed_destination_mult": 0.33,
-        "refugee_attraction": 1,
-        "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "host_has_dlc": "Megacorp",
-        "NOT": {
-          "has_ascension_perk": "ap_xeno_compatibility"
-        },
-        "is_regular_empire": true,
-        "is_wilderness_empire": false
-      },
-      "ai_weight": 10
-    },
-    {
-      "id": "ap_universal_transactions",
-      "name": "Universal Transactions",
-      "description": "We shall extend our brand and our business to every solar system in the galaxy. Prosperity is eternal!",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {},
-      "prerequisites": [],
-      "effects": "country_official_cap_add: +1; planet_branch_offices_cost_mult: -15.0%",
-      "modifier": {
-        "country_official_cap_add": 1,
-        "planet_branch_offices_cost_mult": -0.15,
-        "add_attunement_the_instrument_of_desire": "@ascension_perk_attunement1"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "host_has_dlc": "Megacorp",
-        "NOT": {
-          "has_ascension_perk": "ap_universal_transactions"
-        },
-        "is_megacorp": true,
-        "is_criminal_syndicate": false
-      },
-      "ai_weight": 20
-    },
-    {
-      "id": "ap_detox",
-      "name": "Detox",
-      "description": "Our newest advancements in terraforming allow us to breathe new life into a class of planets formerly considered irrevocably deadly and beyond salvation.",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {
-        "custom_tooltip": {
-          "fail_text": "requires_technology_tech_climate_restoration",
-          "has_technology": "tech_climate_restoration"
-        }
-      },
-      "prerequisites": [],
-      "effects": "",
-      "modifier": {
-        "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "host_has_dlc": "Toxoids Species Pack",
-        "NOT": {
-          "has_ascension_perk": "ap_detox",
-          "has_country_flag": "knights_detox"
-        }
-      },
-      "ai_weight": 20
-    },
-    {
-      "id": "ap_mechromancy",
-      "name": "Mechromancy",
-      "description": "Biologicals are merely a different kind of machine. We can stimulate the appropriate synapses and reanimate these creatures, for our own benefit.",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {},
-      "prerequisites": [],
-      "effects": "l_slot_weapon_damage_mult: +15.0%; x_slot_weapon_damage_mult: +15.0%; t_slot_weapon_damage_mult: +15.0%",
-      "modifier": {
-        "l_slot_weapon_damage_mult": 0.15,
-        "x_slot_weapon_damage_mult": 0.15,
-        "t_slot_weapon_damage_mult": 0.15,
-        "add_attunement_the_eater_of_worlds": "@ascension_perk_attunement1"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "has_necroids": true,
-        "is_machine_empire": true,
-        "NOT": {
-          "has_ascension_perk": "ap_mechromancy"
-        }
-      },
-      "ai_weight": 4
-    },
-    {
-      "id": "ap_weather_control",
-      "name": "Galactic Weather Control",
-      "description": "Our latest advances in astrometeorology grant us the ability to manifest Cosmic Storms on command. With the right technology, we can even choose the type of storm to create.",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {
-        "custom_tooltip": [
-          {
-            "fail_text": "requires_technology_tech_advanced_storm_manipulation",
-            "has_technology": "tech_advanced_storm_manipulation"
-          },
-          {
-            "fail_text": "requires_ascension_perks_1",
-            "num_ascension_perks": 0
-          }
-        ]
-      },
-      "prerequisites": [],
-      "effects": "",
-      "modifier": {
-        "add_attunement_the_cradle_of_souls": "@ascension_perk_attunement1"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "has_cosmic_storms_dlc": true,
-        "NOT": {
-          "has_ascension_perk": "ap_weather_control"
-        }
-      },
-      "ai_weight": 0
     }
   ],
   "path_perks": [
@@ -1982,10 +1976,6 @@
       "is_path_perk": true,
       "has_variants": false,
       "potential": {
-        "OR": {
-          "has_utopia": true,
-          "has_machine_age_dlc": true
-        },
         "NOR": {
           "has_ascension_perk": "ap_synthetic_evolution",
           "is_machine_empire": true,
@@ -2060,16 +2050,10 @@
       "is_path_perk": true,
       "has_variants": true,
       "potential": {
-        "OR": [
-          {
-            "has_synthetic_dawn": true,
-            "has_machine_age_dlc": true
-          },
-          {
-            "is_machine_empire": true,
-            "is_individual_machine": true
-          }
-        ],
+        "OR": {
+          "is_machine_empire": true,
+          "is_individual_machine": true
+        },
         "NOR": {
           "has_ascension_perk": "ap_synthetic_age",
           "has_origin": [
@@ -2160,10 +2144,6 @@
       "is_path_perk": false,
       "has_variants": true,
       "potential": {
-        "OR": {
-          "has_utopia": true,
-          "has_biogenesis_dlc": true
-        },
         "NOR": {
           "has_ascension_perk": "ap_engineered_evolution",
           "is_machine_empire": true,
@@ -2238,10 +2218,6 @@
       "is_path_perk": false,
       "has_variants": false,
       "potential": {
-        "OR": {
-          "has_utopia": true,
-          "has_machine_age_dlc": true
-        },
         "NOR": {
           "has_ascension_perk": "ap_the_flesh_is_weak",
           "has_origin": [
@@ -2318,10 +2294,6 @@
       "is_path_perk": false,
       "has_variants": false,
       "potential": {
-        "OR": {
-          "has_utopia": true,
-          "has_machine_age_dlc": true
-        },
         "NOR": {
           "has_ascension_perk": "ap_organo_machine_interfacing",
           "has_origin": [
@@ -2381,10 +2353,6 @@
       "is_path_perk": false,
       "has_variants": false,
       "potential": {
-        "OR": {
-          "has_utopia": true,
-          "has_machine_age_dlc": true
-        },
         "NOR": {
           "has_ascension_perk": "ap_organo_machine_interfacing_assimilator",
           "has_origin": "origin_endbringers"
@@ -2508,29 +2476,6 @@
       "is_path_perk": false,
       "has_variants": true,
       "potential": {
-        "OR": [
-          {
-            "has_utopia": true,
-            "has_shroud_dlc": true
-          },
-          {
-            "has_shroud_dlc": true,
-            "AND": {
-              "is_gestalt": false,
-              "is_mechanical_empire": false,
-              "OR": {
-                "is_cyborg_empire": false,
-                "AND": {
-                  "has_origin": "origin_unplugged",
-                  "NOT": {
-                    "has_country_flag": "is_cyberized"
-                  }
-                }
-              },
-              "is_individual_machine": false
-            }
-          }
-        ],
         "NOR": {
           "has_country_flag": "ratling_country",
           "has_ascension_perk": "ap_mind_over_matter",
@@ -2544,6 +2489,23 @@
             "origin_endbringers"
           ],
           "has_valid_civic": "civic_augmentation_bazaars"
+        },
+        "OR": {
+          "has_shroud_dlc": true,
+          "AND": {
+            "is_gestalt": false,
+            "is_mechanical_empire": false,
+            "OR": {
+              "is_cyborg_empire": false,
+              "AND": {
+                "has_origin": "origin_unplugged",
+                "NOT": {
+                  "has_country_flag": "is_cyberized"
+                }
+              }
+            },
+            "is_individual_machine": false
+          }
         },
         "is_natural_design_empire": false,
         "if": {
@@ -2571,7 +2533,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 3,
-      "effects": "damage_vs_country_type_synth_queen_mult: +50.0%; damage_vs_country_type_awakened_synth_queen_mult: +50.0%; damage_vs_country_type_synth_queen_convoys_mult: +50.0%; damage_vs_country_type_synth_queen_outposts_mult: +50.0%; damage_vs_country_type_swarm_mult: +50.0%; damage_vs_country_type_extradimensional_mult: +50.0%; damage_vs_country_type_extradimensional_2_mult: +50.0%; damage_vs_country_type_extradimensional_3_mult: +50.0%; damage_vs_country_type_ai_empire_mult: +50.0%; damage_vs_country_type_gray_goo_mult: +50.0%; damage_vs_player_crisis_mult: +50.0%",
+      "effects": "Damage to Cetana: +50%; Damage to Cetana, The Synthetic Queen: +50%; Damage to Cetana's Convoys: +50%; Damage to Cetana's Outposts: +50%; Damage to Prethoryn Creatures: +50%; Damage to the Unbidden: +50%; Damage to the Aberrant: +50%; Damage to the Vehement: +50%; Damage to the Contingency: +50%; Damage to Nanites: +50%; Damage to Crisis-Seeking Civilizations: +50%",
       "modifier": {
         "damage_vs_country_type_synth_queen_mult": 0.5,
         "damage_vs_country_type_awakened_synth_queen_mult": 0.5,
@@ -2672,7 +2634,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "refugee_attraction: -0.5",
+      "effects": "Refugee Attraction: -50%",
       "modifier": {
         "refugee_attraction": -0.5
       },
@@ -2719,7 +2681,7 @@
         ]
       },
       "prerequisites": [],
-      "effects": "refugee_attraction: -0.5",
+      "effects": "Refugee Attraction: -50%",
       "modifier": {
         "refugee_attraction": -0.5
       },
@@ -2772,7 +2734,7 @@
         "is_pacifist": false
       },
       "prerequisites": [],
-      "effects": "refugee_attraction: -0.5",
+      "effects": "Refugee Attraction: -50%",
       "modifier": {
         "refugee_attraction": -0.5
       },
@@ -2826,7 +2788,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "refugee_attraction: -0.5",
+      "effects": "Refugee Attraction: -50%",
       "modifier": {
         "refugee_attraction": -0.5
       },
@@ -2859,7 +2821,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "country_scientist_cap_add: +1; weapon_archaeotech_weapon_damage_mult: +33.0%; starbase_shipyard_build_minor_artifacts_cost_mult: -20.0%",
+      "effects": "Scientist Capacity: +1; Archaeotech Weapon Damage: +33%; Minor Artifact Ship Cost: -20%",
       "modifier": {
         "country_scientist_cap_add": 1,
         "weapon_archaeotech_weapon_damage_mult": 0.33,
@@ -2883,7 +2845,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_enclave_capacity_add: +1; diplo_weight_naval_mult: +25.0%",
+      "effects": "Enclave Capacity: +1; Diplomatic Weight From Fleet Power: +25%",
       "modifier": {
         "country_enclave_capacity_add": 1,
         "diplo_weight_naval_mult": 0.25
@@ -2923,7 +2885,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "terraforming_ocean_cost_mult: -25.0%",
+      "effects": "Ocean Terraforming Cost: -25%",
       "modifier": {
         "terraforming_ocean_cost_mult": -0.25,
         "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
@@ -2959,7 +2921,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 1,
-      "effects": "intel_encryption_add: +2",
+      "effects": "Encryption: +2",
       "modifier": {
         "intel_encryption_add": 2,
         "add_attunement_the_cradle_of_souls": "@ascension_perk_attunement1"
@@ -3023,7 +2985,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 3,
-      "effects": "country_war_exhaustion_mult: -15.0%; ships_upkeep_mult: -5.0%",
+      "effects": "War Exhaustion Gain: -15%; Ship Upkeep: -5%",
       "modifier": {
         "country_war_exhaustion_mult": -0.15,
         "ships_upkeep_mult": -0.05,
@@ -3058,7 +3020,7 @@
         ]
       },
       "prerequisites": [],
-      "effects": "terraforming_cost_mult: -25.0%",
+      "effects": "Terraforming Cost: -25%",
       "modifier": {
         "terraforming_cost_mult": -0.25,
         "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
@@ -3099,7 +3061,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 2,
-      "effects": "country_power_projection_influence_produces_add: +2; country_commander_cap_add: +1; country_naval_cap_add: +150; command_limit_mult: +20.0%",
+      "effects": "Max Influence from Power Projection: +2; Commander Capacity: +1; Naval Capacity: +150; Fleet Command Limit: +20%",
       "modifier": {
         "country_power_projection_influence_produces_add": 2,
         "country_commander_cap_add": 1,
@@ -3124,7 +3086,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_starbase_influence_cost_mult: -20.0%; country_claim_influence_cost_mult: -20.0%; empire_size_systems_mult: -25.0%",
+      "effects": "Starbase Influence Cost: -20%; Claim Influence Cost: -20%; Empire Size from Systems: -25%",
       "modifier": {
         "country_starbase_influence_cost_mult": -0.2,
         "country_claim_influence_cost_mult": -0.2,
@@ -3154,7 +3116,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 1,
-      "effects": "country_starbase_capacity_add: +5",
+      "effects": "Starbase Capacity: +5",
       "modifier": {
         "country_starbase_capacity_add": 5,
         "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
@@ -3184,7 +3146,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "country_commander_cap_add: +1; shipclass_starbase_damage_mult: +25.0%; shipclass_starbase_hull_mult: +25.0%; shipclass_military_station_damage_mult: +25.0%; starbase_defense_platform_capacity_add: +5; ship_military_station_small_upkeep_mult: -50.0%; ship_home_territory_fire_rate_mult: +20.0%",
+      "effects": "Commander Capacity: +1; Starbase Damage: +25%; Starbase Hull Points: +25%; Defense Platform Damage: +25%; Defense Platforms Cap: +5; Defense Platform Upkeep: -50%; Home Territory Fire Rate: +20%",
       "modifier": {
         "country_commander_cap_add": 1,
         "shipclass_starbase_damage_mult": 0.25,
@@ -3218,7 +3180,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 3,
-      "effects": "diplo_weight_mult: +20.0%",
+      "effects": "Diplomatic Weight: +20%",
       "modifier": {
         "diplo_weight_mult": 0.2,
         "damage_vs_country_type_fallen_empire_mult": "@ap_galactic_contender_dmg_mult",
@@ -3252,7 +3214,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "rare_tech_draw_chance_mult: +50.0%",
+      "effects": "Rare Tech Draw Chance: +50%",
       "modifier": {
         "rare_tech_draw_chance_mult": 0.5
       },
@@ -3273,7 +3235,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_unity_produces_mult: +10.0%",
+      "effects": "Monthly Unity: +10%",
       "modifier": {
         "country_unity_produces_mult": 0.1
       },
@@ -3317,7 +3279,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "deposit_blockers_cost_mult: -33.0%",
+      "effects": "Clear Blocker Cost: -33%",
       "modifier": {
         "deposit_blockers_cost_mult": -0.33,
         "add_attunement_the_instrument_of_desire": "@ascension_perk_attunement1"
@@ -3340,7 +3302,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "empire_size_colonies_mult: -25.0%; country_official_cap_add: +2",
+      "effects": "Empire Size from Planets: -25%; Official Capacity: +2",
       "modifier": {
         "empire_size_colonies_mult": -0.25,
         "country_official_cap_add": 2
@@ -3363,7 +3325,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_edict_fund_add: +100; council_agenda_progress_speed: +15.0%",
+      "effects": "Edict Fund: +100; Council Agenda Speed: +15%",
       "modifier": {
         "country_edict_fund_add": 100,
         "council_agenda_progress_speed": 0.15,
@@ -3386,7 +3348,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_scientist_cap_add: +2; species_leader_exp_gain: +0.25; leaders_upkeep_mult: -15.0%",
+      "effects": "Scientist Capacity: +2; Species Leader Exp Gain: +25%; Leader Upkeep: -15%",
       "modifier": {
         "country_scientist_cap_add": 2,
         "species_leader_exp_gain": 0.25,
@@ -3409,7 +3371,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "divided_patrongage_max_subjects: +1; specialist_subject_conversion_time_mult: -20.0%; envoys_add: +2",
+      "effects": "Subjects Exempt from Divided Patronage: +1; Specialist Subject Conversion Time: -20%; Envoys: +2",
       "modifier": {
         "divided_patrongage_max_subjects": 1,
         "specialist_subject_conversion_time_mult": -0.2,
@@ -3442,7 +3404,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "habitat_max_districts_add: +2; megastructures_habitat_cost_mult: -20.0%; planet_districts_hab_cost_mult: -20.0%; habitat_districts_minor_add: +25.0%; habitat_district_jobs_mult: +50.0%",
+      "effects": "Habitat Max Districts: +2; Habitat Build Cost: -20%; Habitat Districts Cost: -20%; Habitat Max Districts from Minor Celestial Bodies: +0.25; Jobs from Habitat Districts: +50%",
       "modifier": {
         "habitat_max_districts_add": 2,
         "megastructures_habitat_cost_mult": -0.2,
@@ -3453,7 +3415,6 @@
       "is_path_perk": false,
       "has_variants": false,
       "potential": {
-        "host_has_dlc": "Utopia",
         "is_void_dweller_empire": false,
         "is_wilderness_empire": false
       },
@@ -3478,7 +3439,7 @@
         ]
       },
       "prerequisites": [],
-      "effects": "megastructure_build_speed_mult: +50.0%; country_megastructure_build_cap_add: +1",
+      "effects": "Megastructure Build Speed: +50%; Megastructure Build Capacity: +1",
       "modifier": {
         "megastructure_build_speed_mult": 0.5,
         "country_megastructure_build_cap_add": 1
@@ -3486,12 +3447,320 @@
       "is_path_perk": false,
       "has_variants": false,
       "potential": {
-        "host_has_dlc": "Utopia",
         "NOT": {
           "has_ascension_perk": "ap_master_builders"
         }
       },
       "ai_weight": 10
+    },
+    {
+      "id": "ap_galactic_wonders",
+      "name": "Galactic Wonders",
+      "description": "Megastructures are rightfully regarded as the wonders of our time. The scope of such a project would have been unimaginable mere generations ago.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "requires_mega_engineering",
+            "has_technology": "tech_mega_engineering"
+          },
+          {
+            "fail_text": "requires_built_or_repaired_megastructure",
+            "has_country_flag": "has_built_or_repaired_megastructure"
+          }
+        ]
+      },
+      "prerequisites": [],
+      "effects": "",
+      "modifier": {},
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "NOT": {
+          "has_ascension_perk": "ap_galactic_wonders"
+        }
+      },
+      "ai_weight": 20
+    },
+    {
+      "id": "ap_machine_worlds",
+      "name": "Machine Worlds",
+      "description": "We shall shape our worlds into a mirror image of ourselves, replacing the frailty of biology with the immutable perfection of metal.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "requires_technology_tech_climate_restoration",
+            "OR": {
+              "has_technology": "tech_climate_restoration",
+              "has_origin": "origin_machine"
+            }
+          },
+          {
+            "fail_text": "requires_ascension_perks_2",
+            "num_ascension_perks": 1
+          }
+        ]
+      },
+      "prerequisites": [],
+      "effects": "",
+      "modifier": {
+        "add_attunement_the_instrument_of_desire": "@ascension_perk_attunement1"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "is_machine_empire": true,
+        "NOT": {
+          "has_ascension_perk": "ap_machine_worlds"
+        }
+      },
+      "ai_weight": 100
+    },
+    {
+      "id": "ap_hive_worlds",
+      "name": "Hive Worlds",
+      "description": "We shall create living worlds that are every bit as much a part of the Hive as the drones that inhabit them.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "requires_technology_tech_climate_restoration",
+            "has_technology": "tech_climate_restoration"
+          },
+          {
+            "fail_text": "requires_ascension_perks_2",
+            "OR": {
+              "num_ascension_perks": 1,
+              "has_origin": "origin_fallen_empire_hive"
+            }
+          }
+        ]
+      },
+      "prerequisites": [],
+      "effects": "",
+      "modifier": {
+        "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "is_hive_empire": true,
+        "NOT": {
+          "has_ascension_perk": "ap_hive_worlds"
+        },
+        "is_lithoid_devouring_swarm": false,
+        "is_wilderness_empire": false
+      },
+      "ai_weight": 100
+    },
+    {
+      "id": "ap_arcology_project",
+      "name": "Arcology Project",
+      "description": "Thus shall we make a world of the city, and a city of the world.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "requires_technology_housing_2",
+            "has_technology": "tech_housing_2"
+          },
+          {
+            "fail_text": "requires_ascension_perks_2",
+            "num_ascension_perks": 1
+          }
+        ]
+      },
+      "prerequisites": [],
+      "effects": "",
+      "modifier": {
+        "add_attunement_the_instrument_of_desire": "@ascension_perk_attunement1"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "host_has_dlc": "Megacorp",
+        "OR": {
+          "is_regular_empire": true,
+          "has_valid_civic": "civic_machine_servitor"
+        },
+        "NOT": [
+          {
+            "has_valid_civic": "civic_agrarian_idyll"
+          },
+          {
+            "has_ascension_perk": "ap_arcology_project"
+          }
+        ]
+      },
+      "ai_weight": 10
+    },
+    {
+      "id": "ap_xeno_compatibility",
+      "name": "Xeno-Compatibility",
+      "description": "The invention of universal sexual biology has revolutionized society. Even if it sometimes requires awkward rotations to make a connection.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "requires_xenophile",
+            "is_xenophile": true
+          },
+          {
+            "fail_text": "requires_xeno_species",
+            "any_owned_pop_group": {
+              "NOR": {
+                "is_same_species": "root.owner",
+                "has_trait": [
+                  "trait_mechanical",
+                  "trait_machine_unit",
+                  "trait_hive_mind"
+                ]
+              }
+            }
+          },
+          {
+            "fail_text": "requires_technology_gene_tailoring",
+            "has_technology": "tech_gene_tailoring"
+          }
+        ]
+      },
+      "prerequisites": [],
+      "effects": "Automatic Resettlement Destination Chance: +33%; Refugee Attraction: +100%",
+      "modifier": {
+        "planet_resettlement_unemployed_destination_mult": 0.33,
+        "refugee_attraction": 1,
+        "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "host_has_dlc": "Megacorp",
+        "NOT": {
+          "has_ascension_perk": "ap_xeno_compatibility"
+        },
+        "is_regular_empire": true,
+        "is_wilderness_empire": false
+      },
+      "ai_weight": 10
+    },
+    {
+      "id": "ap_universal_transactions",
+      "name": "Universal Transactions",
+      "description": "We shall extend our brand and our business to every solar system in the galaxy. Prosperity is eternal!",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {},
+      "prerequisites": [],
+      "effects": "Official Capacity: +1; Branch Office Cost: -15%",
+      "modifier": {
+        "country_official_cap_add": 1,
+        "planet_branch_offices_cost_mult": -0.15,
+        "add_attunement_the_instrument_of_desire": "@ascension_perk_attunement1"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "host_has_dlc": "Megacorp",
+        "NOT": {
+          "has_ascension_perk": "ap_universal_transactions"
+        },
+        "is_megacorp": true,
+        "is_criminal_syndicate": false
+      },
+      "ai_weight": 20
+    },
+    {
+      "id": "ap_detox",
+      "name": "Detox",
+      "description": "Our newest advancements in terraforming allow us to breathe new life into a class of planets formerly considered irrevocably deadly and beyond salvation.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": {
+          "fail_text": "requires_technology_tech_climate_restoration",
+          "has_technology": "tech_climate_restoration"
+        }
+      },
+      "prerequisites": [],
+      "effects": "",
+      "modifier": {
+        "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "host_has_dlc": "Toxoids Species Pack",
+        "NOT": {
+          "has_ascension_perk": "ap_detox",
+          "has_country_flag": "knights_detox"
+        }
+      },
+      "ai_weight": 20
+    },
+    {
+      "id": "ap_mechromancy",
+      "name": "Mechromancy",
+      "description": "Biologicals are merely a different kind of machine. We can stimulate the appropriate synapses and reanimate these creatures, for our own benefit.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {},
+      "prerequisites": [],
+      "effects": "Large Slot Weapon Damage: +15%; Extra Large Slot Weapon Damage: +15%; Titan Slot Weapon Damage: +15%",
+      "modifier": {
+        "l_slot_weapon_damage_mult": 0.15,
+        "x_slot_weapon_damage_mult": 0.15,
+        "t_slot_weapon_damage_mult": 0.15,
+        "add_attunement_the_eater_of_worlds": "@ascension_perk_attunement1"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "has_necroids": true,
+        "is_machine_empire": true,
+        "NOT": {
+          "has_ascension_perk": "ap_mechromancy"
+        }
+      },
+      "ai_weight": 4
+    },
+    {
+      "id": "ap_weather_control",
+      "name": "Galactic Weather Control",
+      "description": "Our latest advances in astrometeorology grant us the ability to manifest Cosmic Storms on command. With the right technology, we can even choose the type of storm to create.",
+      "custom_tooltip": "",
+      "type": "ascension_perk",
+      "possible": {
+        "custom_tooltip": [
+          {
+            "fail_text": "requires_technology_tech_advanced_storm_manipulation",
+            "has_technology": "tech_advanced_storm_manipulation"
+          },
+          {
+            "fail_text": "requires_ascension_perks_1",
+            "num_ascension_perks": 0
+          }
+        ]
+      },
+      "prerequisites": [],
+      "effects": "",
+      "modifier": {
+        "add_attunement_the_cradle_of_souls": "@ascension_perk_attunement1"
+      },
+      "is_path_perk": false,
+      "has_variants": false,
+      "potential": {
+        "has_cosmic_storms_dlc": true,
+        "NOT": {
+          "has_ascension_perk": "ap_weather_control"
+        }
+      },
+      "ai_weight": 0
     },
     {
       "id": "ap_galactic_wonders_utopia",
@@ -3590,287 +3859,6 @@
         }
       },
       "ai_weight": 20
-    },
-    {
-      "id": "ap_machine_worlds",
-      "name": "Machine Worlds",
-      "description": "We shall shape our worlds into a mirror image of ourselves, replacing the frailty of biology with the immutable perfection of metal.",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {
-        "custom_tooltip": [
-          {
-            "fail_text": "requires_technology_tech_climate_restoration",
-            "OR": {
-              "has_technology": "tech_climate_restoration",
-              "has_origin": "origin_machine"
-            }
-          },
-          {
-            "fail_text": "requires_ascension_perks_2",
-            "num_ascension_perks": 1
-          }
-        ]
-      },
-      "prerequisites": [],
-      "effects": "",
-      "modifier": {
-        "add_attunement_the_instrument_of_desire": "@ascension_perk_attunement1"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "host_has_dlc": "Synthetic Dawn Story Pack",
-        "is_machine_empire": true,
-        "NOT": {
-          "has_ascension_perk": "ap_machine_worlds"
-        }
-      },
-      "ai_weight": 100
-    },
-    {
-      "id": "ap_hive_worlds",
-      "name": "Hive Worlds",
-      "description": "We shall create living worlds that are every bit as much a part of the Hive as the drones that inhabit them.",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {
-        "custom_tooltip": [
-          {
-            "fail_text": "requires_technology_tech_climate_restoration",
-            "has_technology": "tech_climate_restoration"
-          },
-          {
-            "fail_text": "requires_ascension_perks_2",
-            "OR": {
-              "num_ascension_perks": 1,
-              "has_origin": "origin_fallen_empire_hive"
-            }
-          }
-        ]
-      },
-      "prerequisites": [],
-      "effects": "",
-      "modifier": {
-        "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "host_has_dlc": "Utopia",
-        "is_hive_empire": true,
-        "NOT": {
-          "has_ascension_perk": "ap_hive_worlds"
-        },
-        "is_lithoid_devouring_swarm": false,
-        "is_wilderness_empire": false
-      },
-      "ai_weight": 100
-    },
-    {
-      "id": "ap_arcology_project",
-      "name": "Arcology Project",
-      "description": "Thus shall we make a world of the city, and a city of the world.",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {
-        "custom_tooltip": [
-          {
-            "fail_text": "requires_technology_housing_2",
-            "has_technology": "tech_housing_2"
-          },
-          {
-            "fail_text": "requires_ascension_perks_2",
-            "num_ascension_perks": 1
-          }
-        ]
-      },
-      "prerequisites": [],
-      "effects": "",
-      "modifier": {
-        "add_attunement_the_instrument_of_desire": "@ascension_perk_attunement1"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "host_has_dlc": "Megacorp",
-        "OR": {
-          "is_regular_empire": true,
-          "has_valid_civic": "civic_machine_servitor"
-        },
-        "NOT": [
-          {
-            "has_valid_civic": "civic_agrarian_idyll"
-          },
-          {
-            "has_ascension_perk": "ap_arcology_project"
-          }
-        ]
-      },
-      "ai_weight": 10
-    },
-    {
-      "id": "ap_xeno_compatibility",
-      "name": "Xeno-Compatibility",
-      "description": "The invention of universal sexual biology has revolutionized society. Even if it sometimes requires awkward rotations to make a connection.",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {
-        "custom_tooltip": [
-          {
-            "fail_text": "requires_xenophile",
-            "is_xenophile": true
-          },
-          {
-            "fail_text": "requires_xeno_species",
-            "any_owned_pop_group": {
-              "NOR": {
-                "is_same_species": "root.owner",
-                "has_trait": [
-                  "trait_mechanical",
-                  "trait_machine_unit",
-                  "trait_hive_mind"
-                ]
-              }
-            }
-          },
-          {
-            "fail_text": "requires_technology_gene_tailoring",
-            "has_technology": "tech_gene_tailoring"
-          }
-        ]
-      },
-      "prerequisites": [],
-      "effects": "planet_resettlement_unemployed_destination_mult: +33.0%; refugee_attraction: +1",
-      "modifier": {
-        "planet_resettlement_unemployed_destination_mult": 0.33,
-        "refugee_attraction": 1,
-        "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "host_has_dlc": "Megacorp",
-        "NOT": {
-          "has_ascension_perk": "ap_xeno_compatibility"
-        },
-        "is_regular_empire": true,
-        "is_wilderness_empire": false
-      },
-      "ai_weight": 10
-    },
-    {
-      "id": "ap_universal_transactions",
-      "name": "Universal Transactions",
-      "description": "We shall extend our brand and our business to every solar system in the galaxy. Prosperity is eternal!",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {},
-      "prerequisites": [],
-      "effects": "country_official_cap_add: +1; planet_branch_offices_cost_mult: -15.0%",
-      "modifier": {
-        "country_official_cap_add": 1,
-        "planet_branch_offices_cost_mult": -0.15,
-        "add_attunement_the_instrument_of_desire": "@ascension_perk_attunement1"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "host_has_dlc": "Megacorp",
-        "NOT": {
-          "has_ascension_perk": "ap_universal_transactions"
-        },
-        "is_megacorp": true,
-        "is_criminal_syndicate": false
-      },
-      "ai_weight": 20
-    },
-    {
-      "id": "ap_detox",
-      "name": "Detox",
-      "description": "Our newest advancements in terraforming allow us to breathe new life into a class of planets formerly considered irrevocably deadly and beyond salvation.",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {
-        "custom_tooltip": {
-          "fail_text": "requires_technology_tech_climate_restoration",
-          "has_technology": "tech_climate_restoration"
-        }
-      },
-      "prerequisites": [],
-      "effects": "",
-      "modifier": {
-        "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "host_has_dlc": "Toxoids Species Pack",
-        "NOT": {
-          "has_ascension_perk": "ap_detox",
-          "has_country_flag": "knights_detox"
-        }
-      },
-      "ai_weight": 20
-    },
-    {
-      "id": "ap_mechromancy",
-      "name": "Mechromancy",
-      "description": "Biologicals are merely a different kind of machine. We can stimulate the appropriate synapses and reanimate these creatures, for our own benefit.",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {},
-      "prerequisites": [],
-      "effects": "l_slot_weapon_damage_mult: +15.0%; x_slot_weapon_damage_mult: +15.0%; t_slot_weapon_damage_mult: +15.0%",
-      "modifier": {
-        "l_slot_weapon_damage_mult": 0.15,
-        "x_slot_weapon_damage_mult": 0.15,
-        "t_slot_weapon_damage_mult": 0.15,
-        "add_attunement_the_eater_of_worlds": "@ascension_perk_attunement1"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "has_necroids": true,
-        "is_machine_empire": true,
-        "NOT": {
-          "has_ascension_perk": "ap_mechromancy"
-        }
-      },
-      "ai_weight": 4
-    },
-    {
-      "id": "ap_weather_control",
-      "name": "Galactic Weather Control",
-      "description": "Our latest advances in astrometeorology grant us the ability to manifest Cosmic Storms on command. With the right technology, we can even choose the type of storm to create.",
-      "custom_tooltip": "",
-      "type": "ascension_perk",
-      "possible": {
-        "custom_tooltip": [
-          {
-            "fail_text": "requires_technology_tech_advanced_storm_manipulation",
-            "has_technology": "tech_advanced_storm_manipulation"
-          },
-          {
-            "fail_text": "requires_ascension_perks_1",
-            "num_ascension_perks": 0
-          }
-        ]
-      },
-      "prerequisites": [],
-      "effects": "",
-      "modifier": {
-        "add_attunement_the_cradle_of_souls": "@ascension_perk_attunement1"
-      },
-      "is_path_perk": false,
-      "has_variants": false,
-      "potential": {
-        "has_cosmic_storms_dlc": true,
-        "NOT": {
-          "has_ascension_perk": "ap_weather_control"
-        }
-      },
-      "ai_weight": 0
     }
   ]
 }

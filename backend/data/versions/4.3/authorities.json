@@ -340,33 +340,6 @@
     "possible": {
       "all": [
         {
-          "all": [
-            {
-              "unsupported": [
-                {
-                  "limit": {
-                    "OR": {
-                      "has_synthetic_dawn": true,
-                      "has_machine_age_dlc": true
-                    }
-                  },
-                  "always": true
-                },
-                {
-                  "limit": {
-                    "has_synthetic_dawn": false,
-                    "has_machine_age_dlc": false,
-                    "has_shroud_dlc": true
-                  },
-                  "origin": {
-                    "value": "origin_shroud_forged"
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
           "field": "ethics",
           "value": "ethic_gestalt_consciousness"
         },

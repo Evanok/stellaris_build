@@ -8,7 +8,7 @@
     "leader_class": [
       "official"
     ],
-    "effects": "planet_stability_add: +2",
+    "effects": "Stability: +2",
     "councilor_modifier": {
       "planet_stability_add": 2
     },
@@ -29,7 +29,7 @@
     "leader_class": [
       "commander"
     ],
-    "effects": "country_naval_cap_mult: +5.0%",
+    "effects": "Naval Capacity: +5%",
     "councilor_modifier": {
       "country_naval_cap_mult": 0.05
     },
@@ -53,7 +53,7 @@
     "leader_class": [
       "official"
     ],
-    "effects": "spy_network_daily_value_mult: +15.0%; operations_cost_mult: -5.0%",
+    "effects": "Infiltration Speed: +15%; Operation Cost: -5%",
     "councilor_modifier": {
       "spy_network_daily_value_mult": 0.15,
       "operations_cost_mult": -0.05
@@ -75,7 +75,7 @@
     "leader_class": [
       "scientist"
     ],
-    "effects": "all_technology_research_speed: +3.0%",
+    "effects": "All Technology Research Speed: +3%",
     "councilor_modifier": {
       "all_technology_research_speed": 0.03
     },
@@ -100,7 +100,7 @@
       "official",
       "scientist"
     ],
-    "effects": "planet_jobs_minerals_produces_mult: +2.5%",
+    "effects": "Minerals from Jobs: +2.5%",
     "councilor_modifier": {
       "planet_jobs_minerals_produces_mult": 0.025
     },
@@ -121,7 +121,7 @@
     "leader_class": [
       "commander"
     ],
-    "effects": "ship_weapon_damage: +0.05; army_damage_mult: +5.0%",
+    "effects": "Ship Weapons Damage: +5%; Army Damage: +5%",
     "councilor_modifier": {
       "ship_weapon_damage": 0.05,
       "army_damage_mult": 0.05
@@ -145,7 +145,7 @@
       "official",
       "commander"
     ],
-    "effects": "edicts_upkeep_mult: -7.5%; country_edict_fund_add: +15",
+    "effects": "Edict Upkeep: -7.5%; Edict Fund: +15",
     "councilor_modifier": {
       "edicts_upkeep_mult": -0.075,
       "country_edict_fund_add": 15
@@ -169,7 +169,7 @@
       "official",
       "commander"
     ],
-    "effects": "planet_stability_add: +1; planet_amenities_no_happiness_add: +100",
+    "effects": "Stability: +1; Amenities: +100",
     "councilor_modifier": {
       "planet_stability_add": 1,
       "planet_amenities_no_happiness_add": 100
@@ -198,7 +198,7 @@
       "scientist",
       "official"
     ],
-    "effects": "ship_orbit_upkeep_mult: -5.0%; armies_upkeep_mult: -10.0%",
+    "effects": "Docked Ship Upkeep: -5%; Army Upkeep: -10%",
     "councilor_modifier": {
       "ship_orbit_upkeep_mult": -0.05,
       "armies_upkeep_mult": -0.1
@@ -222,7 +222,7 @@
       "official",
       "commander"
     ],
-    "effects": "species_leader_exp_gain: +0.05",
+    "effects": "Species Leader Exp Gain: +5%",
     "councilor_modifier": {
       "species_leader_exp_gain": 0.05
     },
