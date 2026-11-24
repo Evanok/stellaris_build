@@ -7,6 +7,39 @@ a feature matters.
 
 Add new entries at the top: `## <Title> (YYYY-MM-DD)`.
 
+## Stellaris 4.6 "Corona Borealis" + Willpower data (2026-11-23)
+
+- New data folder `backend/data/versions/4.6/`, wired as the latest version (backend version lists,
+  `check_build_rules.js`, `BuildForm.tsx` default, Home/Stats labels, `gameVersion.ts` badge, `llms.txt`).
+  Extracted with the Willpower DLC installed (`dlc041_willpower`, through the Stellaris subscription).
+- New: 3 origins (Great Mosaic, Golden Generation, Lost Makers), 5 fanatic civics + their corporate
+  variants, `civic_memory_optimization` (Lost Makers only), `ap_force_of_will`, the Inquisitor shipset
+  (`crusader_01`), 8 Absolute ethics. Traits: `19_forceofwill_species_traits.txt` added to
+  `extract_traits.py`, but it only holds Lost Makers' forced/in-game traits (Redundant Module, Restored
+  Modules), so no new selectable trait.
+- Real rule changes (beyond ~60 civics that just gained `ethic_absolute_*` in their ethics predicates):
+  Worker Cooperative and Shared Burdens need Fanatic Egalitarian, Dystopian Society needs Fanatic
+  Authoritarian, Police State bans Fanatic Egalitarian, Citizen Service bans Fanatic Xenophile, Agrarian
+  Idyll vs Megacity Architects, Fear of the Dark vs Open Stars Sovereignty.
+- **Absolute ethics** cost 3 points and replace every other ethic; they are adopted in game (Ideology
+  strong enough + Unity), never at creation. `BuildForm.tsx` drops them from the starting ethics list and
+  `check_build_rules.js` flags them. A separate "Absolute ethic (in game)" field, like `third_civic`, is planned.
+- **Ideologies** are not a creation choice (derived from a fanatic ethic in game, only a game setup
+  toggle), so no new build field.
+- **Bug fix, ethics**: the form only checked the 3-point budget, so Xenophile + Fanatic Xenophile or
+  Xenophile + Xenophobe could be picked. Now one ethic per axis (`category`: col/xen/mil/spi), in
+  `BuildForm.tsx` and in `check_build_rules.js` (which now also checks the ethic point budget). No
+  existing build in the local DB copy was affected.
+- `extract_icons.py` now reads the latest `output/versions/X.Y/` instead of the stale `output/*.json`.
+- **Effects text cleanup** (`localization_parser.py`): scripted variables are now resolved
+  (`$@social_concord_starting_opinion|0$` -> `25`, `|%0` -> percentage, `+` -> sign), from every
+  `@name = value` under `common/` (3873 of them); `[foundry.GetNamePlural]` style references become the job
+  name (`Metallurgists`), `.GetIcon` ones are dropped, `[Ruler.GetTitle]` -> `Ruler`; `§0` style color codes
+  (digit) are stripped. Fixed 11 traits, 23 civics and 1 origin in 4.6 (older versions not re-extracted).
+- Not done yet: Great Mosaic grants an extra civic at creation (`country_government_civic_points_add = 1`),
+  so 3 starting civics (4 with Galactic Administration), while the form and the rules checker still cap
+  creation at 2.
+
 ## Visitor and comment statistics (2026-11-04)
 
 - **Daily visitors, logged in vs anonymous** (`/admin/stats`): new `daily_visitors` table, one row per

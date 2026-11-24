@@ -13,6 +13,7 @@ import { trackEvent } from '../utils/analytics';
 import './Home.css';
 
 const VERSION_NAMES: Record<string, string> = {
+  '4.6': '4.6 (Corona Borealis)',
   '4.5': '4.5 (Cygnus)',
   '4.4': '4.4 (Pegasus)',
   '4.3': '4.3 (Cetus)',
@@ -128,6 +129,12 @@ export const Home: React.FC = () => {
 
   // What's New data
   const latestNews: NewsItem[] = [
+    {
+      date: '23 Nov 2026',
+      title: 'Stellaris 4.6 "Corona Borealis" and Willpower support',
+      description: 'New origins (Great Mosaic, Golden Generation, Lost Makers), the 5 new fanatic civics and the Inquisitor shipset are available in the build form.',
+      type: 'update'
+    },
     {
       date: '1 Nov 2026',
       title: 'Comments on builds, optional 3rd civic and better markdown support',

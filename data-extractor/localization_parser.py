@@ -8,6 +8,69 @@ import os
 import re
 from typing import Dict, Optional
 
+# Filled by load_all_localizations(): scripted variables (`@name = value`, from
+# common/scripted_variables/ and the top of any common/ file) used by
+# localization as `$@name|format$`, and the last loaded localizations (to
+# resolve `[job.GetNamePlural]` when a caller cleans text without passing them)
+_SCRIPTED_VARIABLES: Dict[str, float] = {}
+_LAST_LOCALIZATIONS: Dict[str, str] = {}
+
+
+def load_scripted_variables(stellaris_path: str) -> Dict[str, float]:
+    """Collect every numeric `@name = value` defined under common/."""
+    variables: Dict[str, float] = {}
+    pattern = re.compile(r'^\s*@([A-Za-z0-9_]+)\s*=\s*(-?\d+(?:\.\d+)?)\b', re.MULTILINE)
+    for root, _dirs, files in os.walk(os.path.join(stellaris_path, 'common')):
+        for filename in files:
+            if not filename.endswith('.txt'):
+                continue
+            try:
+                with open(os.path.join(root, filename), encoding='utf-8-sig', errors='replace') as f:
+                    content = f.read()
+            except OSError:
+                continue
+            for name, value in pattern.findall(content):
+                variables.setdefault(name, float(value))
+    return variables
+
+
+def format_scripted_variable(value: float, fmt: str) -> str:
+    """Render `$@var|fmt$`: `%` = percentage (x100), `+` = explicit sign,
+    digits = decimals; color/letter flags (`=`, `G`, `-`) are ignored."""
+    if '%' in fmt:
+        value *= 100
+    digits = re.search(r'\d', fmt)
+    text = f'{value:.{int(digits.group(0))}f}' if digits else f'{value:g}'
+    if '+' in fmt and value > 0:
+        text = '+' + text
+    return text + ('%' if '%' in fmt else '')
+
+
+def resolve_scripted_variables(text: str) -> str:
+    def replace(match):
+        name, fmt = match.group(1), match.group(2) or ''
+        if name not in _SCRIPTED_VARIABLES:
+            return match.group(0)
+        return format_scripted_variable(_SCRIPTED_VARIABLES[name], fmt)
+    return re.sub(r'\$@([A-Za-z0-9_]+)(?:\|([^$]*))?\$', replace, text)
+
+
+def resolve_scope_references(text: str, localizations: Dict[str, str]) -> str:
+    """`[foundry.GetIcon]` -> removed, `[foundry.GetName]` / `[foundry.GetNamePlural]`
+    -> the job (or pop category) name, `[Ruler.GetTitle]` -> "Ruler"."""
+    text = re.sub(r'\[[A-Za-z0-9_]+\.GetIcon\]\s*', '', text)
+
+    def name(match):
+        key, plural = match.group(1), match.group(2) == 'NamePlural'
+        for candidate in (f'job_{key}', key):
+            loc_key = candidate + ('_plural' if plural else '')
+            if loc_key in localizations:
+                return localizations[loc_key]
+        return key.replace('_', ' ').title() + ('s' if plural else '')
+    text = re.sub(r'\[([a-z0-9_]+)\.Get(NamePlural|Name)\]', name, text)
+    text = re.sub(r'\[Ruler\.GetTitle\]', 'Ruler', text)
+    return text
+
 
 def parse_localization_file(filepath: str) -> Dict[str, str]:
     """
@@ -85,6 +148,12 @@ def load_all_localizations(stellaris_path: str, language: str = 'english') -> Di
                 all_localizations.update(file_localizations)
 
     print(f"Loaded {len(all_localizations)} localization entries for {language}")
+
+    _LAST_LOCALIZATIONS.clear()
+    _LAST_LOCALIZATIONS.update(all_localizations)
+    if not _SCRIPTED_VARIABLES:
+        _SCRIPTED_VARIABLES.update(load_scripted_variables(stellaris_path))
+        print(f"Loaded {len(_SCRIPTED_VARIABLES)} scripted variables")
     return all_localizations
 
 
@@ -142,8 +211,13 @@ def clean_localized_text(text: str, localizations: Optional[Dict[str, str]] = No
     Returns:
         Cleaned text
     """
-    # Remove color codes like §Y, §!, §H, §L, etc.
-    text = re.sub(r'§[A-Z!]', '', text)
+    # Remove color codes like §Y, §!, §H, §L, §0, etc.
+    text = re.sub(r'§[A-Za-z0-9!]', '', text)
+
+    # Scripted variables ($@social_concord_starting_opinion|0$ -> 25) and
+    # scope references ([foundry.GetNamePlural] -> Metallurgists)
+    text = resolve_scripted_variables(text)
+    text = resolve_scope_references(text, localizations or _LAST_LOCALIZATIONS)
 
     # Remove icon references like £energy£, £pop£, etc.
     text = re.sub(r'£[a-z_]+£', '', text)
@@ -179,7 +253,7 @@ def clean_localized_text(text: str, localizations: Optional[Dict[str, str]] = No
         text = re.sub(r"\['([^']+)'\]", lambda m: m.group(1).split(':')[-1].replace('_', ' ').title(), text)
 
     # Resolved concepts can bring their own markup back (e.g. "£blocker£ Ancient Stasis Pods")
-    text = re.sub(r'§[A-Z!]', '', text)
+    text = re.sub(r'§[A-Za-z0-9!]', '', text)
     text = re.sub(r'£[a-z_]+£', '', text)
 
     # Clean up multiple spaces

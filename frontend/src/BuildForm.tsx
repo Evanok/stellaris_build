@@ -284,12 +284,16 @@ const CharCounter: React.FC<{ length: number; max: number }> = ({ length, max })
 // A third civic slot unlocks during the game: builds can recommend one, shown on
 // the build page but never exported (the game rejects 3 civics at creation)
 
+// Absolute ethics (4.6 Willpower), adopted in game once an Ideology is strong enough
+const isAbsoluteEthic = (id: string) => typeof id === 'string' && id.startsWith('ethic_absolute_');
+
 // Nomads DLC was introduced in 4.4 "Pegasus"
 const supportsNomadic = (version: string) => parseFloat(version) >= 4.4;
 
 // Stellaris game versions
 const GAME_VERSIONS = [
-  { value: '4.5', label: '4.5 "Cygnus" (Latest)' },
+  { value: '4.6', label: '4.6 "Corona Borealis" (Latest)' },
+  { value: '4.5', label: '4.5 "Cygnus"' },
   { value: '4.4', label: '4.4 "Pegasus"' },
   { value: '4.3', label: '4.3 "Cetus"' },
   { value: '4.2', label: '4.2 "Corvus"' },
@@ -314,7 +318,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [guide, setGuide] = useState('');
-  const [game_version, setGameVersion] = useState('4.5');
+  const [game_version, setGameVersion] = useState('4.6');
   const [youtube_url, setYoutubeUrl] = useState('');
   const [source_url, setSourceUrl] = useState('');
   const [difficulty, setDifficulty] = useState<string>('');
@@ -503,7 +507,10 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       const uniquePerks = sanitizedPerks.filter((p: any) => { if (seenNames.has(p.name)) return false; seenNames.add(p.name); return true; });
       setAllAscensionPerks(uniquePerks);
 
+      // Absolute ethics (4.6 Willpower) are only reachable in game, never at
+      // empire creation: they are not starting ethics
       const sanitizedEthics = ethicsRaw
+        .filter((e: any) => !isAbsoluteEthic(e.id))
         .map((e: any) => ({ ...e, effects: typeof e.effects === 'string' ? e.effects : '', description: typeof e.description === 'string' ? e.description : '', tags: Array.isArray(e.tags) ? e.tags : [], cost: typeof e.cost === 'number' ? e.cost : 1 }))
         .sort((a: any, b: any) => b.cost !== a.cost ? b.cost - a.cost : a.id.localeCompare(b.id));
       setAllEthics(sanitizedEthics);
@@ -826,6 +833,12 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
     // Only check if selecting this ethic would exceed max points
     if (currentEthicsPoints + ethic.cost > MAX_ETHICS_POINTS) {
+      return false;
+    }
+
+    // One ethic per axis: the game rejects Xenophile + Fanatic Xenophile as
+    // well as Xenophile + Xenophobe (same `category`, e.g. "xen")
+    if (ethic.category && selectedEthics.some(id => allEthics.find(e => e.id === id)?.category === ethic.category)) {
       return false;
     }
 
@@ -1153,7 +1166,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setName(formData.name || '');
         setDescription(formData.description || '');
         setGuide(formData.guide || '');
-        setGameVersion(formData.game_version || '4.5');
+        setGameVersion(formData.game_version || '4.6');
         setYoutubeUrl(formData.youtube_url || '');
         setSourceUrl(formData.source_url || '');
         setDifficulty(formData.difficulty || '');
@@ -1531,7 +1544,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       setName('');
       setDescription('');
       setGuide('');
-      setGameVersion('4.5'); // Reset to latest version
+      setGameVersion('4.6'); // Reset to latest version
       setYoutubeUrl('');
       setSourceUrl('');
       setDifficulty('');
