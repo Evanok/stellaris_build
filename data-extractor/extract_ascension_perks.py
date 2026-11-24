@@ -11,29 +11,13 @@ from pathlib import Path
 from typing import Dict, List, Any
 from paradox_parser import parse_stellaris_file
 from localization_parser import load_all_localizations, get_localized_text, clean_localized_text
+from modifier_formatter import format_modifier_effects
 
 
 def extract_modifier_effects(modifier_data: Any) -> str:
-    """Extract and format modifier effects into readable text"""
-    if not modifier_data or not isinstance(modifier_data, dict):
-        return ""
+    """Readable modifier text, as shown in game (see modifier_formatter.py)"""
+    return format_modifier_effects(modifier_data)
 
-    effects = []
-    for key, value in modifier_data.items():
-        if isinstance(value, (int, float)):
-            if '_mult' in key or 'speed' in key or '_add' in key:
-                if abs(value) < 1 and value != 0:
-                    percentage = value * 100
-                    sign = '+' if percentage > 0 else ''
-                    effects.append(f"{key}: {sign}{percentage}%")
-                else:
-                    sign = '+' if value > 0 else ''
-                    effects.append(f"{key}: {sign}{value}")
-            else:
-                sign = '+' if value > 0 else ''
-                effects.append(f"{key}: {sign}{value}")
-
-    return "; ".join(effects)
 
 
 def extract_perk_data(perk_key: str, perk_data: Dict[str, Any], localizations: Dict[str, str] = None) -> Dict[str, Any]:

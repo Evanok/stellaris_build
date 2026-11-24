@@ -13,6 +13,30 @@ from typing import Dict, Optional
 # localization as `$@name|format$`, and the last loaded localizations (to
 # resolve `[job.GetNamePlural]` when a caller cleans text without passing them)
 _SCRIPTED_VARIABLES: Dict[str, float] = {}
+# Scripted localization functions ([GetTelepathPlural] -> localization key of
+# their default variant), from common/scripted_loc/
+_SCRIPTED_LOC: Dict[str, str] = {}
+# Engine functions that had to be guessed from their name, reported at exit
+_UNRESOLVED_FUNCTIONS: set = set()
+
+
+def _report_unresolved_functions():
+    if _UNRESOLVED_FUNCTIONS:
+        print(f"Localization functions guessed from their name ({len(_UNRESOLVED_FUNCTIONS)}): "
+              + ', '.join(sorted(_UNRESOLVED_FUNCTIONS)))
+
+
+import atexit
+atexit.register(_report_unresolved_functions)
+
+# Engine functions with no scripted_loc definition: a neutral word that fits
+# the sentence instead of the raw call
+ENGINE_FUNCTION_WORDS = {
+    'IndividualNamePlural': 'Pops', 'IndividualName': 'Pop', 'SpeciesName': 'species',
+    'SpeciesNamePlural': 'species', 'SpeciesAdj': 'species', 'HomeWorldName': 'the homeworld',
+    'RulerName': 'the Ruler', 'Name': '', 'Date': '', 'CitizenOrCrew': 'Citizen',
+    'CrimeDeviancy': 'Crime',
+}
 _LAST_LOCALIZATIONS: Dict[str, str] = {}
 
 
@@ -32,6 +56,88 @@ def load_scripted_variables(stellaris_path: str) -> Dict[str, float]:
             for name, value in pattern.findall(content):
                 variables.setdefault(name, float(value))
     return variables
+
+
+def _blocks(content: str, keyword: str):
+    """Bodies of every `keyword = { ... }` block (brace matched)."""
+    for match in re.finditer(r'\b' + keyword + r'\s*=\s*\{', content):
+        depth, i = 1, match.end()
+        while i < len(content) and depth:
+            depth += {'{': 1, '}': -1}.get(content[i], 0)
+            i += 1
+        yield content[match.end():i - 1]
+
+
+# A variant whose trigger targets one kind of empire is not the generic text
+SPECIFIC_EMPIRE_TRIGGER = re.compile(
+    r'is_(machine|hive|robot|gestalt|wilderness|nomadic|megacorp)_empire\s*=\s*yes|is_gestalt\s*=\s*yes|'
+    r'country_uses_bio_ships\s*=\s*yes|is_catalytic_empire\s*=\s*yes|has_origin')
+
+
+def load_scripted_loc(stellaris_path: str) -> Dict[str, str]:
+    """`defined_text = { name = GetX  text = { trigger = {...} localization_key = A }
+    ...  default = B }` -> {GetX: B}. Without `default`, the first variant whose
+    trigger does not target a specific kind of empire (machine, hive, bio-ships...):
+    the text the game shows a standard empire."""
+    functions: Dict[str, str] = {}
+    loc_dir = os.path.join(stellaris_path, 'common', 'scripted_loc')
+    if not os.path.isdir(loc_dir):
+        return functions
+    for filename in sorted(os.listdir(loc_dir)):
+        if not filename.endswith('.txt') or re.search(r'_(fr|deloc|ruloc)\.txt$|loc_[a-z]{2}\.txt$', filename):
+            continue
+        with open(os.path.join(loc_dir, filename), encoding='utf-8-sig', errors='replace') as f:
+            content = re.sub(r'#[^\n]*', '', f.read())
+        # The game files spell it defined_text, define_text and defined_txt
+        for body in _blocks(content, r'defined?_te?xt'):
+            name = re.search(r'\bname\s*=\s*"?([A-Za-z0-9_]+)"?', body)
+            if not name:
+                continue
+            default = re.search(r'\bdefault\s*=\s*"?([A-Za-z0-9_.]+)"?', body)
+            key = default.group(1) if default else None
+            # DLC-only text with an empty fallback (`default = BLANK_STRING`):
+            # the site assumes every DLC is owned, so the DLC variant wins
+            if key == 'BLANK_STRING':
+                key = None
+            if not key:
+                variants = []
+                for text in _blocks(body, 'text'):
+                    loc_key = re.search(r'\blocalization_key\s*=\s*"?([A-Za-z0-9_.]+)"?', text)
+                    if loc_key:
+                        variants.append((bool(SPECIFIC_EMPIRE_TRIGGER.search(text)), loc_key.group(1)))
+                generic = [k for specific, k in variants if not specific]
+                key = (generic or [k for _, k in variants] or ['BLANK_STRING' if default else None])[0]
+            if key:
+                functions.setdefault(name.group(1), key)
+    return functions
+
+
+def resolve_engine_functions(text: str, localizations: Dict[str, str]) -> str:
+    """[GetTelepathPlural] -> Telepaths (scripted_loc default variant),
+    [GetSpeciesName] -> species (engine function, neutral word)."""
+    def replace(match):
+        name = match.group(1)
+        key = _SCRIPTED_LOC.get('Get' + name)
+        if key == 'BLANK_STRING':
+            return ''
+        if key and key in localizations:
+            return get_localized_text(key, localizations)
+        if name in ENGINE_FUNCTION_WORDS:
+            return ENGINE_FUNCTION_WORDS[name]
+        # Engine job name swaps: [GetBureaucratSwapPluralWithIcon] -> Bureaucrats
+        job = re.match(r'^([A-Z][a-z]+)(?:Swap)?(Plural)?(?:WithIcon|Icon)?$', name)
+        if job:
+            suffix = '_plural' if job.group(2) else ''
+            for key in (f'job_{job.group(1).lower()}{suffix}', f'pop_cat_{job.group(1).lower()}{suffix}'):
+                if key in localizations:
+                    return localizations[key]
+        # Unknown engine function: a readable guess from its name
+        _UNRESOLVED_FUNCTIONS.add(name)
+        words = re.sub(r'(?<!^)(?=[A-Z])', ' ', name).lower()
+        return words
+    for _ in range(2):  # a resolved key can hold another call
+        text = re.sub(r'\[Get([A-Za-z]+)\]', replace, text)
+    return text
 
 
 def format_scripted_variable(value: float, fmt: str) -> str:
@@ -154,6 +260,9 @@ def load_all_localizations(stellaris_path: str, language: str = 'english') -> Di
     if not _SCRIPTED_VARIABLES:
         _SCRIPTED_VARIABLES.update(load_scripted_variables(stellaris_path))
         print(f"Loaded {len(_SCRIPTED_VARIABLES)} scripted variables")
+    if not _SCRIPTED_LOC:
+        _SCRIPTED_LOC.update(load_scripted_loc(stellaris_path))
+        print(f"Loaded {len(_SCRIPTED_LOC)} scripted localization functions")
     return all_localizations
 
 
@@ -225,8 +334,12 @@ def clean_localized_text(text: str, localizations: Optional[Dict[str, str]] = No
     # Remove special formatting like $TABBED_NEW_LINE$
     text = re.sub(r'\$[A-Z_]+\$', '\n', text)
 
-    # Remove dynamic function calls like [GetIndividualNamePlural], [GetSpeciesName], etc.
-    text = re.sub(r'\[Get[^\]]+\]', 'individuals', text)
+    # Engine / scripted localization calls like [GetTelepathPlural], [GetSpeciesName]
+    text = resolve_engine_functions(text, localizations or _LAST_LOCALIZATIONS)
+    # A resolved function can bring scripted variables ($@var|fmt$) and job
+    # references ([telepath.GetNamePlural]) with it
+    text = resolve_scripted_variables(text)
+    text = resolve_scope_references(text, localizations or _LAST_LOCALIZATIONS)
 
     # Remove concept references with comma format like ['edict:energy_drain',Energy Drain]
     # Extract the display name (after the comma) if present, otherwise use the key
