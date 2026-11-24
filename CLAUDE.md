@@ -338,6 +338,8 @@ Non-versioned files (still in `backend/data/`):
 - Loads 69,867 English localization entries from `localisation/english/*.yml`
 - Recursively resolves variable references like `$civic_name$` (up to 5 iterations)
 - Cleans markup (removes color codes `§Y`, icons `£energy£`, etc.)
+- Resolves scripted variables (`$@var|fmt$`, from every `@name = value` under `common/`), job references (`[foundry.GetNamePlural]`) and scripted localization functions (`[GetTelepathPlural]`, from `common/scripted_loc/`, default variant = what a standard empire sees); prints any function it had to guess from its name
+- Modifier blocks are turned into in-game text by `modifier_formatter.py` (shared by every extractor): label from the `mod_<key>` localization, value as a percentage for `_mult`/`_perc` and the `_gain`/`_speed`/`_happiness`... families, a plain number for `_add`, otherwise by value (fraction = %, whole = number)
 - Handles multiple YAML formats: `key: "value"`, `key:0 "value"`, `key:1 "value"`
 
 **Data Filtering:**
@@ -646,7 +648,7 @@ After making changes to game data:
 
 ## Known Bugs / TODO
 
-- **Raw modifier keys in effects text**: most traits/civics/origins end their `effects` with the raw `modifier` block (`pop_happiness: +0.1`, `country_unity_produces_mult: +10.0%`). Fix: localize them through the game's `mod_<key>` localization entries in the extractor. (Scripted variables `$@var|fmt$`, `[job.GetNamePlural]` scope references and `§0` color codes were fixed in `localization_parser.py` on 2026-11-23, but only 4.6 was re-extracted: older version folders still contain them.)
+- **Older data versions (4.2-4.5) still have the pre-2026-11-23 texts**: raw modifier keys (`pop_happiness: +0.1`), unresolved `$@var|fmt$`, `[job.GetNamePlural]`, and "individuals" in place of engine localization functions. Fixed in the extractor (`modifier_formatter.py`, `localization_parser.py`) and re-extracted for 4.6 only: re-extracting an older version needs that game version installed (Steam > Properties > Betas).
 - **`BuildForm.tsx` feels sluggish in dev mode since the React 19 upgrade (2026-08-18)**: measured click-to-render on a trait checkbox (442 checkboxes on the create-build page) at ~400ms in dev under React 19, vs ~125ms under React 18 and ~100ms in the production build — confirmed by directly A/B-swapping React versions locally, not just suspected. Root cause: React 19's dev build does more diagnostic work per render than React 18's, which compounds with `StrictMode`'s double-render and the fact that toggling one checkbox re-renders all ~442 (no memoization). **Production is unaffected** (dev-only diagnostics are stripped by `vite build`). Fix, if it's worth doing: memoize the trait/civic/ethic checkbox rows in `BuildForm.tsx` (`React.memo` + stable callbacks) so a single toggle doesn't re-render the whole list — would help both the dev experience and prod on slower devices, but it's a real refactor of a ~2500-line file, not attempted yet.
 
 ## Future Development

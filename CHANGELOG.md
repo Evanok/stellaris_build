@@ -36,6 +36,20 @@ Add new entries at the top: `## <Title> (YYYY-MM-DD)`.
   Xenophile + Xenophobe could be picked. Now one ethic per axis (`category`: col/xen/mil/spi), in
   `BuildForm.tsx` and in `check_build_rules.js` (which now also checks the ethic point budget). No
   existing build in the local DB copy was affected.
+- **Readable modifiers** (`data-extractor/modifier_formatter.py`, replacing 6 copied
+  `extract_modifier_effects`): `founder_species_growth_mult: +20.0%; refugee_attraction: -0.3` ->
+  `Pop Growth (or Assembly) Speed: +20%; Refugee Attraction: -30%`. Labels from the game localization
+  (`mod_<key>`, any case; 369 of the 408 keys used); the engine-generated ones are rebuilt (job efficiency
+  from the job names) or humanized. The percentage/number format is not exposed by the game: it follows the
+  key naming (`_mult`/`_perc` and `_gain`/`_speed`/`_happiness`/`_attraction`/`_habitability`/`_damage`/
+  `_health`/`_chance`/`_rate` -> %, `_add` -> number, else fraction -> %, whole -> number), checked by hand
+  on all 408 keys.
+- **"individuals" in tooltips**: `clean_localized_text` replaced every `[GetX]` engine call with
+  "individuals" (93 texts, e.g. Imperial Cult "additional individuals individuals Jobs"). They are now
+  resolved from `common/scripted_loc/` (the `default`, else the first variant whose trigger does not target a
+  specific kind of empire; DLC-only texts with `default = BLANK_STRING` take the DLC variant, as the site
+  assumes every DLC). The game spells the block `defined_text`, `define_text` and `defined_txt`.
+- 4.6 re-extracted with both: 623 texts changed (only `effects`, `tooltip`, `description`), no rule or value.
 - **Rule warnings, unset species**: `species_archetype` / `species_class` joined the evaluator's
   `OPTIONAL_FIELDS` (backend `rules/predicateEvaluator.js` and frontend `utils/ruleEvaluator.ts`): with no
   species picked (optional in the form), "Machine Intelligence requires a Machine species" was a false

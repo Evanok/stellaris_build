@@ -8,7 +8,7 @@
     "leader_class": [
       "official"
     ],
-    "effects": "planet_stability_add: +2",
+    "effects": "Stability: +2",
     "councilor_modifier": {
       "planet_stability_add": 2
     },
@@ -127,7 +127,7 @@
       "official",
       "commander"
     ],
-    "effects": "edicts_upkeep_mult: -7.5%; country_edict_fund_add: +15",
+    "effects": "Edict Upkeep: -7.5%; Edict Fund: +15",
     "councilor_modifier": {
       "edicts_upkeep_mult": -0.075,
       "country_edict_fund_add": 15
@@ -151,7 +151,7 @@
       "official",
       "commander"
     ],
-    "effects": "planet_stability_add: +1; planet_amenities_no_happiness_add: +100",
+    "effects": "Stability: +1; Amenities: +100",
     "councilor_modifier": {
       "planet_stability_add": 1,
       "planet_amenities_no_happiness_add": 100
@@ -180,7 +180,7 @@
       "scientist",
       "official"
     ],
-    "effects": "armies_upkeep_mult: -10.0%",
+    "effects": "Army Upkeep: -10%",
     "councilor_modifier": {
       "armies_upkeep_mult": -0.1
     },
@@ -203,7 +203,7 @@
       "official",
       "commander"
     ],
-    "effects": "species_leader_exp_gain: +0.05",
+    "effects": "Species Leader Exp Gain: +5%",
     "councilor_modifier": {
       "species_leader_exp_gain": 0.05
     },

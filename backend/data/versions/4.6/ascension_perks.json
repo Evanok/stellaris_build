@@ -728,7 +728,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "damage_vs_country_type_synth_queen_mult: +50.0%; damage_vs_country_type_awakened_synth_queen_mult: +50.0%; damage_vs_country_type_synth_queen_convoys_mult: +50.0%; damage_vs_country_type_synth_queen_outposts_mult: +50.0%; damage_vs_country_type_swarm_mult: +50.0%; damage_vs_country_type_extradimensional_mult: +50.0%; damage_vs_country_type_extradimensional_2_mult: +50.0%; damage_vs_country_type_extradimensional_3_mult: +50.0%; damage_vs_country_type_ai_empire_mult: +50.0%; damage_vs_country_type_gray_goo_mult: +50.0%; damage_vs_player_crisis_mult: +50.0%",
+      "effects": "Damage to Cetana: +50%; Damage to Cetana, The Synthetic Queen: +50%; Damage to Cetana's Convoys: +50%; Damage to Cetana's Outposts: +50%; Damage to Prethoryn Creatures: +50%; Damage to the Unbidden: +50%; Damage to the Aberrant: +50%; Damage to the Vehement: +50%; Damage to the Contingency: +50%; Damage to Nanites: +50%; Damage to Crisis-Seeking Civilizations: +50%",
       "modifier": {
         "damage_vs_country_type_synth_queen_mult": 0.5,
         "damage_vs_country_type_awakened_synth_queen_mult": 0.5,
@@ -911,7 +911,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "refugee_attraction: -0.5",
+      "effects": "Refugee Attraction: -50%",
       "modifier": {
         "refugee_attraction": -0.5
       },
@@ -958,7 +958,7 @@
         ]
       },
       "prerequisites": [],
-      "effects": "refugee_attraction: -0.5",
+      "effects": "Refugee Attraction: -50%",
       "modifier": {
         "refugee_attraction": -0.5
       },
@@ -1011,7 +1011,7 @@
         "is_pacifist": false
       },
       "prerequisites": [],
-      "effects": "refugee_attraction: -0.5",
+      "effects": "Refugee Attraction: -50%",
       "modifier": {
         "refugee_attraction": -0.5
       },
@@ -1065,7 +1065,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "refugee_attraction: -0.5",
+      "effects": "Refugee Attraction: -50%",
       "modifier": {
         "refugee_attraction": -0.5
       },
@@ -1119,7 +1119,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "country_scientist_cap_add: +1; weapon_archaeotech_weapon_damage_mult: +33.0%; starbase_shipyard_build_minor_artifacts_cost_mult: -20.0%",
+      "effects": "Scientist Capacity: +1; Archaeotech Weapon Damage: +33%; Minor Artifact Ship Cost: -20%",
       "modifier": {
         "country_scientist_cap_add": 1,
         "weapon_archaeotech_weapon_damage_mult": 0.33,
@@ -1143,7 +1143,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_enclave_capacity_add: +1; diplo_weight_naval_mult: +25.0%",
+      "effects": "Enclave Capacity: +1; Diplomatic Weight From Fleet Power: +25%",
       "modifier": {
         "country_enclave_capacity_add": 1,
         "diplo_weight_naval_mult": 0.25
@@ -1177,7 +1177,7 @@
         "has_aquatic_trait": true
       },
       "prerequisites": [],
-      "effects": "terraforming_ocean_cost_mult: -25.0%",
+      "effects": "Ocean Terraforming Cost: -25%",
       "modifier": {
         "terraforming_ocean_cost_mult": -0.25,
         "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
@@ -1215,7 +1215,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 1,
-      "effects": "intel_encryption_add: +2",
+      "effects": "Encryption: +2",
       "modifier": {
         "intel_encryption_add": 2,
         "add_attunement_the_cradle_of_souls": "@ascension_perk_attunement1"
@@ -1279,7 +1279,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 3,
-      "effects": "country_war_exhaustion_mult: -15.0%; ships_upkeep_mult: -5.0%",
+      "effects": "War Exhaustion Gain: -15%; Ship Upkeep: -5%",
       "modifier": {
         "country_war_exhaustion_mult": -0.15,
         "ships_upkeep_mult": -0.05,
@@ -1314,7 +1314,7 @@
         ]
       },
       "prerequisites": [],
-      "effects": "terraforming_cost_mult: -25.0%",
+      "effects": "Terraforming Cost: -25%",
       "modifier": {
         "terraforming_cost_mult": -0.25,
         "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
@@ -1356,7 +1356,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 2,
-      "effects": "country_power_projection_influence_produces_add: +2; country_commander_cap_add: +1; country_naval_cap_add: +150; command_limit_mult: +20.0%",
+      "effects": "Max Influence from Power Projection: +2; Commander Capacity: +1; Naval Capacity: +150; Fleet Command Limit: +20%",
       "modifier": {
         "country_power_projection_influence_produces_add": 2,
         "country_commander_cap_add": 1,
@@ -1406,7 +1406,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 1,
-      "effects": "country_starbase_capacity_add: +5",
+      "effects": "Station Capacity: +5",
       "modifier": {
         "country_starbase_capacity_add": 5,
         "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
@@ -1436,7 +1436,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "country_commander_cap_add: +1; shipclass_starbase_damage_mult: +25.0%; shipclass_starbase_hull_mult: +25.0%; shipclass_military_station_damage_mult: +25.0%; starbase_defense_platform_capacity_add: +5; ship_military_station_small_upkeep_mult: -50.0%; ship_home_territory_fire_rate_mult: +20.0%",
+      "effects": "Commander Capacity: +1; Station Damage: +25%; Station Hull Points: +25%; Defense Platform Damage: +25%; Defense Platforms Cap: +5; Defense Platform Upkeep: -50%; Home Territory Fire Rate: +20%",
       "modifier": {
         "country_commander_cap_add": 1,
         "shipclass_starbase_damage_mult": 0.25,
@@ -1473,7 +1473,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "country_commander_cap_add: +1; waystation_armor_hardening_add: +25.0%; waystation_shield_hardening_add: +15.0%; waystation_hull_mult: +25.0%; starbase_waystations_alloys_cost_mult: -25.0%; arkship_fire_rate: +0.25; ship_hull_mult: +25.0%",
+      "effects": "Commander Capacity: +1; Waystation Armor Hardening: +0.25; Waystation Shield Hardening: +0.15; Waystation Hull: +25%; Waystations Alloy Cost: -25%; Arkship Fire Rate: +25%; Ship Hull Points: +25%",
       "modifier": {
         "country_commander_cap_add": 1,
         "waystation_armor_hardening_add": 0.25,
@@ -1508,7 +1508,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 3,
-      "effects": "diplo_weight_mult: +20.0%",
+      "effects": "Diplomatic Weight: +20%",
       "modifier": {
         "diplo_weight_mult": 0.2,
         "damage_vs_country_type_fallen_empire_mult": "@ap_galactic_contender_dmg_mult",
@@ -1542,7 +1542,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "rare_tech_draw_chance_mult: +50.0%",
+      "effects": "Rare Tech Draw Chance: +50%",
       "modifier": {
         "rare_tech_draw_chance_mult": 0.5
       },
@@ -1563,7 +1563,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_unity_produces_mult: +10.0%",
+      "effects": "Monthly Unity: +10%",
       "modifier": {
         "country_unity_produces_mult": 0.1,
         "add_attunement_the_cradle_of_souls": "@ascension_perk_attunement1"
@@ -1608,7 +1608,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "deposit_blockers_cost_mult: -33.0%",
+      "effects": "Clear Blocker Cost: -33%",
       "modifier": {
         "deposit_blockers_cost_mult": -0.33,
         "add_attunement_the_instrument_of_desire": "@ascension_perk_attunement1"
@@ -1651,7 +1651,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_edict_fund_add: +100; council_agenda_progress_speed: +15.0%",
+      "effects": "Edict Fund: +100; Council Agenda Speed: +15%",
       "modifier": {
         "country_edict_fund_add": 100,
         "council_agenda_progress_speed": 0.15,
@@ -1674,7 +1674,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_scientist_cap_add: +2; species_leader_exp_gain: +0.25; leaders_upkeep_mult: -15.0%",
+      "effects": "Scientist Capacity: +2; Species Leader Exp Gain: +25%; Leader Upkeep: -15%",
       "modifier": {
         "country_scientist_cap_add": 2,
         "species_leader_exp_gain": 0.25,
@@ -1697,7 +1697,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "divided_patrongage_max_subjects: +1; specialist_subject_conversion_time_mult: -20.0%; envoys_add: +2",
+      "effects": "Subjects Exempt from Divided Patronage: +1; Specialist Subject Conversion Time: -20%; Envoys: +2",
       "modifier": {
         "divided_patrongage_max_subjects": 1,
         "specialist_subject_conversion_time_mult": -0.2,
@@ -1738,7 +1738,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "habitat_max_districts_add: +2; megastructures_habitat_cost_mult: -20.0%; planet_districts_hab_cost_mult: -20.0%; habitat_districts_minor_add: +25.0%; habitat_district_jobs_mult: +50.0%",
+      "effects": "Habitat Max Districts: +2; Habitat Build Cost: -20%; Habitat Districts Cost: -20%; Habitat Max Districts from Minor Celestial Bodies: +0.25; Jobs from Habitat Districts: +50%",
       "modifier": {
         "habitat_max_districts_add": 2,
         "megastructures_habitat_cost_mult": -0.2,
@@ -1773,7 +1773,7 @@
         ]
       },
       "prerequisites": [],
-      "effects": "megastructure_build_speed_mult: +50.0%; country_megastructure_build_cap_add: +1",
+      "effects": "Megastructure Build Speed: +50%; Megastructure Build Capacity: +1",
       "modifier": {
         "megastructure_build_speed_mult": 0.5,
         "country_megastructure_build_cap_add": 1
@@ -1980,7 +1980,7 @@
         ]
       },
       "prerequisites": [],
-      "effects": "planet_resettlement_unemployed_destination_mult: +33.0%; refugee_attraction: +1",
+      "effects": "Automatic Resettlement Destination Chance: +33%; Refugee Attraction: +100%",
       "modifier": {
         "planet_resettlement_unemployed_destination_mult": 0.33,
         "refugee_attraction": 1,
@@ -2006,7 +2006,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_official_cap_add: +1; planet_branch_offices_cost_mult: -15.0%",
+      "effects": "Official Capacity: +1; Branch Office Cost: -15%",
       "modifier": {
         "country_official_cap_add": 1,
         "planet_branch_offices_cost_mult": -0.15,
@@ -2061,7 +2061,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "l_slot_weapon_damage_mult: +15.0%; x_slot_weapon_damage_mult: +15.0%; t_slot_weapon_damage_mult: +15.0%",
+      "effects": "Large Slot Weapon Damage: +15%; Extra Large Slot Weapon Damage: +15%; Titan Slot Weapon Damage: +15%",
       "modifier": {
         "l_slot_weapon_damage_mult": 0.15,
         "x_slot_weapon_damage_mult": 0.15,
@@ -2844,7 +2844,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "damage_vs_country_type_synth_queen_mult: +50.0%; damage_vs_country_type_awakened_synth_queen_mult: +50.0%; damage_vs_country_type_synth_queen_convoys_mult: +50.0%; damage_vs_country_type_synth_queen_outposts_mult: +50.0%; damage_vs_country_type_swarm_mult: +50.0%; damage_vs_country_type_extradimensional_mult: +50.0%; damage_vs_country_type_extradimensional_2_mult: +50.0%; damage_vs_country_type_extradimensional_3_mult: +50.0%; damage_vs_country_type_ai_empire_mult: +50.0%; damage_vs_country_type_gray_goo_mult: +50.0%; damage_vs_player_crisis_mult: +50.0%",
+      "effects": "Damage to Cetana: +50%; Damage to Cetana, The Synthetic Queen: +50%; Damage to Cetana's Convoys: +50%; Damage to Cetana's Outposts: +50%; Damage to Prethoryn Creatures: +50%; Damage to the Unbidden: +50%; Damage to the Aberrant: +50%; Damage to the Vehement: +50%; Damage to the Contingency: +50%; Damage to Nanites: +50%; Damage to Crisis-Seeking Civilizations: +50%",
       "modifier": {
         "damage_vs_country_type_synth_queen_mult": 0.5,
         "damage_vs_country_type_awakened_synth_queen_mult": 0.5,
@@ -3027,7 +3027,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "refugee_attraction: -0.5",
+      "effects": "Refugee Attraction: -50%",
       "modifier": {
         "refugee_attraction": -0.5
       },
@@ -3074,7 +3074,7 @@
         ]
       },
       "prerequisites": [],
-      "effects": "refugee_attraction: -0.5",
+      "effects": "Refugee Attraction: -50%",
       "modifier": {
         "refugee_attraction": -0.5
       },
@@ -3127,7 +3127,7 @@
         "is_pacifist": false
       },
       "prerequisites": [],
-      "effects": "refugee_attraction: -0.5",
+      "effects": "Refugee Attraction: -50%",
       "modifier": {
         "refugee_attraction": -0.5
       },
@@ -3181,7 +3181,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "refugee_attraction: -0.5",
+      "effects": "Refugee Attraction: -50%",
       "modifier": {
         "refugee_attraction": -0.5
       },
@@ -3235,7 +3235,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "country_scientist_cap_add: +1; weapon_archaeotech_weapon_damage_mult: +33.0%; starbase_shipyard_build_minor_artifacts_cost_mult: -20.0%",
+      "effects": "Scientist Capacity: +1; Archaeotech Weapon Damage: +33%; Minor Artifact Ship Cost: -20%",
       "modifier": {
         "country_scientist_cap_add": 1,
         "weapon_archaeotech_weapon_damage_mult": 0.33,
@@ -3259,7 +3259,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_enclave_capacity_add: +1; diplo_weight_naval_mult: +25.0%",
+      "effects": "Enclave Capacity: +1; Diplomatic Weight From Fleet Power: +25%",
       "modifier": {
         "country_enclave_capacity_add": 1,
         "diplo_weight_naval_mult": 0.25
@@ -3293,7 +3293,7 @@
         "has_aquatic_trait": true
       },
       "prerequisites": [],
-      "effects": "terraforming_ocean_cost_mult: -25.0%",
+      "effects": "Ocean Terraforming Cost: -25%",
       "modifier": {
         "terraforming_ocean_cost_mult": -0.25,
         "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
@@ -3331,7 +3331,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 1,
-      "effects": "intel_encryption_add: +2",
+      "effects": "Encryption: +2",
       "modifier": {
         "intel_encryption_add": 2,
         "add_attunement_the_cradle_of_souls": "@ascension_perk_attunement1"
@@ -3395,7 +3395,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 3,
-      "effects": "country_war_exhaustion_mult: -15.0%; ships_upkeep_mult: -5.0%",
+      "effects": "War Exhaustion Gain: -15%; Ship Upkeep: -5%",
       "modifier": {
         "country_war_exhaustion_mult": -0.15,
         "ships_upkeep_mult": -0.05,
@@ -3430,7 +3430,7 @@
         ]
       },
       "prerequisites": [],
-      "effects": "terraforming_cost_mult: -25.0%",
+      "effects": "Terraforming Cost: -25%",
       "modifier": {
         "terraforming_cost_mult": -0.25,
         "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
@@ -3472,7 +3472,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 2,
-      "effects": "country_power_projection_influence_produces_add: +2; country_commander_cap_add: +1; country_naval_cap_add: +150; command_limit_mult: +20.0%",
+      "effects": "Max Influence from Power Projection: +2; Commander Capacity: +1; Naval Capacity: +150; Fleet Command Limit: +20%",
       "modifier": {
         "country_power_projection_influence_produces_add": 2,
         "country_commander_cap_add": 1,
@@ -3522,7 +3522,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 1,
-      "effects": "country_starbase_capacity_add: +5",
+      "effects": "Station Capacity: +5",
       "modifier": {
         "country_starbase_capacity_add": 5,
         "add_attunement_the_composer_of_strands": "@ascension_perk_attunement1"
@@ -3552,7 +3552,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "country_commander_cap_add: +1; shipclass_starbase_damage_mult: +25.0%; shipclass_starbase_hull_mult: +25.0%; shipclass_military_station_damage_mult: +25.0%; starbase_defense_platform_capacity_add: +5; ship_military_station_small_upkeep_mult: -50.0%; ship_home_territory_fire_rate_mult: +20.0%",
+      "effects": "Commander Capacity: +1; Station Damage: +25%; Station Hull Points: +25%; Defense Platform Damage: +25%; Defense Platforms Cap: +5; Defense Platform Upkeep: -50%; Home Territory Fire Rate: +20%",
       "modifier": {
         "country_commander_cap_add": 1,
         "shipclass_starbase_damage_mult": 0.25,
@@ -3589,7 +3589,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "country_commander_cap_add: +1; waystation_armor_hardening_add: +25.0%; waystation_shield_hardening_add: +15.0%; waystation_hull_mult: +25.0%; starbase_waystations_alloys_cost_mult: -25.0%; arkship_fire_rate: +0.25; ship_hull_mult: +25.0%",
+      "effects": "Commander Capacity: +1; Waystation Armor Hardening: +0.25; Waystation Shield Hardening: +0.15; Waystation Hull: +25%; Waystations Alloy Cost: -25%; Arkship Fire Rate: +25%; Ship Hull Points: +25%",
       "modifier": {
         "country_commander_cap_add": 1,
         "waystation_armor_hardening_add": 0.25,
@@ -3624,7 +3624,7 @@
       },
       "prerequisites": [],
       "min_perks_required": 3,
-      "effects": "diplo_weight_mult: +20.0%",
+      "effects": "Diplomatic Weight: +20%",
       "modifier": {
         "diplo_weight_mult": 0.2,
         "damage_vs_country_type_fallen_empire_mult": "@ap_galactic_contender_dmg_mult",
@@ -3658,7 +3658,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "rare_tech_draw_chance_mult: +50.0%",
+      "effects": "Rare Tech Draw Chance: +50%",
       "modifier": {
         "rare_tech_draw_chance_mult": 0.5
       },
@@ -3679,7 +3679,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_unity_produces_mult: +10.0%",
+      "effects": "Monthly Unity: +10%",
       "modifier": {
         "country_unity_produces_mult": 0.1,
         "add_attunement_the_cradle_of_souls": "@ascension_perk_attunement1"
@@ -3724,7 +3724,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "deposit_blockers_cost_mult: -33.0%",
+      "effects": "Clear Blocker Cost: -33%",
       "modifier": {
         "deposit_blockers_cost_mult": -0.33,
         "add_attunement_the_instrument_of_desire": "@ascension_perk_attunement1"
@@ -3767,7 +3767,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_edict_fund_add: +100; council_agenda_progress_speed: +15.0%",
+      "effects": "Edict Fund: +100; Council Agenda Speed: +15%",
       "modifier": {
         "country_edict_fund_add": 100,
         "council_agenda_progress_speed": 0.15,
@@ -3790,7 +3790,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_scientist_cap_add: +2; species_leader_exp_gain: +0.25; leaders_upkeep_mult: -15.0%",
+      "effects": "Scientist Capacity: +2; Species Leader Exp Gain: +25%; Leader Upkeep: -15%",
       "modifier": {
         "country_scientist_cap_add": 2,
         "species_leader_exp_gain": 0.25,
@@ -3813,7 +3813,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "divided_patrongage_max_subjects: +1; specialist_subject_conversion_time_mult: -20.0%; envoys_add: +2",
+      "effects": "Subjects Exempt from Divided Patronage: +1; Specialist Subject Conversion Time: -20%; Envoys: +2",
       "modifier": {
         "divided_patrongage_max_subjects": 1,
         "specialist_subject_conversion_time_mult": -0.2,
@@ -3854,7 +3854,7 @@
         }
       },
       "prerequisites": [],
-      "effects": "habitat_max_districts_add: +2; megastructures_habitat_cost_mult: -20.0%; planet_districts_hab_cost_mult: -20.0%; habitat_districts_minor_add: +25.0%; habitat_district_jobs_mult: +50.0%",
+      "effects": "Habitat Max Districts: +2; Habitat Build Cost: -20%; Habitat Districts Cost: -20%; Habitat Max Districts from Minor Celestial Bodies: +0.25; Jobs from Habitat Districts: +50%",
       "modifier": {
         "habitat_max_districts_add": 2,
         "megastructures_habitat_cost_mult": -0.2,
@@ -3889,7 +3889,7 @@
         ]
       },
       "prerequisites": [],
-      "effects": "megastructure_build_speed_mult: +50.0%; country_megastructure_build_cap_add: +1",
+      "effects": "Megastructure Build Speed: +50%; Megastructure Build Capacity: +1",
       "modifier": {
         "megastructure_build_speed_mult": 0.5,
         "country_megastructure_build_cap_add": 1
@@ -4096,7 +4096,7 @@
         ]
       },
       "prerequisites": [],
-      "effects": "planet_resettlement_unemployed_destination_mult: +33.0%; refugee_attraction: +1",
+      "effects": "Automatic Resettlement Destination Chance: +33%; Refugee Attraction: +100%",
       "modifier": {
         "planet_resettlement_unemployed_destination_mult": 0.33,
         "refugee_attraction": 1,
@@ -4122,7 +4122,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "country_official_cap_add: +1; planet_branch_offices_cost_mult: -15.0%",
+      "effects": "Official Capacity: +1; Branch Office Cost: -15%",
       "modifier": {
         "country_official_cap_add": 1,
         "planet_branch_offices_cost_mult": -0.15,
@@ -4177,7 +4177,7 @@
       "type": "ascension_perk",
       "possible": {},
       "prerequisites": [],
-      "effects": "l_slot_weapon_damage_mult: +15.0%; x_slot_weapon_damage_mult: +15.0%; t_slot_weapon_damage_mult: +15.0%",
+      "effects": "Large Slot Weapon Damage: +15%; Extra Large Slot Weapon Damage: +15%; Titan Slot Weapon Damage: +15%",
       "modifier": {
         "l_slot_weapon_damage_mult": 0.15,
         "x_slot_weapon_damage_mult": 0.15,

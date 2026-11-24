@@ -15,7 +15,7 @@
       "ETHIC_ALLOWS_SLAVERY",
       "ETHIC_ONLY_AUTOCRACY"
     ],
-    "effects": "country_ethic_influence_produces_add: +1.5; pop_cat_worker_bonus_workforce_mult: +15.0%",
+    "effects": "Monthly Influence: +1.5; Job Efficiency for Workers: +15%",
     "modifier": {
       "country_ethic_influence_produces_add": 1.5,
       "pop_cat_worker_bonus_workforce_mult": 0.15,
@@ -38,7 +38,7 @@
       "ETHIC_ALLOWS_SLAVERY",
       "ETHIC_ONLY_AUTOCRACY"
     ],
-    "effects": "country_ethic_influence_produces_add: +1; pop_cat_worker_bonus_workforce_mult: +10.0%",
+    "effects": "Monthly Influence: +1; Job Efficiency for Workers: +10%",
     "modifier": {
       "country_ethic_influence_produces_add": 1,
       "pop_cat_worker_bonus_workforce_mult": 0.1,
@@ -61,7 +61,7 @@
       "ETHIC_ALLOWS_SLAVERY",
       "ETHIC_NEVER_DEMOCRACY"
     ],
-    "effects": "country_ethic_influence_produces_add: +50.0%; pop_cat_worker_bonus_workforce_mult: +5.0%",
+    "effects": "Monthly Influence: +0.5; Job Efficiency for Workers: +5%",
     "modifier": {
       "country_ethic_influence_produces_add": 0.5,
       "pop_cat_worker_bonus_workforce_mult": 0.05,
@@ -83,7 +83,7 @@
       "ETHIC_ONLY_DEMOCRACY",
       "ETHIC_ALLOWS_UTOPIA"
     ],
-    "effects": "pop_factions_produces_mult: +45.0%; pop_cat_specialist_bonus_workforce_mult: +15.0%; planet_civilians_unity_produces_add: +1",
+    "effects": "Faction Resource Output: +45%; Job Efficiency for Specialists: +15%; Unity Produced per 100 Civilians: +1",
     "modifier": {
       "pop_factions_produces_mult": 0.45,
       "pop_cat_specialist_bonus_workforce_mult": 0.15,
@@ -106,7 +106,7 @@
       "ETHIC_ONLY_DEMOCRACY",
       "ETHIC_ALLOWS_UTOPIA"
     ],
-    "effects": "pop_factions_produces_mult: +30.0%; pop_cat_specialist_bonus_workforce_mult: +10.0%",
+    "effects": "Faction Resource Output: +30%; Job Efficiency for Specialists: +10%",
     "modifier": {
       "pop_factions_produces_mult": 0.3,
       "pop_cat_specialist_bonus_workforce_mult": 0.1,
@@ -128,7 +128,7 @@
       "ETHIC_NEVER_AUTOCRACY",
       "ETHIC_ALLOWS_UTOPIA"
     ],
-    "effects": "pop_factions_produces_mult: +15.0%; pop_cat_specialist_bonus_workforce_mult: +5.0%",
+    "effects": "Faction Resource Output: +15%; Job Efficiency for Specialists: +5%",
     "modifier": {
       "pop_factions_produces_mult": 0.15,
       "pop_cat_specialist_bonus_workforce_mult": 0.05,
@@ -155,7 +155,7 @@
       "ETHIC_NEVER_ALIEN_MILITARY_SERVICE",
       "ETHIC_NO_REFUGEES"
     ],
-    "effects": "founder_species_growth_mult: +30.0%; refugee_attraction: -0.45",
+    "effects": "Pop Growth (or Assembly) Speed: +30%; Refugee Attraction: -45%",
     "modifier": {
       "founder_species_growth_mult": 0.3,
       "add_attunement_the_eater_of_worlds": "@ethic_attunement4",
@@ -181,7 +181,7 @@
       "ETHIC_NEVER_ALIEN_MILITARY_SERVICE",
       "ETHIC_NO_REFUGEES"
     ],
-    "effects": "founder_species_growth_mult: +20.0%; refugee_attraction: -0.3",
+    "effects": "Pop Growth (or Assembly) Speed: +20%; Refugee Attraction: -30%",
     "modifier": {
       "founder_species_growth_mult": 0.2,
       "add_attunement_the_eater_of_worlds": "@ethic_attunement2",
@@ -207,7 +207,7 @@
       "ETHIC_NEVER_ALIEN_MILITARY_SERVICE",
       "ETHIC_NO_REFUGEES"
     ],
-    "effects": "founder_species_growth_mult: +10.0%; refugee_attraction: -0.15",
+    "effects": "Pop Growth (or Assembly) Speed: +10%; Refugee Attraction: -15%",
     "modifier": {
       "founder_species_growth_mult": 0.1,
       "add_attunement_the_eater_of_worlds": "@ethic_attunement1",
@@ -231,7 +231,7 @@
       "ETHIC_DISALLOWS_SLAVERY",
       "ETHIC_DISALLOWS_DISPLACE"
     ],
-    "effects": "planet_jobs_trade_produces_mult: +30.0%; envoys_add: +3; show_only_custom_tooltip: False; refugee_attraction: +0.45",
+    "effects": "Trade from Jobs: +30%; Envoys: +3; Refugee Attraction: +45%",
     "modifier": {
       "planet_jobs_trade_produces_mult": 0.3,
       "envoys_add": 3,
@@ -261,7 +261,7 @@
       "ETHIC_DISALLOWS_SLAVERY",
       "ETHIC_DISALLOWS_DISPLACE"
     ],
-    "effects": "planet_jobs_trade_produces_mult: +20.0%; envoys_add: +2; show_only_custom_tooltip: False; refugee_attraction: +0.3",
+    "effects": "Trade from Jobs: +20%; Envoys: +2; Refugee Attraction: +30%",
     "modifier": {
       "planet_jobs_trade_produces_mult": 0.2,
       "envoys_add": 2,
@@ -288,7 +288,7 @@
       "ETHIC_DISALLOWS_SLAVERY",
       "ETHIC_DISALLOWS_DISPLACE"
     ],
-    "effects": "planet_jobs_trade_produces_mult: +10.0%; envoys_add: +1; show_only_custom_tooltip: False; refugee_attraction: +0.15",
+    "effects": "Trade from Jobs: +10%; Envoys: +1; Refugee Attraction: +15%",
     "modifier": {
       "planet_jobs_trade_produces_mult": 0.1,
       "envoys_add": 1,
@@ -312,7 +312,7 @@
     "tags": [
       "ETHIC_ALLOW_NO_RETREAT"
     ],
-    "effects": "ship_fire_rate_mult: +30.0%; country_war_exhaustion_mult: -50.0%; country_naval_cap_mult: +10.0%",
+    "effects": "Ship Fire Rate: +30%; War Exhaustion Gain: -50%; Naval Capacity: +10%",
     "modifier": {
       "ship_fire_rate_mult": 0.3,
       "country_war_exhaustion_mult": -0.5,
@@ -334,7 +334,7 @@
     "tags": [
       "ETHIC_ALLOW_NO_RETREAT"
     ],
-    "effects": "ship_fire_rate_mult: +20.0%",
+    "effects": "Ship Fire Rate: +20%",
     "modifier": {
       "ship_fire_rate_mult": 0.2,
       "add_attunement_the_eater_of_worlds": "@ethic_attunement2"
@@ -354,7 +354,7 @@
     "tags": [
       "ETHIC_ALLOW_NO_RETREAT"
     ],
-    "effects": "ship_fire_rate_mult: +10.0%",
+    "effects": "Ship Fire Rate: +10%",
     "modifier": {
       "ship_fire_rate_mult": 0.1,
       "add_attunement_the_eater_of_worlds": "@ethic_attunement1"
@@ -375,7 +375,7 @@
       "ETHIC_DISALLOW_OFFENSIVE_WARS",
       "ETHIC_DISALLOW_FULL_BOMBARDMENT"
     ],
-    "effects": "empire_size_pops_mult: -30.0%; planet_stability_add: +15; the_eater_of_worlds_attunement_mult: -45.0%; show_only_custom_tooltip: False",
+    "effects": "Empire Size from Pops: -30%; Stability: +15; The Eater of Worlds Attunement: -45%",
     "modifier": {
       "empire_size_pops_mult": -0.3,
       "planet_stability_add": 15,
@@ -400,7 +400,7 @@
       "ETHIC_DISALLOW_OFFENSIVE_WARS",
       "ETHIC_DISALLOW_FULL_BOMBARDMENT"
     ],
-    "effects": "empire_size_pops_mult: -20.0%; planet_stability_add: +10; the_eater_of_worlds_attunement_mult: -35.0%",
+    "effects": "Empire Size from Pops: -20%; Stability: +10; The Eater of Worlds Attunement: -35%",
     "modifier": {
       "empire_size_pops_mult": -0.2,
       "planet_stability_add": 10,
@@ -423,7 +423,7 @@
       "ETHIC_DISALLOW_CONQUEST_WARS",
       "ETHIC_DISALLOW_FULL_BOMBARDMENT"
     ],
-    "effects": "empire_size_pops_mult: -10.0%; planet_stability_add: +5; the_eater_of_worlds_attunement_mult: -25.0%",
+    "effects": "Empire Size from Pops: -10%; Stability: +5; The Eater of Worlds Attunement: -25%",
     "modifier": {
       "empire_size_pops_mult": -0.1,
       "planet_stability_add": 5,
@@ -446,7 +446,7 @@
       "ETHIC_ALLOWS_TEMPLE",
       "ETHIC_DISALLOW_AI"
     ],
-    "effects": "country_unity_produces_mult: +30.0%; edicts_upkeep_mult: -30.0%; edicts_cost_mult: -30.0%; planet_bureaucrats_produces_mult: +30.0%; planet_high_priests_produces_mult: +30.0%",
+    "effects": "Monthly Unity: +30%; Edict Upkeep: -30%; Edict Cost: -30%; Resources Produced from Bureaucrats: +30%; Resources Produced from Job High Priest High Priests: +30%",
     "modifier": {
       "country_unity_produces_mult": 0.3,
       "edicts_upkeep_mult": -0.3,
@@ -471,7 +471,7 @@
       "ETHIC_ALLOWS_TEMPLE",
       "ETHIC_DISALLOW_AI"
     ],
-    "effects": "country_unity_produces_mult: +20.0%; edicts_upkeep_mult: -20.0%; edicts_cost_mult: -20.0%",
+    "effects": "Monthly Unity: +20%; Edict Upkeep: -20%; Edict Cost: -20%",
     "modifier": {
       "country_unity_produces_mult": 0.2,
       "edicts_upkeep_mult": -0.2,
@@ -494,7 +494,7 @@
       "ETHIC_ALLOWS_TEMPLE",
       "ETHIC_DISALLOW_AI"
     ],
-    "effects": "country_unity_produces_mult: +10.0%; edicts_upkeep_mult: -10.0%; edicts_cost_mult: -10.0%",
+    "effects": "Monthly Unity: +10%; Edict Upkeep: -10%; Edict Cost: -10%",
     "modifier": {
       "country_unity_produces_mult": 0.1,
       "edicts_upkeep_mult": -0.1,
@@ -519,7 +519,7 @@
       "ETHIC_DISALLOW_BAN_AI",
       "ETHIC_DISALLOW_BAN_ROBOTS"
     ],
-    "effects": "planet_pops_robotics_upkeep_mult: -30.0%; all_technology_research_speed: +15.0%; guaranteed_rare_or_dangerous_tech_add: +1",
+    "effects": "Robot Upkeep: -30%; All Technology Research Speed: +15%; Rare/Dangerous Research Alternatives: +1",
     "modifier": {
       "planet_pops_robotics_upkeep_mult": -0.3,
       "all_technology_research_speed": 0.15,
@@ -543,7 +543,7 @@
       "ETHIC_DISALLOW_BAN_AI",
       "ETHIC_DISALLOW_BAN_ROBOTS"
     ],
-    "effects": "planet_pops_robotics_upkeep_mult: -20.0%; all_technology_research_speed: +10.0%",
+    "effects": "Robot Upkeep: -20%; All Technology Research Speed: +10%",
     "modifier": {
       "planet_pops_robotics_upkeep_mult": -0.2,
       "all_technology_research_speed": 0.1,
@@ -566,7 +566,7 @@
       "ETHIC_DISALLOW_BAN_AI",
       "ETHIC_DISALLOW_BAN_ROBOTS"
     ],
-    "effects": "planet_pops_robotics_upkeep_mult: -10.0%; all_technology_research_speed: +5.0%",
+    "effects": "Robot Upkeep: -10%; All Technology Research Speed: +5%",
     "modifier": {
       "planet_pops_robotics_upkeep_mult": -0.1,
       "all_technology_research_speed": 0.05,
@@ -593,7 +593,7 @@
       "ETHIC_GESTALT_CONSCIOUSNESS_DOMESTIC_POP_SURVIVAL",
       "ETHIC_ALLOW_NO_RETREAT"
     ],
-    "effects": "country_war_exhaustion_mult: -20.0%; country_ethic_influence_produces_add: +1; intel_encryption_add: +2",
+    "effects": "War Exhaustion Gain: -20%; Monthly Influence: +1; Encryption: +2",
     "modifier": {
       "country_war_exhaustion_mult": -0.2,
       "country_ethic_influence_produces_add": 1,
