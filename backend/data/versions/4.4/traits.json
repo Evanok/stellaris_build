@@ -33,6 +33,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -45,7 +46,7 @@
       "pop_happiness": 0.1,
       "worker_and_simple_drone_cat_bonus_workforce_mult": 0.1
     },
-    "effects": "Incompatible with Trait: Machine  Cannot generate Leaders Cannot be employed in Elite or Specialist Jobs | pop_happiness: +0.1; worker_and_simple_drone_cat_bonus_workforce_mult: +10.0%",
+    "effects": "Incompatible with Trait: Machine  Cannot generate Leaders Cannot be employed in Elite or Specialist Jobs | Happiness: +10%; Job Efficiency for Worker and Simple Drone Jobs: +10%",
     "custom_tooltip": "TRAIT_SYNCRETIC_PROLES_EFFECT",
     "slave_cost": {
       "trade": 500
@@ -66,6 +67,9 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [
+      "pc_ocean"
+    ],
     "tags": [
       "organic",
       "positive",
@@ -77,7 +81,7 @@
     "modifier": {
       "pc_ocean_habitability": 0.2
     },
-    "effects": "Housing Usage on Ocean worlds and Flooded Habitats: -10%  - Job Efficiency for Workers & Menial Drones on Ocean worlds: +10%  - Housing Usage on non-Wet worlds: +30%  - Habitability on non-Wet worlds: -20%  The Hydrocentric Ascension Perk amplifies this trait's effects. | pc_ocean_habitability: +0.2 | Triggered: is_ideal: False; pop_environment_tolerance: -0.2; is_ideal: False; pop_environment_tolerance: -0.1; pop_environment_tolerance: +0.2",
+    "effects": "Housing Usage on Ocean worlds and Flooded Habitats: -10%  - Job Efficiency for Workers & Menial Drones on Ocean worlds: +10%  - Housing Usage on non-Wet worlds: +30%  - Habitability on non-Wet worlds: -20%  The Hydrocentric Ascension Perk amplifies this trait's effects. | Ocean Habitability: +20% | Triggered: Habitability: -20%; Habitability: -10%; Habitability: +20%",
     "custom_tooltip": "trait_aquatic_tooltip",
     "slave_cost": {}
   },
@@ -96,6 +100,9 @@
       "MACHINE",
       "ROBOT"
     ],
+    "allowed_planet_classes": [
+      "pc_ocean"
+    ],
     "tags": [
       "machine",
       "positive",
@@ -106,7 +113,7 @@
     "modifier": {
       "pc_ocean_habitability": 0.2
     },
-    "effects": "Housing Usage on Ocean worlds and Flooded Habitats: -10%  - Job Efficiency for Workers & Menial Drones on Ocean worlds: +10%  - Housing Usage on non-Wet worlds: +30%  - Habitability on non-Wet worlds: -20%  The Hydrocentric Ascension Perk amplifies this trait's effects. | pc_ocean_habitability: +0.2 | Triggered: is_ideal: False; pop_environment_tolerance: -0.2; is_ideal: False; pop_environment_tolerance: -0.1; pop_environment_tolerance: +0.2",
+    "effects": "Housing Usage on Ocean worlds and Flooded Habitats: -10%  - Job Efficiency for Workers & Menial Drones on Ocean worlds: +10%  - Housing Usage on non-Wet worlds: +30%  - Habitability on non-Wet worlds: -20%  The Hydrocentric Ascension Perk amplifies this trait's effects. | Ocean Habitability: +20% | Triggered: Habitability: -20%; Habitability: -10%; Habitability: +20%",
     "custom_tooltip": "trait_robot_aquatic_tooltip",
     "slave_cost": {}
   },
@@ -127,6 +134,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "automod",
@@ -154,6 +162,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -163,7 +172,7 @@
     "modifier": {
       "farmer_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "farmer_jobs_bonus_workforce_mult: +15.0%",
+    "effects": "Job Efficiency for Farmers: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -184,6 +193,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -193,7 +203,7 @@
     "modifier": {
       "technician_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "technician_jobs_bonus_workforce_mult: +15.0%",
+    "effects": "Job Efficiency for Technicians: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -214,6 +224,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -223,7 +234,7 @@
     "modifier": {
       "miner_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "miner_jobs_bonus_workforce_mult: +15.0%",
+    "effects": "Job Efficiency for Miners: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -248,6 +259,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -257,7 +269,7 @@
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": 0.1
     },
-    "effects": "researcher_jobs_bonus_workforce_mult: +10.0%",
+    "effects": "Job Efficiency for Researchers: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -280,6 +292,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -289,7 +302,7 @@
     "modifier": {
       "trader_jobs_bonus_workforce_mult": 0.25
     },
-    "effects": "trader_jobs_bonus_workforce_mult: +25.0%",
+    "effects": "Job Efficiency for Traders: +25%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -315,6 +328,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -324,7 +338,7 @@
     "modifier": {
       "engineer_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "engineer_jobs_bonus_workforce_mult: +15.0%",
+    "effects": "Job Efficiency for Engineers: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -352,6 +366,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -361,7 +376,7 @@
     "modifier": {
       "physicist_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "physicist_jobs_bonus_workforce_mult: +15.0%",
+    "effects": "Job Efficiency for Physicists: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -387,6 +402,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -396,7 +412,7 @@
     "modifier": {
       "biologist_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "biologist_jobs_bonus_workforce_mult: +15.0%",
+    "effects": "Job Efficiency for Biologists: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -423,6 +439,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -431,7 +448,7 @@
     "modifier": {
       "pop_environment_tolerance": 0.2
     },
-    "effects": "pop_environment_tolerance: +0.2",
+    "effects": "Habitability: +20%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1000
@@ -459,6 +476,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -467,7 +485,7 @@
     "modifier": {
       "pop_environment_tolerance": 0.1
     },
-    "effects": "pop_environment_tolerance: +0.1",
+    "effects": "Habitability: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -495,6 +513,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -503,7 +522,7 @@
     "modifier": {
       "pop_environment_tolerance": -0.1
     },
-    "effects": "pop_environment_tolerance: -0.1",
+    "effects": "Habitability: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -534,6 +553,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -542,7 +562,7 @@
     "modifier": {
       "logistic_growth_mult": 0.1
     },
-    "effects": "logistic_growth_mult: +10.0%",
+    "effects": "Pop Growth Speed: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1000
@@ -575,6 +595,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -583,7 +604,7 @@
     "modifier": {
       "logistic_growth_mult": -0.1
     },
-    "effects": "logistic_growth_mult: -10.0%",
+    "effects": "Pop Growth Speed: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -1000
@@ -607,6 +628,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -616,7 +638,7 @@
       "negative_leader_traits_species": -1,
       "leaders_upkeep_mult": -0.1
     },
-    "effects": "negative_leader_traits_species: -1; leaders_upkeep_mult: -10.0%",
+    "effects": "Leader Maximum Negative Traits: -1; Leader Upkeep: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -640,6 +662,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -648,7 +671,7 @@
     "modifier": {
       "species_leader_exp_gain": 0.1
     },
-    "effects": "species_leader_exp_gain: +0.1",
+    "effects": "Species Leader Exp Gain: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -673,6 +696,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -681,7 +705,7 @@
     "modifier": {
       "species_leader_exp_gain": -0.1
     },
-    "effects": "species_leader_exp_gain: -0.1",
+    "effects": "Species Leader Exp Gain: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -250
@@ -704,6 +728,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -713,7 +738,7 @@
     "modifier": {
       "bureaucrat_jobs_bonus_workforce_mult": 0.1
     },
-    "effects": "bureaucrat_jobs_bonus_workforce_mult: +10.0%",
+    "effects": "Job Efficiency for Bureaucrats: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -736,6 +761,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -745,7 +771,7 @@
     "modifier": {
       "bureaucrat_jobs_bonus_workforce_mult": -0.1
     },
-    "effects": "bureaucrat_jobs_bonus_workforce_mult: -10.0%",
+    "effects": "Job Efficiency for Bureaucrats: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -768,6 +794,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -776,7 +803,7 @@
     "modifier": {
       "species_empire_size_mult": -0.1
     },
-    "effects": "species_empire_size_mult: -10.0%",
+    "effects": "Empire Size from Pops: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -799,6 +826,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -807,7 +835,7 @@
     "modifier": {
       "species_empire_size_mult": 0.1
     },
-    "effects": "species_empire_size_mult: +10.0%",
+    "effects": "Empire Size from Pops: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -832,6 +860,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -843,7 +872,7 @@
       "worker_and_simple_drone_cat_bonus_workforce_mult": 0.05,
       "soldier_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "army_damage_mult: +40.0%; worker_and_simple_drone_cat_bonus_workforce_mult: +5.0%; soldier_jobs_bonus_workforce_mult: +15.0%",
+    "effects": "Army Damage: +40%; Job Efficiency for Worker and Simple Drone Jobs: +5%; Job Efficiency for Soldiers: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 2000
@@ -868,6 +897,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -879,7 +909,7 @@
       "worker_and_simple_drone_cat_bonus_workforce_mult": 0.025,
       "soldier_jobs_bonus_workforce_mult": 0.1
     },
-    "effects": "army_damage_mult: +20.0%; worker_and_simple_drone_cat_bonus_workforce_mult: +2.5%; soldier_jobs_bonus_workforce_mult: +10.0%",
+    "effects": "Army Damage: +20%; Job Efficiency for Worker and Simple Drone Jobs: +2.5%; Job Efficiency for Soldiers: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1000
@@ -905,6 +935,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -916,7 +947,7 @@
       "worker_and_simple_drone_cat_bonus_workforce_mult": -0.025,
       "soldier_jobs_bonus_workforce_mult": -0.1
     },
-    "effects": "army_damage_mult: -20.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -2.5%; soldier_jobs_bonus_workforce_mult: -10.0%",
+    "effects": "Army Damage: -20%; Job Efficiency for Worker and Simple Drone Jobs: -2.5%; Job Efficiency for Soldiers: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -1000
@@ -941,6 +972,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -949,7 +981,7 @@
     "modifier": {
       "pop_resettlement_cost_mult": -0.35
     },
-    "effects": "pop_resettlement_cost_mult: -35.0%",
+    "effects": "Resettlement Cost: -35%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -975,6 +1007,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -983,7 +1016,7 @@
     "modifier": {
       "pop_resettlement_cost_mult": 0.35
     },
-    "effects": "pop_resettlement_cost_mult: +35.0%",
+    "effects": "Resettlement Cost: +35%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -1008,6 +1041,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1016,7 +1050,7 @@
     "modifier": {
       "pop_housing_usage_mult": -0.1
     },
-    "effects": "pop_housing_usage_mult: -10.0%",
+    "effects": "Pop Housing Usage: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -1039,6 +1073,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -1047,7 +1082,7 @@
     "modifier": {
       "pop_housing_usage_mult": 0.1
     },
-    "effects": "pop_housing_usage_mult: +10.0%",
+    "effects": "Pop Housing Usage: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -1071,6 +1106,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1080,7 +1116,7 @@
     "modifier": {
       "influential_jobs_bonus_workforce_mult": 0.2
     },
-    "effects": "influential_jobs_bonus_workforce_mult: +20.0%",
+    "effects": "Job Efficiency for Influentials: +20%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -1103,6 +1139,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -1112,7 +1149,7 @@
     "modifier": {
       "influential_jobs_bonus_workforce_mult": -0.2
     },
-    "effects": "influential_jobs_bonus_workforce_mult: -20.0%",
+    "effects": "Job Efficiency for Influentials: -20%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -1137,6 +1174,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1146,7 +1184,7 @@
     "modifier": {
       "pop_government_ethic_attraction": 0.3
     },
-    "effects": "pop_government_ethic_attraction: +0.3",
+    "effects": "Governing Ethics Attraction: +30%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -1170,6 +1208,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -1179,7 +1218,7 @@
     "modifier": {
       "pop_government_ethic_attraction": -0.15
     },
-    "effects": "pop_government_ethic_attraction: -0.15",
+    "effects": "Governing Ethics Attraction: -15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -1205,6 +1244,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1213,7 +1253,7 @@
     "modifier": {
       "leader_lifespan_add": 80
     },
-    "effects": "leader_lifespan_add: +80",
+    "effects": "Leader Lifespan: +80",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1000
@@ -1239,6 +1279,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1247,7 +1288,7 @@
     "modifier": {
       "leader_lifespan_add": 20
     },
-    "effects": "leader_lifespan_add: +20",
+    "effects": "Leader Lifespan: +20",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -1272,6 +1313,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -1280,7 +1322,7 @@
     "modifier": {
       "leader_lifespan_add": -10
     },
-    "effects": "leader_lifespan_add: -10",
+    "effects": "Leader Lifespan: -10",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -1305,6 +1347,7 @@
     "allowed_archetypes": [
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -1315,7 +1358,7 @@
     "modifier": {
       "leader_lifespan_add": -25
     },
-    "effects": "leader_lifespan_add: -25",
+    "effects": "Leader Lifespan: -25",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -1339,6 +1382,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -1349,7 +1393,7 @@
       "pop_cat_worker_happiness": -0.1,
       "pop_slave_happiness": -0.1
     },
-    "effects": "pop_cat_worker_happiness: -0.1; pop_slave_happiness: -0.1",
+    "effects": "Worker Happiness: -10%; Slave Happiness: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -1372,6 +1416,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1380,7 +1425,7 @@
     "modifier": {
       "army_defense_damage_mult": 0.5
     },
-    "effects": "army_defense_damage_mult: +50.0%",
+    "effects": "Defense Army Damage: +50%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -1404,6 +1449,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1414,7 +1460,7 @@
     "modifier": {
       "planet_pops_consumer_goods_upkeep_mult": -0.1
     },
-    "effects": "planet_pops_consumer_goods_upkeep_mult: -10.0%",
+    "effects": "Pop Consumer Goods Upkeep: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -1438,6 +1484,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -1448,7 +1495,7 @@
     "modifier": {
       "planet_pops_consumer_goods_upkeep_mult": 0.1
     },
-    "effects": "planet_pops_consumer_goods_upkeep_mult: +10.0%",
+    "effects": "Pop Consumer Goods Upkeep: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -1478,6 +1525,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1492,7 +1540,7 @@
       "pop_amenities_usage_mult": -0.05,
       "logistic_growth_mult": 0.05
     },
-    "effects": "habitability_floor_add: +0.3; pop_amenities_usage_mult: -5.0%; logistic_growth_mult: +5.0%",
+    "effects": "Species Minimum Habitability: +0.3; Pop Amenities Usage: -5%; Pop Growth Speed: +5%",
     "custom_tooltip": ""
   },
   {
@@ -1519,6 +1567,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1533,7 +1582,7 @@
       "pop_amenities_usage_mult": -0.05,
       "logistic_growth_mult": 0.05
     },
-    "effects": "pop_housing_usage_mult: -5.0%; pop_amenities_usage_mult: -5.0%; logistic_growth_mult: +5.0%",
+    "effects": "Pop Housing Usage: -5%; Pop Amenities Usage: -5%; Pop Growth Speed: +5%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 250
@@ -1563,6 +1612,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1579,7 +1629,7 @@
       "pop_amenities_usage_mult": -0.05,
       "logistic_growth_mult": 0.05
     },
-    "effects": "army_damage_mult: +15.0%; leader_lifespan_mult: +10.0%; pop_amenities_usage_mult: -5.0%; logistic_growth_mult: +5.0%",
+    "effects": "Army Damage: +15%; Leader Lifespan: +10%; Pop Amenities Usage: -5%; Pop Growth Speed: +5%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 250
@@ -1604,6 +1654,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1638,6 +1689,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1672,6 +1724,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1706,6 +1759,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1739,6 +1793,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1752,7 +1807,7 @@
     "modifier": {
       "pc_nuked_habitability": 0.1
     },
-    "effects": "Replaces 50% of Food (or equivalent) Upkeep with Energy Credits Upkeep  - This Energy Upkeep is removed for Pops living on Tomb Worlds.  - Pop Growth Speed on Tomb Worlds +10%  - Tomb World Habitability: +10% | pc_nuked_habitability: +0.1 | Triggered: pc_nuked_habitability: +0.05; logistic_growth_mult: +10.0%",
+    "effects": "Replaces 50% of Food (or equivalent) Upkeep with Energy Credits Upkeep  - This Energy Upkeep is removed for Pops living on Tomb Worlds.  - Pop Growth Speed on Tomb Worlds +10%  - Tomb World Habitability: +10% | Tomb World Habitability: +10% | Triggered: Tomb World Habitability: +5%; Pop Growth Speed: +10%",
     "custom_tooltip": "TRAIT_PLANTOID_RADIOTROPHIC_EFFECT",
     "slave_cost": {
       "trade": 1500
@@ -1784,6 +1839,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1793,7 +1849,7 @@
       "species"
     ],
     "modifier": {},
-    "effects": "Every 100 Pops working as a slave or better produces 0.02 Monthly Organic Pop Growth.  This stacks with other sources of Monthly Organic Pop Growth such as Clone Vats or Spawning Drones. | Triggered: has_budding_trait: +True; divide_over_pop_groups: False",
+    "effects": "Every 100 Pops working as a slave or better produces 0.02 Monthly Organic Pop Growth.  This stacks with other sources of Monthly Organic Pop Growth such as Clone Vats or Spawning Drones.",
     "custom_tooltip": "TRAIT_PLANTOID_BUDDING_EFFECT",
     "slave_cost": {
       "trade": 2000
@@ -1868,6 +1924,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1878,7 +1935,7 @@
       "species"
     ],
     "modifier": {},
-    "effects": "Can only select negative or botanical traits   - Habitability: +5% for each negative trait selected  - Pop Growth Speed: +5% for each negative trait selected | Triggered: logistic_growth_mult: +5.0%; pop_environment_tolerance: +0.05",
+    "effects": "Can only select negative or botanical traits   - Habitability: +5% for each negative trait selected  - Pop Growth Speed: +5% for each negative trait selected | Triggered: Pop Growth Speed: +5%; Habitability: +5%",
     "custom_tooltip": "TRAIT_INVASIVE_EFFECT",
     "slave_cost": {}
   },
@@ -1909,6 +1966,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -1917,7 +1975,7 @@
       "species"
     ],
     "modifier": {},
-    "effects": "Every 100 Pops working as a slave or better produces 0.02 Monthly Organic Pop Growth.  This stacks with other sources of Monthly Organic Pop Growth such as Clone Vats or Spawning Drones. | Triggered: has_budding_trait: +True; divide_over_pop_groups: False; has_budding_trait: +True",
+    "effects": "Every 100 Pops working as a slave or better produces 0.02 Monthly Organic Pop Growth.  This stacks with other sources of Monthly Organic Pop Growth such as Clone Vats or Spawning Drones.",
     "custom_tooltip": "TRAIT_LITHOID_BUDDING_EFFECT",
     "slave_cost": {
       "trade": 2000
@@ -1949,13 +2007,14 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
       "pop_growth"
     ],
     "modifier": {},
-    "effects": "Pop Growth During War and Crisis: +20% | Triggered: is_at_war: +True; has_crisis: +True; logistic_growth_mult: +20.0%",
+    "effects": "Pop Growth During War and Crisis: +20% | Triggered: Pop Growth Speed: +20%",
     "custom_tooltip": "TRAIT_HUMANOID_EXISTENTIAL_ITEROPARITY_EFFECT",
     "slave_cost": {
       "trade": 1000
@@ -1982,13 +2041,14 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
       "pop_growth"
     ],
     "modifier": {},
-    "effects": "Pop Growth During War and Crisis: -30% | Triggered: is_at_war: +True; has_crisis: +True; logistic_growth_mult: -30.0%",
+    "effects": "Pop Growth During War and Crisis: -30% | Triggered: Pop Growth Speed: -30%",
     "custom_tooltip": "TRAIT_HUMANOID_PSYCHOLOGICAL_INFERTILITY_EFFECT",
     "slave_cost": {
       "trade": -1000
@@ -2012,6 +2072,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -2020,7 +2081,7 @@
     "modifier": {
       "negative_leader_traits_species": 1
     },
-    "effects": "Leader Maximum Negative Traits: +1 | negative_leader_traits_species: +1",
+    "effects": "Leader Maximum Negative Traits: +1 | Leader Maximum Negative Traits: +1",
     "custom_tooltip": "TRAIT_HUMANOID_JINXED_EFFECT",
     "slave_cost": {
       "trade": -500
@@ -2047,6 +2108,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2074,6 +2136,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2083,7 +2146,7 @@
     "modifier": {
       "miner_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "miner_jobs_bonus_workforce_mult: +15.0%",
+    "effects": "Job Efficiency for Miners: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -2104,6 +2167,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2113,7 +2177,7 @@
     "modifier": {
       "farmer_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "farmer_jobs_bonus_workforce_mult: +15.0%",
+    "effects": "Job Efficiency for Farmers: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -2134,6 +2198,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2143,7 +2208,7 @@
     "modifier": {
       "technician_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "technician_jobs_bonus_workforce_mult: +15.0%",
+    "effects": "Job Efficiency for Technicians: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -2164,6 +2229,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2172,7 +2238,7 @@
     "modifier": {
       "pop_bonus_workforce_mult": 0.05
     },
-    "effects": "pop_bonus_workforce_mult: +5.0%",
+    "effects": "Job Efficiency: +5%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -2193,6 +2259,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2203,7 +2270,7 @@
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": 0.1
     },
-    "effects": "researcher_jobs_bonus_workforce_mult: +10.0%",
+    "effects": "Job Efficiency for Researchers: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -2224,6 +2291,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2234,7 +2302,7 @@
     "modifier": {
       "pop_happiness": 0.1
     },
-    "effects": "pop_happiness: +0.1",
+    "effects": "Happiness: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -2255,6 +2323,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2266,7 +2335,7 @@
     "modifier": {
       "influential_jobs_bonus_workforce_mult": 0.2
     },
-    "effects": "Can be employed in Servant Jobs if under AI Servitude | influential_jobs_bonus_workforce_mult: +20.0%",
+    "effects": "Can be employed in Servant Jobs if under AI Servitude | Job Efficiency for Influentials: +20%",
     "custom_tooltip": "TRAIT_DOMESTIC_PROTOCOLS_EFFECT",
     "slave_cost": {
       "trade": 750
@@ -2292,6 +2361,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2300,7 +2370,7 @@
     "modifier": {
       "pop_housing_usage_mult": -0.1
     },
-    "effects": "pop_housing_usage_mult: -10.0%",
+    "effects": "Pop Housing Usage: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -2324,6 +2394,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "negative",
@@ -2332,7 +2403,7 @@
     "modifier": {
       "pop_housing_usage_mult": 0.1
     },
-    "effects": "pop_housing_usage_mult: +10.0%",
+    "effects": "Pop Housing Usage: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -150
@@ -2353,6 +2424,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2363,7 +2435,7 @@
       "negative_leader_traits_species": -1,
       "leaders_upkeep_mult": -0.25
     },
-    "effects": "negative_leader_traits_species: -1; leaders_upkeep_mult: -25.0%",
+    "effects": "Leader Maximum Negative Traits: -1; Leader Upkeep: -25%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -2389,6 +2461,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2398,7 +2471,7 @@
     "modifier": {
       "influential_jobs_bonus_workforce_mult": 0.2
     },
-    "effects": "influential_jobs_bonus_workforce_mult: +20.0%",
+    "effects": "Job Efficiency for Influentials: +20%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -2421,6 +2494,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "negative",
@@ -2430,7 +2504,7 @@
     "modifier": {
       "influential_jobs_bonus_workforce_mult": -0.2
     },
-    "effects": "influential_jobs_bonus_workforce_mult: -20.0%",
+    "effects": "Job Efficiency for Influentials: -20%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -150
@@ -2453,6 +2527,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2461,7 +2536,7 @@
     "modifier": {
       "planet_pops_robotics_upkeep_mult": -0.1
     },
-    "effects": "planet_pops_robotics_upkeep_mult: -10.0%",
+    "effects": "Robot Upkeep: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -2484,6 +2559,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "negative",
@@ -2492,7 +2568,7 @@
     "modifier": {
       "planet_pops_robotics_upkeep_mult": 0.1
     },
-    "effects": "planet_pops_robotics_upkeep_mult: +10.0%",
+    "effects": "Robot Upkeep: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -150
@@ -2515,6 +2591,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2524,7 +2601,7 @@
     "modifier": {
       "species_leader_exp_gain": 0.1
     },
-    "effects": "species_leader_exp_gain: +0.1",
+    "effects": "Species Leader Exp Gain: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -2547,6 +2624,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2556,7 +2634,7 @@
     "modifier": {
       "species_leader_exp_gain": -0.1
     },
-    "effects": "species_leader_exp_gain: -0.1",
+    "effects": "Species Leader Exp Gain: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -250
@@ -2579,6 +2657,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2587,7 +2666,7 @@
     "modifier": {
       "planet_pop_assembly_mult": 0.15
     },
-    "effects": "planet_pop_assembly_mult: +15.0%",
+    "effects": "Mechanical Pop Assembly Speed: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1500
@@ -2610,6 +2689,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "negative",
@@ -2618,7 +2698,7 @@
     "modifier": {
       "planet_pop_assembly_mult": -0.15
     },
-    "effects": "planet_pop_assembly_mult: -15.0%",
+    "effects": "Mechanical Pop Assembly Speed: -15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -2641,6 +2721,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2650,7 +2731,7 @@
     "modifier": {
       "roboticist_jobs_bonus_workforce_mult": 0.2
     },
-    "effects": "roboticist_jobs_bonus_workforce_mult: +20.0%",
+    "effects": "Job Efficiency for Roboticists: +20%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1500
@@ -2673,6 +2754,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "negative",
@@ -2681,7 +2763,7 @@
     "modifier": {
       "roboticist_jobs_bonus_workforce_mult": -0.2
     },
-    "effects": "roboticist_jobs_bonus_workforce_mult: -20.0%",
+    "effects": "Job Efficiency for Roboticists: -20%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -2704,6 +2786,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2715,7 +2798,7 @@
     "modifier": {
       "bureaucrat_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "bureaucrat_jobs_bonus_workforce_mult: +15.0%",
+    "effects": "Job Efficiency for Bureaucrats: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -2738,6 +2821,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -2746,7 +2830,7 @@
     "modifier": {
       "species_empire_size_mult": -0.1
     },
-    "effects": "species_empire_size_mult: -10.0%",
+    "effects": "Empire Size from Pops: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -2769,6 +2853,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "negative",
@@ -2777,7 +2862,7 @@
     "modifier": {
       "species_empire_size_mult": 0.1
     },
-    "effects": "species_empire_size_mult: +10.0%",
+    "effects": "Empire Size from Pops: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -150
@@ -2800,6 +2885,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2809,7 +2895,7 @@
     "modifier": {
       "trader_jobs_bonus_workforce_mult": 0.25
     },
-    "effects": "trader_jobs_bonus_workforce_mult: +25.0%",
+    "effects": "Job Efficiency for Traders: +25%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -2832,6 +2918,7 @@
       "MACHINE",
       "ROBOT"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2843,7 +2930,7 @@
     "modifier": {
       "bureaucrat_jobs_bonus_workforce_mult": -0.1
     },
-    "effects": "bureaucrat_jobs_bonus_workforce_mult: -10.0%",
+    "effects": "Job Efficiency for Bureaucrats: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -2864,6 +2951,7 @@
       "MACHINE",
       "ROBOT"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2874,7 +2962,7 @@
     "modifier": {
       "pop_government_ethic_attraction": -0.15
     },
-    "effects": "pop_government_ethic_attraction: -0.15",
+    "effects": "Governing Ethics Attraction: -15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -2895,6 +2983,7 @@
       "MACHINE",
       "ROBOT"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2906,7 +2995,7 @@
       "pop_cat_worker_happiness": -0.1,
       "pop_slave_happiness": -0.1
     },
-    "effects": "pop_cat_worker_happiness: -0.1; pop_slave_happiness: -0.1",
+    "effects": "Worker Happiness: -10%; Slave Happiness: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -2927,6 +3016,7 @@
       "MACHINE",
       "ROBOT"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2938,7 +3028,7 @@
     "modifier": {
       "planet_pops_consumer_goods_upkeep_mult": 0.1
     },
-    "effects": "planet_pops_consumer_goods_upkeep_mult: +10.0%",
+    "effects": "Pop Consumer Goods Upkeep: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -200
@@ -2963,6 +3053,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -2973,7 +3064,7 @@
     "modifier": {
       "engineer_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "engineer_jobs_bonus_workforce_mult: +15.0%",
+    "effects": "Job Efficiency for Engineers: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -2998,6 +3089,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3008,7 +3100,7 @@
     "modifier": {
       "physicist_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "physicist_jobs_bonus_workforce_mult: +15.0%",
+    "effects": "Job Efficiency for Physicists: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -3033,6 +3125,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3043,7 +3136,7 @@
     "modifier": {
       "biologist_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "biologist_jobs_bonus_workforce_mult: +15.0%",
+    "effects": "Job Efficiency for Biologists: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -3066,6 +3159,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3077,7 +3171,7 @@
       "enforcer_jobs_bonus_workforce_mult": 0.15,
       "soldier_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "army_damage_mult: +100.0%; enforcer_jobs_bonus_workforce_mult: +15.0%; soldier_jobs_bonus_workforce_mult: +15.0%",
+    "effects": "Army Damage: +100%; Job Efficiency for Enforcers: +15%; Job Efficiency for Soldiers: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1000
@@ -3101,6 +3195,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3114,7 +3209,7 @@
       "worker_and_simple_drone_cat_bonus_workforce_mult": -0.05,
       "soldier_jobs_bonus_workforce_mult": -0.15
     },
-    "effects": "army_damage_mult: -50.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -5.0%; soldier_jobs_bonus_workforce_mult: -15.0%",
+    "effects": "Army Damage: -50%; Job Efficiency for Worker and Simple Drone Jobs: -5%; Job Efficiency for Soldiers: -15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -250
@@ -3138,6 +3233,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3148,7 +3244,7 @@
     "modifier": {
       "trader_jobs_bonus_workforce_mult": -0.25
     },
-    "effects": "trader_jobs_bonus_workforce_mult: -25.0%",
+    "effects": "Job Efficiency for Traders: -25%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -150
@@ -3169,6 +3265,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3182,7 +3279,7 @@
       "army_damage_mult": 5,
       "foundry_jobs_bonus_workforce_mult": 0.15
     },
-    "effects": "army_damage_mult: +500%; foundry_jobs_bonus_workforce_mult: +15.0%",
+    "effects": "Army Damage: +500%; Job Efficiency for Metallurgists: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1500
@@ -3203,6 +3300,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3213,7 +3311,7 @@
     "modifier": {
       "pop_amenities_usage_mult": -0.5
     },
-    "effects": "pop_amenities_usage_mult: -50.0%",
+    "effects": "Pop Amenities Usage: -50%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1500
@@ -3234,6 +3332,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3245,7 +3344,7 @@
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": 0.25
     },
-    "effects": "researcher_jobs_bonus_workforce_mult: +25.0%",
+    "effects": "Job Efficiency for Researchers: +25%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1500
@@ -3266,6 +3365,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "synthetic",
@@ -3276,7 +3376,7 @@
     "modifier": {
       "planet_pop_assembly_mult": 0.5
     },
-    "effects": "planet_pop_assembly_mult: +50.0%",
+    "effects": "Mechanical Pop Assembly Speed: +50%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1500
@@ -3303,6 +3403,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3312,7 +3413,7 @@
     "modifier": {
       "army_damage_mult": 0.05
     },
-    "effects": "army_damage_mult: +5.0%",
+    "effects": "Army Damage: +5%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -3339,6 +3440,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3349,7 +3451,7 @@
     "modifier": {
       "influential_jobs_bonus_workforce_mult": 0.05
     },
-    "effects": "influential_jobs_bonus_workforce_mult: +5.0%",
+    "effects": "Job Efficiency for Influentials: +5%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -3376,6 +3478,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3386,7 +3489,7 @@
     "modifier": {
       "bureaucrat_jobs_bonus_workforce_mult": 0.02
     },
-    "effects": "bureaucrat_jobs_bonus_workforce_mult: +2.0%",
+    "effects": "Job Efficiency for Bureaucrats: +2%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -3413,6 +3516,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3423,7 +3527,7 @@
     "modifier": {
       "researcher_jobs_bonus_workforce_mult": 0.02
     },
-    "effects": "researcher_jobs_bonus_workforce_mult: +2.0%",
+    "effects": "Job Efficiency for Researchers: +2%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -3450,6 +3554,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3460,7 +3565,7 @@
     "modifier": {
       "miner_jobs_bonus_workforce_mult": 0.05
     },
-    "effects": "miner_jobs_bonus_workforce_mult: +5.0%",
+    "effects": "Job Efficiency for Miners: +5%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -3487,6 +3592,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3496,7 +3602,7 @@
     "modifier": {
       "trader_jobs_bonus_workforce_mult": 0.05
     },
-    "effects": "trader_jobs_bonus_workforce_mult: +5.0%",
+    "effects": "Job Efficiency for Traders: +5%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -3522,6 +3628,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3535,7 +3642,7 @@
       "species_leader_exp_gain": -1,
       "civilian_and_maintenance_drone_cat_bonus_workforce_mult": -0.85
     },
-    "effects": "Cannot generate Leaders Cannot be employed in Elite or Specialist Jobs | pop_bonus_workforce_mult: +10.0%; species_leader_exp_gain: -1; civilian_and_maintenance_drone_cat_bonus_workforce_mult: -85.0%",
+    "effects": "Cannot generate Leaders Cannot be employed in Elite or Specialist Jobs | Job Efficiency: +10%; Species Leader Exp Gain: -100%; Job Efficiency for Civilian and Maintenance Drone Jobs: -85%",
     "custom_tooltip": "trait_robot_suppressed_tt",
     "slave_cost": {
       "trade": 750
@@ -3556,6 +3663,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3569,7 +3677,7 @@
       "pop_bonus_workforce_mult": 0.05,
       "leader_lifespan_add": 50
     },
-    "effects": "pop_environment_tolerance: +0.3; pop_bonus_workforce_mult: +5.0%; leader_lifespan_add: +50",
+    "effects": "Habitability: +30%; Job Efficiency: +5%; Leader Lifespan: +50",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -3590,6 +3698,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3601,7 +3710,7 @@
       "pop_housing_usage_mult": -0.5,
       "planet_pop_assembly_mult": 0.2
     },
-    "effects": "pop_housing_usage_mult: -50.0%; planet_pop_assembly_mult: +20.0%",
+    "effects": "Pop Housing Usage: -50%; Mechanical Pop Assembly Speed: +20%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -3624,6 +3733,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3637,7 +3747,7 @@
       "leaders_upkeep_mult": -0.1,
       "negative_traits_leader": -1
     },
-    "effects": "researcher_jobs_bonus_workforce_mult: +20.0%; leaders_upkeep_mult: -10.0%; negative_traits_leader: -1",
+    "effects": "Job Efficiency for Researchers: +20%; Leader Upkeep: -10%; Leader Maximum Negative Traits: -1",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 750
@@ -3658,6 +3768,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3668,7 +3779,7 @@
     "modifier": {
       "pop_bonus_workforce_mult": 0.2
     },
-    "effects": "Dark Matter Upkeep: +0.03 | pop_bonus_workforce_mult: +20.0%",
+    "effects": "Dark Matter Upkeep: +0.03 | Job Efficiency: +20%",
     "custom_tooltip": "trait_robot_ceaseless_symmetric_annihilation_engine_tt",
     "slave_cost": {
       "trade": 750
@@ -3689,6 +3800,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3700,7 +3812,7 @@
     "modifier": {
       "leader_lifespan_mult": 0.5
     },
-    "effects": "Pop Amenities Usage: -50%  Living Metal Upkeep: +0.03 | leader_lifespan_mult: +50.0%",
+    "effects": "Pop Amenities Usage: -50%  Living Metal Upkeep: +0.03 | Leader Lifespan: +50%",
     "custom_tooltip": "trait_robot_ferro_viscosity_augmentation_tt",
     "slave_cost": {
       "trade": 750
@@ -3721,6 +3833,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3731,7 +3844,7 @@
     "modifier": {
       "roboticist_jobs_bonus_workforce_mult": 0.2
     },
-    "effects": "Food Upkeep: +1  Exotic Gases Upkeep: +0.02 | roboticist_jobs_bonus_workforce_mult: +20.0%",
+    "effects": "Food Upkeep: +1  Exotic Gases Upkeep: +0.02 | Job Efficiency for Roboticists: +20%",
     "custom_tooltip": "trait_robot_biomimetic_assembly_tt",
     "slave_cost": {
       "trade": 750
@@ -3754,6 +3867,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3765,7 +3879,7 @@
     "modifier": {
       "trader_jobs_bonus_workforce_mult": 0.2
     },
-    "effects": "Energy Credits Upkeep: +1  Rare Crystals Upkeep: +0.02 | trader_jobs_bonus_workforce_mult: +20.0%",
+    "effects": "Energy Credits Upkeep: +1  Rare Crystals Upkeep: +0.02 | Job Efficiency for Traders: +20%",
     "custom_tooltip": "trait_robot_matrix_trading_tt",
     "slave_cost": {
       "trade": 750
@@ -3786,6 +3900,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3817,6 +3932,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3826,7 +3942,7 @@
     "modifier": {
       "specialist_and_complex_drone_cat_bonus_workforce_mult": 0.1
     },
-    "effects": "Exotic Gases Upkeep: +0.05 | specialist_and_complex_drone_cat_bonus_workforce_mult: +10.0%",
+    "effects": "Exotic Gases Upkeep: +0.05 | Job Efficiency for Specialist and Complex Drone Jobs: +10%",
     "custom_tooltip": "trait_robot_exotic_fuel_consumption_tt",
     "slave_cost": {
       "trade": 750
@@ -3847,6 +3963,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3858,7 +3975,7 @@
     "modifier": {
       "pop_environment_tolerance": 0.3
     },
-    "effects": "Rare Crystals Upkeep: +0.05 | pop_environment_tolerance: +0.3",
+    "effects": "Rare Crystals Upkeep: +0.05 | Habitability: +30%",
     "custom_tooltip": "trait_robot_rare_crystal_exterior_tt",
     "slave_cost": {
       "trade": 750
@@ -3879,6 +3996,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3889,7 +4007,7 @@
     "modifier": {
       "worker_and_simple_drone_cat_bonus_workforce_mult": 0.1
     },
-    "effects": "Volatile Motes Upkeep: +0.05 | worker_and_simple_drone_cat_bonus_workforce_mult: +10.0%",
+    "effects": "Volatile Motes Upkeep: +0.05 | Job Efficiency for Worker and Simple Drone Jobs: +10%",
     "custom_tooltip": "trait_robot_volatile_mote_reactor_tt",
     "slave_cost": {
       "trade": 750
@@ -3910,6 +4028,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -3936,6 +4055,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -3947,7 +4067,7 @@
       "pop_environment_tolerance": 0.5,
       "logistic_growth_mult": 0.15
     },
-    "effects": "pop_environment_tolerance: +0.5; logistic_growth_mult: +15.0%",
+    "effects": "Habitability: +50%; Pop Growth Speed: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 100
@@ -3965,11 +4085,12 @@
     "opposites": [],
     "prerequisites": [],
     "allowed_archetypes": [],
+    "allowed_planet_classes": [],
     "tags": [],
     "modifier": {
       "trader_jobs_bonus_workforce_mult": 0.25
     },
-    "effects": "trader_jobs_bonus_workforce_mult: +25.0%",
+    "effects": "Job Efficiency for Traders: +25%",
     "custom_tooltip": "",
     "slave_cost": {}
   },
@@ -3993,6 +4114,7 @@
     "allowed_archetypes": [
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4005,7 +4127,7 @@
     "modifier": {
       "pop_environment_tolerance": 0.1
     },
-    "effects": "pop_environment_tolerance: +0.1",
+    "effects": "Habitability: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1000
@@ -4033,6 +4155,7 @@
     "allowed_archetypes": [
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4045,7 +4168,7 @@
     "modifier": {
       "logistic_growth_mult": 0.1
     },
-    "effects": "logistic_growth_mult: +10.0%",
+    "effects": "Pop Growth Speed: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 2000
@@ -4073,6 +4196,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4083,7 +4207,7 @@
     "modifier": {
       "pop_livestock_bonus_workforce_mult": 1
     },
-    "effects": "pop_livestock_bonus_workforce_mult: +100%",
+    "effects": "Job Efficiency for Livestock: +100%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1000
@@ -4120,6 +4244,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4136,7 +4261,7 @@
       "species_empire_size_mult": -0.15,
       "civilian_and_maintenance_drone_cat_bonus_workforce_mult": -0.9
     },
-    "effects": "Cannot generate Leaders Cannot be employed in Elite or Specialist Jobs | pop_bonus_workforce_mult: +15.0%; species_leader_exp_gain: -1; species_empire_size_mult: -15.0%; civilian_and_maintenance_drone_cat_bonus_workforce_mult: -90.0%",
+    "effects": "Cannot generate Leaders Cannot be employed in Elite or Specialist Jobs | Job Efficiency: +15%; Species Leader Exp Gain: -100%; Empire Size from Pops: -15%; Job Efficiency for Civilian and Maintenance Drone Jobs: -90%",
     "custom_tooltip": "TRAIT_NERVE_STAPLED_EFFECT",
     "slave_cost": {
       "trade": 1500
@@ -4168,6 +4293,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4181,7 +4307,7 @@
       "pop_housing_usage_mult": -0.05,
       "pop_happiness": 0.1
     },
-    "effects": "logistic_growth_mult: +20.0%; pop_housing_usage_mult: -5.0%; pop_happiness: +0.1",
+    "effects": "Pop Growth Speed: +20%; Pop Housing Usage: -5%; Happiness: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 2000
@@ -4214,6 +4340,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4227,7 +4354,7 @@
       "pop_bonus_workforce_mult": 0.05,
       "leader_lifespan_add": 50
     },
-    "effects": "pop_environment_tolerance: +0.3; pop_bonus_workforce_mult: +5.0%; leader_lifespan_add: +50",
+    "effects": "Habitability: +30%; Job Efficiency: +5%; Leader Lifespan: +50",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 2000
@@ -4258,6 +4385,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4271,7 +4399,7 @@
       "negative_leader_traits_species": -1,
       "leaders_upkeep_mult": -0.1
     },
-    "effects": "researcher_jobs_bonus_workforce_mult: +20.0%; negative_leader_traits_species: -1; leaders_upkeep_mult: -10.0%",
+    "effects": "Job Efficiency for Researchers: +20%; Leader Maximum Negative Traits: -1; Leader Upkeep: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 2000
@@ -4322,6 +4450,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4336,7 +4465,7 @@
       "pop_housing_usage_mult": -0.05,
       "pop_amenities_usage_mult": -0.1
     },
-    "effects": "bonus_pop_growth_mult: +25.0%; pop_housing_usage_mult: -5.0%; pop_amenities_usage_mult: -10.0%",
+    "effects": "Monthly Organic Pop Growth Multiplier: +25%; Pop Housing Usage: -5%; Pop Amenities Usage: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 2000
@@ -4362,6 +4491,7 @@
     "allowed_archetypes": [
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4372,7 +4502,7 @@
     "modifier": {
       "pop_livestock_lithoid_bonus_workforce_mult": 1
     },
-    "effects": "pop_livestock_lithoid_bonus_workforce_mult: +100%",
+    "effects": "Job Efficiency for Livestock: +100%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1000
@@ -4398,6 +4528,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4408,7 +4539,7 @@
     "modifier": {
       "pop_livestock_infernal_bonus_workforce_mult": 1
     },
-    "effects": "pop_livestock_infernal_bonus_workforce_mult: +100%",
+    "effects": "Job Efficiency for Livestock: +100%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1500
@@ -4435,6 +4566,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4447,7 +4579,7 @@
       "foundry_jobs_bonus_workforce_mult": 0.25,
       "artisan_jobs_bonus_workforce_mult": 0.25
     },
-    "effects": "foundry_jobs_bonus_workforce_mult: +25.0%; artisan_jobs_bonus_workforce_mult: +25.0%",
+    "effects": "Job Efficiency for Metallurgists: +25%; Job Efficiency for Artisans: +25%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 2000
@@ -4472,6 +4604,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4484,7 +4617,7 @@
     "modifier": {
       "army_health": 1.0
     },
-    "effects": "Every 100 Pops working as a slave or better produces 0.5 Alloys per month. | army_health: +1.0",
+    "effects": "Every 100 Pops working as a slave or better produces 0.5 Alloys per month. | Army Health: +100%",
     "custom_tooltip": "TRAIT_DRAKE_SCALED_EFFECT",
     "slave_cost": {
       "trade": 1000
@@ -4508,6 +4641,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4519,7 +4653,7 @@
     "modifier": {
       "habitability_floor_add": 0.8
     },
-    "effects": "Replaces Food (or Minerals) Upkeep with Energy Credits Upkeep | habitability_floor_add: +0.8",
+    "effects": "Replaces Food (or Minerals) Upkeep with Energy Credits Upkeep | Species Minimum Habitability: +0.8",
     "custom_tooltip": "TRAIT_VOIDLING_EFFECT",
     "slave_cost": {
       "trade": 1500
@@ -4552,6 +4686,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4560,7 +4695,7 @@
       "genetic_ascension"
     ],
     "modifier": {},
-    "effects": "Every 100 Pops working as a slave or better produces $@tiyanki_budding_rate$ Monthly Organic Pop Growth.  This stacks with other sources of Monthly Organic Pop Growth such as Clone Vats or Spawning Drones. | Triggered: divide_over_pop_groups: False",
+    "effects": "Every 100 Pops working as a slave or better produces 0.1 Monthly Organic Pop Growth.  This stacks with other sources of Monthly Organic Pop Growth such as Clone Vats or Spawning Drones.",
     "custom_tooltip": "TRAIT_TIYANKI_BUDDING_EFFECT",
     "slave_cost": {
       "trade": 1500
@@ -4593,13 +4728,14 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
       "pop_growth"
     ],
     "modifier": {},
-    "effects": "Grants between +30% and -10% Pop Growth Speed, inversely proportional to the number of pops on the planet. | Triggered: logistic_growth_mult: +1.0%",
+    "effects": "Grants between +30% and -10% Pop Growth Speed, inversely proportional to the number of pops on the planet. | Triggered: Pop Growth Speed: +1%",
     "custom_tooltip": "incubator_tooltip",
     "slave_cost": {
       "trade": 2000
@@ -4620,6 +4756,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4630,7 +4767,7 @@
     "modifier": {
       "planet_pops_upkeep_mult": 0.5
     },
-    "effects": "Every 100 Pops working as a slave or better produces 0.02 Exotic Gases per month. | planet_pops_upkeep_mult: +50.0%",
+    "effects": "Every 100 Pops working as a slave or better produces 0.02 Exotic Gases per month. | Pop Upkeep: +50%",
     "custom_tooltip": "inorganic_breath_tooltip",
     "slave_cost": {
       "trade": 1000
@@ -4651,6 +4788,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4665,7 +4803,7 @@
       "army_damage_mult": 0.5,
       "pop_housing_usage_mult": 0.1
     },
-    "effects": "Happiness to non-noxious Pops: $@noxious_happiness_penalty|%$  - Happiness per non-noxious Pop (not including Pops unaffected by Happiness): $@noxious_happiness_bonus|%$ (max: +40%) | habitability_floor_add: +0.3; habitability_ceil_add: -0.3; army_damage_mult: +50.0%; pop_housing_usage_mult: +10.0%",
+    "effects": "Happiness to non-noxious Pops: -1%  - Happiness per non-noxious Pop (not including Pops unaffected by Happiness): 2% (max: +40%) | Species Minimum Habitability: +0.3; Species Maximum Habitability: -0.3; Army Damage: +50%; Pop Housing Usage: +10%",
     "custom_tooltip": "noxious_tooltip",
     "slave_cost": {
       "trade": -500
@@ -4686,6 +4824,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4699,7 +4838,7 @@
     "modifier": {
       "leader_lifespan_add": 50
     },
-    "effects": "Exotic Gas Upkeep: +0.125  - Pop Growth Speed: + 25%  - Habitability: + 25% | leader_lifespan_add: +50 | Triggered: logistic_growth_mult: +25.0%; pop_environment_tolerance: +0.25",
+    "effects": "Exotic Gas Upkeep: +0.125  - Pop Growth Speed: + 25%  - Habitability: + 25% | Leader Lifespan: +50 | Triggered: Pop Growth Speed: +25%; Habitability: +25%",
     "custom_tooltip": "exotic_metabolism_tooltip",
     "slave_cost": {
       "trade": 750
@@ -4720,6 +4859,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4730,7 +4870,7 @@
     "modifier": {
       "leader_lifespan_add": -20
     },
-    "effects": "Auto-Modding Traits automatically adjust to better suit the job that a Pop is currently working.  Fleeting Excellence picks modifiers from the Overtuned Auto-Mod Trait List | leader_lifespan_add: -20",
+    "effects": "Auto-Modding Traits automatically adjust to better suit the job that a Pop is currently working.  Fleeting Excellence picks modifiers from the Overtuned Auto-Mod Trait List | Leader Lifespan: -20",
     "custom_tooltip": "automodding_trait_overtuned_tooltip",
     "slave_cost": {
       "trade": 1000
@@ -4751,6 +4891,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4762,7 +4903,7 @@
       "leader_lifespan_add": -10,
       "logistic_growth_mult": "@overtuned_growth_penalty"
     },
-    "effects": "Habitability: +20% | leader_lifespan_add: -10 | Triggered: pop_environment_tolerance: +0.2; pop_environment_tolerance: +0.4",
+    "effects": "Habitability: +20% | Leader Lifespan: -10 | Triggered: Habitability: +20%; Habitability: +40%",
     "custom_tooltip": "spliced_adaptability_tooltip",
     "slave_cost": {
       "trade": 1000
@@ -4783,6 +4924,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4796,7 +4938,7 @@
       "leader_lifespan_add": -10,
       "logistic_growth_mult": "@overtuned_growth_penalty"
     },
-    "effects": "Job Efficiency for Workers: +5%  - Job Efficiency for Soldier jobs: +15% | army_damage_mult: +40.0%; leader_lifespan_add: -10",
+    "effects": "Job Efficiency for Workers: +5%  - Job Efficiency for Soldier jobs: +15% | Army Damage: +40%; Leader Lifespan: -10",
     "custom_tooltip": "juiced_power_tooltip",
     "slave_cost": {
       "trade": 1000
@@ -4817,6 +4959,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4829,7 +4972,7 @@
       "leader_lifespan_add": -10,
       "logistic_growth_mult": "@overtuned_growth_penalty"
     },
-    "effects": "Job Efficiency for Farming Jobs: +15% | leader_lifespan_add: -10",
+    "effects": "Job Efficiency for Farming Jobs: +15% | Leader Lifespan: -10",
     "custom_tooltip": "farm_hands_tooltip",
     "slave_cost": {
       "trade": 1000
@@ -4850,6 +4993,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4862,7 +5006,7 @@
       "leader_lifespan_add": -10,
       "logistic_growth_mult": "@overtuned_growth_penalty"
     },
-    "effects": "Job Efficiency for Mining Jobs: +15% | leader_lifespan_add: -10",
+    "effects": "Job Efficiency for Mining Jobs: +15% | Leader Lifespan: -10",
     "custom_tooltip": "crack_miner_tooltip",
     "slave_cost": {
       "trade": 1000
@@ -4883,6 +5027,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4895,7 +5040,7 @@
       "leader_lifespan_add": -10,
       "logistic_growth_mult": "@overtuned_growth_penalty"
     },
-    "effects": "Job Efficiency for Technician Jobs: +15% | leader_lifespan_add: -10",
+    "effects": "Job Efficiency for Technician Jobs: +15% | Leader Lifespan: -10",
     "custom_tooltip": "technical_skill_tooltip",
     "slave_cost": {
       "trade": 1000
@@ -4916,6 +5061,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4928,7 +5074,7 @@
       "leader_lifespan_add": -10,
       "logistic_growth_mult": "@overtuned_growth_penalty"
     },
-    "effects": "Job Efficiency for Trader Jobs: +25% | leader_lifespan_add: -10",
+    "effects": "Job Efficiency for Trader Jobs: +25% | Leader Lifespan: -10",
     "custom_tooltip": "trait_commercial_genius_tooltip",
     "slave_cost": {
       "trade": 1000
@@ -4949,6 +5095,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4961,7 +5108,7 @@
       "leader_lifespan_add": -10,
       "logistic_growth_mult": "@overtuned_growth_penalty"
     },
-    "effects": "Job Efficiency for Influential Jobs: +15% | leader_lifespan_add: -10",
+    "effects": "Job Efficiency for Influential Jobs: +15% | Leader Lifespan: -10",
     "custom_tooltip": "crafted_smiles_tooltip",
     "slave_cost": {
       "trade": 1000
@@ -4982,6 +5129,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -4994,7 +5142,7 @@
       "leader_lifespan_add": -10,
       "logistic_growth_mult": "@overtuned_growth_penalty"
     },
-    "effects": "Pop Consumer Goods Upkeep: -10% | leader_lifespan_add: -10",
+    "effects": "Pop Consumer Goods Upkeep: -10% | Leader Lifespan: -10",
     "custom_tooltip": "low_maintenance_tooltip",
     "slave_cost": {
       "trade": 1000
@@ -5017,6 +5165,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5029,7 +5178,7 @@
       "leader_lifespan_add": -10,
       "logistic_growth_mult": "@overtuned_growth_penalty"
     },
-    "effects": "Job Efficiency for Researcher Jobs: +10% | leader_lifespan_add: -10",
+    "effects": "Job Efficiency for Researcher Jobs: +10% | Leader Lifespan: -10",
     "custom_tooltip": "artificial_intelligence_tooltip",
     "slave_cost": {
       "trade": 1000
@@ -5052,6 +5201,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5062,7 +5212,7 @@
       "leader_lifespan_add": -10,
       "logistic_growth_mult": "@overtuned_growth_penalty"
     },
-    "effects": "Leader Experience Gain: +30% | leader_lifespan_add: -10",
+    "effects": "Leader Experience Gain: +30% | Leader Lifespan: -10",
     "custom_tooltip": "gene_mentorship_tooltip",
     "slave_cost": {
       "trade": 1000
@@ -5083,6 +5233,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5095,7 +5246,7 @@
       "leader_lifespan_add": -10,
       "logistic_growth_mult": "@overtuned_growth_penalty"
     },
-    "effects": "Job Efficiency for Bureaucrat Jobs: +10% | leader_lifespan_add: -10",
+    "effects": "Job Efficiency for Bureaucrat Jobs: +10% | Leader Lifespan: -10",
     "custom_tooltip": "expressed_tradition_tooltip",
     "slave_cost": {
       "trade": 1000
@@ -5118,6 +5269,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5130,7 +5282,7 @@
       "leader_lifespan_add": -30,
       "logistic_growth_mult": "@overtuned_increased_growth_penalty"
     },
-    "effects": "Job Efficiency for Researcher Jobs: +20% | leader_lifespan_add: -30",
+    "effects": "Job Efficiency for Researcher Jobs: +20% | Leader Lifespan: -30",
     "custom_tooltip": "elevated_synapses_tooltip",
     "slave_cost": {
       "trade": 2000
@@ -5151,6 +5303,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5165,7 +5318,7 @@
       "planet_pops_organics_alloys_upkeep_mult": 0.15,
       "leader_lifespan_add": -30
     },
-    "effects": "Pop Growth Speed: +30%  - Pop Housing Usage: -10% | planet_pops_organics_food_upkeep_mult: +15.0%; planet_pops_organics_minerals_upkeep_mult: +15.0%; planet_pops_organics_alloys_upkeep_mult: +15.0%; leader_lifespan_add: -30 | Triggered: logistic_growth_mult: +30.0%; logistic_growth_mult: +60.0%",
+    "effects": "Pop Growth Speed: +30%  - Pop Housing Usage: -10% | Pop Food Upkeep: +15%; Pop Mineral Upkeep: +15%; Pop Alloy Upkeep: +15%; Leader Lifespan: -30 | Triggered: Pop Growth Speed: +30%; Pop Growth Speed: +60%",
     "custom_tooltip": "preplanned_growth_tooltip",
     "slave_cost": {
       "trade": 2000
@@ -5186,6 +5339,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5198,7 +5352,7 @@
       "logistic_growth_mult": "@overtuned_increased_growth_penalty",
       "leader_lifespan_add": -30
     },
-    "effects": "Habitability: +30%  - Job Efficiency: +5% | leader_lifespan_add: -30 | Triggered: pop_environment_tolerance: +0.3; pop_environment_tolerance: +0.6",
+    "effects": "Habitability: +30%  - Job Efficiency: +5% | Leader Lifespan: -30 | Triggered: Habitability: +30%; Habitability: +60%",
     "custom_tooltip": "excessive_endurance_tooltip",
     "slave_cost": {
       "trade": 2000
@@ -5219,6 +5373,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5267,6 +5422,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -5302,6 +5458,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5312,7 +5469,7 @@
       "species"
     ],
     "modifier": {},
-    "effects": "Pop Growth Speed: +15% while living on a planet with a local Food (or equivalent) Production Surplus | Triggered: logistic_growth_mult: +15.0%",
+    "effects": "Pop Growth Speed: +15% while living on a planet with a local Food (or equivalent) Production Surplus | Triggered: Pop Growth Speed: +15%",
     "custom_tooltip": "trait_egg_laying_effect",
     "slave_cost": {
       "trade": 500
@@ -5337,6 +5494,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5348,7 +5506,7 @@
     "modifier": {
       "planet_pops_upkeep_mult": -0.15
     },
-    "effects": "Employed Pop Upkeep: -15%  - Unemployed and Denizen Pop Upkeep: -75% | planet_pops_upkeep_mult: -15.0%",
+    "effects": "Employed Pop Upkeep: -15%  - Unemployed and Denizen Pop Upkeep: -75% | Pop Upkeep: -15%",
     "custom_tooltip": "trait_seasonal_dormancy_effect",
     "slave_cost": {
       "trade": 500
@@ -5375,6 +5533,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -5408,6 +5567,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -5419,7 +5579,7 @@
     "modifier": {
       "pop_resettlement_cost_mult": 2
     },
-    "effects": "Pops will not Automatically Resettle  - Resettlement Cost: +200% | pop_resettlement_cost_mult: +200%",
+    "effects": "Pops will not Automatically Resettle  - Resettlement Cost: +200% | Resettlement Cost: +200%",
     "custom_tooltip": "trait_rooted_effect",
     "slave_cost": {
       "trade": -400
@@ -5440,6 +5600,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5451,7 +5612,7 @@
     "modifier": {
       "pop_cat_purge_bonus_workforce_mult": -0.75
     },
-    "effects": "Armies Explode on Death for 250 Damage to Enemies  - Purged Pop Resource Output: -75% | pop_cat_purge_bonus_workforce_mult: -75.0%",
+    "effects": "Armies Explode on Death for 250 Damage to Enemies  - Purged Pop Resource Output: -75% | Job Efficiency for Undesirables: -75%",
     "custom_tooltip": "trait_acidic_vascularity_effect",
     "slave_cost": {
       "trade": 500
@@ -5480,6 +5641,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5493,7 +5655,7 @@
       "pop_housing_usage_mult": -0.3,
       "pop_environment_tolerance": 0.1
     },
-    "effects": "pop_housing_usage_mult: -30.0%; pop_environment_tolerance: +0.1",
+    "effects": "Pop Housing Usage: -30%; Habitability: +10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1500
@@ -5518,6 +5680,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5533,7 +5696,7 @@
       "physicist_jobs_bonus_workforce_mult": 0.1,
       "army_health": 0.2
     },
-    "effects": "physicist_jobs_bonus_workforce_mult: +10.0%; army_health: +0.2",
+    "effects": "Job Efficiency for Physicists: +10%; Army Health: +20%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -5558,6 +5721,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5576,7 +5740,7 @@
       "army_health": 0.4,
       "pop_government_ethic_attraction": 0.15
     },
-    "effects": "physicist_jobs_bonus_workforce_mult: +20.0%; bureaucrat_jobs_bonus_workforce_mult: +20.0%; army_health: +0.4; pop_government_ethic_attraction: +0.15",
+    "effects": "Job Efficiency for Physicists: +20%; Job Efficiency for Bureaucrats: +20%; Army Health: +40%; Governing Ethics Attraction: +15%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1500
@@ -5597,6 +5761,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -5608,7 +5773,7 @@
     "modifier": {
       "pop_amenities_usage_add": 0.5
     },
-    "effects": "pop_amenities_usage_add: +0.5",
+    "effects": "Pop Amenities Usage: +0.5",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -1000
@@ -5629,6 +5794,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5664,6 +5830,17 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [
+      "pc_tropical",
+      "pc_arid",
+      "pc_continental",
+      "pc_ocean",
+      "pc_tundra",
+      "pc_arctic",
+      "pc_alpine",
+      "pc_savannah",
+      "pc_desert"
+    ],
     "tags": [
       "organic",
       "negative",
@@ -5673,7 +5850,7 @@
       "species"
     ],
     "modifier": {},
-    "effects": "Habitability on worlds with a different Climate Category from our Preference: -20% | Triggered: pop_environment_tolerance: -0.2",
+    "effects": "Habitability on worlds with a different Climate Category from our Preference: -20% | Triggered: Habitability: -20%",
     "custom_tooltip": "trait_permeable_skin_effect",
     "slave_cost": {
       "trade": -1000
@@ -5697,6 +5874,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5707,7 +5885,7 @@
       "species"
     ],
     "modifier": {},
-    "effects": "Habitability from Colony Age: +0.5% per Year (Max. +25%) | Triggered: is_colony: +True; pop_environment_tolerance: +0.005",
+    "effects": "Habitability from Colony Age: +0.5% per Year (Max. +25%) | Triggered: Habitability: +0.5%",
     "custom_tooltip": "trait_genetic_memory_effect",
     "slave_cost": {
       "trade": 1000
@@ -5736,6 +5914,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -5770,6 +5949,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5783,7 +5963,7 @@
       "commander_skill_add": 1,
       "army_damage_taken_mult": -0.3
     },
-    "effects": "commander_skill_add: +1; army_damage_taken_mult: -30.0%",
+    "effects": "Effective Commander Skill Level: +1; Army Damage Taken: -30%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 500
@@ -5808,6 +5988,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5823,7 +6004,7 @@
       "army_damage_taken_mult": -0.5,
       "pop_housing_usage_mult": -0.1
     },
-    "effects": "leader_skill_add: +1; army_damage_taken_mult: -50.0%; pop_housing_usage_mult: -10.0%",
+    "effects": "Effective Leader Skill Level: +1; Army Damage Taken: -50%; Pop Housing Usage: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1000
@@ -5844,6 +6025,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5857,7 +6039,7 @@
     "modifier": {
       "livestock_jobs_bonus_workforce_mult": 0.5
     },
-    "effects": "Leaders will survive their first death  - On Offensive Army Death: 20% Chance to spawn a Replacement Army  - Livestock Output: +50% | livestock_jobs_bonus_workforce_mult: +50.0%",
+    "effects": "Leaders will survive their first death  - On Offensive Army Death: 20% Chance to spawn a Replacement Army  - Livestock Output: +50% | Job Efficiency for Livestock: +50%",
     "custom_tooltip": "trait_spare_organs_effect",
     "slave_cost": {
       "trade": 1000
@@ -5880,6 +6062,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5908,6 +6091,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5938,6 +6122,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -5947,7 +6132,7 @@
       "production"
     ],
     "modifier": {},
-    "effects": "Every 100 Pops with this trait working as a slave or better produces $@shell_slag_trait_resource_production|3$ Living Metal per month.",
+    "effects": "Every 100 Pops with this trait working as a slave or better produces 0.005 Living Metal per month.",
     "custom_tooltip": "trait_shell_slag_tooltip",
     "slave_cost": {
       "trade": 500
@@ -5968,6 +6153,7 @@
       "ROBOT",
       "MACHINE"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -5975,7 +6161,7 @@
       "production"
     ],
     "modifier": {},
-    "effects": "Every 100 Pops with this trait working as a slave or better produces $@shell_slag_trait_resource_production|3$ Living Metal per month.",
+    "effects": "Every 100 Pops with this trait working as a slave or better produces 0.005 Living Metal per month.",
     "custom_tooltip": "trait_shell_slag_tooltip",
     "slave_cost": {
       "trade": 500
@@ -6007,6 +6193,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "infernal",
@@ -6015,7 +6202,7 @@
       "species"
     ],
     "modifier": {},
-    "effects": "Pop Growth Speed on Volcanic Worlds: +10% | Triggered: logistic_growth_mult: +10.0%",
+    "effects": "Pop Growth Speed on Volcanic Worlds: +10% | Triggered: Pop Growth Speed: +10%",
     "custom_tooltip": "trait_pyroclastic_tooltip",
     "slave_cost": {
       "trade": 500
@@ -6035,6 +6222,7 @@
     "allowed_archetypes": [
       "BIOLOGICAL"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "infernal",
@@ -6063,6 +6251,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -6072,7 +6261,7 @@
     "modifier": {
       "councilor_skill_add": 2
     },
-    "effects": "councilor_skill_add: +2",
+    "effects": "Effective Councilor Skill: +2",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 2000
@@ -6096,6 +6285,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -6107,7 +6297,7 @@
       "researcher_jobs_bonus_workforce_mult": 0.15,
       "worker_and_simple_drone_cat_bonus_workforce_mult": -0.1
     },
-    "effects": "researcher_jobs_bonus_workforce_mult: +15.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -10.0%",
+    "effects": "Job Efficiency for Researchers: +15%; Job Efficiency for Worker and Simple Drone Jobs: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 1500
@@ -6131,6 +6321,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -6142,7 +6333,7 @@
       "researcher_jobs_bonus_workforce_mult": 0.25,
       "worker_and_simple_drone_cat_bonus_workforce_mult": -0.2
     },
-    "effects": "researcher_jobs_bonus_workforce_mult: +25.0%; worker_and_simple_drone_cat_bonus_workforce_mult: -20.0%",
+    "effects": "Job Efficiency for Researchers: +25%; Job Efficiency for Worker and Simple Drone Jobs: -20%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": 2000
@@ -6163,6 +6354,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "negative",
@@ -6174,7 +6366,7 @@
       "specialist_and_complex_drone_cat_bonus_workforce_mult": -0.1,
       "pop_cat_ruler_bonus_workforce_mult": -0.1
     },
-    "effects": "specialist_and_complex_drone_cat_bonus_workforce_mult: -10.0%; pop_cat_ruler_bonus_workforce_mult: -10.0%",
+    "effects": "Job Efficiency for Specialist and Complex Drone Jobs: -10%; Job Efficiency for Elites: -10%",
     "custom_tooltip": "",
     "slave_cost": {
       "trade": -1000
@@ -6199,6 +6391,7 @@
       "BIOLOGICAL",
       "LITHOID"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "organic",
       "positive",
@@ -6211,7 +6404,7 @@
     "modifier": {
       "leader_lifespan_add": 10
     },
-    "effects": "Job Efficiency from Star Classes:   - Workers & Menial Drones: Min: -15%, Max: +15%   - Black Holes, Physicist jobs: +15%   - Class M Stars, Engineer jobs: +15% | leader_lifespan_add: +10",
+    "effects": "Job Efficiency from Star Classes:   - Workers & Menial Drones: Min: -15%, Max: +15%   - Black Holes, Physicist jobs: +15%   - Class M Stars, Engineer jobs: +15% | Leader Lifespan: +10",
     "custom_tooltip": "trait_photoadaptive_effects",
     "slave_cost": {
       "trade": 1000
@@ -6234,6 +6427,7 @@
       "MACHINE",
       "ROBOT"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "machine",
       "positive",
@@ -6246,7 +6440,7 @@
     "modifier": {
       "leader_lifespan_add": 10
     },
-    "effects": "Job Efficiency from Star Classes:   - Workers & Menial Drones: Min: -15%, Max: +15%   - Black Holes, Physicist jobs: +15%   - Class M Stars, Engineer jobs: +15% | leader_lifespan_add: +10",
+    "effects": "Job Efficiency from Star Classes:   - Workers & Menial Drones: Min: -15%, Max: +15%   - Black Holes, Physicist jobs: +15%   - Class M Stars, Engineer jobs: +15% | Leader Lifespan: +10",
     "custom_tooltip": "trait_photoadaptive_effects",
     "slave_cost": {
       "trade": 1000
@@ -6270,6 +6464,9 @@
     "allowed_archetypes": [
       "BIOLOGICAL",
       "LITHOID"
+    ],
+    "allowed_planet_classes": [
+      "pc_ark"
     ],
     "tags": [
       "organic",
@@ -6303,6 +6500,9 @@
       "MACHINE",
       "ROBOT"
     ],
+    "allowed_planet_classes": [
+      "pc_ark"
+    ],
     "tags": [
       "machine",
       "positive",
@@ -6334,6 +6534,9 @@
     "allowed_archetypes": [
       "MACHINE",
       "ROBOT"
+    ],
+    "allowed_planet_classes": [
+      "pc_ark"
     ],
     "tags": [
       "machine",
@@ -6369,6 +6572,7 @@
       "LITHOID",
       "ROBOT"
     ],
+    "allowed_planet_classes": [],
     "tags": [
       "positive",
       "leader"
@@ -6376,7 +6580,7 @@
     "modifier": {
       "trader_jobs_bonus_workforce_mult": 0.05
     },
-    "effects": "Commanders start with the Plunderer trait if they are not Xenophile or Pacifist | trader_jobs_bonus_workforce_mult: +5.0%",
+    "effects": "Commanders start with the Plunderer trait if they are not Xenophile or Pacifist | Job Efficiency for Traders: +5%",
     "custom_tooltip": "trait_reavers_effects",
     "slave_cost": {
       "trade": 500
@@ -6400,6 +6604,10 @@
       "MACHINE",
       "ROBOT"
     ],
+    "allowed_planet_classes": [
+      "pc_ark",
+      "pc_habitat"
+    ],
     "tags": [
       "machine",
       "positive",
@@ -6411,7 +6619,7 @@
       "engineer_jobs_bonus_workforce_mult": 0.07,
       "planet_pops_energy_upkeep_mult": 0.05
     },
-    "effects": "During War or Crisis: Every 100 Pops with this trait adds +$@defence_drones_stability$ Stability to the Colony, up to +15   - These effects only apply on Artificial Worlds | engineer_jobs_bonus_workforce_mult: +7.000000000000001%; planet_pops_energy_upkeep_mult: +5.0%",
+    "effects": "During War or Crisis: Every 100 Pops with this trait adds +0.1 Stability to the Colony, up to +15   - These effects only apply on Artificial Worlds | Job Efficiency for Engineers: +7%; Pop Energy Upkeep: +5%",
     "custom_tooltip": "trait_defence_drones_effects",
     "slave_cost": {
       "trade": 1000
@@ -6438,6 +6646,10 @@
       "MACHINE",
       "ROBOT"
     ],
+    "allowed_planet_classes": [
+      "pc_ark",
+      "pc_habitat"
+    ],
     "tags": [
       "negative",
       "amenities",
@@ -6446,7 +6658,7 @@
     "modifier": {
       "army_health": -0.35
     },
-    "effects": "On non-Artificial Worlds:   - Job Efficiency: -15%   - Pop Amenities Usage: +15% | army_health: -0.35",
+    "effects": "On non-Artificial Worlds:   - Job Efficiency: -15%   - Pop Amenities Usage: +15% | Army Health: -35%",
     "custom_tooltip": "trait_terraphobic_effects",
     "slave_cost": {
       "trade": -250

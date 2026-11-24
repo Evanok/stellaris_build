@@ -134,17 +134,6 @@
     "picker_column_name": "Dry"
   },
   {
-    "id": "pc_ark",
-    "name": "Arkship",
-    "description": "Our world became our ship and our ship became our world.",
-    "climate": "artificial",
-    "climate_name": null,
-    "selectable": false,
-    "icon": "/icons/planets/pc_ark.png",
-    "picker_column": "artificial",
-    "picker_column_name": null
-  },
-  {
     "id": "pc_gaia",
     "name": "Gaia World",
     "description": "An ideal, temperate world with a nitrogen-oxygen atmosphere and a resilient ecosystem. Optimal conditions for all known higher forms of life at different latitudes.",

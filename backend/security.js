@@ -262,6 +262,17 @@ const validateBuildData = (data) => {
     }
   }
 
+  // Absolute ethic (optional, adopted in game): the Absolute form of the
+  // build's fanatic ethic, e.g. ethic_absolute_pacifist needs ethic_fanatic_pacifist
+  if (data.absolute_ethic !== undefined && data.absolute_ethic !== null && data.absolute_ethic !== '') {
+    const match = typeof data.absolute_ethic === 'string' && data.absolute_ethic.match(/^ethic_absolute_([a-z]{1,40})$/);
+    if (!match) {
+      errors.push('Invalid absolute ethic');
+    } else if (typeof data.ethics !== 'string' || !data.ethics.split(',').map(e => e.trim()).includes(`ethic_fanatic_${match[1]}`)) {
+      errors.push('The absolute ethic must match the fanatic ethic of the build');
+    }
+  }
+
   // Homeworld planet class (optional): a game id like "pc_desert". Not checked
   // against planet_classes.json - the rule evaluator handles game validity,
   // this only keeps arbitrary strings out of the column.

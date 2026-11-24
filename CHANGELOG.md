@@ -7,6 +7,90 @@ a feature matters.
 
 Add new entries at the top: `## <Title> (YYYY-MM-DD)`.
 
+## Stellaris 4.6 "Corona Borealis" + Willpower data (2026-11-23)
+
+- New data folder `backend/data/versions/4.6/`, wired as the latest version (backend version lists,
+  `check_build_rules.js`, `BuildForm.tsx` default, Home/Stats labels, `gameVersion.ts` badge, `llms.txt`).
+  Extracted with the Willpower DLC installed (`dlc041_willpower`, through the Stellaris subscription).
+- New: 3 origins (Great Mosaic, Golden Generation, Lost Makers), 5 fanatic civics + their corporate
+  variants, `civic_memory_optimization` (Lost Makers only), `ap_force_of_will`, the Inquisitor shipset
+  (`crusader_01`), 8 Absolute ethics. Traits: `19_forceofwill_species_traits.txt` added to
+  `extract_traits.py`, but it only holds Lost Makers' forced/in-game traits (Redundant Module, Restored
+  Modules), so no new selectable trait.
+- Real rule changes (beyond ~60 civics that just gained `ethic_absolute_*` in their ethics predicates):
+  Worker Cooperative and Shared Burdens need Fanatic Egalitarian, Dystopian Society needs Fanatic
+  Authoritarian, Police State bans Fanatic Egalitarian, Citizen Service bans Fanatic Xenophile, Agrarian
+  Idyll vs Megacity Architects, Fear of the Dark vs Open Stars Sovereignty.
+- **Absolute ethics** cost 3 points and replace every other ethic; they are adopted in game (Ideology
+  strong enough + Unity), never at creation. `BuildForm.tsx` drops them from the starting ethics list and
+  `check_build_rules.js` flags them as starting ethics.
+- **Absolute ethic field** (`builds.absolute_ethic`, added by `database.js` at startup), modeled on
+  `third_civic`: optional, offered only when the build has a fanatic ethic and the game version has
+  Absolute ethics, as "Aim for Absolute X" under the ethics list. The form only sends it while it still
+  matches the fanatic ethic (changing ethics or version drops it). Validated in `security.js`
+  (`ethic_absolute_<x>` needs `ethic_fanatic_<x>`) and in `check_build_rules.js`. On the build page it is a
+  sub-block under its fanatic ethic ("Later in game: becomes Absolute"), never in the empire export.
+- **Ideologies** are not a creation choice (derived from a fanatic ethic in game, only a game setup
+  toggle), so no new build field.
+- **Bug fix, ethics**: the form only checked the 3-point budget, so Xenophile + Fanatic Xenophile or
+  Xenophile + Xenophobe could be picked. Now one ethic per axis (`category`: col/xen/mil/spi), in
+  `BuildForm.tsx` and in `check_build_rules.js` (which now also checks the ethic point budget). No
+  existing build in the local DB copy was affected.
+- **Readable modifiers** (`data-extractor/modifier_formatter.py`, replacing 6 copied
+  `extract_modifier_effects`): `founder_species_growth_mult: +20.0%; refugee_attraction: -0.3` ->
+  `Pop Growth (or Assembly) Speed: +20%; Refugee Attraction: -30%`. Labels from the game localization
+  (`mod_<key>`, any case; 369 of the 408 keys used); the engine-generated ones are rebuilt (job efficiency
+  from the job names) or humanized. The percentage/number format is not exposed by the game: it follows the
+  key naming (`_mult`/`_perc` and `_gain`/`_speed`/`_happiness`/`_attraction`/`_habitability`/`_damage`/
+  `_health`/`_chance`/`_rate` -> %, `_add` -> number, else fraction -> %, whole -> number), checked by hand
+  on all 408 keys.
+- **"individuals" in tooltips**: `clean_localized_text` replaced every `[GetX]` engine call with
+  "individuals" (93 texts, e.g. Imperial Cult "additional individuals individuals Jobs"). They are now
+  resolved from `common/scripted_loc/` (the `default`, else the first variant whose trigger does not target a
+  specific kind of empire; DLC-only texts with `default = BLANK_STRING` take the DLC variant, as the site
+  assumes every DLC). The game spells the block `defined_text`, `define_text` and `defined_txt`.
+- 4.6 re-extracted with both: 623 texts changed (only `effects`, `tooltip`, `description`), no rule or value.
+- 4.5 re-extracted the same way from a 4.5.4 install (Steam beta branch): 640 texts changed. One rule
+  changed too, and it is a correction: `ap_hydrocentric` `possible` no longer accepts
+  `trait_auto_hab_preference` (in 4.5.4 that alternative is in `potential`; the previous file came from 4.5.0).
+- 4.4 re-extracted from 4.4.6: 655 texts changed, plus what the June 2026 extraction (4.4.0, before the
+  planet/shipset work) lacked: `allowed_planet_classes` on traits, `granted_traits` on civics/origins, and
+  the 4.4.x rule changes (16 civics, 15 origins, `ap_cosmogenesis`, `tr_domestication`; all added
+  restrictions, e.g. Beacon of Liberty / Worker Cooperative not xenophobe, Endbringers not gestalt). Audit
+  impact: still 31 violating builds, two already-flagged ones (#49, #66) get one more message.
+- 4.3 re-extracted from 4.3.7 (previous file: 4.3.0, March 2026): 643 texts changed, same missing fields
+  added as 4.4, 4.3.x balance changes (e.g. Sovereign Guardianship colony empire size 1 -> 0.75), `pc_ark`
+  gone from planet classes (Nomads came in 4.4; the old file was a copy of 4.5's). In 4.3.7 Galactic
+  Wonders is a single `ap_galactic_wonders`: the three 4.3.0 variants (`_utopia`, `_megacorp`,
+  `_utopia_and_megacorp`) were re-added from the previous file, since builds #43/#44 use
+  `ap_galactic_wonders_megacorp` (the form dedupes perks by name, so it still offers one). Audit unchanged.
+- Parser: scoped engine calls (`[Owner.Species.GetFleshTypeCyberCreed]` -> "flesh") are resolved too; a
+  modifier label built from the game state (`[This.GetCradleColor]` -> "an Unknown Entity" until met)
+  falls back to the key ("The Cradle of Souls Attunement").
+- 4.2 (also used for 4.0/4.1 builds) deliberately not re-extracted: 4.3+ covers 65 of 91 builds.
+- **Rule warnings, unset species**: `species_archetype` / `species_class` joined the evaluator's
+  `OPTIONAL_FIELDS` (backend `rules/predicateEvaluator.js` and frontend `utils/ruleEvaluator.ts`): with no
+  species picked (optional in the form), "Machine Intelligence requires a Machine species" was a false
+  warning; it is now "unknown", like the planet and shipset. Checked against the 54 prescripted empires
+  of the game (0 flagged, while 5 deliberately broken copies all are).
+- **Graying incompatible civics in the form: decided against.** Since the submit-time warning shipped
+  (2026-08-10), 27 of the 28 builds published in prod are clean (the last one is a real violation the
+  author kept), so blocking would mostly add the risk of a parser false positive blocking a legit build.
+- `extract_icons.py` now reads the latest `output/versions/X.Y/` instead of the stale `output/*.json`.
+- **Effects text cleanup** (`localization_parser.py`): scripted variables are now resolved
+  (`$@social_concord_starting_opinion|0$` -> `25`, `|%0` -> percentage, `+` -> sign), from every
+  `@name = value` under `common/` (3873 of them); `[foundry.GetNamePlural]` style references become the job
+  name (`Metallurgists`), `.GetIcon` ones are dropped, `[Ruler.GetTitle]` -> `Ruler`; `§0` style color codes
+  (digit) are stripped. Fixed 11 traits, 23 civics and 1 origin in 4.6 (older versions not re-extracted).
+- **Great Mosaic civics**: starting civic slots are now 2 + the origin's `country_government_civic_points_add`
+  (Great Mosaic: +1, so 3 starting civics, all exported), in `BuildForm.tsx` (`maxCivicSlots`), the
+  `BuildDetail.tsx` export warning and `check_build_rules.js`. The optional "later" civic (`third_civic`)
+  stays on top of that and is labelled by its rank (4th with Great Mosaic). It is the slot of the
+  Galactic Administration technology (no ascension perk or tradition grants a civic slot). In game that
+  tech only gives the slot to non-gestalt empires; deliberately not enforced. When the origin changes, a
+  starting civic beyond the new limit moves to the "later" slot if it is free, else it is dropped; this
+  waits for the origins to load, so editing a Great Mosaic build keeps its 3 starting civics.
+
 ## Visitor and comment statistics (2026-11-04)
 
 - **Daily visitors, logged in vs anonymous** (`/admin/stats`): new `daily_visitors` table, one row per

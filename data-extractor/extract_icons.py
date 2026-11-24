@@ -500,7 +500,18 @@ if __name__ == "__main__":
 
     # Paths
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    data_path = os.path.join(script_dir, 'output')
+    # Read the latest extracted version (output/versions/X.Y/), not the stale
+    # top-level output/*.json dumps, or the icons of new items are never made.
+    # A third argument picks another version folder.
+    versions_dir = os.path.join(script_dir, 'output', 'versions')
+    if len(sys.argv) > 3:
+        data_path = os.path.join(versions_dir, sys.argv[3])
+    elif os.path.isdir(versions_dir) and os.listdir(versions_dir):
+        latest = max(os.listdir(versions_dir), key=lambda v: tuple(int(n) for n in v.split('.') if n.isdigit()))
+        data_path = os.path.join(versions_dir, latest)
+    else:
+        data_path = os.path.join(script_dir, 'output')
+    print(f"Reading extracted data from {data_path}")
     output_path = os.path.join(script_dir, '..', 'frontend', 'public', 'icons')
 
     # Target size (can be changed via argument)

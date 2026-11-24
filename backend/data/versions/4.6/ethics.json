@@ -1,0 +1,605 @@
+[
+  {
+    "id": "ethic_absolute_authoritarian",
+    "name": "Absolute Authoritarian",
+    "description": "The will of leadership is law, and freedom flows from obedience. History has shown that only a firm grip can steer society toward greatness. To question rule is to invite ruin; order demands that dissent be silenced.",
+    "cost": 3,
+    "category": "col",
+    "category_value": 0,
+    "use_for_pops": false,
+    "fanatic_variant": "ethic_fanatic_authoritarian",
+    "regular_variant": "ethic_authoritarian",
+    "tags": [
+      "ETHIC_ALLOWS_CRUSHING",
+      "ETHIC_ALLOWS_STRATIFIED_SOCIETY",
+      "ETHIC_ALLOWS_SLAVERY",
+      "ETHIC_ONLY_AUTOCRACY"
+    ],
+    "effects": "Monthly Influence: +1.5; Job Efficiency for Workers: +15%",
+    "modifier": {
+      "country_ethic_influence_produces_add": 1.5,
+      "pop_cat_worker_bonus_workforce_mult": 0.15,
+      "add_attunement_the_instrument_of_desire": "@ethic_attunement4"
+    },
+    "random_weight": 0
+  },
+  {
+    "id": "ethic_fanatic_authoritarian",
+    "name": "Fanatic Authoritarian",
+    "description": "A single voice, a single throne, a single state. It is the solemn duty of the masses to obey those enlightened few who have been charged with the great responsibility of leadership.",
+    "cost": 2,
+    "category": "col",
+    "category_value": 1,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "ethic_authoritarian",
+    "tags": [
+      "ETHIC_ALLOWS_STRATIFIED_SOCIETY",
+      "ETHIC_ALLOWS_SLAVERY",
+      "ETHIC_ONLY_AUTOCRACY"
+    ],
+    "effects": "Monthly Influence: +1; Job Efficiency for Workers: +10%",
+    "modifier": {
+      "country_ethic_influence_produces_add": 1,
+      "pop_cat_worker_bonus_workforce_mult": 0.1,
+      "add_attunement_the_instrument_of_desire": "@ethic_attunement2"
+    },
+    "random_weight": 150
+  },
+  {
+    "id": "ethic_authoritarian",
+    "name": "Authoritarian",
+    "description": "A strong, guiding hand is essential to the success of any civilization - the alternative would be anarchy and chaos. It is the duty of the state to steer its citizens towards the paths that are the most productive.",
+    "cost": 1,
+    "category": "col",
+    "category_value": 2,
+    "use_for_pops": true,
+    "fanatic_variant": "ethic_fanatic_authoritarian",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_ALLOWS_STRATIFIED_SOCIETY",
+      "ETHIC_ALLOWS_SLAVERY",
+      "ETHIC_NEVER_DEMOCRACY"
+    ],
+    "effects": "Monthly Influence: +0.5; Job Efficiency for Workers: +5%",
+    "modifier": {
+      "country_ethic_influence_produces_add": 0.5,
+      "pop_cat_worker_bonus_workforce_mult": 0.05,
+      "add_attunement_the_instrument_of_desire": "@ethic_attunement1"
+    },
+    "random_weight": 100
+  },
+  {
+    "id": "ethic_absolute_egalitarian",
+    "name": "Absolute Egalitarian",
+    "description": "Equality is the highest virtue, and our commitment to its achievement is unwavering. Everyone within our society must be given every opportunity to thrive. We must forever guard against anything, or anyone, that would threaten this fundamental principle.",
+    "cost": 3,
+    "category": "col",
+    "category_value": 6,
+    "use_for_pops": false,
+    "fanatic_variant": "ethic_fanatic_egalitarian",
+    "regular_variant": "ethic_egalitarian",
+    "tags": [
+      "ETHIC_ONLY_DEMOCRACY",
+      "ETHIC_ALLOWS_UTOPIA"
+    ],
+    "effects": "Faction Resource Output: +45%; Job Efficiency for Specialists: +15%; Unity Produced per 100 Civilians: +1",
+    "modifier": {
+      "pop_factions_produces_mult": 0.45,
+      "pop_cat_specialist_bonus_workforce_mult": 0.15,
+      "planet_civilians_unity_produces_add": 1,
+      "add_attunement_the_composer_of_strands": "@ethic_attunement4"
+    },
+    "random_weight": 0
+  },
+  {
+    "id": "ethic_fanatic_egalitarian",
+    "name": "Fanatic Egalitarian",
+    "description": "Beware always those who would be despots, under the false presumption that their desires and agendas are somehow more imperative than those of their fellows. A society that does not see to the needs and rights of all of its members is not a society - it is a crime.",
+    "cost": 2,
+    "category": "col",
+    "category_value": 5,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "ethic_egalitarian",
+    "tags": [
+      "ETHIC_ONLY_DEMOCRACY",
+      "ETHIC_ALLOWS_UTOPIA"
+    ],
+    "effects": "Faction Resource Output: +30%; Job Efficiency for Specialists: +10%",
+    "modifier": {
+      "pop_factions_produces_mult": 0.3,
+      "pop_cat_specialist_bonus_workforce_mult": 0.1,
+      "add_attunement_the_composer_of_strands": "@ethic_attunement2"
+    },
+    "random_weight": 150
+  },
+  {
+    "id": "ethic_egalitarian",
+    "name": "Egalitarian",
+    "description": "Any society that does not embrace equality between its members - where an individual can rise to any position with enough hard work - is not only deeply unfair, but ultimately counterproductive.",
+    "cost": 1,
+    "category": "col",
+    "category_value": 4,
+    "use_for_pops": true,
+    "fanatic_variant": "ethic_fanatic_egalitarian",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_NEVER_AUTOCRACY",
+      "ETHIC_ALLOWS_UTOPIA"
+    ],
+    "effects": "Faction Resource Output: +15%; Job Efficiency for Specialists: +5%",
+    "modifier": {
+      "pop_factions_produces_mult": 0.15,
+      "pop_cat_specialist_bonus_workforce_mult": 0.05,
+      "add_attunement_the_composer_of_strands": "@ethic_attunement1"
+    },
+    "random_weight": 100
+  },
+  {
+    "id": "ethic_absolute_xenophobe",
+    "name": "Absolute Xenophobe",
+    "description": "Time has proven the wisdom of our aversion to the Xeno. By standing apart from alien entanglements, our society remains uncorrupted by their dangerous machinations. One truth must guide us: strength through self-sufficiency.",
+    "cost": 3,
+    "category": "xen",
+    "category_value": 0,
+    "use_for_pops": false,
+    "fanatic_variant": "ethic_fanatic_xenophobe",
+    "regular_variant": "ethic_xenophobe",
+    "tags": [
+      "ETHIC_ALLOWS_PURGE",
+      "ETHIC_ALLOWS_SLAVERY",
+      "ETHIC_ALLOWS_NATIVE_SUPREMACY",
+      "ETHIC_REDUCED_DIPLOMACY",
+      "ETHIC_NEVER_ALIEN_CITIZENSHIP",
+      "ETHIC_NEVER_ALIEN_MILITARY_SERVICE",
+      "ETHIC_NO_REFUGEES"
+    ],
+    "effects": "Pop Growth (or Assembly) Speed: +30%; Refugee Attraction: -45%",
+    "modifier": {
+      "founder_species_growth_mult": 0.3,
+      "add_attunement_the_eater_of_worlds": "@ethic_attunement4",
+      "refugee_attraction": -0.45
+    },
+    "random_weight": 0
+  },
+  {
+    "id": "ethic_fanatic_xenophobe",
+    "name": "Fanatic Xenophobe",
+    "description": "Any alien influence must be ruthlessly quashed. Only by staying pure, and true to ourselves and the planet that gave us life can we guard against insidious Xeno plots. Even mastery over the Alien might not be enough to guarantee our own safety...",
+    "cost": 2,
+    "category": "xen",
+    "category_value": 1,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "ethic_xenophobe",
+    "tags": [
+      "ETHIC_ALLOWS_PURGE",
+      "ETHIC_ALLOWS_SLAVERY",
+      "ETHIC_REDUCED_DIPLOMACY",
+      "ETHIC_NEVER_ALIEN_CITIZENSHIP",
+      "ETHIC_NEVER_ALIEN_MILITARY_SERVICE",
+      "ETHIC_NO_REFUGEES"
+    ],
+    "effects": "Pop Growth (or Assembly) Speed: +20%; Refugee Attraction: -30%",
+    "modifier": {
+      "founder_species_growth_mult": 0.2,
+      "add_attunement_the_eater_of_worlds": "@ethic_attunement2",
+      "refugee_attraction": -0.3
+    },
+    "random_weight": 150
+  },
+  {
+    "id": "ethic_xenophobe",
+    "name": "Xenophobe",
+    "description": "The stakes could not be higher as we reach into the vast uncharted expanses of the galaxy, for we are gambling with the very survival of our species! Never trust the alien; its false smile hides an unknowable mind...",
+    "cost": 1,
+    "category": "xen",
+    "category_value": 2,
+    "use_for_pops": true,
+    "fanatic_variant": "ethic_fanatic_xenophobe",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_ALLOWS_PURGE",
+      "ETHIC_ALLOWS_SLAVERY",
+      "ETHIC_REDUCED_DIPLOMACY",
+      "ETHIC_NEVER_ALIEN_CITIZENSHIP",
+      "ETHIC_NEVER_ALIEN_MILITARY_SERVICE",
+      "ETHIC_NO_REFUGEES"
+    ],
+    "effects": "Pop Growth (or Assembly) Speed: +10%; Refugee Attraction: -15%",
+    "modifier": {
+      "founder_species_growth_mult": 0.1,
+      "add_attunement_the_eater_of_worlds": "@ethic_attunement1",
+      "refugee_attraction": -0.15
+    },
+    "random_weight": 100
+  },
+  {
+    "id": "ethic_absolute_xenophile",
+    "name": "Absolute Xenophile",
+    "description": "Our long journey into the cosmos has taught us one thing above all else: to reach our highest potential, we must engage the unknown with open minds. A flourishing society draws strength from diversity and cooperation. Left in isolation, we wither.",
+    "cost": 3,
+    "category": "xen",
+    "category_value": 6,
+    "use_for_pops": false,
+    "fanatic_variant": "ethic_fanatic_xenophile",
+    "regular_variant": "ethic_xenophile",
+    "tags": [
+      "ETHIC_IMPROVED_DIPLOMACY",
+      "ETHIC_ALWAYS_REFUGEES",
+      "ETHIC_DISALLOWS_SLAVERY",
+      "ETHIC_DISALLOWS_DISPLACE"
+    ],
+    "effects": "Trade from Jobs: +30%; Envoys: +3; Refugee Attraction: +45%",
+    "modifier": {
+      "planet_jobs_trade_produces_mult": 0.3,
+      "envoys_add": 3,
+      "show_only_custom_tooltip": false,
+      "add_attunement_the_cradle_of_souls": "@ethic_attunement4",
+      "custom_tooltip": [
+        "abs_xenophile_insight_gain",
+        "abs_xenophile_council_species_councilor_skill"
+      ],
+      "refugee_attraction": 0.45
+    },
+    "random_weight": 0
+  },
+  {
+    "id": "ethic_fanatic_xenophile",
+    "name": "Fanatic Xenophile",
+    "description": "If there ever was such a thing as an absolute moral imperative, it would be to explore the cosmos and embrace all within it. We were never meant to journey alone.",
+    "cost": 2,
+    "category": "xen",
+    "category_value": 5,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "ethic_xenophile",
+    "tags": [
+      "ETHIC_IMPROVED_DIPLOMACY",
+      "ETHIC_ALWAYS_REFUGEES",
+      "ETHIC_DISALLOWS_SLAVERY",
+      "ETHIC_DISALLOWS_DISPLACE"
+    ],
+    "effects": "Trade from Jobs: +20%; Envoys: +2; Refugee Attraction: +30%",
+    "modifier": {
+      "planet_jobs_trade_produces_mult": 0.2,
+      "envoys_add": 2,
+      "add_attunement_the_cradle_of_souls": "@ethic_attunement2",
+      "show_only_custom_tooltip": false,
+      "custom_tooltip": "fan_xenophile_insight_gain",
+      "refugee_attraction": 0.3
+    },
+    "random_weight": 100
+  },
+  {
+    "id": "ethic_xenophile",
+    "name": "Xenophile",
+    "description": "There exists, in all of us, a deep-seated fascination for the unknown. An adventurous spirit that rejects the familiar and glories in the unfamiliar, whatever - or whomever - it may be.",
+    "cost": 1,
+    "category": "xen",
+    "category_value": 4,
+    "use_for_pops": true,
+    "fanatic_variant": "ethic_fanatic_xenophile",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_IMPROVED_DIPLOMACY",
+      "ETHIC_ALWAYS_REFUGEES",
+      "ETHIC_DISALLOWS_SLAVERY",
+      "ETHIC_DISALLOWS_DISPLACE"
+    ],
+    "effects": "Trade from Jobs: +10%; Envoys: +1; Refugee Attraction: +15%",
+    "modifier": {
+      "planet_jobs_trade_produces_mult": 0.1,
+      "envoys_add": 1,
+      "add_attunement_the_cradle_of_souls": "@ethic_attunement1",
+      "show_only_custom_tooltip": false,
+      "custom_tooltip": "xenophile_insight_gain",
+      "refugee_attraction": 0.15
+    },
+    "random_weight": 66
+  },
+  {
+    "id": "ethic_absolute_militarist",
+    "name": "Absolute Militarist",
+    "description": "Might is the fulcrum of our civilization. Strength ensures survival, and projected force fosters a deathless glory. All that opposes us shall be settled in the arena of war.",
+    "cost": 3,
+    "category": "mil",
+    "category_value": 0,
+    "use_for_pops": false,
+    "fanatic_variant": "ethic_fanatic_militarist",
+    "regular_variant": "ethic_militarist",
+    "tags": [
+      "ETHIC_ALLOW_NO_RETREAT"
+    ],
+    "effects": "Ship Fire Rate: +30%; War Exhaustion Gain: -50%; Naval Capacity: +10%",
+    "modifier": {
+      "ship_fire_rate_mult": 0.3,
+      "country_war_exhaustion_mult": -0.5,
+      "country_naval_cap_mult": 0.1,
+      "add_attunement_the_eater_of_worlds": "@ethic_attunement4"
+    },
+    "random_weight": 0
+  },
+  {
+    "id": "ethic_fanatic_militarist",
+    "name": "Fanatic Militarist",
+    "description": "The ability to project force is of paramount importance. The only way to preserve our way of life is to make sure everyone shares it; willingly or not...",
+    "cost": 2,
+    "category": "mil",
+    "category_value": 1,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "ethic_militarist",
+    "tags": [
+      "ETHIC_ALLOW_NO_RETREAT"
+    ],
+    "effects": "Ship Fire Rate: +20%",
+    "modifier": {
+      "ship_fire_rate_mult": 0.2,
+      "add_attunement_the_eater_of_worlds": "@ethic_attunement2"
+    },
+    "random_weight": 250
+  },
+  {
+    "id": "ethic_militarist",
+    "name": "Militarist",
+    "description": "The only true virtues are courage and discipline, and channeled properly they can overcome any obstacle. Therein lies true strength; force withheld, a promise made.",
+    "cost": 1,
+    "category": "mil",
+    "category_value": 2,
+    "use_for_pops": true,
+    "fanatic_variant": "ethic_fanatic_militarist",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_ALLOW_NO_RETREAT"
+    ],
+    "effects": "Ship Fire Rate: +10%",
+    "modifier": {
+      "ship_fire_rate_mult": 0.1,
+      "add_attunement_the_eater_of_worlds": "@ethic_attunement1"
+    },
+    "random_weight": 150
+  },
+  {
+    "id": "ethic_absolute_pacifist",
+    "name": "Absolute Pacifist",
+    "description": "War should exist only in historical logs. Such failures of reason and thought must never again darken this cosmos. Our most meaningful contribution to this universe will be the gift of peace for all.",
+    "cost": 3,
+    "category": "mil",
+    "category_value": 6,
+    "use_for_pops": false,
+    "fanatic_variant": "ethic_fanatic_pacifist",
+    "regular_variant": "ethic_pacifist",
+    "tags": [
+      "ETHIC_DISALLOW_OFFENSIVE_WARS",
+      "ETHIC_DISALLOW_FULL_BOMBARDMENT"
+    ],
+    "effects": "Empire Size from Pops: -30%; Stability: +15; The Eater of Worlds Attunement: -45%",
+    "modifier": {
+      "empire_size_pops_mult": -0.3,
+      "planet_stability_add": 15,
+      "add_attunement_the_cradle_of_souls": "@ethic_attunement4",
+      "the_eater_of_worlds_attunement_mult": -0.45,
+      "show_only_custom_tooltip": false,
+      "custom_tooltip": "abs_pacifist_stability_job_output"
+    },
+    "random_weight": 0
+  },
+  {
+    "id": "ethic_fanatic_pacifist",
+    "name": "Fanatic Pacifist",
+    "description": "As civilized beings, the end of all armed conflict should be our primary concern. War is an evolutionary dead end, as futile as it is wasteful.",
+    "cost": 2,
+    "category": "mil",
+    "category_value": 5,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "ethic_pacifist",
+    "tags": [
+      "ETHIC_DISALLOW_OFFENSIVE_WARS",
+      "ETHIC_DISALLOW_FULL_BOMBARDMENT"
+    ],
+    "effects": "Empire Size from Pops: -20%; Stability: +10; The Eater of Worlds Attunement: -35%",
+    "modifier": {
+      "empire_size_pops_mult": -0.2,
+      "planet_stability_add": 10,
+      "add_attunement_the_cradle_of_souls": "@ethic_attunement2",
+      "the_eater_of_worlds_attunement_mult": -0.35
+    },
+    "random_weight": 33
+  },
+  {
+    "id": "ethic_pacifist",
+    "name": "Pacifist",
+    "description": "Conflict as a means to an end is a ridiculous concept. It is by nature destructive, destroying what was to be obtained or giving room to grow that which was to be destroyed.",
+    "cost": 1,
+    "category": "mil",
+    "category_value": 4,
+    "use_for_pops": true,
+    "fanatic_variant": "ethic_fanatic_pacifist",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_DISALLOW_CONQUEST_WARS",
+      "ETHIC_DISALLOW_FULL_BOMBARDMENT"
+    ],
+    "effects": "Empire Size from Pops: -10%; Stability: +5; The Eater of Worlds Attunement: -25%",
+    "modifier": {
+      "empire_size_pops_mult": -0.1,
+      "planet_stability_add": 5,
+      "add_attunement_the_cradle_of_souls": "@ethic_attunement1",
+      "the_eater_of_worlds_attunement_mult": -0.25
+    },
+    "random_weight": 66
+  },
+  {
+    "id": "ethic_absolute_spiritualist",
+    "name": "Absolute Spiritualist",
+    "description": "The pinnacle of being is transcendent alignment with the cosmos. Our society is most perfect when spirit infuses all things, and our consciousness becomes one with existence itself. We can only pity those who cling to the fleeting illusions of material 'reality'.",
+    "cost": 3,
+    "category": "spi",
+    "category_value": 0,
+    "use_for_pops": false,
+    "fanatic_variant": "ethic_fanatic_spiritualist",
+    "regular_variant": "ethic_spiritualist",
+    "tags": [
+      "ETHIC_ALLOWS_TEMPLE",
+      "ETHIC_DISALLOW_AI"
+    ],
+    "effects": "Monthly Unity: +30%; Edict Upkeep: -30%; Edict Cost: -30%; Resources Produced from Bureaucrats: +30%; Resources Produced from Job High Priest High Priests: +30%",
+    "modifier": {
+      "country_unity_produces_mult": 0.3,
+      "edicts_upkeep_mult": -0.3,
+      "edicts_cost_mult": -0.3,
+      "planet_bureaucrats_produces_mult": 0.3,
+      "planet_high_priests_produces_mult": 0.3,
+      "add_attunement_the_composer_of_strands": "@ethic_attunement4"
+    },
+    "random_weight": 0
+  },
+  {
+    "id": "ethic_fanatic_spiritualist",
+    "name": "Fanatic Spiritualist",
+    "description": "Our science has proved that Consciousness begets reality. We regard with patience the childlike efforts of those who delude themselves it is the other way around, as they play with their blocks of \"hard matter.\"",
+    "cost": 2,
+    "category": "spi",
+    "category_value": 1,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "ethic_spiritualist",
+    "tags": [
+      "ETHIC_ALLOWS_TEMPLE",
+      "ETHIC_DISALLOW_AI"
+    ],
+    "effects": "Monthly Unity: +20%; Edict Upkeep: -20%; Edict Cost: -20%",
+    "modifier": {
+      "country_unity_produces_mult": 0.2,
+      "edicts_upkeep_mult": -0.2,
+      "edicts_cost_mult": -0.2,
+      "add_attunement_the_composer_of_strands": "@ethic_attunement2"
+    },
+    "random_weight": 150
+  },
+  {
+    "id": "ethic_spiritualist",
+    "name": "Spiritualist",
+    "description": "There are those who think it behooves us to remember how tiny we are, how pointless our lives are in this vast uncaring universe... What nonsense! The only truth we can ever know is that of our own existence. The universe - in all its apparent glory - is but a dream we all happen to share.",
+    "cost": 1,
+    "category": "spi",
+    "category_value": 2,
+    "use_for_pops": true,
+    "fanatic_variant": "ethic_fanatic_spiritualist",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_ALLOWS_TEMPLE",
+      "ETHIC_DISALLOW_AI"
+    ],
+    "effects": "Monthly Unity: +10%; Edict Upkeep: -10%; Edict Cost: -10%",
+    "modifier": {
+      "country_unity_produces_mult": 0.1,
+      "edicts_upkeep_mult": -0.1,
+      "edicts_cost_mult": -0.1,
+      "add_attunement_the_composer_of_strands": "@ethic_attunement1"
+    },
+    "random_weight": 100
+  },
+  {
+    "id": "ethic_absolute_materialist",
+    "name": "Absolute Materialist",
+    "description": "Research and experience has vindicated our theories: there exist no supernatural forces that affect reality, let alone govern it. The ideal society is one in which all decisions and principles are based on material evidence, free from ambivalence and sentimentality. Objectivity must be our guide.",
+    "cost": 3,
+    "category": "spi",
+    "category_value": 6,
+    "use_for_pops": false,
+    "fanatic_variant": "ethic_fanatic_materialist",
+    "regular_variant": "ethic_materialist",
+    "tags": [
+      "ETHIC_ALLOWS_ACADEMIC_PRIVILEGE",
+      "ETHIC_DISALLOW_RESEARCH_RESTRICTION",
+      "ETHIC_DISALLOW_BAN_AI",
+      "ETHIC_DISALLOW_BAN_ROBOTS"
+    ],
+    "effects": "Robot Upkeep: -30%; All Technology Research Speed: +15%; Rare/Dangerous Research Alternatives: +1",
+    "modifier": {
+      "planet_pops_robotics_upkeep_mult": -0.3,
+      "all_technology_research_speed": 0.15,
+      "guaranteed_rare_or_dangerous_tech_add": 1,
+      "add_attunement_the_instrument_of_desire": "@ethic_attunement4"
+    },
+    "random_weight": 0
+  },
+  {
+    "id": "ethic_fanatic_materialist",
+    "name": "Fanatic Materialist",
+    "description": "Although it hurts, we must grow up and put aside our outdated notions of morality. There is no \"divine spark\" granting special value to a living mind. No object has any intrinsic value apart from what we choose to grant it. Let us embrace the freedom of certitude, and achieve maximum efficiency in all things!",
+    "cost": 2,
+    "category": "spi",
+    "category_value": 5,
+    "use_for_pops": false,
+    "fanatic_variant": "",
+    "regular_variant": "ethic_materialist",
+    "tags": [
+      "ETHIC_ALLOWS_ACADEMIC_PRIVILEGE",
+      "ETHIC_DISALLOW_BAN_AI",
+      "ETHIC_DISALLOW_BAN_ROBOTS"
+    ],
+    "effects": "Robot Upkeep: -20%; All Technology Research Speed: +10%",
+    "modifier": {
+      "planet_pops_robotics_upkeep_mult": -0.2,
+      "all_technology_research_speed": 0.1,
+      "add_attunement_the_instrument_of_desire": "@ethic_attunement2"
+    },
+    "random_weight": 150
+  },
+  {
+    "id": "ethic_materialist",
+    "name": "Materialist",
+    "description": "As we reach for the stars, we must put away childish things; gods, spirits and other phantasms of the brain. Reality is cruel and unforgiving, yet we must steel ourselves and secure the survival of our race through the unflinching pursuit of science and technology.",
+    "cost": 1,
+    "category": "spi",
+    "category_value": 4,
+    "use_for_pops": true,
+    "fanatic_variant": "ethic_fanatic_materialist",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_ALLOWS_ACADEMIC_PRIVILEGE",
+      "ETHIC_DISALLOW_BAN_AI",
+      "ETHIC_DISALLOW_BAN_ROBOTS"
+    ],
+    "effects": "Robot Upkeep: -10%; All Technology Research Speed: +5%",
+    "modifier": {
+      "planet_pops_robotics_upkeep_mult": -0.1,
+      "all_technology_research_speed": 0.05,
+      "add_attunement_the_instrument_of_desire": "@ethic_attunement1"
+    },
+    "random_weight": 100
+  },
+  {
+    "id": "ethic_gestalt_consciousness",
+    "name": "Gestalt Consciousness",
+    "description": "We reach into the void. The vast expanse becomes us.",
+    "cost": 3,
+    "category": "hive",
+    "category_value": 0,
+    "use_for_pops": true,
+    "fanatic_variant": "",
+    "regular_variant": "",
+    "tags": [
+      "ETHIC_GESTALT_CONSCIOUSNESS_NO_TUTORIAL",
+      "ETHIC_GESTALT_CONSCIOUSNESS_AUTHORITY",
+      "ETHIC_GESTALT_CONSCIOUSNESS_IMMORTAL_RULER",
+      "ETHIC_GESTALT_CONSCIOUSNESS_NO_FACTIONS",
+      "ETHIC_GESTALT_CONSCIOUSNESS_NO_CONSUMER_GOODS",
+      "ETHIC_GESTALT_CONSCIOUSNESS_DOMESTIC_POP_SURVIVAL",
+      "ETHIC_ALLOW_NO_RETREAT"
+    ],
+    "effects": "War Exhaustion Gain: -20%; Monthly Influence: +1; Encryption: +2",
+    "modifier": {
+      "country_war_exhaustion_mult": -0.2,
+      "country_ethic_influence_produces_add": 1,
+      "intel_encryption_add": 2,
+      "add_attunement_the_cradle_of_souls": "@ethic_attunement3"
+    },
+    "random_weight": 300
+  }
+]

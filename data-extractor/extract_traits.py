@@ -12,39 +12,13 @@ from pathlib import Path
 from typing import Dict, List, Any
 from paradox_parser import parse_stellaris_file
 from localization_parser import load_all_localizations, get_localized_text, clean_localized_text
+from modifier_formatter import format_modifier_effects
 
 
 def extract_modifier_effects(modifier_data: Any) -> str:
-    """
-    Extract and format modifier effects into readable text
+    """Readable modifier text, as shown in game (see modifier_formatter.py)"""
+    return format_modifier_effects(modifier_data)
 
-    Args:
-        modifier_data: The modifier object from the trait
-
-    Returns:
-        Formatted string describing the effects
-    """
-    if not modifier_data or not isinstance(modifier_data, dict):
-        return ""
-
-    effects = []
-    for key, value in modifier_data.items():
-        if isinstance(value, (int, float)):
-            # Format percentage modifiers
-            if '_mult' in key or 'speed' in key:
-                percentage = value * 100
-                sign = '+' if percentage > 0 else ''
-                effects.append(f"{key}: {sign}{percentage}%")
-            else:
-                sign = '+' if value > 0 else ''
-                effects.append(f"{key}: {sign}{value}")
-        elif isinstance(value, dict):
-            # Nested modifiers
-            nested_effects = extract_modifier_effects(value)
-            if nested_effects:
-                effects.append(nested_effects)
-
-    return "; ".join(effects)
 
 
 def extract_triggered_modifiers(trait_data: Dict[str, Any]) -> str:
@@ -292,7 +266,8 @@ def extract_all_traits(stellaris_path: str, output_file: str = "output/traits.js
         "15_unplugged_traits.txt",
         "16_infernals_traits.txt",
         "17_shroud_species_traits.txt",
-        "18_nomads_species_traits.txt"
+        "18_nomads_species_traits.txt",
+        "19_forceofwill_species_traits.txt"
     ]
 
     for filename in species_trait_files:

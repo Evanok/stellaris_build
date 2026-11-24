@@ -182,9 +182,9 @@ The project uses npm workspaces with three main parts:
 - Species traits with point/pick validation and origin bonuses
 - Origins with trait bonuses
 - Starting ruler traits (with origin/ethics filtering)
-- Ethics with point limits and compatibility checks
+- Ethics with point limits and compatibility checks (one ethic per axis), plus an optional Absolute ethic (`absolute_ethic`, 4.6 Willpower: the Absolute form of the build's fanatic ethic, adopted later in game - shown on the build page, never exported)
 - Authorities with ethics requirements
-- Civics with conditional filtering (potential/possible): 2 at creation, plus an optional third civic (`third_civic`, unlocked later in game - shown on the build page, never exported, still rule-checked with all 3 civics)
+- Civics with conditional filtering (potential/possible): 2 at creation (+ the origin's `country_government_civic_points_add`: 3 with Great Mosaic), plus an optional "later" civic (`third_civic`, the Galactic Administration tech slot - shown on the build page, never exported, still rule-checked with all civics)
 - Description (5k chars) and optional "How to Play" guide (`guide`, 20k chars), both markdown, length enforced while typing (`maxLength` + counter)
 - Recommended Ascension Perks with ordering
 - Recommended Tradition Trees with ordering
@@ -338,6 +338,8 @@ Non-versioned files (still in `backend/data/`):
 - Loads 69,867 English localization entries from `localisation/english/*.yml`
 - Recursively resolves variable references like `$civic_name$` (up to 5 iterations)
 - Cleans markup (removes color codes `§Y`, icons `£energy£`, etc.)
+- Resolves scripted variables (`$@var|fmt$`, from every `@name = value` under `common/`), job references (`[foundry.GetNamePlural]`) and scripted localization functions (`[GetTelepathPlural]`, from `common/scripted_loc/`, default variant = what a standard empire sees); prints any function it had to guess from its name
+- Modifier blocks are turned into in-game text by `modifier_formatter.py` (shared by every extractor): label from the `mod_<key>` localization, value as a percentage for `_mult`/`_perc` and the `_gain`/`_speed`/`_happiness`... families, a plain number for `_add`, otherwise by value (fraction = %, whole = number)
 - Handles multiple YAML formats: `key: "value"`, `key:0 "value"`, `key:1 "value"`
 
 **Data Filtering:**
@@ -442,12 +444,15 @@ EOF
     each must return a non-empty payload, and an out-of-range version (`?version=4.9`) must fall back
     to the latest rather than 404.
 12. `cd backend && node check_build_rules.js audit` — the violation count should stay in line with the
-    previous run (34/70 as of 2026-10-17, excluding throwaway test builds); a sudden jump means the new rules broke the evaluator, not the builds.
+    previous run (33/75 as of 2026-11-23, 4.6 upgrade, excluding throwaway test builds); a sudden jump means the new rules broke the evaluator, not the builds.
 13. Icons: a patch with no new civics/traits/origins needs no icon run. If there ARE new IDs, run
     `data-extractor/extract_icons.py` (generates both the 32px build-page PNGs and the 20px
     `icons/home/*.webp` used by home cards, plus the planet icons in `icons/planets/` and the shipset
-    previews in `icons/shipsets/` - re-render those when a patch adds a shipset). Sanity-check that every `icon` path in the new JSON
-    resolves under `frontend/public/`.
+    previews in `icons/shipsets/` - re-render those when a patch adds a shipset). It reads the latest
+    `output/versions/X.Y/` (pass the version as 3rd argument to pick another); before 2026-11-23 it read
+    the stale top-level `output/*.json` and silently skipped every new item. Icons are resolved by ID
+    (`icons/civics/<id>.png`, ...), the JSON `icon` field is usually null: check that a file exists for
+    each new ID.
 14. Deploy: `npm run build -w frontend` then `pm2 restart stellaris-build` (see Production Deployment).
 
 **When to Re-Extract:**
@@ -643,7 +648,7 @@ After making changes to game data:
 
 ## Known Bugs / TODO
 
-- **Scripted variables not resolved in effects text**: Some civics/traits show raw Paradox variable references like `$@civic_tankbound_job_upkeep|0=-%$` instead of numeric values. Fix: `localization_parser.py` needs to load `common/scripted_variables/` and resolve `$@var|format$` syntax.
+- **Data version 4.2 still has the pre-2026-11-23 texts** (also used for 4.0/4.1 builds; deliberately not re-extracted, ~29% of builds as of 2026-11-23): raw modifier keys (`pop_happiness: +0.1`), unresolved `$@var|fmt$`, `[job.GetNamePlural]`, and "individuals" in place of engine localization functions. Fixed in the extractor (`modifier_formatter.py`, `localization_parser.py`) and re-extracted for 4.6, 4.5 (from 4.5.4), 4.4 (from 4.4.6) and 4.3 (from 4.3.7): re-extracting an older version needs that game version installed (Steam > Properties > Betas).
 - **`BuildForm.tsx` feels sluggish in dev mode since the React 19 upgrade (2026-08-18)**: measured click-to-render on a trait checkbox (442 checkboxes on the create-build page) at ~400ms in dev under React 19, vs ~125ms under React 18 and ~100ms in the production build — confirmed by directly A/B-swapping React versions locally, not just suspected. Root cause: React 19's dev build does more diagnostic work per render than React 18's, which compounds with `StrictMode`'s double-render and the fact that toggling one checkbox re-renders all ~442 (no memoization). **Production is unaffected** (dev-only diagnostics are stripped by `vite build`). Fix, if it's worth doing: memoize the trait/civic/ethic checkbox rows in `BuildForm.tsx` (`React.memo` + stable callbacks) so a single toggle doesn't re-render the whole list — would help both the dev experience and prod on slower devices, but it's a real refactor of a ~2500-line file, not attempted yet.
 
 ## Future Development

@@ -264,11 +264,14 @@ const BASE_MAX_TRAIT_POINTS = 2;
 const BASE_MAX_TRAIT_COUNT = 5;
 const MAX_ETHICS_POINTS = 3;
 // GOVERNMENT_CIVIC_POINTS_BASE in common/defines/00_defines.txt - confirmed
-// in-game. A handful of narrative/mid-game civics (Great Khan's Vision,
-// Galactic Sovereign, Psionic Sovereign) grant +1 via
-// country_government_civic_points_add, but those aren't real creation-time
-// picks, so this stays a flat 2.
-const MAX_CIVIC_SLOTS = 2;
+// in-game. An origin can add starting slots through its modifier
+// country_government_civic_points_add (Great Mosaic, 4.6: +1), see
+// getMaxCivicSlots(). A handful of narrative/mid-game civics (Great Khan's
+// Vision, Galactic Sovereign, Psionic Sovereign) also grant +1, but those
+// aren't creation-time picks. The optional "later" civic is the slot from the
+// Galactic Administration technology.
+const BASE_CIVIC_SLOTS = 2;
+const ordinal = (n: number) => `${n}${n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th'}`;
 // Same limits as validateBuildData() in backend/security.js
 const DESCRIPTION_MAX_LENGTH = 5000;
 const GUIDE_MAX_LENGTH = 20000;
@@ -284,12 +287,16 @@ const CharCounter: React.FC<{ length: number; max: number }> = ({ length, max })
 // A third civic slot unlocks during the game: builds can recommend one, shown on
 // the build page but never exported (the game rejects 3 civics at creation)
 
+// Absolute ethics (4.6 Willpower), adopted in game once an Ideology is strong enough
+const isAbsoluteEthic = (id: string) => typeof id === 'string' && id.startsWith('ethic_absolute_');
+
 // Nomads DLC was introduced in 4.4 "Pegasus"
 const supportsNomadic = (version: string) => parseFloat(version) >= 4.4;
 
 // Stellaris game versions
 const GAME_VERSIONS = [
-  { value: '4.5', label: '4.5 "Cygnus" (Latest)' },
+  { value: '4.6', label: '4.6 "Corona Borealis" (Latest)' },
+  { value: '4.5', label: '4.5 "Cygnus"' },
   { value: '4.4', label: '4.4 "Pegasus"' },
   { value: '4.3', label: '4.3 "Cetus"' },
   { value: '4.2', label: '4.2 "Corvus"' },
@@ -314,7 +321,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [guide, setGuide] = useState('');
-  const [game_version, setGameVersion] = useState('4.5');
+  const [game_version, setGameVersion] = useState('4.6');
   const [youtube_url, setYoutubeUrl] = useState('');
   const [source_url, setSourceUrl] = useState('');
   const [difficulty, setDifficulty] = useState<string>('');
@@ -339,6 +346,10 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
   // Ethics data from API
   const [allEthics, setAllEthics] = useState<Ethic[]>([]);
+  // Absolute ethics (4.6+), kept apart: never a starting ethic, only the
+  // optional "adopted in game" goal of a build with the matching fanatic ethic
+  const [absoluteEthics, setAbsoluteEthics] = useState<Ethic[]>([]);
+  const [absoluteEthic, setAbsoluteEthic] = useState('');
   const [selectedEthics, setSelectedEthics] = useState<string[]>([]);
   const [ethicsSearchQuery, setEthicsSearchQuery] = useState('');
 
@@ -503,7 +514,13 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       const uniquePerks = sanitizedPerks.filter((p: any) => { if (seenNames.has(p.name)) return false; seenNames.add(p.name); return true; });
       setAllAscensionPerks(uniquePerks);
 
+      // Absolute ethics (4.6 Willpower) are only reachable in game, never at
+      // empire creation: they are not starting ethics
+      setAbsoluteEthics(ethicsRaw
+        .filter((e: any) => isAbsoluteEthic(e.id))
+        .map((e: any) => ({ ...e, effects: typeof e.effects === 'string' ? e.effects : '', description: typeof e.description === 'string' ? e.description : '', tags: Array.isArray(e.tags) ? e.tags : [] })));
       const sanitizedEthics = ethicsRaw
+        .filter((e: any) => !isAbsoluteEthic(e.id))
         .map((e: any) => ({ ...e, effects: typeof e.effects === 'string' ? e.effects : '', description: typeof e.description === 'string' ? e.description : '', tags: Array.isArray(e.tags) ? e.tags : [], cost: typeof e.cost === 'number' ? e.cost : 1 }))
         .sort((a: any, b: any) => b.cost !== a.cost ? b.cost - a.cost : a.id.localeCompare(b.id));
       setAllEthics(sanitizedEthics);
@@ -593,14 +610,18 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       if (Array.isArray(initialData.ethics)) {
         setSelectedEthics(initialData.ethics.map((e: string) => e.trim()));
       }
+      if (typeof initialData.absolute_ethic === 'string') {
+        setAbsoluteEthic(initialData.absolute_ethic);
+      }
 
       // Handle civics (array of strings) - trim whitespace
       if (Array.isArray(initialData.civics)) {
         const civics = initialData.civics.map((c: string) => c.trim()).filter(Boolean);
-        // Builds published before 2026-08-10 could hold 3 starting civics: the
-        // extra one moves to the third civic slot, where the author can review it
-        setSelectedCivics(civics.slice(0, MAX_CIVIC_SLOTS));
-        setThirdCivic(initialData.third_civic || civics[MAX_CIVIC_SLOTS] || '');
+        // Builds published before 2026-08-10 could hold 3 starting civics: once
+        // the origins are loaded, any civic beyond the origin's starting slots
+        // moves to the "later" slot (see the normalization effect below)
+        setSelectedCivics(civics);
+        setThirdCivic(initialData.third_civic || '');
       } else if (initialData.third_civic) {
         setThirdCivic(initialData.third_civic);
       }
@@ -651,6 +672,23 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   };
 
   // Get origin bonuses for current species type
+  // Starting civic slots: 2, plus the origin's country_government_civic_points_add
+  const selectedOriginData = allOrigins.find(o => o.id === selectedOrigin);
+  const maxCivicSlots = BASE_CIVIC_SLOTS + (Number(selectedOriginData?.modifier?.country_government_civic_points_add) || 0);
+  const laterCivicLabel = ordinal(maxCivicSlots + 1);
+
+  // More starting civics than the origin allows (legacy 3-civic builds, an
+  // import, or switching away from Great Mosaic): the extra one moves to the
+  // "later" slot if it is free, otherwise it is dropped. Waits for the origins,
+  // or a Great Mosaic build being loaded would lose its 3rd starting civic.
+  useEffect(() => {
+    if (allOrigins.length === 0 || (selectedOrigin && !selectedOriginData)) return;
+    if (selectedCivics.length <= maxCivicSlots) return;
+    const extra = selectedCivics.slice(maxCivicSlots);
+    setSelectedCivics(selectedCivics.slice(0, maxCivicSlots));
+    if (!thirdCivic) setThirdCivic(extra[0]);
+  }, [allOrigins, selectedOrigin, selectedOriginData, selectedCivics, maxCivicSlots, thirdCivic]);
+
   const getOriginTraitBonuses = () => {
     if (!selectedOrigin) {
       return { pointsBonus: 0, picksBonus: 0 };
@@ -721,11 +759,17 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
   };
 
   const currentEthicsPoints = calculateEthicsPoints();
+
+  // The Absolute form of the selected fanatic ethic, if this game version has
+  // one. The stored choice only counts while it still matches (changing the
+  // fanatic ethic or the game version silently drops it from the payload).
+  const availableAbsoluteEthic = absoluteEthics.find(a => selectedEthics.includes(a.fanatic_variant));
+  const effectiveAbsoluteEthic = availableAbsoluteEthic && absoluteEthic === availableAbsoluteEthic.id ? absoluteEthic : '';
   const exceedsEthicsPoints = currentEthicsPoints > MAX_ETHICS_POINTS;
 
   // Homeworld planet rules (see utils/planetRules.ts). The planet is optional:
   // with no pick and nothing forcing one, every planet check below is skipped.
-  const selectedOriginData = allOrigins.find(o => o.id === selectedOrigin);
+  // (selectedOriginData is defined above, with the civic slots)
   const traitById: Record<string, Trait> = Object.fromEntries(allTraits.map(t => [t.id, t]));
   const planetLabel = (planetId: string) => allPlanetClasses.find(p => p.id === planetId)?.name || planetId;
   const speciesLabel = (classId: string) => allSpeciesClasses.find(sc => sc.id === classId)?.name || classId;
@@ -783,7 +827,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
     // Only check if at max slots (2 starting civics + the optional third one) -
     // no complex compatibility rules
-    if (selectedCivics.length >= MAX_CIVIC_SLOTS && thirdCivic) {
+    if (selectedCivics.length >= maxCivicSlots && thirdCivic) {
       return false;
     }
 
@@ -826,6 +870,12 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
     // Only check if selecting this ethic would exceed max points
     if (currentEthicsPoints + ethic.cost > MAX_ETHICS_POINTS) {
+      return false;
+    }
+
+    // One ethic per axis: the game rejects Xenophile + Fanatic Xenophile as
+    // well as Xenophile + Xenophobe (same `category`, e.g. "xen")
+    if (ethic.category && selectedEthics.some(id => allEthics.find(e => e.id === id)?.category === ethic.category)) {
       return false;
     }
 
@@ -1015,7 +1065,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
 
     // If selecting, check if it's allowed: starting slots first, then the third one
     if (canSelectCivic(civic)) {
-      if (selectedCivics.length < MAX_CIVIC_SLOTS) {
+      if (selectedCivics.length < maxCivicSlots) {
         setSelectedCivics(prev => [...prev, civicId]);
       } else {
         setThirdCivic(civicId);
@@ -1134,6 +1184,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       selectedSecondaryTraits,
       selectedOrigin,
       selectedEthics,
+      absoluteEthic,
       selectedAuthority,
       selectedCivics,
       thirdCivic,
@@ -1153,7 +1204,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setName(formData.name || '');
         setDescription(formData.description || '');
         setGuide(formData.guide || '');
-        setGameVersion(formData.game_version || '4.5');
+        setGameVersion(formData.game_version || '4.6');
         setYoutubeUrl(formData.youtube_url || '');
         setSourceUrl(formData.source_url || '');
         setDifficulty(formData.difficulty || '');
@@ -1165,6 +1216,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
         setSelectedSecondaryTraits(formData.selectedSecondaryTraits || []);
         setSelectedOrigin(formData.selectedOrigin || '');
         setSelectedEthics(formData.selectedEthics || []);
+        setAbsoluteEthic(formData.absoluteEthic || '');
         setSelectedAuthority(formData.selectedAuthority || '');
         setIsNomadic(!!formData.isNomadic);
         setArkType(formData.arkType || '');
@@ -1264,11 +1316,11 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       );
     };
 
-    // Double-check civic count independently of the live MAX_CIVIC_SLOTS
+    // Double-check civic count independently of the live maxCivicSlots
     // disable - matters for edit mode, where a build published before this
     // was fixed (2026-08-10, was flat 3) can still have 3 loaded in.
-    if (selectedCivics.length > MAX_CIVIC_SLOTS) {
-      warnings.push(`Civics: ${selectedCivics.length} selected, but the game only allows ${MAX_CIVIC_SLOTS} at empire creation`);
+    if (selectedCivics.length > maxCivicSlots) {
+      warnings.push(`Civics: ${selectedCivics.length} selected, but the game only allows ${maxCivicSlots} at empire creation`);
     }
 
     // Double-check the archetype trait budget independently of the live
@@ -1373,6 +1425,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
     secondary_traits: selectedSecondaryTraits.join(', '), // Convert array to comma-separated string
     origin: selectedOrigin,
     ethics: selectedEthics.join(', '), // Convert array to comma-separated string
+    absolute_ethic: effectiveAbsoluteEthic,
     authority: selectedAuthority,
     ascension_perks: selectedAscensionPerks.join(', '), // Convert array to comma-separated string
     traditions: selectedTraditions.join(', '), // Convert array to comma-separated string
@@ -1531,7 +1584,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       setName('');
       setDescription('');
       setGuide('');
-      setGameVersion('4.5'); // Reset to latest version
+      setGameVersion('4.6'); // Reset to latest version
       setYoutubeUrl('');
       setSourceUrl('');
       setDifficulty('');
@@ -1541,6 +1594,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
       setSelectedSecondaryTraits([]);
       setSelectedOrigin('');
       setSelectedEthics([]);
+      setAbsoluteEthic('');
       setSelectedAuthority('');
       setIsNomadic(false);
       setArkType('');
@@ -2442,6 +2496,49 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                 )}
               </div>
             </div>
+
+            {/* Absolute ethic (4.6 Willpower): optional goal adopted in game, never exported */}
+            {absoluteEthics.length > 0 && (
+              availableAbsoluteEthic ? (
+                <div
+                  className="card border-2 mt-2"
+                  style={{ borderColor: effectiveAbsoluteEthic ? '#e8a838' : '#6c757d', backgroundColor: effectiveAbsoluteEthic ? 'rgba(232, 168, 56, 0.08)' : undefined }}
+                >
+                  <div className="card-body p-3">
+                    <div className="form-check mb-0">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="absolute-ethic"
+                        checked={!!effectiveAbsoluteEthic}
+                        onChange={(e) => setAbsoluteEthic(e.target.checked ? availableAbsoluteEthic.id : '')}
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="absolute-ethic"
+                        style={{ cursor: 'pointer' }}
+                        title={availableAbsoluteEthic.description || 'No description available'}
+                      >
+                        <GameIcon type="ethics" id={availableAbsoluteEthic.id} size={32} />
+                        <strong className="text-white">Aim for {availableAbsoluteEthic.name}</strong>
+                        <span className="badge bg-secondary ms-2">Later in game</span>
+                        <small className="d-block text-light mt-1">
+                          Adopted during the game (Willpower), once your Ideology is strong enough: it replaces all your other ethics.
+                          Shown on the build page, not part of the empire export.
+                        </small>
+                        {effectiveAbsoluteEthic && (
+                          <small className="d-block text-light mt-1">{availableAbsoluteEthic.effects || 'No effects listed'}</small>
+                        )}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <small className="d-block text-muted mt-2">
+                  Pick a fanatic ethic to plan its Absolute form, adopted later in game (Willpower).
+                </small>
+              )
+            )}
           </div>
 
           {/* Nomadic Empire (Nomads DLC) — only available in 4.4+ */}
@@ -2620,11 +2717,12 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
           {/* Civics Selection */}
           <div className="mb-3">
             <label className="form-label">
-              Civics ({selectedCivics.length}/{MAX_CIVIC_SLOTS} selected{thirdCivic ? ' + 1 for later' : ''})
+              Civics ({selectedCivics.length}/{maxCivicSlots} selected{thirdCivic ? ' + 1 for later' : ''})
             </label>
             <div className="form-text text-light mb-2">
-              {MAX_CIVIC_SLOTS} civics at empire creation. Once both are picked, you can add an optional
-              third civic, unlocked later in the game: it is shown on the build page but not exported.
+              {maxCivicSlots} civics at empire creation{maxCivicSlots > BASE_CIVIC_SLOTS && selectedOriginData ? ` (+${maxCivicSlots - BASE_CIVIC_SLOTS} from ${selectedOriginData.name})` : ''}.
+              Once they are all picked, you can add an optional {laterCivicLabel} civic, unlocked later in the game
+              (Galactic Administration technology): it is shown on the build page but not exported.
             </div>
 
             {/* Info about civic selection */}
@@ -2652,7 +2750,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                   })}
                   {thirdCivic && (
                     <span className="badge bg-info text-dark me-1 mb-1" title="Unlocked later in the game, not exported">
-                      3rd (later): {allCivics.find(c => c.id === thirdCivic)?.name || thirdCivic}
+                      {laterCivicLabel} (later): {allCivics.find(c => c.id === thirdCivic)?.name || thirdCivic}
                     </span>
                   )}
                 </div>
@@ -2673,7 +2771,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                     const isThird = thirdCivic === civic.id;
                     const isSelected = selectedCivics.includes(civic.id) || isThird;
                     const canSelect = canSelectCivic(civic);
-                    const slotsFull = selectedCivics.length >= MAX_CIVIC_SLOTS && !!thirdCivic;
+                    const slotsFull = selectedCivics.length >= maxCivicSlots && !!thirdCivic;
                     const isDisabled = !isSelected && !canSelect;
 
                     return (
@@ -2702,7 +2800,7 @@ const BuildFormComponent: React.FC<BuildFormProps> = ({ onBuildCreated, initialD
                             <span className="badge bg-warning text-dark ms-2">Permanent</span>
                           )}
                           {isThird && (
-                            <span className="badge bg-info text-dark ms-2">3rd civic - unlocked later, not exported</span>
+                            <span className="badge bg-info text-dark ms-2">{laterCivicLabel} civic - unlocked later, not exported</span>
                           )}
                           {isDisabled && !isSelected && slotsFull && (
                             <span className="badge bg-danger ms-2">Max slots reached</span>

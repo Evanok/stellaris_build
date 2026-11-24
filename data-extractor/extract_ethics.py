@@ -11,38 +11,13 @@ from pathlib import Path
 from typing import Dict, List, Any
 from paradox_parser import parse_stellaris_file
 from localization_parser import load_all_localizations, get_localized_text, clean_localized_text
+from modifier_formatter import format_modifier_effects
 
 
 def extract_modifier_effects(modifier_data: Any) -> str:
-    """
-    Extract and format modifier effects into readable text
+    """Readable modifier text, as shown in game (see modifier_formatter.py)"""
+    return format_modifier_effects(modifier_data)
 
-    Args:
-        modifier_data: The modifier object
-
-    Returns:
-        Formatted string describing the effects
-    """
-    if not modifier_data or not isinstance(modifier_data, dict):
-        return ""
-
-    effects = []
-    for key, value in modifier_data.items():
-        if isinstance(value, (int, float)):
-            # Format percentage modifiers
-            if '_mult' in key or 'speed' in key or '_add' in key:
-                if abs(value) < 1 and value != 0:
-                    percentage = value * 100
-                    sign = '+' if percentage > 0 else ''
-                    effects.append(f"{key}: {sign}{percentage}%")
-                else:
-                    sign = '+' if value > 0 else ''
-                    effects.append(f"{key}: {sign}{value}")
-            else:
-                sign = '+' if value > 0 else ''
-                effects.append(f"{key}: {sign}{value}")
-
-    return "; ".join(effects)
 
 
 def extract_ethic_data(ethic_key: str, ethic_data: Dict[str, Any], localizations: Dict[str, str] = None) -> Dict[str, Any]:

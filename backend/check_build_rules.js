@@ -14,7 +14,7 @@
 //   node check_build_rules.js audit                 Check every non-deleted build in
 //                                                    the local DB (TODO.md section 3a)
 //
-// Only game_version 4.4 and 4.5 have been re-extracted with the fixed predicate format
+// Only game_version 4.4, 4.5 and 4.6 have been re-extracted with the fixed predicate format
 // (see TODO.md section 1) - builds on other versions are still checked, but
 // against unverified/older data, and are reported as such.
 
@@ -23,8 +23,8 @@ const fs = require('fs');
 const { getFailingConditions, contextFromBuild } = require('./rules/predicateEvaluator');
 const { getEffectivePlanetClass, getTraitPlanetConflicts, getSpeciesPlanetConflict } = require('./rules/planetRules');
 
-const AVAILABLE_DATA_VERSIONS = ['4.2', '4.3', '4.4', '4.5'];
-const FIXED_VERSIONS = new Set(['4.4', '4.5']); // versions re-extracted with the structured predicate format
+const AVAILABLE_DATA_VERSIONS = ['4.2', '4.3', '4.4', '4.5', '4.6'];
+const FIXED_VERSIONS = new Set(['4.4', '4.5', '4.6']); // versions re-extracted with the structured predicate format
 
 function getDataVersion(requestedVersion) {
   if (!requestedVersion) return AVAILABLE_DATA_VERSIONS[0];
@@ -51,7 +51,9 @@ function loadVersionData(dataVersion) {
   const traits = JSON.parse(fs.readFileSync(path.join(dir, 'traits.json'), 'utf8'));
   const archetypeBudgets = JSON.parse(fs.readFileSync(path.join(dir, 'species_archetypes.json'), 'utf8'));
   const planetClasses = JSON.parse(fs.readFileSync(path.join(dir, 'planet_classes.json'), 'utf8'));
+  const ethics = JSON.parse(fs.readFileSync(path.join(dir, 'ethics.json'), 'utf8'));
   return {
+    ethicById: Object.fromEntries(ethics.map(e => [e.id, e])),
     planetById: Object.fromEntries(planetClasses.map(p => [p.id, p])),
     civicById: Object.fromEntries(civics.map(c => [c.id, c])),
     originById: Object.fromEntries(origins.map(o => [o.id, o])),
@@ -80,17 +82,47 @@ function getOriginTraitBonus(origin, speciesArchetype) {
 function checkBuild(build) {
   const dataVersion = getDataVersion(build.game_version);
   const verified = FIXED_VERSIONS.has(dataVersion);
-  const { civicById, originById, archetypeByClass, authorityById, costByTraitId, traitById, archetypeBudgets, planetById } = loadVersionData(dataVersion);
+  const { civicById, originById, archetypeByClass, authorityById, costByTraitId, traitById, archetypeBudgets, planetById, ethicById } = loadVersionData(dataVersion);
   const ctx = contextFromBuild(build, archetypeByClass);
   const buildOrigin = build.origin ? originById[build.origin] : undefined;
   ctx.preferred_planet_class = getEffectivePlanetClass(build, buildOrigin);
   const issues = [];
 
   // GOVERNMENT_CIVIC_POINTS_BASE in common/defines/00_defines.txt - 2 civics
-  // max at creation, confirmed in-game. BuildForm.tsx used to allow 3
-  // (MAX_CIVIC_SLOTS) until 2026-08-10 - about 40% of existing builds have 3.
-  if (ctx.civics.length > 2) {
-    issues.push(`civics: ${ctx.civics.length} selected, but the game only allows 2 at empire creation`);
+  // at creation, confirmed in-game, plus the origin's
+  // country_government_civic_points_add (Great Mosaic, 4.6: +1). BuildForm.tsx
+  // used to allow 3 for everyone until 2026-08-10 - about 40% of existing builds have 3.
+  const maxCivics = 2 + (Number(buildOrigin && buildOrigin.modifier && buildOrigin.modifier.country_government_civic_points_add) || 0);
+  if (ctx.civics.length > maxCivics) {
+    issues.push(`civics: ${ctx.civics.length} selected, but the game only allows ${maxCivics} at empire creation`);
+  }
+
+  // Ethics: 3 points at creation, one ethic per axis (`category`: Xenophile
+  // and Fanatic Xenophile, or Xenophile and Xenophobe, cannot be combined),
+  // and no Absolute ethic (4.6 Willpower, only adopted in game).
+  const ethicPoints = ctx.ethics.reduce((sum, id) => sum + ((ethicById[id] && ethicById[id].cost) || 0), 0);
+  if (ethicPoints > 3) {
+    issues.push(`ethics: ${ethicPoints} ethic points spent, but the game only allows 3`);
+  }
+  const ethicsByAxis = {};
+  ctx.ethics.forEach(id => {
+    const category = ethicById[id] && ethicById[id].category;
+    if (category) (ethicsByAxis[category] = ethicsByAxis[category] || []).push(id);
+  });
+  Object.values(ethicsByAxis).filter(ids => ids.length > 1).forEach(ids => {
+    issues.push(`ethics: ${ids.join(' + ')} are on the same axis, only one can be picked`);
+  });
+  ctx.ethics.filter(id => id.startsWith('ethic_absolute_')).forEach(id => {
+    issues.push(`ethics: "${id}" is an Absolute ethic, only adopted in game, not at empire creation`);
+  });
+  // Absolute ethic adopted later in game: the Absolute form of the fanatic ethic
+  if (build.absolute_ethic) {
+    const absolute = ethicById[build.absolute_ethic];
+    if (!absolute) {
+      issues.push(`absolute ethic "${build.absolute_ethic}" not found in ${dataVersion} data`);
+    } else if (!ctx.ethics.includes(absolute.fanatic_variant)) {
+      issues.push(`absolute ethic "${build.absolute_ethic}" needs "${absolute.fanatic_variant}" among the starting ethics`);
+    }
   }
 
   // Trait point/pick budget differs per archetype (e.g. MACHINE: 1 point/5

@@ -7,8 +7,10 @@
 
 // Optional build fields: unset -> a condition on it is unknown (null), not
 // false, so "requires a Biological shipset" does not fail on builds that
-// simply did not pick one. Mirrors frontend/src/utils/ruleEvaluator.ts.
-const OPTIONAL_FIELDS = ['preferred_planet_class', 'graphical_culture'];
+// simply did not pick one. Same for the species: it is optional in the form, so
+// "Machine Intelligence requires a Machine species" must not fail when no
+// species was picked yet. Mirrors frontend/src/utils/ruleEvaluator.ts.
+const OPTIONAL_FIELDS = ['preferred_planet_class', 'graphical_culture', 'species_archetype', 'species_class'];
 
 function evaluateField(field, value, ctx) {
   if (OPTIONAL_FIELDS.includes(field) && !ctx[field]) return null;
